@@ -16,10 +16,11 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     // The SlaveBegin() function is called after the Begin() function.
     // When running with PROOF SlaveBegin() is called on each slave server.
     // The tree argument is deprecated (on PROOF 0 is passed).
-
-    SearchBins_ = new SearchBins(true);
-    SearchBins_BTags_ = new SearchBins(true);
-
+  std::cout<<"***SFMaker::SlaveBegin***"<<std::endl;
+  
+  SearchBins_ = new SearchBins(true);
+  SearchBins_BTags_ = new SearchBins(true);
+  
     bTagBins = {0, 0, 0, 0};
 
     // Initialize Histograms
@@ -106,6 +107,8 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 
 Bool_t SFMaker::Process(Long64_t entry)
 {
+  //  std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<std::endl;
+  
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
@@ -172,10 +175,10 @@ Bool_t SFMaker::Process(Long64_t entry)
     }
 
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
-
+    //    std::cout<<" currentTree "<<currentTree<<endl;
     if(currentTree != treeName){
         treeName = currentTree;
-
+	//	std::cout<<" treeName "<<treeName<<endl;
         TObjArray *optionArray = currentTree.Tokenize("/");
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 
@@ -195,10 +198,11 @@ Bool_t SFMaker::Process(Long64_t entry)
             btagcorr = 0;
             }
             btagcorr = new BTagCorrector();
+	    //  std::cout<<"***Seg Vio***"<<std::endl;
 
             TFile *skimFile = TFile::Open(path_toSkims+currFileName, "READ");
             btagcorr->SetEffs(skimFile);
-
+	    std::cout<<" skimFile "<<skimFile<<endl;
             btagcorr->SetCalib(path_bTagCalib);        
             //if(runOnSignalMC){
             //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
@@ -656,6 +660,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 void SFMaker::SlaveTerminate()
 {
+  std::cout<<"***SFMaker::SlaveTerminate***"<<std::endl;
+  
     // The SlaveTerminate() function is called after all entries or objects
     // have been processed. When running with PROOF SlaveTerminate() is called
     // on each slave server.
@@ -672,7 +678,7 @@ void SFMaker::SlaveTerminate()
 }
 
 void SFMaker::Terminate()
-{
+{std::cout<<"***SFMaker::Terminate***"<<std::endl;
     // The Terminate() function is the last function to be called during
     // a query. It always runs on the client, it can be used to present
     // the results graphically or save the results to file.
