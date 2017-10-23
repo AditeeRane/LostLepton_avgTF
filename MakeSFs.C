@@ -16,11 +16,17 @@ using namespace std;
 #ifdef __CINT__
 #pragma link C++ class std::vector<TLorentzVector>+;
 #endif
-void MakeSFs(char* InputTxtFile)
+void MakeSFs(const char *InputTxtFile,const char * subSampleKey, const char * Outdir, const char * inputnumber,const char * verbosity)
 {
   gSystem->Load("libPhysics.so");
   gInterpreter->GenerateDictionary("vector<TLorentzVector>","TLorentzVector.h;vector");
-
+  /*
+  const string InputTxtFile = argv[1];
+  const string subSampleKey = argv[2];
+  const string Outdir = argv[3];
+  const string inputnumber = argv[4];
+  const string verbosity = argv[5];
+*/
   gROOT->ProcessLine(".L SFMaker.C+");
   vector<string> filesVec;
   char filenames[500]; 
@@ -40,6 +46,7 @@ void MakeSFs(char* InputTxtFile)
   for(unsigned int in=0; in<filesVec.size(); in++){
     Effchain[0]->Add(filesVec.at(in).c_str());
   }
+  std::cout<< "size "<<filesVec.size()<<endl;
   /*
   // genHT cut of those samples already performed when skimming!
   Effchain[0]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/TTJets_SingleLeptFromT.root");
@@ -58,7 +65,7 @@ void MakeSFs(char* InputTxtFile)
   Effchain[1]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/WJetsToLNu_HT-800to1200.root");
   Effchain[1]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/WJetsToLNu_HT-1200to2500.root");
   Effchain[1]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/WJetsToLNu_HT-2500toInf.root");
-
+  
   Effchain[2]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/ST_s-channel.root");
   Effchain[2]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/ST_t-channel_antitop.root");
   Effchain[2]->Add("/nfs/dust/cms/user/kurzsimo/LostLepton/mc_v12_baseline/ST_t-channel_top.root");
@@ -83,6 +90,7 @@ void MakeSFs(char* InputTxtFile)
 */
   for(Int_t i=0; i<nChains; i++){ //i<nChains i>2
     std::cout<<"Processing Tree: "<<i<<std::endl;
-        Effchain[i]->Process("SFMaker", TString::Format("SFSR_%d.root",i));
+    Effchain[i]->Process("SFMaker", TString::Format("%s/SFSR_%d_%s_%s.root",Outdir,i,subSampleKey,inputnumber));
+    std::cout<<" Processed Tree "<<endl;
   }
 }

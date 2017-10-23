@@ -181,6 +181,33 @@ Bool_t SFMaker::Process(Long64_t entry)
 	//	std::cout<<" treeName "<<treeName<<endl;
         TObjArray *optionArray = currentTree.Tokenize("/");
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+	
+	//	std::cout<<" currFileName "<<currFileName<<endl;
+	string skimName="tree_TTJets_SingleLeptFromT.root";
+	char SkimFile[500];
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
+	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 
         if(doISRcorr){
             h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
@@ -200,9 +227,9 @@ Bool_t SFMaker::Process(Long64_t entry)
             btagcorr = new BTagCorrector();
 	    //  std::cout<<"***Seg Vio***"<<std::endl;
 
-            TFile *skimFile = TFile::Open(path_toSkims+currFileName, "READ");
+            TFile *skimFile = TFile::Open(SkimFile, "READ");
             btagcorr->SetEffs(skimFile);
-	    std::cout<<" skimFile "<<skimFile<<endl;
+	    //	    std::cout<<" skimFile "<<skimFile<<endl;
             btagcorr->SetCalib(path_bTagCalib);        
             //if(runOnSignalMC){
             //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
@@ -478,33 +505,35 @@ Bool_t SFMaker::Process(Long64_t entry)
     	}
 
     	if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 1){
-    		h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
-	    	h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-
-            isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
-
-    		if(ElectronsPromptNum_ == 1){
-                double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
-
-                h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
-			    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-			    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
-			    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-    		}else if(includeIsotrkVeto && ElectronsPromptNum_ == 0 && ElectronTracksPromptNum_ == 1){
-                double WeightCorr = WeightBtagProb * trackingSF;
-
-                h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
-                h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-                h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
-                h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-            }else if(ElectronsPromptNum_ == 0 && (!includeIsotrkVeto || ElectronTracksPromptNum_ == 0)){
-    			h_el_nLostOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
-	    		h_el_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-    		}else{
-                std::cout<<"SingleElec: "<<ElectronsPromptNum_<<"+"<<ElectronTracksPromptNum_<<std::endl;
-            }	
+	  h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
+	  h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
+	  isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	  recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	  trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+	  
+	  if(ElectronsPromptNum_ == 1){
+	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
+	    
+	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
+	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    //std::cout<<" h_el_nFoundOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
+	    
+	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
+	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	  }else if(includeIsotrkVeto && ElectronsPromptNum_ == 0 && ElectronTracksPromptNum_ == 1){
+	    double WeightCorr = WeightBtagProb * trackingSF;
+	    
+	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
+	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
+	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	  }else if(ElectronsPromptNum_ == 0 && (!includeIsotrkVeto || ElectronTracksPromptNum_ == 0)){
+	    h_el_nLostOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
+	    h_el_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  }else{
+	    std::cout<<"SingleElec: "<<ElectronsPromptNum_<<"+"<<ElectronTracksPromptNum_<<std::endl;
+	  }	
     	}
 
         if(GenMuonsAccNum_ == 2 && GenElectronsAccNum_ == 0){
@@ -735,54 +764,58 @@ void SFMaker::Terminate()
 	h_di_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_SFSR_SB"));
 
     for(int nX = 1; nX <= h_el_nOnePrompt_SB->GetXaxis()->GetNbins(); ++nX){
-        if(h_el_nOnePrompt_SB->GetBinContent(nX) < 0){
-            h_el_nOnePrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_el_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
-            h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_el_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_el_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
-            h_el_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
-            std::cout<<"h_el_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
+      //      std::cout<<" checking anything unusual "<<endl;
+      //std::cout<<" h_el_nOnePrompt_SB "<<h_el_nOnePrompt_SB->GetBinContent(nX)<<" h_el_nFoundOnePrompt_SB "<<h_el_nFoundOnePrompt_SB->GetBinContent(nX)<<endl;
+      if(h_el_nOnePrompt_SB->GetBinContent(nX)<h_el_nFoundOnePrompt_SB->GetBinContent(nX))
+	//std::cout<<" weird "<<endl;
+      if(h_el_nOnePrompt_SB->GetBinContent(nX) < 0){
+	h_el_nOnePrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_el_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
+	h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_el_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_el_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
+	h_el_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
+	std::cout<<"h_el_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_el_nLostOnePrompt_SB->SetBinContent(nX, 0);
             std::cout<<"h_el_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_mu_nOnePrompt_SB->GetBinContent(nX) < 0){
+	h_mu_nOnePrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_mu_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
         }
-        if(h_mu_nOnePrompt_SB->GetBinContent(nX) < 0){
-            h_mu_nOnePrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_mu_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
-            h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_mu_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_mu_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
-            h_mu_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
-            std::cout<<"h_mu_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_mu_nLostOnePrompt_SB->GetBinContent(nX) < 0){
+      if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
+	h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_mu_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_mu_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
+	h_mu_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
+	std::cout<<"h_mu_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_mu_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_mu_nLostOnePrompt_SB->SetBinContent(nX, 0);
             std::cout<<"h_mu_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }        
-        if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
-            h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_di_nTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }        
+      if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
+	h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_di_nTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_di_nOneFoundTwoPrompt_SB->GetBinContent(nX) < 0){
+	h_di_nOneFoundTwoPrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_di_nOneFoundTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
         }
-        if(h_di_nOneFoundTwoPrompt_SB->GetBinContent(nX) < 0){
-            h_di_nOneFoundTwoPrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_di_nOneFoundTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_di_nOneFoundTwoPrompt_SF_SB->GetBinContent(nX) < 0){
-            h_di_nOneFoundTwoPrompt_SF_SB->SetBinContent(nX, 0);
-            std::cout<<"h_di_nOneFoundTwoPrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
-        if(h_di_nTwoFoundTwoPrompt_SB->GetBinContent(nX) < 0){
-            h_di_nTwoFoundTwoPrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_di_nTwoFoundTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
+      if(h_di_nOneFoundTwoPrompt_SF_SB->GetBinContent(nX) < 0){
+	h_di_nOneFoundTwoPrompt_SF_SB->SetBinContent(nX, 0);
+	std::cout<<"h_di_nOneFoundTwoPrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(h_di_nTwoFoundTwoPrompt_SB->GetBinContent(nX) < 0){
+	h_di_nTwoFoundTwoPrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_di_nTwoFoundTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
         if(h_di_nTwoFoundTwoPrompt_SF_SB->GetBinContent(nX) < 0){
             h_di_nTwoFoundTwoPrompt_SF_SB->SetBinContent(nX, 0);
             std::cout<<"h_di_nTwoFoundTwoPrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -839,8 +872,17 @@ void SFMaker::Terminate()
 
 
     // Save histograms
-    //SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
-    //SaveEff(h_el_nOnePrompt_SB, outPutFile);
+	h_el_nOnePrompt_etaPt->Write();
+	h_el_nOnePrompt_SB->Write();
+	h_el_nFoundOnePrompt_etaPt->Write();
+	h_el_nFoundOnePrompt_SB->Write();
+	h_el_nFoundOnePrompt_SF_etaPt->Write();
+	h_el_nFoundOnePrompt_SF_SB->Write();
+	h_el_nLostOnePrompt_etaPt->Write();
+	h_el_nLostOnePrompt_SB->Write();
+	/*
+    SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
+    SaveEff(h_el_nOnePrompt_SB, outPutFile);
     h_el_nFoundOnePrompt_etaPt->Divide(h_el_nOnePrompt_etaPt);
     SaveEff(h_el_nFoundOnePrompt_etaPt, outPutFile, false, true);
     h_el_nFoundOnePrompt_SB->Divide(h_el_nOnePrompt_SB);
@@ -853,7 +895,7 @@ void SFMaker::Terminate()
     SaveEff(h_el_nLostOnePrompt_etaPt, outPutFile, false, true);
     h_el_nLostOnePrompt_SB->Divide(h_el_nOnePrompt_SB);
     SaveEff(h_el_nLostOnePrompt_SB, outPutFile);
-
+*/
     for(int nX = 1; nX <= h_el_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
         h_el_SFCR_SB->SetBinError(nX, 0);
         h_el_SFSR_SB->SetBinError(nX, 0);
@@ -872,8 +914,17 @@ void SFMaker::Terminate()
     SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
     SaveEff(h_el_SFSR_SB, outPutFile);
 
-    //SaveEff(h_mu_nOnePrompt_etaPt, outPutFile, false, true);
-    //SaveEff(h_mu_nOnePrompt_SB, outPutFile);
+    h_mu_nOnePrompt_etaPt->Write();
+    h_mu_nOnePrompt_SB->Write();
+    h_mu_nFoundOnePrompt_etaPt->Write();
+    h_mu_nFoundOnePrompt_SB->Write();
+    h_mu_nFoundOnePrompt_SF_etaPt->Write();
+    h_mu_nFoundOnePrompt_SF_SB->Write();
+    h_mu_nLostOnePrompt_etaPt->Write();
+    h_mu_nLostOnePrompt_SB->Write();
+    /*  
+    SaveEff(h_mu_nOnePrompt_etaPt, outPutFile, false, true);
+    SaveEff(h_mu_nOnePrompt_SB, outPutFile);
     h_mu_nFoundOnePrompt_etaPt->Divide(h_mu_nOnePrompt_etaPt);
     SaveEff(h_mu_nFoundOnePrompt_etaPt, outPutFile, false, true);
     h_mu_nFoundOnePrompt_SB->Divide(h_mu_nOnePrompt_SB);
@@ -886,7 +937,7 @@ void SFMaker::Terminate()
     SaveEff(h_mu_nLostOnePrompt_etaPt, outPutFile, false, true);
     h_mu_nLostOnePrompt_SB->Divide(h_mu_nOnePrompt_SB);
     SaveEff(h_mu_nLostOnePrompt_SB, outPutFile);
-
+*/
     for(int nX = 1; nX <= h_mu_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
         h_mu_SFCR_SB->SetBinError(nX, 0);
         h_mu_SFSR_SB->SetBinError(nX, 0);
@@ -940,17 +991,24 @@ void SFMaker::Terminate()
         if(h_di_SFSR_SB->GetBinContent(nX) < 1) h_di_SFSR_SB->SetBinContent(nX, 1);
 	}
 
-    h_di_nTwoFoundTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
-    SaveEff(h_di_nTwoFoundTwoPrompt_SB, outPutFile);
-    h_di_nOneFoundTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
-    SaveEff(h_di_nOneFoundTwoPrompt_SB, outPutFile);
-    h_di_nTwoFoundTwoPrompt_SF_SB->Divide(h_di_nTwoPrompt_SB);
-    SaveEff(h_di_nTwoFoundTwoPrompt_SF_SB, outPutFile);
-    h_di_nOneFoundTwoPrompt_SF_SB->Divide(h_di_nTwoPrompt_SB);
-    SaveEff(h_di_nOneFoundTwoPrompt_SF_SB, outPutFile);
-    h_di_nLostTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
-    SaveEff(h_di_nLostTwoPrompt_SB, outPutFile);
-
+	h_di_nTwoPrompt_SB->Write();
+	h_di_nTwoFoundTwoPrompt_SB->Write();
+	h_di_nOneFoundTwoPrompt_SB->Write();
+	h_di_nTwoFoundTwoPrompt_SF_SB->Write();
+	h_di_nOneFoundTwoPrompt_SF_SB->Write();
+	h_di_nLostTwoPrompt_SB->Write();
+	/*
+	h_di_nTwoFoundTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
+	SaveEff(h_di_nTwoFoundTwoPrompt_SB, outPutFile);
+	h_di_nOneFoundTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
+	SaveEff(h_di_nOneFoundTwoPrompt_SB, outPutFile);
+	h_di_nTwoFoundTwoPrompt_SF_SB->Divide(h_di_nTwoPrompt_SB);
+	SaveEff(h_di_nTwoFoundTwoPrompt_SF_SB, outPutFile);
+	h_di_nOneFoundTwoPrompt_SF_SB->Divide(h_di_nTwoPrompt_SB);
+	SaveEff(h_di_nOneFoundTwoPrompt_SF_SB, outPutFile);
+	h_di_nLostTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
+	SaveEff(h_di_nLostTwoPrompt_SB, outPutFile);
+*/	
     SaveEff(h_di_SFCR_SB, outPutFile);
     SaveEff(h_di_SFSR_SB, outPutFile);
 

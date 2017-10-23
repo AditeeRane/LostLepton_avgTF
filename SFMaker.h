@@ -35,7 +35,7 @@
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
-const bool doBTagCorr = false;
+const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false;
 const bool doISRcorr = false; 
@@ -44,7 +44,7 @@ const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
 
 // Path to Skims for btag reweighting
-const string path_toSkims("/nfs/dust/cms/user/kurzsimo/LostLepton/skims_v12/SLe/tree_");
+const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
@@ -165,6 +165,7 @@ class SFMaker : public TSelector {
   std::string fname; // for fetching file name
   TString fileName;
   TString currFileName;
+  string currentFile;
   TFile* pufile = 0;
   TH1* puhist = 0;
 
