@@ -44,8 +44,8 @@ const double scaleFactorWeight = 35862.351;
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
-const bool runOnNtuples = false;
-const string path_toSkims("/nfs/dust/cms/user/kurzsimo/LostLepton/skims_v12/SLe/tree_");
+const bool runOnNtuples = true;
+const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
 // Useful for T2tt corridor studies
 const bool useGenHTMHT = false;
@@ -98,14 +98,15 @@ class Prediction : public TSelector {
   bool useTrigger = false;
   bool useTriggerEffWeight = false;
   bool doPUreweighting = false;
-  bool doBTagCorr = false;
+  bool doBTagCorr = true;
   bool doISRcorr = false; 
-  bool useFilterData = false;
+  bool useFilterData = true;
 
   // output variables
   std::string fname; // for fetching file name
   TString fileName;
   Double_t HTgen_cut = 0;
+  string currentFile;
   TFile* pufile = 0;
   TH1* puhist = 0;
 

@@ -13,52 +13,54 @@ void TFMaker::Begin(TTree * /*tree*/)
 
 void TFMaker::SlaveBegin(TTree * /*tree*/)
 {
-    // The SlaveBegin() function is called after the Begin() function.
-    // When running with PROOF SlaveBegin() is called on each slave server.
-    // The tree argument is deprecated (on PROOF 0 is passed).
+  // The SlaveBegin() function is called after the Begin() function.
+  // When running with PROOF SlaveBegin() is called on each slave server.
+  // The tree argument is deprecated (on PROOF 0 is passed).
+  std::cout<<"***TFMaker::SlaveBegin***"<<std::endl;
+  SearchBins_ = new SearchBins(true);
+  SearchBins_BTags_ = new SearchBins(true);
 
-    SearchBins_ = new SearchBins(true);
-    SearchBins_BTags_ = new SearchBins(true);
+  bTagBins = {0, 0, 0, 0};
 
-    bTagBins = {0, 0, 0, 0};
+  // Initialize Histograms
+  TH1::SetDefaultSumw2();
+  unsigned nSB = SearchBins_->GetNbins();
+  h_CR_SB = new TH1D("h_CR_SB", "h_CR_SB", nSB, 0.5, nSB+0.5);
+  h_SR_SB = new TH1D("h_SR_SB", "h_SR_SB", nSB, 0.5, nSB+0.5);
+  h_0L1L_SB = new TH1D("h_0L1L_SB", "h_0L1L_SB", nSB, 0.5, nSB+0.5);
 
-    // Initialize Histograms
-    TH1::SetDefaultSumw2();
-    unsigned nSB = SearchBins_->GetNbins();
-    h_CR_SB = new TH1D("h_CR_SB", "h_CR_SB", nSB, 0.5, nSB+0.5);
-    h_SR_SB = new TH1D("h_SR_SB", "h_SR_SB", nSB, 0.5, nSB+0.5);
-    h_0L1L_SB = new TH1D("h_0L1L_SB", "h_0L1L_SB", nSB, 0.5, nSB+0.5);
+  h_CR_SF_SB = new TH1D("h_CR_SF_SB", "h_CR_SF_SB", nSB, 0.5, nSB+0.5);
+  h_SR_SF_SB = new TH1D("h_SR_SF_SB", "h_SR_SF_SB", nSB, 0.5, nSB+0.5);
+  h_0L1L_SF_SB = new TH1D("h_0L1L_SF_SB", "h_0L1L_SF_SB", nSB, 0.5, nSB+0.5);
 
-    h_CR_SF_SB = new TH1D("h_CR_SF_SB", "h_CR_SF_SB", nSB, 0.5, nSB+0.5);
-    h_SR_SF_SB = new TH1D("h_SR_SF_SB", "h_SR_SF_SB", nSB, 0.5, nSB+0.5);
-    h_0L1L_SF_SB = new TH1D("h_0L1L_SF_SB", "h_0L1L_SF_SB", nSB, 0.5, nSB+0.5);
+  // Use those histograms per sample. You don't want net negative weights
+  h_CR_SB_copy = new TH1D("h_CR_SB_copy", "h_CR_SB_copy", nSB, 0.5, nSB+0.5);
+  h_SR_SB_copy = new TH1D("h_SR_SB_copy", "h_SR_SB_copy", nSB, 0.5, nSB+0.5);
 
-    // Use those histograms per sample. You don't want net negative weights
-    h_CR_SB_copy = new TH1D("h_CR_SB_copy", "h_CR_SB_copy", nSB, 0.5, nSB+0.5);
-    h_SR_SB_copy = new TH1D("h_SR_SB_copy", "h_SR_SB_copy", nSB, 0.5, nSB+0.5);
+  h_CR_SF_SB_copy = new TH1D("h_CR_SF_SB_copy", "h_CR_SF_SB_copy", nSB, 0.5, nSB+0.5);
+  h_SR_SF_SB_copy = new TH1D("h_SR_SF_SB_copy", "h_SR_SF_SB_copy", nSB, 0.5, nSB+0.5);
 
-    h_CR_SF_SB_copy = new TH1D("h_CR_SF_SB_copy", "h_CR_SF_SB_copy", nSB, 0.5, nSB+0.5);
-    h_SR_SF_SB_copy = new TH1D("h_SR_SF_SB_copy", "h_SR_SF_SB_copy", nSB, 0.5, nSB+0.5);
+  GetOutputList()->Add(h_CR_SB);
+  GetOutputList()->Add(h_SR_SB);
+  GetOutputList()->Add(h_0L1L_SB);
+  GetOutputList()->Add(h_CR_SF_SB);
+  GetOutputList()->Add(h_SR_SF_SB);
+  GetOutputList()->Add(h_0L1L_SF_SB);
 
-    GetOutputList()->Add(h_CR_SB);
-    GetOutputList()->Add(h_SR_SB);
-    GetOutputList()->Add(h_0L1L_SB);
-    GetOutputList()->Add(h_CR_SF_SB);
-    GetOutputList()->Add(h_SR_SF_SB);
-    GetOutputList()->Add(h_0L1L_SF_SB);
+  GetOutputList()->Add(h_CR_SB_copy);
+  GetOutputList()->Add(h_SR_SB_copy);
+  GetOutputList()->Add(h_CR_SF_SB_copy);
+  GetOutputList()->Add(h_SR_SF_SB_copy);
 
-    GetOutputList()->Add(h_CR_SB_copy);
-    GetOutputList()->Add(h_SR_SB_copy);
-    GetOutputList()->Add(h_CR_SF_SB_copy);
-    GetOutputList()->Add(h_SR_SF_SB_copy);
-
-    std::cout<<"----------------"<<std::endl;
-    std::cout<<"DeltaPhi Cut: "<<useDeltaPhiCut<<std::endl;
-    std::cout<<"----------------"<<std::endl;
+  std::cout<<"----------------"<<std::endl;
+  std::cout<<"DeltaPhi Cut: "<<useDeltaPhiCut<<std::endl;
+  std::cout<<"----------------"<<std::endl;
 }
 
 Bool_t TFMaker::Process(Long64_t entry)
 {
+
+  std::cout<<"***TFMaker::Process***"<<" entry "<<entry<<std::endl;
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
@@ -125,7 +127,32 @@ Bool_t TFMaker::Process(Long64_t entry)
 
         TObjArray *optionArray = currentTree.Tokenize("/");
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+	string skimName="tree_TTJets_SingleLeptFromT.root";
+	char SkimFile[500];
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 
+	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
         // Make sure you don't have negative number of events per sample
         PushHist(h_CR_SB_copy, h_CR_SB);
         PushHist(h_SR_SB_copy, h_SR_SB);
@@ -168,7 +195,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             SFCR_histFile_path = "SFCR_3.root";
             SFSR_histFile_path = "SFSR_3.root";
         }
-
+	std::cout<<" SFCR_histFile_path "<<SFCR_histFile_path<<endl;
         SFCR_histFile = TFile::Open(SFCR_histFile_path, "READ");
         SFSR_histFile = TFile::Open(SFSR_histFile_path, "READ");
         h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
@@ -209,7 +236,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             }
             btagcorr = new BTagCorrector();
 
-            TFile *skimFile = TFile::Open(path_toSkims+currFileName, "READ");
+            TFile *skimFile = TFile::Open(SkimFile, "READ");
             btagcorr->SetEffs(skimFile);
 
             btagcorr->SetCalib(path_bTagCalib);        
@@ -518,6 +545,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 
 void TFMaker::SlaveTerminate()
 {
+  std::cout<<"***TFMaker::SlaveTerminate***"<<std::endl;
     // The SlaveTerminate() function is called after all entries or objects
     // have been processed. When running with PROOF SlaveTerminate() is called
     // on each slave server.
@@ -535,7 +563,7 @@ void TFMaker::Terminate()
     // The Terminate() function is the last function to be called during
     // a query. It always runs on the client, it can be used to present
     // the results graphically or save the results to file.
-
+  std::cout<<"***TFMaker::Terminate***"<<std::endl;
     // Draw Options
     gStyle->SetPaintTextFormat("5.2f");
     gStyle->SetStatW(0.1);
@@ -576,14 +604,21 @@ void TFMaker::Terminate()
         if(h_0L1L_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SB (Bin "<<nX<<") negative value"<<std::endl;
         if(h_0L1L_SF_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
     }
+    h_CR_SB->Write();
+    h_CR_SF_SB->Write();
+    h_SR_SB->Write();
+    h_SR_SF_SB->Write();
+    h_0L1L_SB->Write();
+    h_0L1L_SF_SB->Write();
 
+    /*
     SaveEff(h_CR_SB, outPutFile);
     SaveEff(h_CR_SF_SB, outPutFile);
     SaveEff(h_SR_SB, outPutFile);
     SaveEff(h_SR_SF_SB, outPutFile);
     SaveEff(h_0L1L_SB, outPutFile);
     SaveEff(h_0L1L_SF_SB, outPutFile);    
-
+*/
     outPutFile->Close();
 
     cout << "Saved output to " << fileName << endl;

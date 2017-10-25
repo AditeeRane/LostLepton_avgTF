@@ -45,7 +45,7 @@ const bool useFilterData = true; // false for FastSim since not simulated
 const double scaleFactorWeight = 35862.351;
 
 // Path to Skims for btag reweighting
-const string path_toSkims("/nfs/dust/cms/user/kurzsimo/LostLepton/skims_v12/SLe/tree_");
+const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
@@ -118,6 +118,7 @@ class TFMaker : public TSelector {
   std::string fname; // for fetching file name
   TString fileName;
   TString currFileName;
+  string currentFile;
   TFile* pufile = 0;
   TH1* puhist = 0;
 

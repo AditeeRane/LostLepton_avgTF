@@ -19,7 +19,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   // The SlaveBegin() function is called after the Begin() function.
   // When running with PROOF SlaveBegin() is called on each slave server.
   // The tree argument is deprecated (on PROOF 0 is passed).
-  
+  std::cout<<"***Prediction::SlaveBegin***"<<std::endl;  
 
   SearchBins_ = new SearchBins(false);
   SearchBinsQCD_ = new SearchBins(true);
@@ -46,6 +46,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 {
+  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
   resetValues();
   fChain->GetTree()->GetEntry(entry);
 
@@ -82,7 +83,7 @@ Bool_t Prediction::Process(Long64_t entry)
   bTagBins = {Bin_, 0, 0, 0};
   bTagBinsQCD = {BinQCD_, 0, 0, 0};
 
-
+  std::cout<<" *** Seg Vio1 *** "<<endl;
   if(topPTreweight){
     if(GenParticles->size() != GenParticles_PdgId->size()){
       std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
@@ -117,13 +118,43 @@ Bool_t Prediction::Process(Long64_t entry)
     // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
         topPtSF /= 0.99;
   }
+  std::cout<<" *** Seg Vio2 *** "<<endl;
 
   if(!runOnData){
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
     if(currentTree != treeName){
       treeName = currentTree;
+      
+      TObjArray *optionArray = currentTree.Tokenize("/");
+      TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+      currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+      string skimName="tree_TTJets_SingleLeptFromT.root";
+      char SkimFile[500];
+      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
+      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT.root"; 
+      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept.root";
+      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800.root";
+      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200.root";
+      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500.root";
+      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf.root";
+      else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets.root";
+      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200.root";
+      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400.root";
+      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600.root";
+      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800.root";
+      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200.root";
+      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500.root";
+      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf.root"; 
+      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop.root";
+      else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top.root";
+      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
+      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
+      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+      sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 
+      std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
+	
       if(doISRcorr){
         h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
         if(isrcorr!=0){
@@ -133,22 +164,21 @@ Bool_t Prediction::Process(Long64_t entry)
         isrcorr = new ISRCorrector();
         isrcorr->SetWeights(h_isr,h_njetsisr);
       }
-
+      std::cout<<" *** Seg Vio3 *** "<<endl;
       if(doBTagCorr){
         if(btagcorr!=0){
           delete btagcorr;
           btagcorr = 0;
         }
-        btagcorr = new BTagCorrector();
 
+        btagcorr = new BTagCorrector();
         if(!runOnNtuples) btagcorr->SetEffs(fChain->GetCurrentFile());
         else{
-          TObjArray *optionArray = currentTree.Tokenize("/");
-          TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-          TFile *skimFile = TFile::Open(path_toSkims+currFileName, "READ");
-          btagcorr->SetEffs(skimFile);
+	  std::cout<<" *** Seg Vio4 *** "<<endl;
+	  TFile *skimFile = TFile::Open(SkimFile, "READ");
+	  btagcorr->SetEffs(skimFile);
         }
-
+	
         btagcorr->SetCalib(path_bTagCalib);        
         if(runOnSignalMC){
           btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
@@ -156,7 +186,7 @@ Bool_t Prediction::Process(Long64_t entry)
         }
         else btagcorr->SetFastSim(false);
       }
-
+      
       if(runOnSignalMC){
         if((std::string(currentTree.Data()).find(std::string("T1"))) != std::string::npos || (std::string(currentTree.Data()).find(std::string("T5"))) != std::string::npos){
           xsecs = &xsecsT1T5;
@@ -250,6 +280,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
 void Prediction::SlaveTerminate()
 {
+  std::cout<<"***Prediction::SlaveTerminate***"<<std::endl;
   // The SlaveTerminate() function is called after all entries or objects
   // have been processed. When running with PROOF SlaveTerminate() is called
   // on each slave server.
@@ -267,7 +298,7 @@ void Prediction::Terminate()
   // a query. It always runs on the client, it can be used to present
   // the results graphically or save the results to file.
 
-
+  std::cout<<"***Prediction::Terminate***"<<std::endl;
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
 
   TFile *outPutFile = new TFile(fileName,"RECREATE"); ;

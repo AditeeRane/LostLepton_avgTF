@@ -31,19 +31,19 @@ void shift_bin(TH1* input, TH1* output){
 
 }
 
-void Plot_searchBin_comparison(string option="", int pull=1){ // string option="QCD"
+void Plot_searchBin_comparison(string option="", int pull=0){ // string option="QCD"
 
   // Use option="QCD" to produce plots in QCD binning
 
   char tempname[200];
   char tempnameAvg[200];
   // Open root file
-  sprintf(tempname,"./../Lost_Lepton_delphiClass/LLPrediction_SF.root");
-  sprintf(tempnameAvg,"Prediction_data.root");
+  sprintf(tempname,"LLPrediction.root");
+  sprintf(tempnameAvg,"Prediction_0_LL.root");
 
   // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
-  bool doData = true;
+  bool doData = false;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!

@@ -874,7 +874,7 @@ void SFMaker::Terminate()
     // Save histograms
 	h_el_nOnePrompt_etaPt->Write();
 	h_el_nOnePrompt_SB->Write();
-	h_el_nFoundOnePrompt_etaPt->Write();
+	h_el_nSFCR_histFile_pathFoundOnePrompt_etaPt->Write();
 	h_el_nFoundOnePrompt_SB->Write();
 	h_el_nFoundOnePrompt_SF_etaPt->Write();
 	h_el_nFoundOnePrompt_SF_SB->Write();
