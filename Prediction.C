@@ -55,6 +55,7 @@ Bool_t Prediction::Process(Long64_t entry)
   MuonsNum_ = Muons->size();
   ElectronsNum_ = Electrons->size();
 
+  //only considers single lepton events
   if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
   
   if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -67,6 +68,7 @@ Bool_t Prediction::Process(Long64_t entry)
   }else if(MuonsNum_==0 && ElectronsNum_==1){
     mtw =  Electrons_MTW->at(0);
   }
+  //do not consider event if mT>100 
   if(mtw > 100) return kTRUE;
 
   isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
@@ -84,7 +86,7 @@ Bool_t Prediction::Process(Long64_t entry)
   bTagBinsQCD = {BinQCD_, 0, 0, 0};
 
   std::cout<<" *** Seg Vio1 *** "<<endl;
-  if(topPTreweight){
+  if(topPTreweight){ //false
     if(GenParticles->size() != GenParticles_PdgId->size()){
       std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
     }else{
@@ -117,13 +119,13 @@ Bool_t Prediction::Process(Long64_t entry)
 
     // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
         topPtSF /= 0.99;
-  }
+  } //end of if(topPTreweight)
   std::cout<<" *** Seg Vio2 *** "<<endl;
 
   if(!runOnData){
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
-    if(currentTree != treeName){
+    if(currentTree != treeName){ //treeName = " "
       treeName = currentTree;
       
       TObjArray *optionArray = currentTree.Tokenize("/");
@@ -155,7 +157,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
       std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 	
-      if(doISRcorr){
+      if(doISRcorr){//false
         h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
         if(isrcorr!=0){
           delete isrcorr;
@@ -172,6 +174,7 @@ Bool_t Prediction::Process(Long64_t entry)
         }
 
         btagcorr = new BTagCorrector();
+	//runOnNtuples is true
         if(!runOnNtuples) btagcorr->SetEffs(fChain->GetCurrentFile());
         else{
 	  std::cout<<" *** Seg Vio4 *** "<<endl;
@@ -187,7 +190,7 @@ Bool_t Prediction::Process(Long64_t entry)
         else btagcorr->SetFastSim(false);
       }
       
-      if(runOnSignalMC){
+      if(runOnSignalMC){ //false for SM MC
         if((std::string(currentTree.Data()).find(std::string("T1"))) != std::string::npos || (std::string(currentTree.Data()).find(std::string("T5"))) != std::string::npos){
           xsecs = &xsecsT1T5;
           //std::cout<<"Using xsecs for gluino pair production!"<<std::endl;
@@ -198,7 +201,7 @@ Bool_t Prediction::Process(Long64_t entry)
           std::cout<<"No valid dictionary with xsecs found!"<<std::endl;
           return kTRUE;
         }
-      }
+      } //end of runOnSignalMC
     }
 
     if(runOnSignalMC){
@@ -220,9 +223,9 @@ Bool_t Prediction::Process(Long64_t entry)
 
       Weight = xsec / nEvtsTotal;
       if(Weight < 0) Weight *= -1;
-    }   
+    } //end of runOnSignalMC   
 
-    if(doISRcorr){
+    if(doISRcorr){ //false
       w_isr = isrcorr->GetCorrection(NJetsISR);
       Weight *= w_isr;
     }
@@ -232,14 +235,14 @@ Bool_t Prediction::Process(Long64_t entry)
       bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};  
       bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,3)};  
     }
-  }
+  } //end of if(!runOnData)
 
   if(runOnSignalMC){
     //Account for efficiency of JetID since we cannot apply it on fastSim
     Weight *= 0.99;
   }
 
-  if(useTriggerEffWeight){
+  if(useTriggerEffWeight){ // false for SM MC
     if(runOnSignalMC){
       Weight *= GetSignalTriggerEffWeight(MHT);
     }else{

@@ -38,7 +38,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   char tempname[200];
   char tempnameAvg[200];
   // Open root file
-  sprintf(tempname,"LLPrediction.root");
+  sprintf(tempname,"LLPrediction_Moriond.root");
   sprintf(tempnameAvg,"Prediction_0_LL.root");
 
   // true: do closure test (MC prediction vs MC truth)

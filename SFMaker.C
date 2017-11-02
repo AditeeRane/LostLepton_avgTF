@@ -127,9 +127,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
-    if(useCombinedBins){
+    if(useCombinedBins){ //useCombinedBins=false
         Bin_ = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
-    }else{
+    }else{ 
         Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
     }    
     if(Bin_ > 900) return kTRUE;
@@ -138,44 +138,45 @@ Bool_t SFMaker::Process(Long64_t entry)
     // At most 1% difference in SFs expected (rare BGs only)
     //if(Weight < 0) return kTRUE;
 
-    if(doTopPtReweighting){
-        if(GenParticles->size() != GenParticles_PdgId->size()){
-            std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
-        }else{
-            for(unsigned iGen = 0; iGen < GenParticles->size(); iGen++){
-                if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
-                  topPt.push_back(GenParticles->at(iGen).Pt());
-                }
-            }
-
-            // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
-            // Numbers outdated! Use latest numbers from twiki
-            if(topPt.size() == 2){
-                // dilept
-                if(GenElectrons->size() + GenMuons->size() == 2){
-                    topPtSF = std::sqrt(std::exp(0.148-0.00129*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.148-0.00129*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-                // singlelept
-                }else if(GenElectrons->size() + GenMuons->size() == 1){
-                    topPtSF = std::sqrt(std::exp(0.159-0.00141*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.159-0.00141*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-                //had
-                }else{
-                    // Usually non-promt (in hadTau evts): use average SF
-                    topPtSF = std::sqrt(std::exp(0.156-0.00137*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.156-0.00137*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-                    //std::cout << "Cannot do top-pT reweighting! No leptonic top found."<< std::endl; 
-                }
-            }else{
-                topPtSF = -1;
-                std::cout << "Cannot do top-pT reweighting! More/Less than 2 tops found."<< std::endl; 
-            }
-        }
+    if(doTopPtReweighting){ //doTopPtReweighting=false
+      if(GenParticles->size() != GenParticles_PdgId->size()){
+	std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
+      }else{
+	for(unsigned iGen = 0; iGen < GenParticles->size(); iGen++){
+	  if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
+	    topPt.push_back(GenParticles->at(iGen).Pt());
+	  }
+	}
+	
+	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
+	// Numbers outdated! Use latest numbers from twiki
+	if(topPt.size() == 2){
+	  // dilept
+	  if(GenElectrons->size() + GenMuons->size() == 2){
+	    topPtSF = std::sqrt(std::exp(0.148-0.00129*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.148-0.00129*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+	    // singlelept
+	  }else if(GenElectrons->size() + GenMuons->size() == 1){
+	    topPtSF = std::sqrt(std::exp(0.159-0.00141*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.159-0.00141*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+	    //had
+	  }else{
+	    // Usually non-promt (in hadTau evts): use average SF
+	    topPtSF = std::sqrt(std::exp(0.156-0.00137*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.156-0.00137*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+	    //std::cout << "Cannot do top-pT reweighting! No leptonic top found."<< std::endl; 
+	  }
+	}else{
+	  topPtSF = -1;
+	  std::cout << "Cannot do top-pT reweighting! More/Less than 2 tops found."<< std::endl; 
+	}
+      } //end of else of "if(GenParticles->size() != GenParticles_PdgId->size())"
 
         // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
-        topPtSF /= 0.99;
-        Weight *= topPtSF;
-    }
-
+      topPtSF /= 0.99;
+      Weight *= topPtSF;
+    } //end of "if(doTopPtReweighting)"
+    
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
-    //    std::cout<<" currentTree "<<currentTree<<endl;
+    std::cout<<" currentTree "<<currentTree<<endl;
+    //treeName = " "
     if(currentTree != treeName){
         treeName = currentTree;
 	//	std::cout<<" treeName "<<treeName<<endl;
@@ -183,7 +184,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	
-	//	std::cout<<" currFileName "<<currFileName<<endl;
+	std::cout<<" currFileName "<<currFileName<<endl;
 	string skimName="tree_TTJets_SingleLeptFromT.root";
 	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
@@ -209,7 +210,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 
-        if(doISRcorr){
+        if(doISRcorr){ //doISRcorr=false
             h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
             if(isrcorr!=0){
             delete isrcorr;
@@ -251,7 +252,7 @@ Bool_t SFMaker::Process(Long64_t entry)
             return kTRUE;
           }
         }*/
-    }
+    } // end of "if(currentTree != treeName)"
 
     /*if(runOnSignalMC){
         TH1F *nEventProc = (TH1F*)fChain->GetCurrentFile()->Get("nEventProc");
@@ -274,7 +275,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         if(Weight < 0) Weight *= -1;
     }   
     */
-    if(doISRcorr){
+    if(doISRcorr){ //false
         w_isr = isrcorr->GetCorrection(NJetsISR);
         Weight *= w_isr;
     }
@@ -764,10 +765,6 @@ void SFMaker::Terminate()
 	h_di_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_SFSR_SB"));
 
     for(int nX = 1; nX <= h_el_nOnePrompt_SB->GetXaxis()->GetNbins(); ++nX){
-      //      std::cout<<" checking anything unusual "<<endl;
-      //std::cout<<" h_el_nOnePrompt_SB "<<h_el_nOnePrompt_SB->GetBinContent(nX)<<" h_el_nFoundOnePrompt_SB "<<h_el_nFoundOnePrompt_SB->GetBinContent(nX)<<endl;
-      if(h_el_nOnePrompt_SB->GetBinContent(nX)<h_el_nFoundOnePrompt_SB->GetBinContent(nX))
-	//std::cout<<" weird "<<endl;
       if(h_el_nOnePrompt_SB->GetBinContent(nX) < 0){
 	h_el_nOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -874,7 +871,7 @@ void SFMaker::Terminate()
     // Save histograms
 	h_el_nOnePrompt_etaPt->Write();
 	h_el_nOnePrompt_SB->Write();
-	h_el_nSFCR_histFile_pathFoundOnePrompt_etaPt->Write();
+	h_el_nFoundOnePrompt_etaPt->Write();
 	h_el_nFoundOnePrompt_SB->Write();
 	h_el_nFoundOnePrompt_SF_etaPt->Write();
 	h_el_nFoundOnePrompt_SF_SB->Write();
