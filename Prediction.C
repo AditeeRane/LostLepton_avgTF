@@ -46,7 +46,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 {
-  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
+  //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
   resetValues();
   fChain->GetTree()->GetEntry(entry);
 
@@ -85,7 +85,7 @@ Bool_t Prediction::Process(Long64_t entry)
   bTagBins = {Bin_, 0, 0, 0};
   bTagBinsQCD = {BinQCD_, 0, 0, 0};
 
-  std::cout<<" *** Seg Vio1 *** "<<endl;
+  //  std::cout<<" *** Seg Vio1 *** "<<endl;
   if(topPTreweight){ //false
     if(GenParticles->size() != GenParticles_PdgId->size()){
       std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
@@ -120,8 +120,8 @@ Bool_t Prediction::Process(Long64_t entry)
     // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
         topPtSF /= 0.99;
   } //end of if(topPTreweight)
-  std::cout<<" *** Seg Vio2 *** "<<endl;
-
+  //  std::cout<<" *** Seg Vio2 *** "<<endl;
+  double madHTcut=0.0;
   if(!runOnData){
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
@@ -153,9 +153,24 @@ Bool_t Prediction::Process(Long64_t entry)
       else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
       else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
       else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+      else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+      else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+      else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+      else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+      else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+      else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+      else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+      else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+      else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+      else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+      else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+      else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+      else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+      else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+
       sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 
-      std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
+      //  std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 	
       if(doISRcorr){//false
         h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
@@ -166,7 +181,7 @@ Bool_t Prediction::Process(Long64_t entry)
         isrcorr = new ISRCorrector();
         isrcorr->SetWeights(h_isr,h_njetsisr);
       }
-      std::cout<<" *** Seg Vio3 *** "<<endl;
+      //      std::cout<<" *** Seg Vio3 *** "<<endl;
       if(doBTagCorr){
         if(btagcorr!=0){
           delete btagcorr;
@@ -177,7 +192,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	//runOnNtuples is true
         if(!runOnNtuples) btagcorr->SetEffs(fChain->GetCurrentFile());
         else{
-	  std::cout<<" *** Seg Vio4 *** "<<endl;
+	  //  std::cout<<" *** Seg Vio4 *** "<<endl;
 	  TFile *skimFile = TFile::Open(SkimFile, "READ");
 	  btagcorr->SetEffs(skimFile);
         }
@@ -202,6 +217,17 @@ Bool_t Prediction::Process(Long64_t entry)
           return kTRUE;
         }
       } //end of runOnSignalMC
+    }// end of if(currentTree != treeName)
+
+    if(Weight < 0)
+      return kTRUE;
+    
+    if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
+      madHTcut=600;
+      if(madHT > madHTcut){
+	//	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
+	return kTRUE;
+      }
     }
 
     if(runOnSignalMC){

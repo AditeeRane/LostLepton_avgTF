@@ -37,7 +37,7 @@ const bool runOnStandardModelMC = true;  //<-check------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 
 // Use TFs with/without SFs
-const bool applySFs = true;
+const bool applySFs = false;
 
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;

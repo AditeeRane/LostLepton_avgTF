@@ -60,7 +60,7 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
 Bool_t TFMaker::Process(Long64_t entry)
 {
 
-  std::cout<<"***TFMaker::Process***"<<" entry "<<entry<<std::endl;
+  //  std::cout<<"***TFMaker::Process***"<<" entry "<<entry<<std::endl;
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
@@ -119,7 +119,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         topPtSF /= 0.99;
         Weight *= topPtSF;
     }
-
+    double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
     if(currentTree != treeName){
@@ -150,9 +150,23 @@ Bool_t TFMaker::Process(Long64_t entry)
 	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
 	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
 	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
 	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 
-	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
+	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
         // Make sure you don't have negative number of events per sample
         PushHist(h_CR_SB_copy, h_CR_SB);
         PushHist(h_SR_SB_copy, h_SR_SB);
@@ -195,7 +209,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             SFCR_histFile_path = "SFCR_3.root";
             SFSR_histFile_path = "SFSR_3.root";
         }
-	std::cout<<" SFCR_histFile_path "<<SFCR_histFile_path<<endl;
+	//	std::cout<<" SFCR_histFile_path "<<SFCR_histFile_path<<endl;
         SFCR_histFile = TFile::Open(SFCR_histFile_path, "READ");
         SFSR_histFile = TFile::Open(SFSR_histFile_path, "READ");
         h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
@@ -260,7 +274,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             return kTRUE;
           }
         }*/
-    }
+    } //end of currentTree != treeName
 
     /*if(runOnSignalMC){
         TH1F *nEventProc = (TH1F*)fChain->GetCurrentFile()->Get("nEventProc");
@@ -283,6 +297,17 @@ Bool_t TFMaker::Process(Long64_t entry)
         if(Weight < 0) Weight *= -1;
     }   
     */
+    if(Weight < 0)
+      return kTRUE;
+
+    if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
+      madHTcut=600;
+      if(madHT > madHTcut){
+	//std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
+	return kTRUE;
+      }
+    }
+
     if(doISRcorr){
         w_isr = isrcorr->GetCorrection(NJetsISR);
         Weight *= w_isr;
@@ -487,9 +512,11 @@ Bool_t TFMaker::Process(Long64_t entry)
                 mtw = Electrons_MTW->at(0);
                 if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
                     SF = GetSF(h_el_SFCR_SB, binSF); 
-                }else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
-                    SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
-                }else{
+                }
+		//else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
+		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
+                //}
+		else{
                     SF = 1;
                 }
 
@@ -500,9 +527,11 @@ Bool_t TFMaker::Process(Long64_t entry)
                 mtw = Muons_MTW->at(0);
                 if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
                     SF = GetSF(h_mu_SFCR_SB, binSF); 
-                }else if((GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 2) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
-                    SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
-                }else{
+                }
+		//else if((GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 2) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
+		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
+                //}
+		else{
                     SF = 1;
                 }
 
@@ -528,9 +557,11 @@ Bool_t TFMaker::Process(Long64_t entry)
                 SF = GetSF(h_el_SFSR_SB, binSF); 
             }else if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
                 SF = GetSF(h_mu_SFSR_SB, binSF); 
-            }else if(GenElectronsAccNum_ + GenMuonsAccNum_ == 2){
-                SF = GetSF(h_di_SFSR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF); 
-            }else{
+            }
+	    //else if(GenElectronsAccNum_ + GenMuonsAccNum_ == 2){
+	    //  SF = GetSF(h_di_SFSR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF); 
+            //}
+	    else{
                 SF = 1;
             }
 

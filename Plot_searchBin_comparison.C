@@ -38,8 +38,13 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   char tempname[200];
   char tempnameAvg[200];
   // Open root file
-  sprintf(tempname,"LLPrediction_Moriond.root");
-  sprintf(tempnameAvg,"Prediction_0_LL.root");
+  //  sprintf(tempname,"LLPrediction_Moriond.root");
+  //sprintf(tempnameAvg,"Prediction_0_LL.root");
+
+  //sprintf(tempname,"ARElog115_GenInfo_HadTauEstimation_stacked.root");
+  sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
+
+  sprintf(tempnameAvg,"HadTauPredbyAvgTF.root");
 
   // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
@@ -48,7 +53,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
   bool showSystematics = false;
-
+  bool NjNbcorr=false;
   bool doClosurewoIsoTrackVeto = false;
 
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -197,13 +202,17 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   TDirectory *dPre = 0;
   //TDirectory *dExp = (TDirectory*)LLFileAvg->Get("Expectation");
   TDirectory *dExp = (TDirectory*) LLFileAvg;
-
+  THStack *tempstack;
+  //  char tempname[200];
+  sprintf(tempname,"%s","searchH_b");
   if(doData){
     dPre = (TDirectory*)LLFile->Get("Prediction_data");
-  }else{
+  }
+  /*
+else{
     dPre = (TDirectory*)LLFile->Get("Prediction_MC");
   }  
-
+  */
   if(doData){    
       EstHistTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
       EstHistDTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
@@ -212,18 +221,39 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
       EstHistTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
       EstHistDTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
     }else{
-      EstHistTemp=(TH1D*) dPre->Get("totalPred_LL_MC")->Clone();
-      EstHistDTemp=(TH1D*) dPre->Get("totalPred_LL_MC")->Clone();
+      tempstack=(THStack*)LLFile->Get(tempname)->Clone();
+      EstHistTemp=(TH1D*) tempstack->GetStack()->Last();
+      EstHistDTemp=(TH1D*) tempstack->GetStack()->Last();
+      EstHistTemp->Scale(35.9/3);
+      //EstHistDTemp->Scale(35.9/3);
+      if(NjNbcorr){
+	double NjNbCorrArray[19]={1.17399,1.20094,1.10832,1.02584,1.03485,1.0356,1.21258,0.98518,1.00936,1.00807,1.04635,0.959842,0.970069,0.945353,1.01596,0.90192,0.925152,0.970212,0.919978};
+	int nbins=EstHistTemp->GetSize();
+	int NjNbIdx=-1;
+	int bin=1;
+	while(bin<nbins-1){
+	  double yOne=EstHistTemp->GetBinContent(bin);
+	  if(bin<=110)
+	    NjNbIdx=(bin-1)/10;
+	  else
+	    NjNbIdx=(bin-111)/8 + 11;
+	  double NjNbCorr = NjNbCorrArray[NjNbIdx];
+	  std::cout<<" bin "<<bin<<" NjNbIdx "<<NjNbIdx<<" NjNbCorr "<<NjNbCorr<<endl;
+	  double yPrimeOne=yOne*NjNbCorr;
+	  EstHistTemp->SetBinContent(bin,yPrimeOne);
+	  bin++;
+	}
+      }
     }
   }
 
-
+ 
   if(doClosurewoIsoTrackVeto){
       GenHistTemp=(TH1D*) dExp->Get("totalExp_woIsoTrack_LL")->Clone();
       GenHistDTemp=(TH1D*) dExp->Get("totalExp_woIsoTrack_LL")->Clone();;
   }else{
-      GenHistTemp=(TH1D*) dExp->Get("h_Prediction")->Clone();
-      GenHistDTemp=(TH1D*) dExp->Get("h_Prediction")->Clone();
+      GenHistTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
+      GenHistDTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
   }
 
   if(showSystematics){
@@ -547,7 +577,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
   sprintf(tempname,"Average TF");
   catLeg1->AddEntry(GenHist,tempname,"pe");
-  //sprintf(tempname,"Prediction from MC");
+  //  sprintf(tempname,"MC Expectation");
   sprintf(tempname,"Event-by-Event");
   catLeg1->AddEntry(EstHist,tempname);
   catLeg1->Draw();
@@ -606,6 +636,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
       //
       //sprintf(ytitlename,"#frac{Estimate - #tau_{had} BG}{#tau_{had} BG} ");
       sprintf(ytitlename,"#frac{Avg TF}{Evt-by-Evt} ");
+      //    sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
+
       numerator->SetMaximum(ymax_bottom);
       numerator->SetMinimum(ymin_bottom);
 

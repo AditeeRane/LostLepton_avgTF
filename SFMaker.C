@@ -107,7 +107,7 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 
 Bool_t SFMaker::Process(Long64_t entry)
 {
-  //  std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<std::endl;
+  //  std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<std::endl;
   
     resetValues();
 
@@ -173,18 +173,20 @@ Bool_t SFMaker::Process(Long64_t entry)
       topPtSF /= 0.99;
       Weight *= topPtSF;
     } //end of "if(doTopPtReweighting)"
-    
+    double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
-    std::cout<<" currentTree "<<currentTree<<endl;
+    //std::cout<<" survived event "<< " entry "<<entry<<" currentTree "<<currentTree<<endl;
+
     //treeName = " "
+    //**AR-Nov3,2017-Loop below "if(currentTree != treeName)" only executes for every new tree in filelist and not for every event. So variables to be checked for every event should be outside this loop.
     if(currentTree != treeName){
         treeName = currentTree;
-	//	std::cout<<" treeName "<<treeName<<endl;
+	//std::cout<<" treeName "<<treeName<<endl;
         TObjArray *optionArray = currentTree.Tokenize("/");
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-	
-	std::cout<<" currFileName "<<currFileName<<endl;
+	//	std::cout<<" currFileName "<<currFileName<<endl;
+	//
 	string skimName="tree_TTJets_SingleLeptFromT.root";
 	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
@@ -207,6 +209,21 @@ Bool_t SFMaker::Process(Long64_t entry)
 	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
 	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
 	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+
 	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 
@@ -275,8 +292,22 @@ Bool_t SFMaker::Process(Long64_t entry)
         if(Weight < 0) Weight *= -1;
     }   
     */
+    //*AR-Nov27,2017-following if loop was introduced to ignore negative weight events. After ignoring those, SFSR for exotic and single top samples are found to be better in agreement with Simon's results
+    if(Weight < 0)
+      return kTRUE;
+    //      std::cout<<" entry "<<entry<<" negative event weight "<<endl;
+
+    if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
+      madHTcut=600;
+      if(madHT > madHTcut){
+	//	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
+	return kTRUE;
+      }
+    }
+    //    std::cout<<" passed "<<" entry "<<entry<<" madHT "<<madHT<<endl;
+    
     if(doISRcorr){ //false
-        w_isr = isrcorr->GetCorrection(NJetsISR);
+      w_isr = isrcorr->GetCorrection(NJetsISR);
         Weight *= w_isr;
     }
 
@@ -439,8 +470,8 @@ Bool_t SFMaker::Process(Long64_t entry)
                 matched = true;
                 MuonsPromptNum_++;
                 break;
-            }
-        }
+            }//end of if condition with deltaR matching
+        } //end of loop over j
         if(matched) continue;
 
         for(int j=0; j< isoMuonTracksNum; j++){
@@ -473,38 +504,40 @@ Bool_t SFMaker::Process(Long64_t entry)
     for(int i = 0; i < nLoops; i++){
     	double WeightBtagProb = Weight*bTagProb.at(i);
     	unsigned bTagBin = bTagBins.at(i);
-
-    	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
-    		h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
-	    	h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-
-            isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-            recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-            if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-            else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
-
-    		if(MuonsPromptNum_ == 1){
-                double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
-
-		        h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
-			    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-			    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
-			    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-    		}else if(includeIsotrkVeto && MuonsPromptNum_ == 0 && MuonTracksPromptNum_ == 1){
-                double WeightCorr = WeightBtagProb * trackingSF;
-
-                h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
-                h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-                h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
-                h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-            }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
-    			h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
-	    		h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-    		}else{
-                std::cout<<"SingleMu: "<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
-            }
-    	}
-
+	
+	//*AR, Nov20,2017- Checks if a gen muon is found and gen electron is not found
+	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
+	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
+	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  
+	  isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	  recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	  if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
+	  else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
+	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
+	  
+	  if(MuonsPromptNum_ == 1){
+	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
+	    
+	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
+	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
+	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	  }else if(includeIsotrkVeto && MuonsPromptNum_ == 0 && MuonTracksPromptNum_ == 1){
+	    double WeightCorr = WeightBtagProb * trackingSF;
+	    
+	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
+	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
+	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	  }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
+	    h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
+	    h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  }else{
+	    std::cout<<"SingleMu: "<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
+	  }
+    	} //end of if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0)
+	
     	if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 1){
 	  h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	  h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -557,7 +590,8 @@ Bool_t SFMaker::Process(Long64_t entry)
                 h_di_nTwoFoundTwoPrompt_SF_SB->Fill(bTagBin, WeightCorr);
             }else if(includeIsotrkVeto && MuonsPromptNum_ == 1 && MuonTracksPromptNum_ == 1){
                 double WeightCorr = 1;
-                if(MuonsPromptMatch_ == 0)  WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * trackingSF2;
+		//*AR, Nov20,2017-MuonsPromptMatch_ gives the index of a reco muon which is matched to gen muon.   
+             if(MuonsPromptMatch_ == 0)  WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * trackingSF2;
                 else WeightCorr = WeightBtagProb * trackingSF * isoSF2 * recoSF2 * trackingSF2;
 
                 h_di_nTwoFoundTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
