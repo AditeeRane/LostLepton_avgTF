@@ -492,7 +492,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         return kTRUE;
     }
 
-
+    //*AR, 180101- Steps up to here are similar to those in SFMaker.C
 
     Weight *= scaleFactorWeight;
 
@@ -510,6 +510,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 
             if(ElectronsNum_ == 1){
                 mtw = Electrons_MTW->at(0);
+		//*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
                 if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
                     SF = GetSF(h_el_SFCR_SB, binSF); 
                 }
@@ -539,6 +540,7 @@ Bool_t TFMaker::Process(Long64_t entry)
                 if(MuonsPromptNum_==0) SF = 1;
             }
 
+	    //*AR-180101-skips event if mT>100
             if(mtw > 100) return kTRUE;
         
             h_CR_SB_copy->Fill(bTagBin, WeightBtagProb);

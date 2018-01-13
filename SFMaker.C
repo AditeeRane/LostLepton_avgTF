@@ -116,7 +116,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     //  if(entry % 3 != 0) return kTRUE;
 
     //if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
-
+    //*AR, 180101-minHT_=300,minMHT_=250,minNJets_=1.5,deltaPhi1_=0.5,deltaPhi2_=0.5,deltaPhi3_=0.3,deltaPhi4_=0.3
+    //*AR, 180101-minMHT_=250 here as we are also deriving SFs for low MHT, 3 bins.
     if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
     if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
@@ -125,6 +126,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     GenMuonsNum_ = GenMuons->size();
     GenElectronsNum_ = GenElectrons->size();
 
+    //*AR, 180101- Only consider events which have atleast one gen electron or one gen muon.
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
     if(useCombinedBins){ //useCombinedBins=false
@@ -146,7 +148,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
 	    topPt.push_back(GenParticles->at(iGen).Pt());
 	  }
-	}
+	} //* AR-180101--end of for loop
 	
 	// https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
 	// Numbers outdated! Use latest numbers from twiki
@@ -242,7 +244,8 @@ Bool_t SFMaker::Process(Long64_t entry)
             delete btagcorr;
             btagcorr = 0;
             }
-            btagcorr = new BTagCorrector();
+	    //* AR-20180101- Creates an instance of class BTagCorrector for every new tree of the filelist     
+	    btagcorr = new BTagCorrector();
 	    //  std::cout<<"***Seg Vio***"<<std::endl;
 
             TFile *skimFile = TFile::Open(SkimFile, "READ");
@@ -337,7 +340,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         //  }
     //}
 
-    if(doPUreweighting){
+    if(doPUreweighting){ // doPUreweighting is false
         w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
         Weight *= w_pu;
     }
@@ -345,7 +348,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     // We are only interested in the GenLeptons that pass the acceptance, including isotrk veto! (i.e. abs(eta)<2.5, pT>5)
     for(unsigned i=0; i< GenElectrons->size(); i++){
         if(GenElectrons->at(i).Pt() > 5. && std::abs(GenElectrons->at(i).Eta()) < 2.5){
-            GenElectronsAcc.push_back(GenElectrons->at(i));
+	  GenElectronsAcc.push_back(GenElectrons->at(i));
         }
     }
     for(unsigned i=0; i< GenMuons->size(); i++){
@@ -353,11 +356,27 @@ Bool_t SFMaker::Process(Long64_t entry)
             GenMuonsAcc.push_back(GenMuons->at(i));
         }
     }
-
+    /*  
+    for(unsigned i=0; i< Electrons->size(); i++){
+      std::cout<<" i_reco "<<i<<" pt "<<Electrons->at(i).Pt()<<" eta "<<Electrons->at(i).Eta()<<endl;
+    }
+*/
+    for(unsigned i=0; i< Muons->size(); i++){
+      std::cout<<" i_reco "<<i<<" pt "<<Muons->at(i).Pt()<<" eta "<<Muons->at(i).Eta()<<endl;
+    }
+    
+    /*
+    for(unsigned i=0; i< GenElectrons->size(); i++){
+      std::cout<<" i_gen "<<i<<" pt "<<GenElectrons->at(i).Pt()<<" eta "<<GenElectrons->at(i).Eta()<<endl;
+    }
+    
+*/
     GenMuonsAccNum_ = GenMuonsAcc.size();
     GenElectronsAccNum_ = GenElectronsAcc.size();
+    //*AR-180101---Skip the event if there is no electron and no muon with pT>5 and abs(eta)<2.5
     if(GenMuonsAccNum_ + GenElectronsAccNum_ == 0) return kTRUE;
 
+    //*AR-180101---Call first two leading muons or electrons by special names
     //Define some helpful variables
     if(GenMuonsAccNum_ > 0){
         GenMuonsAccPt_ = GenMuonsAcc.at(0).Pt();
@@ -380,6 +399,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     MuonsNum_ = Muons->size();
 
     // get isoTrack collection from full TAP collection
+    //*AR-180101---Skips event if number of isolated tracks obtained from TAP selection and those provided by isotrack collection in tree are not same 
+    //*AR-180102---Q. isolated track needs track isolation<0.2 and mT<100 for electrons, muons and track isolation<0.1 and mT<100 for pions, why there is no pT cut >5 for leptonic track and >10 for hadronic track?
     isoTracksNum = isoMuonTracksNum + isoPionTracksNum + isoElectronTracksNum;
 
     for(unsigned i=0; i< TAPElectronTracks->size(); i++){
@@ -414,8 +435,10 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     // Match iso leptons/tracks to gen leptons
     // Apply SFs only to prompts
+    // *AR-180101---Reco objects which match to gen obects within acceptane, call them by special names
+    // *AR-180102---matching is done in terms of delta_pT/pT<0.1 and deltaR<0.03 for both isolated reco electrons and reco isolated tracks 
     for(unsigned i=0; i< GenElectronsAccNum_; i++){
-        bool matched = false;
+      bool matched = false;
         for(unsigned j=0; j< ElectronsNum_; j++){
             if(std::abs(GenElectronsAcc.at(i).Pt() - Electrons->at(j).Pt()) / GenElectronsAcc.at(i).Pt() < 0.1
                 && deltaR(GenElectronsAcc.at(i).Eta(), GenElectronsAcc.at(i).Phi(), Electrons->at(j).Eta(), Electrons->at(j).Phi()) < 0.03){
@@ -430,10 +453,10 @@ Bool_t SFMaker::Process(Long64_t entry)
                 }
                 matched = true;
                 ElectronsPromptNum_++;
-                break;
-            }
-        }
-        if(matched) continue;
+                break; //*AR if for a given gen object, a matching reco object is found, skip looping over remaining reco objects for match
+            }// end of if(std::abs(GenElect...)
+        } //end of loop over ElectronsNum_
+        if(matched) continue; //* AR,180101---if a matching reco electron is found don't need to check for isoElectronTracks, hence skip rest of this loop and move to next gen electron 
 
         for(int j=0; j< isoElectronTracksNum; j++){
             if(std::abs(GenElectronsAcc.at(i).Pt() - isoElectronTracks.at(j).Pt()) / GenElectronsAcc.at(i).Pt() < 0.1
@@ -451,8 +474,8 @@ Bool_t SFMaker::Process(Long64_t entry)
                 break;
             }
         }
-    }
-
+    } //*AR-180101-end of loop over gen electrons
+    //*AR-180101-For muons as well same procedure is repeated
     for(unsigned i=0; i< GenMuonsAccNum_; i++){
         bool matched = false;
         for(unsigned j=0; j< MuonsNum_; j++){
@@ -506,6 +529,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     	unsigned bTagBin = bTagBins.at(i);
 	
 	//*AR, Nov20,2017- Checks if a gen muon is found and gen electron is not found
+	//*AR, Nov20,2017- input histograms for deriving SF are only filled when there is electron /muon within acceptance pt>5 and |eta|<2.5
 	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
 	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -515,7 +539,10 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
 	  else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
+
+	  //*AR, 20180102---A set of events with identified, isolated and reconstructed electrons/muons and a set of events with isolated electron/isolated muon tracks can be considered as two different subsets of total events with no overlap. Becuase the second subset is constructed out of events which do not fall in first subset. Hence for a reconstructed ele/muon three scale factors come into picture while for reconstructed tracks only one scale factor.
 	  
+	  //*AR, 20180102---Thus when isotrack veto is applied, lost e event is one which has reco electron=0 and isolated electron track=0. When isotrack veto is not applied,lost e event is one with reco electron=0 
 	  if(MuonsPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
 	    
@@ -531,6 +558,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
 	  }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
+	    //*AR, 20180102- if IsotrkVeto is applied, following histograms filled only when there is no reco muon. If IsotrkVeto is not applied, following histograms filled when there is no muon and no isolated track
 	    h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 	  }else{
@@ -1101,6 +1129,7 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
 bool SFMaker::FiltersPass()
 {
     bool result=true;
+    //*AR-180101- useFilterData true for other than FastSim
     if(useFilterData){
         if(HBHENoiseFilter!=1) result=false;
         if(HBHEIsoNoiseFilter!=1) result=false;
@@ -1119,6 +1148,7 @@ bool SFMaker::FiltersPass()
     if(PFCaloMETRatio>5) result=false;
 
     for(unsigned j = 0; j < Jets->size(); j++){
+      //*AR-180101- return std::isnan(x)----> A non-zero value (true) if x is a NaN value; and zero (false) otherwise.
         if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
         if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
             //std::cout<<"found bad muon jet"<<std::endl;

@@ -30,6 +30,7 @@ class BTagCorrector {
 		void SetDebug(bool d) { debug = d; }
 		void SetFastSim(bool f) { fastsim = f; }
 		void SetEffs(TFile* file){
+		  //* AR- 180101-what these h_eff_b,h_eff_c and h_eff_udsg signify?
 			h_eff_b = (TH2F*)file->Get("h_eff_b");
 			h_eff_c = (TH2F*)file->Get("h_eff_c");
 			h_eff_udsg = (TH2F*)file->Get("h_eff_udsg");

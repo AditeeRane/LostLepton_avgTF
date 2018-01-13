@@ -32,12 +32,12 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;  //<-check------------------------
-const bool runOnStandardModelMC = true;  //<-check------------------------
+const bool runOnData = true;  //<-check------------------------
+const bool runOnStandardModelMC = false;  //<-check------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 
 // Use TFs with/without SFs
-const bool applySFs = false;
+const bool applySFs = true;
 
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
