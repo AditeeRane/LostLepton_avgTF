@@ -33,17 +33,18 @@
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
-
 const bool doBTagCorr = true;
 const bool doPUreweighting = false;
 const bool doISRcorr = false; 
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
+const bool JECSys=true;
+const bool SysUp=false;
+const bool SysDn=true;
 
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
-
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -72,6 +73,7 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
+const double csvForBtag=0.8484;
 
 
 class TFMaker : public TSelector {
@@ -82,6 +84,12 @@ class TFMaker : public TSelector {
   void SaveEff(TH1* h, TFile* oFile, bool xlog=false, bool ylog=false);
   bool FiltersPass();
   void resetValues();
+
+  std::vector<TVector3>Order_the_Vec(std::vector<TVector3> vec);
+  std::vector<double>Order_the_Vec(std::vector<TVector3> vec,std::vector<double> vecTwo);
+  std::vector<int>Order_the_Vec(std::vector<TVector3> vec,std::vector<int> vecTwo);
+  std::vector<bool>Order_the_Vec(std::vector<TVector3> vec,std::vector<bool> vecTwo);
+  std::vector<TLorentzVector>Order_the_Vec(std::vector<TVector3> vec,std::vector<TLorentzVector> vecTwo);
 
   // Histograms
   TFile *SFCR_histFile = 0;
@@ -223,6 +231,8 @@ class TFMaker : public TSelector {
   std::vector<int>     *Jets_hadronFlavor=0;
   std::vector<int>     *Jets_chargedHadronEnergyFraction=0;
   std::vector<bool>    *Jets_HTMask=0;
+  std::vector<double>  *Jets_jecUnc=0;
+
   Double_t        METPhi;
   Double_t        MET;
   Double_t        PFCaloMETRatio;
@@ -301,6 +311,7 @@ class TFMaker : public TSelector {
   TBranch        *b_isoPionTracksNum=0;   //!
   TBranch        *b_JetID=0;   //!
   TBranch        *b_Jets=0;   //!
+  TBranch        *b_Jets_jecUnc=0;
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
   TBranch        *b_Jets_hadronFlavor=0;   //!
@@ -499,6 +510,7 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("TriggerNames", 1);
   fChain->SetBranchStatus("TriggerPass", 1);
   fChain->SetBranchStatus("TriggerPrescales", 1);
+  fChain->SetBranchStatus("Jets_jecUnc" , 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
   if(doTopPtReweighting){
@@ -593,6 +605,7 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("TriggerNames", &TriggerNames, &b_TriggerNames);
   fChain->SetBranchAddress("TriggerPass", &TriggerPass, &b_TriggerPass);
   fChain->SetBranchAddress("TriggerPrescales", &TriggerPrescales, &b_TriggerPrescales);
+  fChain->SetBranchAddress("Jets_jecUnc", &Jets_jecUnc, &b_Jets_jecUnc);
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
   if(doTopPtReweighting){

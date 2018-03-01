@@ -158,7 +158,97 @@ class BTagCorrector {
 			if(debug) cout << prob[0] << ", " << prob[1] << ", " << prob[2] << ", " << prob[3] << endl;
 			
 			return prob;
-		}
+		}//end of GetCorrections
+
+
+
+		//*AR-180116---GetCorrections method is overloaded here while deriving JEC systematics as bTagProb we are calculating for JECSys=true is function of vectors and not pointers
+		vector<double> GetCorrections(vector<TLorentzVector> Jets, vector<int> Jets_flavor, vector<bool> Jets_HTMask){
+			//reset probabilities
+			vector<double> prob(4,0.0);
+			prob[0] = 1.0;
+			
+			//first loop over jets
+			vector<vector<double> > sfEffLists = vector<vector<double> >(Jets.size(),vector<double>());
+			for(unsigned ja = 0; ja < Jets.size(); ++ja){
+				//HT jet cuts
+				if(!Jets_HTMask[ja]) continue;
+				
+				//get sf and eff values (checks if already calculated)
+				InitSFEff(Jets[ja].Pt(), Jets[ja].Eta(), Jets_flavor[ja], sfEffLists[ja]);
+				double eps_a = sfEffLists[ja][0]*sfEffLists[ja][1]*sfEffLists[ja][2];
+				
+				//jet index, pt, eta, flavor, eff, sf, cf
+				if(debug) cout << "Jet " << ja << ": " << Jets[ja].Pt() << ", " << fabs(Jets[ja].Eta()) << ", " << abs(Jets_flavor[ja]) 
+								<< ", " << sfEffLists[ja][0] << ", " << sfEffLists[ja][1] << ", " << sfEffLists[ja][2] << endl;
+				
+				//calculate prob(0 b-tags)
+				prob[0] *= (1-eps_a);
+				
+				//sub-probabilities for following calculations
+				double subprob1 = 1.0;
+				double subprob2 = 0.0;
+				
+				//second loop over jets
+				for(unsigned jb = 0; jb < Jets.size(); ++jb){
+					//skip the same jet
+					if(jb==ja) continue;
+					
+					//HT jet cuts
+					if(!Jets_HTMask[jb]) continue;
+					
+					//get sf and eff values (checks if already calculated)
+					InitSFEff(Jets[jb].Pt(), Jets[jb].Eta(), Jets_flavor[jb], sfEffLists[jb]);
+					double eps_b = sfEffLists[jb][0]*sfEffLists[jb][1]*sfEffLists[jb][2];
+					
+					//jet index, pt, eta, flavor, eff, sf, cf
+					if(debug) cout << "\tJet " << jb << ": " << Jets[jb].Pt() << ", " << fabs(Jets[jb].Eta()) << ", " << abs(Jets_flavor[jb]) 
+									<< ", " << sfEffLists[jb][0] << ", " << sfEffLists[jb][1] << ", " << sfEffLists[jb][2] << endl;
+					
+					//calculate prob(1 b-tag)
+					subprob1 *= (1-eps_b);
+					
+					//sub-sub-probability for following calculations
+					double subsubprob2 = 1.0;
+					
+					//third loop over jets (only for jb>ja)
+					if(jb<ja) continue;
+					for(unsigned jc = 0; jc < Jets.size(); ++jc){
+						//skip the same jet
+						if(jc==jb || jc==ja) continue;
+						
+						//HT jet cuts
+						if(!Jets_HTMask[jc]) continue;
+						
+						//get sf and eff values (checks if already calculated)
+						InitSFEff(Jets[jc].Pt(), Jets[jc].Eta(), Jets_flavor[jc], sfEffLists[jc]);
+						double eps_c = sfEffLists[jc][0]*sfEffLists[jc][1]*sfEffLists[jc][2];
+						
+						//jet index, pt, eta, flavor, eff, sf, cf
+						if(debug) cout << "\t\tJet " << jc << ": " << Jets[jc].Pt() << ", " << fabs(Jets[jc].Eta()) << ", " << abs(Jets_flavor[jc]) 
+										<< ", " << sfEffLists[jc][0] << ", " << sfEffLists[jc][1] << ", " << sfEffLists[jc][2] << endl;
+						
+						//calculate prob(2 b-tags)
+						subsubprob2 *= (1-eps_c);
+					}
+					
+					//add up sub-sub-prob
+					subprob2 += eps_b*subsubprob2;
+				}
+				
+				//add up sub-probs
+				prob[1] += eps_a*subprob1;
+				prob[2] += eps_a*subprob2;
+			}
+			
+			//conserve probability
+			prob[3] = 1 - prob[0] - prob[1] - prob[2];
+			if(debug) cout << prob[0] << ", " << prob[1] << ", " << prob[2] << ", " << prob[3] << endl;
+			
+			return prob;
+		}//end of GetCorrections
+
+
 		
 		//method 1a
 		double GetSimpleCorrection(vector<TLorentzVector>* Jets, vector<int>* Jets_flavor, vector<bool>* Jets_HTMask, vector<double>* Jets_bDiscriminatorCSV){

@@ -41,15 +41,15 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //  sprintf(tempname,"LLPrediction_Moriond.root");
   //sprintf(tempnameAvg,"Prediction_0_LL.root");
 
-  sprintf(tempname,"ARElog115_GenInfo_HadTauEstimation_stacked.root");
+  //  sprintf(tempname,"ARElog115_GenInfo_HadTauEstimation_stacked.root");
   //  sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
-  //  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_SingleMuon_V12_.root");
+  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_SingleMuon_V12_.root");
 
-  sprintf(tempnameAvg,"HadTauDataPredbyAvgTF.root");
+  sprintf(tempnameAvg,"HadTauDataPredDirectbyAvgTF.root");
 
   // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
-  bool doData = false;
+  bool doData = true;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
@@ -205,23 +205,24 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   TDirectory *dExp = (TDirectory*) LLFileAvg;
   THStack *tempstack;
   //  char tempname[200];
+  //*AR-180124--Reads Moriond histogram
   sprintf(tempname,"%s","searchH_b");
   if(doData){
     //    dPre = (TDirectory*)LLFile->Get("Prediction_data");
     dPre = (TDirectory*) LLFile;
-
   }
   /*
 else{
     dPre = (TDirectory*)LLFile->Get("Prediction_MC");
   }  
   */
-  std::cout<<" *** Seg Vio ***"<<endl;
   if(doData){
+    //*AR-180124--Reads Moriond histogram 
       EstHistTemp=(TH1D*) dPre->Get(tempname)->Clone();
       EstHistDTemp=(TH1D*) dPre->Get(tempname)->Clone();
       //      EstHistTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
       //      EstHistDTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
+      //*AR-180124--NjNbcorr=false for hadtau data prediction from Moriond
       if(NjNbcorr){
 	double NjNbCorrArray[19]={1.17399,1.20094,1.10832,1.02584,1.03485,1.0356,1.21258,0.98518,1.00936,1.00807,1.04635,0.959842,0.970069,0.945353,1.01596,0.90192,0.925152,0.970212,0.919978};
 	int nbins=EstHistTemp->GetSize();
@@ -246,12 +247,14 @@ else{
       EstHistTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
       EstHistDTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
     }else{
-      //EstHist is Moriond exp/pre
+   
+//EstHist is Moriond exp/pre
       tempstack=(THStack*)LLFile->Get(tempname)->Clone();
       EstHistTemp=(TH1D*) tempstack->GetStack()->Last();
       EstHistDTemp=(TH1D*) tempstack->GetStack()->Last();
       EstHistTemp->Scale(35.9/3);
       //EstHistDTemp->Scale(35.9/3);
+      //*AR-180124--NjNbcorr=true for hadtau MC prediction from Moriond
       if(NjNbcorr){
 	double NjNbCorrArray[19]={1.17399,1.20094,1.10832,1.02584,1.03485,1.0356,1.21258,0.98518,1.00936,1.00807,1.04635,0.959842,0.970069,0.945353,1.01596,0.90192,0.925152,0.970212,0.919978};
 	int nbins=EstHistTemp->GetSize();
@@ -279,9 +282,15 @@ else{
       GenHistDTemp=(TH1D*) dExp->Get("totalExp_woIsoTrack_LL")->Clone();;
   }
   else{
+    //      std::cout<<" *** Seg Vio ***"<<endl;     
     //GenHist is avg TF prediction
-      GenHistTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
-      GenHistDTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
+      //      GenHistTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
+
+    //*AR-180124--Name of histogram if AvgHadTau=(LL+hadtau)-LL
+      //GenHistDTemp=(TH1D*) dExp->Get("AvgTFPred")->Clone();
+    //*AR-180124--Name of histogram if AvgHadTau prediction obtained using TFHadtau      
+    GenHistTemp=(TH1D*) dExp->Get("h_Prediction")->Clone();
+    GenHistDTemp=(TH1D*) dExp->Get("h_Prediction")->Clone();
   }
 
   if(showSystematics){
@@ -605,8 +614,8 @@ else{
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
   sprintf(tempname,"Average TF Prediction");
   catLeg1->AddEntry(GenHist,tempname,"pe");
-  sprintf(tempname,"MC Expectation");
-  //sprintf(tempname,"Event-by-Event");
+  //sprintf(tempname,"MC Expectation");
+  sprintf(tempname,"Event-by-Event");
   catLeg1->AddEntry(EstHist,tempname);
   catLeg1->Draw();
 
@@ -663,8 +672,10 @@ else{
       // Common to all bottom plots
       //
       //sprintf(ytitlename,"#frac{Estimate - #tau_{had} BG}{#tau_{had} BG} ");
-      //      sprintf(ytitlename,"#frac{Avg TF}{Evt-by-Evt} ");
-      sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
+      //*AR-180124----for prediction vs prediction
+      sprintf(ytitlename,"#frac{Avg TF}{Evt-by-Evt} ");
+      //*AR-180124----for MC exp vs prediction
+      //    sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
 
       numerator->SetMaximum(ymax_bottom);
       numerator->SetMinimum(ymin_bottom);

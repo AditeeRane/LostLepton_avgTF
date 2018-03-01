@@ -64,15 +64,129 @@ Bool_t TFMaker::Process(Long64_t entry)
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
-
+    //*AR-180116-Only consider events passing filters
+    if(applyFilters &&  !FiltersPass() ) return kTRUE;
+    
     //  if(entry % 3 != 0) return kTRUE;
 
     //if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
 
-    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
-    if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
-    if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-    if(applyFilters &&  !FiltersPass() ) return kTRUE;
+
+    vector<TVector3> NewJets;
+    vector<TVector3> HT3JetVec;
+    vector<TVector3> MHT3JetVec;
+    vector<TLorentzVector> MHT3JetLorentzVec;
+    vector<double> HT3JetCSVvec;
+    vector<double> MHT3JetCSVvec;
+    vector<bool> HT3JetHTMaskvec;
+    vector<bool> MHT3JetHTMaskvec;
+    vector<int> HT3JetHadronFlavorvec;
+    vector<int> MHT3JetHadronFlavorvec;
+    TVector3 temp3Vec;
+    TLorentzVector temp3LorentzVec;
+    double newPt=-99;     
+    double jetCSV=-99;
+    bool jet_HTMask=false;
+    int jet_hadronFlavor=-99;
+    bool Print=false;
+    double newHT=0,newMHT=0,newMHTPhi=0;
+    TVector3 newMHT3Vec;
+    int newNJets=-99;
+    double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
+    int newBTags = 0;
+
+  //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
+    if(JECSys){ 
+      for(unsigned int i=0;i < Jets->size();i++){
+	//std::cout<<" i "<<i<<" jet_pt(i) "<<Jets->at(i).Pt()<<" jec "<< Jets_jecUnc->at(i)<<" new pt "<< Jets->at(i).Pt()*(1+Jets_jecUnc->at(i))<<" csv "<< Jets_bDiscriminatorCSV->at(i)<<" HTMask "<< Jets_HTMask->at(i)<<" hadronFlavor "<<Jets_hadronFlavor->at(i)<<" eta "<< Jets->at(i).Eta()<<endl;
+	if(SysUp) newPt=Jets->at(i).Pt()*(1+Jets_jecUnc->at(i));
+	if(SysDn) newPt=Jets->at(i).Pt()*(1-Jets_jecUnc->at(i));
+	jetCSV=Jets_bDiscriminatorCSV->at(i);
+	jet_HTMask=Jets_HTMask->at(i);
+	jet_hadronFlavor=Jets_hadronFlavor->at(i);
+	temp3Vec.SetPtEtaPhi(newPt,Jets->at(i).Eta(),Jets->at(i).Phi());
+	temp3LorentzVec.SetPtEtaPhiM(newPt,Jets->at(i).Eta(),Jets->at(i).Phi(),Jets->at(i).M());
+	NewJets.push_back(temp3Vec);
+	if(newPt>30. && fabs(Jets->at(i).Eta())<2.4){
+	  HT3JetVec.push_back(temp3Vec);
+	  HT3JetCSVvec.push_back(jetCSV);
+	  HT3JetHTMaskvec.push_back(jet_HTMask);
+	  HT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+	if(newPt>30. && fabs(Jets->at(i).Eta())<5.){
+	  MHT3JetVec.push_back(temp3Vec);
+	  MHT3JetLorentzVec.push_back(temp3LorentzVec);
+	  MHT3JetCSVvec.push_back(jetCSV);
+	  MHT3JetHTMaskvec.push_back(jet_HTMask);
+	  MHT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+      } /*//end of for loop
+      
+      for(unsigned int i=1;i<MHT3JetVec.size();i++){
+	if(MHT3JetVec[i-1].Pt()<MHT3JetVec[i].Pt()){
+	  Print=true;
+	  //  std::cout<<"*** vector before ordering ***"<<" i "<<i<<" jet_pt(i) "<< Jets->at(i).Pt()<<" MHT_pt(i) "<<MHT3JetVec[i].Pt()<<" MHT_csv(i) "<< MHT3JetCSVvec[i]<<" MHT_HTMask(i) "<< MHT3JetHTMaskvec[i]<<" MHT_JetHadronFlavor "<< MHT3JetHadronFlavorvec[i]<<" eta "<< MHT3JetVec[i].Eta()<<" MHT_Lor_pt(i) "<<MHT3JetLorentzVec[i].Pt()<<endl;
+	}
+      }
+      
+      */
+      
+      HT3JetCSVvec= Order_the_Vec(HT3JetVec,HT3JetCSVvec);   
+      MHT3JetCSVvec= Order_the_Vec(MHT3JetVec,MHT3JetCSVvec);    
+      HT3JetHTMaskvec= Order_the_Vec(HT3JetVec,HT3JetHTMaskvec);   
+      MHT3JetHTMaskvec= Order_the_Vec(MHT3JetVec,MHT3JetHTMaskvec);    
+      HT3JetHadronFlavorvec= Order_the_Vec(HT3JetVec,HT3JetHadronFlavorvec);   
+      MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);         MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
+      HT3JetVec= Order_the_Vec(HT3JetVec);
+      MHT3JetVec= Order_the_Vec(MHT3JetVec);      
+      /*
+      if(Print){
+	for(unsigned int i=0;i<MHT3JetVec.size();i++){
+	  std::cout<<"*** vector is ordered ***"<<" i "<<i<<" pt "<<MHT3JetVec[i].Pt()<<" csv "<<MHT3JetCSVvec[i]<<" HTMask "<<MHT3JetHTMaskvec[i]<<" HadronFlavor "<<MHT3JetHadronFlavorvec[i]<<" eta "<<MHT3JetVec[i].Eta()<<" MHT_Lor_pt(i) "<<MHT3JetLorentzVec[i].Pt()<<endl;
+	}
+      }
+    */  
+      for(unsigned int i=0;i<HT3JetVec.size();i++){
+	newHT+=HT3JetVec[i].Pt();
+      }
+      for(unsigned int i=0;i<MHT3JetVec.size();i++){
+	newMHT3Vec-=MHT3JetVec[i];
+      }
+      newMHT=newMHT3Vec.Pt();
+      newMHTPhi=newMHT3Vec.Phi();
+      
+      newNJets = HT3JetVec.size();
+      if(HT3JetVec.size()>0)
+	newDphi1=fabs(TVector2::Phi_mpi_pi(HT3JetVec[0].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>1)
+	newDphi2=fabs(TVector2::Phi_mpi_pi(HT3JetVec[1].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>2)
+	newDphi3=fabs(TVector2::Phi_mpi_pi(HT3JetVec[2].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>3)
+	newDphi4=fabs(TVector2::Phi_mpi_pi(HT3JetVec[3].Phi() - newMHTPhi));
+      
+      for(unsigned int i=0;i<HT3JetVec.size();i++){
+	if(HT3JetCSVvec[i]>csvForBtag)
+	  newBTags++;
+      }
+    }    
+      //    std::cout<<" btags "<<BTags<<" newBTags "<<newBTags<<endl;
+      //  if(entry % 3 != 0) return kTRUE;
+      
+    //if(HTgen_" vector is orderedcut > 0.01) if(madHT > HTgen_cut) return kTRUE;
+    //*AR, 180101-minHT_=300,minMHT_=250,minNJets_=1.5,deltaPhi1_=0.5,deltaPhi2_=0.5,deltaPhi3_=0.3,deltaPhi4_=0.3
+    //*AR, 180101-minMHT_=250 here as we are also deriving SFs for low MHT, 3 bins.
+    if(JECSys){
+      if(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ) return kTRUE;
+      if(useDeltaPhiCut == 1) if(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_) return kTRUE;
+      if(useDeltaPhiCut == -1) if(!(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_)) return kTRUE;
+    }
+    else{
+      if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+      if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
+      if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
+    }
+
 
     GenMuonsNum_ = GenMuons->size();
     GenElectronsNum_ = GenElectrons->size();
@@ -81,9 +195,14 @@ Bool_t TFMaker::Process(Long64_t entry)
 
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
-    Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
+    if(JECSys)
+      Bin_ = SearchBins_->GetBinNumber(newHT,newMHT,newNJets,newBTags);
+    else
+      Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
+
     if(Bin_ > 900) return kTRUE;
 
+    //* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
     if(doTopPtReweighting){
         if(GenParticles->size() != GenParticles_PdgId->size()){
             std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
@@ -92,7 +211,7 @@ Bool_t TFMaker::Process(Long64_t entry)
                 if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
                   topPt.push_back(GenParticles->at(iGen).Pt());
                 }
-            }
+            }//* AR-180123--end of for loop
 
             // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
             // Numbers outdated! Use latest numbers from twiki
@@ -118,7 +237,8 @@ Bool_t TFMaker::Process(Long64_t entry)
         // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
         topPtSF /= 0.99;
         Weight *= topPtSF;
-    }
+    }//end of "if(doTopPtReweighting)"
+
     double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
@@ -233,6 +353,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             std::cout<<"Using combined bins in SR"<<std::endl;
         }
 
+	//* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
         if(doISRcorr){
             h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
             if(isrcorr!=0){
@@ -307,15 +428,22 @@ Bool_t TFMaker::Process(Long64_t entry)
 	return kTRUE;
       }
     }
-
+    //* AR-20180123-As following loop is not executing, it is not modified to account for JECSys effect.   
     if(doISRcorr){
         w_isr = isrcorr->GetCorrection(NJetsISR);
         Weight *= w_isr;
     }
 
     if(doBTagCorr){
-    	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
-        bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};  
+      if(JECSys)
+	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec);
+      else
+	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
+
+	if(JECSys)
+	  bTagBins = {SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,0), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,1), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,2), newNJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,3)};
+	else
+	  bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};
     }
     else{
     	bTagProb = {1, 0, 0, 0};
@@ -506,8 +634,12 @@ Bool_t TFMaker::Process(Long64_t entry)
         if(ElectronsNum_ + MuonsNum_ == 1){
             double SF = 1;
             double binSF = Bin_;
-            if(useCombinedBinsCR) binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
-
+            if(useCombinedBinsCR){
+	      if(JECSys)
+		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
+	      else
+		binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
+	    }
             if(ElectronsNum_ == 1){
                 mtw = Electrons_MTW->at(0);
 		//*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
@@ -553,8 +685,12 @@ Bool_t TFMaker::Process(Long64_t entry)
 
             double SF = 1;
             double binSF = Bin_;
-            if(useCombinedBinsSR) binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
-
+            if(useCombinedBinsSR){
+	      if(JECSys)
+		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
+	      else
+		binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
+	    }
             if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
                 SF = GetSF(h_el_SFSR_SB, binSF); 
             }else if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
@@ -757,6 +893,80 @@ bool TFMaker::FiltersPass()
     // Do not apply on fastSim samples!
     //if(!runOnSignalMC) if(!JetID) result=false;
     return result;
+}
+
+vector<TVector3>TFMaker::Order_the_Vec(vector<TVector3> vec)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<int> vecIndex;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+      }
+    }
+  }
+  return vecjvec;
+}
+
+vector<double>TFMaker::Order_the_Vec(vector<TVector3> vec,vector<double> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<double> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<bool>TFMaker::Order_the_Vec(vector<TVector3> vec,vector<bool> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<bool> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<int>TFMaker::Order_the_Vec(vector<TVector3> vec,vector<int> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<int> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<TLorentzVector>TFMaker::Order_the_Vec(vector<TVector3> vec,vector<TLorentzVector> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<TLorentzVector> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
 }
 
 void TFMaker::resetValues()

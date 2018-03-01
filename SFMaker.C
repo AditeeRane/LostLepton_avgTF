@@ -21,11 +21,11 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
   SearchBins_ = new SearchBins(true);
   SearchBins_BTags_ = new SearchBins(true);
   
-    bTagBins = {0, 0, 0, 0};
-
-    // Initialize Histograms
-    TH1::SetDefaultSumw2();
-    unsigned nSB = SearchBins_->GetNbins();
+  bTagBins = {0, 0, 0, 0};
+  
+  // Initialize Histograms
+  TH1::SetDefaultSumw2();
+  unsigned nSB = SearchBins_->GetNbins();
     if(useCombinedBins) nSB = SearchBins_->GetNbinsCombined();
     h_el_nOnePrompt_etaPt = new TH2D("h_el_nOnePrompt_etaPt", "h_el_nOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_nOnePrompt_SB = new TH1D("h_el_nOnePrompt_SB", "h_el_nOnePrompt_SB", nSB, 0.5, nSB+0.5);    
@@ -112,16 +112,168 @@ Bool_t SFMaker::Process(Long64_t entry)
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
+    //*AR-180116-Only consider events passing filters
+    if(applyFilters &&  !FiltersPass() ) return kTRUE;
 
-    //  if(entry % 3 != 0) return kTRUE;
+    
+    vector<TVector3> NewJets;
+    vector<TVector3> HT3JetVec;
+    vector<TVector3> MHT3JetVec;
+    vector<TLorentzVector> MHT3JetLorentzVec;
+    vector<double> HT3JetCSVvec;
+    vector<double> MHT3JetCSVvec;
+    vector<bool> HT3JetHTMaskvec;
+    vector<bool> MHT3JetHTMaskvec;
+    vector<int> HT3JetHadronFlavorvec;
+    vector<int> MHT3JetHadronFlavorvec;
+    TVector3 temp3Vec;
+    TLorentzVector temp3LorentzVec;
+    double newPt=-99;     
+    double jetCSV=-99;
+    bool jet_HTMask=false;
+    int jet_hadronFlavor=-99;
+    bool Print=false;
+    double newHT=0,newMHT=0,newMHTPhi=0;
+    TVector3 newMHT3Vec;
+    int newNJets=-99;
+    double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
+    int newBTags = 0;
+  //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
+    if(JECSys){ 
+      for(unsigned int i=0;i < Jets->size();i++){
+	//std::cout<<" i "<<i<<" jet_pt(i) "<<Jets->at(i).Pt()<<" jec "<< Jets_jecUnc->at(i)<<" new pt "<< Jets->at(i).Pt()*(1+Jets_jecUnc->at(i))<<" csv "<< Jets_bDiscriminatorCSV->at(i)<<" HTMask "<< Jets_HTMask->at(i)<<" hadronFlavor "<<Jets_hadronFlavor->at(i)<<" eta "<< Jets->at(i).Eta()<<endl;
+	if(SysUp) newPt=Jets->at(i).Pt()*(1+Jets_jecUnc->at(i));
+	if(SysDn) newPt=Jets->at(i).Pt()*(1-Jets_jecUnc->at(i));
+	jetCSV=Jets_bDiscriminatorCSV->at(i);
+	jet_HTMask=Jets_HTMask->at(i);
+	jet_hadronFlavor=Jets_hadronFlavor->at(i);
+	temp3Vec.SetPtEtaPhi(newPt,Jets->at(i).Eta(),Jets->at(i).Phi());
+	temp3LorentzVec.SetPtEtaPhiM(newPt,Jets->at(i).Eta(),Jets->at(i).Phi(),Jets->at(i).M());
+	NewJets.push_back(temp3Vec);
+	if(newPt>30. && fabs(Jets->at(i).Eta())<2.4){
+	  HT3JetVec.push_back(temp3Vec);
+	  HT3JetCSVvec.push_back(jetCSV);
+	  HT3JetHTMaskvec.push_back(jet_HTMask);
+	  HT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+	if(newPt>30. && fabs(Jets->at(i).Eta())<5.){
+	  MHT3JetVec.push_back(temp3Vec);
+	  MHT3JetLorentzVec.push_back(temp3LorentzVec);
+	  MHT3JetCSVvec.push_back(jetCSV);
+	  MHT3JetHTMaskvec.push_back(jet_HTMask);
+	  MHT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+      } //end of for loop
+      /*
+	for(unsigned int i=0;i < SoftJets->size();i++){
+	//std::cout<<" i "<<i<<" jet_pt(i) "<<Jets->at(i).Pt()<<" jec "<< Jets_jecUnc->at(i)<<" new pt "<< Jets->at(i).Pt()*(1+Jets_jecUnc->at(i))<<" csv "<< Jets_bDiscriminatorCSV->at(i)<<" HTMask "<< Jets_HTMask->at(i)<<" hadronFlavor "<<Jets_hadronFlavor->at(i)<<" eta "<< Jets->at(i).Eta()<<endl;
+	if(SysUp) newPt=SoftJets->at(i).Pt()*(1+SoftJets_jecUnc->at(i));
+	if(SysDn) newPt=SoftJets->at(i).Pt()*(1-SoftJets_jecUnc->at(i));
+	jetCSV=SoftJets_bDiscriminatorCSV->at(i);
+	jet_HTMask=SoftJets_HTMask->at(i);
+	jet_hadronFlavor=SoftJets_hadronFlavor->at(i);
+	temp3Vec.SetPtEtaPhi(newPt,SoftJets->at(i).Eta(),SoftJets->at(i).Phi());
+	temp3LorentzVec.SetPtEtaPhiM(newPt,SoftJets->at(i).Eta(),SoftJets->at(i).Phi(),SoftJets->at(i).M());
+	NewJets.push_back(temp3Vec);
+	if(newPt>30. && fabs(SoftJets->at(i).Eta())<2.4){
+	  HT3JetVec.push_back(temp3Vec);
+	  HT3JetCSVvec.push_back(jetCSV);
+	  HT3JetHTMaskvec.push_back(jet_HTMask);
+	  HT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+	if(newPt>30. && fabs(SoftJets->at(i).Eta())<5.){
+	  MHT3JetVec.push_back(temp3Vec);
+	  MHT3JetLorentzVec.push_back(temp3LorentzVec);
+	  MHT3JetCSVvec.push_back(jetCSV);
+	  MHT3JetHTMaskvec.push_back(jet_HTMask);
+	  MHT3JetHadronFlavorvec.push_back(jet_hadronFlavor);
+	}
+      } //end of for loop
+      */
+      //      if(Jets->size()!=MHT3JetVec.size()) 
+      //std::cout<< " jet_size "<<Jets->size()<<" HT3 "<<HT3JetVec.size()<<" MHT3 "<<MHT3JetVec.size()<<endl;
+      /*
+      for(unsigned int i=1;i<MHT3JetVec.size();i++){
+	if(MHT3JetVec[i-1].Pt()<MHT3JetVec[i].Pt()){
+	  Print=true;
+	  //  std::cout<<"*** vector before ordering ***"<<" i "<<i<<" jet_pt(i) "<< Jets->at(i).Pt()<<" MHT_pt(i) "<<MHT3JetVec[i].Pt()<<" MHT_csv(i) "<< MHT3JetCSVvec[i]<<" MHT_HTMask(i) "<< MHT3JetHTMaskvec[i]<<" MHT_JetHadronFlavor "<< MHT3JetHadronFlavorvec[i]<<" eta "<< MHT3JetVec[i].Eta()<<" MHT_Lor_pt(i) "<<MHT3JetLorentzVec[i].Pt()<<endl;
+	}
+      }
+      
+      */
+      
+      HT3JetCSVvec= Order_the_Vec(HT3JetVec,HT3JetCSVvec);   
+      MHT3JetCSVvec= Order_the_Vec(MHT3JetVec,MHT3JetCSVvec);    
+      HT3JetHTMaskvec= Order_the_Vec(HT3JetVec,HT3JetHTMaskvec);   
+      MHT3JetHTMaskvec= Order_the_Vec(MHT3JetVec,MHT3JetHTMaskvec);    
+      HT3JetHadronFlavorvec= Order_the_Vec(HT3JetVec,HT3JetHadronFlavorvec);   
+      MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);         MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
+      HT3JetVec= Order_the_Vec(HT3JetVec);
+      MHT3JetVec= Order_the_Vec(MHT3JetVec);      
+      /*
+      if(HT3JetCSVvec.size()!=HT3JetVec.size() || HT3JetHTMaskvec.size()!=HT3JetVec.size() || HT3JetHadronFlavorvec.size()!=HT3JetVec.size()) 
+	std::cout<<" HT3 vectors not consistent in size "<<endl;
 
-    //if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
+      if(MHT3JetCSVvec.size()!=MHT3JetVec.size() || MHT3JetHTMaskvec.size()!=MHT3JetVec.size() || MHT3JetHadronFlavorvec.size()!=MHT3JetVec.size()) 
+	std::cout<<" MHT3 vectors not consistent in size "<<endl;
+*/
+      /*
+      if(Print){
+	for(unsigned int i=0;i<MHT3JetVec.size();i++){
+	  std::cout<<"*** vector is ordered ***"<<" i "<<i<<" pt "<<MHT3JetVec[i].Pt()<<" csv "<<MHT3JetCSVvec[i]<<" HTMask "<<MHT3JetHTMaskvec[i]<<" HadronFlavor "<<MHT3JetHadronFlavorvec[i]<<" eta "<<MHT3JetVec[i].Eta()<<" MHT_Lor_pt(i) "<<MHT3JetLorentzVec[i].Pt()<<endl;
+	}
+      }
+    */  
+
+      for(unsigned int i=0;i<HT3JetVec.size();i++){
+	newHT+=HT3JetVec[i].Pt();
+      }
+      for(unsigned int i=0;i<MHT3JetVec.size();i++){
+	newMHT3Vec-=MHT3JetVec[i];
+      }
+      newMHT=newMHT3Vec.Pt();
+      newMHTPhi=newMHT3Vec.Phi();
+      
+      newNJets = HT3JetVec.size();
+      if(HT3JetVec.size()>0)
+	newDphi1=fabs(TVector2::Phi_mpi_pi(HT3JetVec[0].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>1)
+	newDphi2=fabs(TVector2::Phi_mpi_pi(HT3JetVec[1].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>2)
+	newDphi3=fabs(TVector2::Phi_mpi_pi(HT3JetVec[2].Phi() - newMHTPhi));
+      if(HT3JetVec.size()>3)
+	newDphi4=fabs(TVector2::Phi_mpi_pi(HT3JetVec[3].Phi() - newMHTPhi));
+      //      std::cout<<" jet_size "<<Jets->size()<<" HT3 "<< HT3JetVec.size()<<" Dphi1 "<<newDphi1<<" Dphi2 "<<newDphi2<<" Dphi3 "<<newDphi3<<"  Dphi4 "<<newDphi4<<endl;
+      for(unsigned int i=0;i<HT3JetVec.size();i++){
+	if(HT3JetCSVvec[i]>csvForBtag)
+	  newBTags++;
+      }
+    }    
+
+    //    if(Jets->size() !=MHT3JetVec.size())
+    //std::cout<<" jets "<<Jets->size()<<" MHT3 "<<MHT3JetVec.size()<<" btags "<<BTags<<" newBTags "<<newBTags<<endl;
+      //  if(entry % 3 != 0) return kTRUE;
+      
+    //if(HTgen_" vector is orderedcut > 0.01) if(madHT > HTgen_cut) return kTRUE;
     //*AR, 180101-minHT_=300,minMHT_=250,minNJets_=1.5,deltaPhi1_=0.5,deltaPhi2_=0.5,deltaPhi3_=0.3,deltaPhi4_=0.3
     //*AR, 180101-minMHT_=250 here as we are also deriving SFs for low MHT, 3 bins.
-    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
-    if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
-    if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-    if(applyFilters &&  !FiltersPass() ) return kTRUE;
+    if(JECSys){
+      //      if(newNJets==2 && (newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ))
+      //std::cout<<" fail "<<" old jet "<<NJets<<" old HT "<< HT<<" new HT "<<newHT<<" old MHT "<<MHT<<" new MHT "<<newMHT<<endl;
+      //if(newNJets==2 && !(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ))
+	//	std::cout<<" **pass** "<<" old jet "<<NJets<<" old HT "<< HT<<" new HT "<<newHT<<" old MHT "<<MHT<<" new MHT "<<newMHT<<" dphi1 "<<newDphi1<<" dphi2 "<<newDphi2<<" dphi3 "<<newDphi3<<" dphi4 "<<newDphi4<<endl;
+      if(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ) return kTRUE;
+      if(useDeltaPhiCut == 1) if(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_) return kTRUE;
+      if(useDeltaPhiCut == -1) if(!(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_)) return kTRUE;
+    }
+    else{
+      if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+      if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
+      if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
+    }
+
+    //if(newNJets==2)
+    //std::cout<<" there are 2 jets "<<endl;
 
     GenMuonsNum_ = GenMuons->size();
     GenElectronsNum_ = GenElectrons->size();
@@ -129,17 +281,28 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR, 180101- Only consider events which have atleast one gen electron or one gen muon.
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
-    if(useCombinedBins){ //useCombinedBins=false
+    if(JECSys){
+      if(useCombinedBins){ //useCombinedBins=false
+        Bin_ = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
+      }else{ 
+        Bin_ = SearchBins_->GetBinNumber(newHT,newMHT,newNJets,newBTags);
+	//	if(newNJets==2)
+	//std::cout<<" Bin_ "<<Bin_<<endl;
+      }    
+      if(Bin_ > 900) return kTRUE;
+    }
+    else{
+      if(useCombinedBins){ //useCombinedBins=false
         Bin_ = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
-    }else{ 
+      }else{ 
         Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
-    }    
-    if(Bin_ > 900) return kTRUE;
-
+      }    
+      if(Bin_ > 900) return kTRUE;
+    }
     // TH1 cannot properly deal with negative bin contents
     // At most 1% difference in SFs expected (rare BGs only)
     //if(Weight < 0) return kTRUE;
-
+    //* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
     if(doTopPtReweighting){ //doTopPtReweighting=false
       if(GenParticles->size() != GenParticles_PdgId->size()){
 	std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
@@ -229,37 +392,38 @@ Bool_t SFMaker::Process(Long64_t entry)
 	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/%s",skimName.c_str());
 	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 
+	//* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
         if(doISRcorr){ //doISRcorr=false
-            h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
-            if(isrcorr!=0){
+	  h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
+	  if(isrcorr!=0){
             delete isrcorr;
             isrcorr = 0;
-            }
-            isrcorr = new ISRCorrector();
-            isrcorr->SetWeights(h_isr,h_njetsisr);
+	  }
+	  isrcorr = new ISRCorrector();
+	  isrcorr->SetWeights(h_isr,h_njetsisr);
         }
-
+	
         if(doBTagCorr){
-            if(btagcorr!=0){
+	  if(btagcorr!=0){
             delete btagcorr;
             btagcorr = 0;
-            }
-	    //* AR-20180101- Creates an instance of class BTagCorrector for every new tree of the filelist     
-	    btagcorr = new BTagCorrector();
-	    //  std::cout<<"***Seg Vio***"<<std::endl;
-
-            TFile *skimFile = TFile::Open(SkimFile, "READ");
-            btagcorr->SetEffs(skimFile);
-	    //	    std::cout<<" skimFile "<<skimFile<<endl;
-            btagcorr->SetCalib(path_bTagCalib);        
-            //if(runOnSignalMC){
-            //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
-            //  btagcorr->SetFastSim(true);
-            //}
-            //else
-            btagcorr->SetFastSim(false);
+	  }
+	  //* AR-20180101- Creates an instance of class BTagCorrector for every new tree of the filelist     
+	  btagcorr = new BTagCorrector();
+	  //  std::cout<<"***Seg Vio***"<<std::endl;
+	  
+	  TFile *skimFile = TFile::Open(SkimFile, "READ");
+	  btagcorr->SetEffs(skimFile);
+	  //	    std::cout<<" skimFile "<<skimFile<<endl;
+	  btagcorr->SetCalib(path_bTagCalib);        
+	  //if(runOnSignalMC){
+	  //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
+	  //  btagcorr->SetFastSim(true);
+	  //}
+	  //else
+	  btagcorr->SetFastSim(false);
         }
-
+	
         /*if(runOnSignalMC){
           if((std::string(currentTree.Data()).find(std::string("T1"))) != std::string::npos || (std::string(currentTree.Data()).find(std::string("T5"))) != std::string::npos){
             xsecs = &xsecsT1T5;
@@ -308,25 +472,32 @@ Bool_t SFMaker::Process(Long64_t entry)
       }
     }
     //    std::cout<<" passed "<<" entry "<<entry<<" madHT "<<madHT<<endl;
-    
+    //* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.   
     if(doISRcorr){ //false
       w_isr = isrcorr->GetCorrection(NJetsISR);
-        Weight *= w_isr;
+      Weight *= w_isr;
     }
-
+    
     if(doBTagCorr){
-    	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
-        if(useCombinedBins){
-            bTagBins = {Bin_, Bin_, Bin_, Bin_};
-        }else{
-            bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};
-        }  
+      if(JECSys)
+	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec);
+      else
+	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
+      if(useCombinedBins){
+	bTagBins = {Bin_, Bin_, Bin_, Bin_};
+      }
+      else{
+	if(JECSys)
+	  bTagBins = {SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,0), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,1), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,2), newNJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,3)};
+	else
+	  bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};
+      }  
     }
     else{
-    	bTagProb = {1, 0, 0, 0};
-    	bTagBins = {Bin_, 0, 0, 0};
+      bTagProb = {1, 0, 0, 0};
+      bTagBins = {Bin_, 0, 0, 0};
     }
-
+    
     //if(runOnSignalMC){
         //  //Account for efficiency of JetID since we cannot apply it on fastSim
         // Weight *= 0.99;
@@ -360,11 +531,11 @@ Bool_t SFMaker::Process(Long64_t entry)
     for(unsigned i=0; i< Electrons->size(); i++){
       std::cout<<" i_reco "<<i<<" pt "<<Electrons->at(i).Pt()<<" eta "<<Electrons->at(i).Eta()<<endl;
     }
-*/
+    *//*
     for(unsigned i=0; i< Muons->size(); i++){
       std::cout<<" i_reco "<<i<<" pt "<<Muons->at(i).Pt()<<" eta "<<Muons->at(i).Eta()<<endl;
     }
-    
+    */
     /*
     for(unsigned i=0; i< GenElectrons->size(); i++){
       std::cout<<" i_gen "<<i<<" pt "<<GenElectrons->at(i).Pt()<<" eta "<<GenElectrons->at(i).Eta()<<endl;
@@ -523,7 +694,12 @@ Bool_t SFMaker::Process(Long64_t entry)
     }
 
     int nLoops = 1;
-    if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
+    if(doBTagCorr){
+      if(JECSys) 
+	nLoops = (newNJets == 2 ? 3 : 4);
+      else
+	nLoops = (NJets == 2 ? 3 : 4);
+    }
     for(int i = 0; i < nLoops; i++){
     	double WeightBtagProb = Weight*bTagProb.at(i);
     	unsigned bTagBin = bTagBins.at(i);
@@ -533,8 +709,15 @@ Bool_t SFMaker::Process(Long64_t entry)
 	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
 	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
-	  
-	  isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	  if(IsoSys){
+	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
+	    if(SysUp)
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    if(SysDn)
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	  }
+	  else
+	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	  recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	  if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
 	  else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
@@ -570,7 +753,14 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	  h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
-	  isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	  if(IsoSys){
+	    if(SysUp)
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	    if(SysDn)
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	  }
+	  else
+	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	  recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	  trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
 	  
@@ -601,12 +791,27 @@ Bool_t SFMaker::Process(Long64_t entry)
         if(GenMuonsAccNum_ == 2 && GenElectronsAccNum_ == 0){
             h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
 
-            isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    if(IsoSys){
+	      if(SysUp)
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      if(SysDn)
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    }
+	    else
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    
             recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
             if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
             else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 
-            isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
+	    if(IsoSys){
+	      if(SysUp)
+		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+	      if(SysDn)
+		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+	    }
+	    else
+	      isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
             recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
             if(GenMuonsAccPt2_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_);
             else trackingSF2 = GetSF(h_muTrkLowPtSF, GenMuonsAccEta2_);
@@ -651,17 +856,31 @@ Bool_t SFMaker::Process(Long64_t entry)
         }
 
         if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 2){
-            h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
-
-            isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
-
-            isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
-            recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
-            trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_); 
-
-            if(ElectronsPromptNum_ == 2){
+	  h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  
+	  if(IsoSys){
+	    if(SysUp)
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	    if(SysDn)
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	  }
+	  else
+	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+       
+	  recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	  trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+	  if(IsoSys){
+	    if(SysUp)
+	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.01);
+	    if(SysDn)
+	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.01);
+	  }
+	  else
+	    isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
+	  recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
+	  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_); 
+	  
+	  if(ElectronsPromptNum_ == 2){
                 double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * isoSF2 * recoSF2 * trackingSF2;
 
                 h_di_nTwoFoundTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -701,13 +920,27 @@ Bool_t SFMaker::Process(Long64_t entry)
 
         if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 1){
             h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(IsoSys){
+	      if(SysUp)
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      if(SysDn)
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    }
+	    else
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 
-            isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
             recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
             if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
             else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 
-            isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	    if(IsoSys){
+	      if(SysUp)
+		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	      if(SysDn)
+		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	    }
+	    else
+	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
             recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
             trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
 
@@ -1178,6 +1411,99 @@ bool SFMaker::FiltersPass()
     //if(!runOnSignalMC) if(!JetID) result=false;
     return result;
 }
+/*
+std::pair<vector<TVector3>,vector<int>> SFMaker::Order_the_Vec(vector<TVector3> vec)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<int> vecIndex;
+  for(int i=0; i<((int)vecjvec.size()-1);i++){
+    int OrgIndex=-1;
+    for(int j=i+1; j<((int)vecjvec.size()-1);j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	OrgIndex=j;
+	swap(vecjvec[i],vecjvec[j]);
+      }
+    }
+    vecIndex.push_back(OrgIndex);
+  }
+  return std::make_pair(vecjvec,vecIndex);
+}
+*/
+
+vector<TVector3>SFMaker::Order_the_Vec(vector<TVector3> vec)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<int> vecIndex;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+      }
+    }
+  }
+  return vecjvec;
+}
+
+vector<double>SFMaker::Order_the_Vec(vector<TVector3> vec,vector<double> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<double> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<bool>SFMaker::Order_the_Vec(vector<TVector3> vec,vector<bool> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<bool> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<int>SFMaker::Order_the_Vec(vector<TVector3> vec,vector<int> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<int> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
+vector<TLorentzVector>SFMaker::Order_the_Vec(vector<TVector3> vec,vector<TLorentzVector> vecTwo)
+{
+  vector<TVector3> vecjvec=vec;
+  vector<TLorentzVector> vecjTwovec=vecTwo;
+  for(unsigned int i=0; i<vecjvec.size();i++){
+    for(unsigned int j=i+1; j<vecjvec.size();j++){
+      if(vecjvec[j].Pt()>vecjvec[i].Pt()){
+	swap(vecjvec[i],vecjvec[j]);
+	swap(vecjTwovec[i],vecjTwovec[j]);
+      }
+    }
+  }
+  return vecjTwovec;
+}
+
 
 void SFMaker::resetValues()
 {
