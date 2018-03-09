@@ -39,7 +39,7 @@ const bool doISRcorr = false;
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
-const bool JECSys=true;
+const bool JECSys=false; //false by default
 const bool SysUp=false;
 const bool SysDn=true;
 

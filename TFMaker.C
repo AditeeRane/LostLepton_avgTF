@@ -329,6 +329,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             SFCR_histFile_path = "SFCR_3.root";
             SFSR_histFile_path = "SFSR_3.root";
         }
+	//*AR-180302-SF Histograms are read from respective SF files 
 	//	std::cout<<" SFCR_histFile_path "<<SFCR_histFile_path<<endl;
         SFCR_histFile = TFile::Open(SFCR_histFile_path, "READ");
         SFSR_histFile = TFile::Open(SFSR_histFile_path, "READ");
@@ -635,6 +636,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             double SF = 1;
             double binSF = Bin_;
             if(useCombinedBinsCR){
+	      //*AR-180302-JEC Sys is considered here as it leads to change in the search bins, hence to remain consistent with search bins of histograms used in evaluating SFs. 
 	      if(JECSys)
 		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
 	      else

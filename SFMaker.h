@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false;
@@ -42,10 +42,12 @@ const bool doISRcorr = false;
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
-const bool JECSys=false;
 const bool SysUp=false;
 const bool SysDn=true;
-const bool IsoSys=true;
+const bool JECSys=false;//false by default
+const bool IsoSys=false;//false by default
+const bool IDSys=false;//false by default
+const bool TrackRecoSys=true;
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 

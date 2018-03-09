@@ -714,15 +714,52 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(SysUp)
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
 	    if(SysDn)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
 	  }
 	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	  recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	  if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-	  else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
-	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
 
+	  if(IDSys){
+	    //	    std::pair<double, double> MyPair;
+	    //MyPair=EvalSF(h_muIDSF,GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    //	    std::cout<<" pt "<<GenMuonsAccPt_<<" eta "<<GenMuonsAccEta_<<" MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<endl;
+	    if(SysUp)
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    if(SysDn)
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	  }
+	  else
+	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	  
+	  if(TrackRecoSys){
+	    if(GenMuonsAccPt_ > 10){
+	      if(SysUp)
+		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+	      
+	      if(SysDn){
+		//	std::pair<double, double> MyPair;
+		//		MyPair=EvalSF(h_muTrkHighPtSF, GenMuonsAccEta_);
+		//		std::cout<<" eta "<<GenMuonsAccEta_<<"MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<" totUnc "<<GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01)<<endl;	
+		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+	      }
+	    }
+	    else{
+	      if(SysUp)
+		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+	      if(SysDn)
+		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+	    }
+	  }
+	  else{
+	    if(GenMuonsAccPt_ > 10)
+	      trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
+	    else
+	      trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
+	  }
+	  
+	  
+	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
+	  
 	  //*AR, 20180102---A set of events with identified, isolated and reconstructed electrons/muons and a set of events with isolated electron/isolated muon tracks can be considered as two different subsets of total events with no overlap. Becuase the second subset is constructed out of events which do not fall in first subset. Hence for a reconstructed ele/muon three scale factors come into picture while for reconstructed tracks only one scale factor.
 	  
 	  //*AR, 20180102---Thus when isotrack veto is applied, lost e event is one which has reco electron=0 and isolated electron track=0. When isotrack veto is not applied,lost e event is one with reco electron=0 
@@ -755,14 +792,48 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
 	  if(IsoSys){
 	    if(SysUp)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    if(SysDn)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	  }
 	  else
 	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-	  recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-	  trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+
+	  if(IDSys){
+	    //	    std::pair<double, double> MyPair;
+	    //MyPair=EvalSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	    //std::cout<<" pt "<<GenElectronsAccPt_<<" eta "<<GenElectronsAccEta_<<" ElePair_1 "<<MyPair.first<<" ElePair_2 "<<MyPair.second<<endl;
+	    
+	    if(SysUp)
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	    if(SysDn)
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	  }
+	  else
+	    recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	  //*AR-180306---According to lepton SF twiki, 1% systematics should be added on top for electrons with pt<20 or >80 GeV, as Scale factors are found to be flat with pT. Nevertheless the pT dependence is hard to verify below 20GeV and above 80 GeV.
+	  if(TrackRecoSys){
+	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
+	      if(SysUp)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	      if(SysDn)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	    }
+	    else{
+	      if(SysUp)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	      if(SysDn){
+		/*		
+		std::pair<double, double> MyPair;
+		MyPair=EvalSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_);
+		std::cout<<" eta "<<GenElectronsAccEta_<<"ElecPair_1 "<<MyPair.first<<" ElecPair_2 "<<MyPair.second<<" totUnc "<<GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0)<<endl;
+*/
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	      }
+	    }
+	  }
+	  else
+	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
 	  
 	  if(ElectronsPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
@@ -800,23 +871,78 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    
-            recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-            if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-            else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 
-	    if(IsoSys){
+	  if(IDSys){
+	    if(SysUp)
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    if(SysDn)
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	  }
+	  else
+	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+
+
+	  if(TrackRecoSys){
+	    if(GenMuonsAccPt_ > 10){
 	      if(SysUp)
+		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+	      if(SysDn)
+		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+	    }
+	    else{
+	      if(SysUp)
+		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+	      if(SysDn)
+		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+	    }
+	  }
+	  else{
+	    if(GenMuonsAccPt_ > 10)
+	      trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
+	    else
+	      trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
+	  }
+	  
+	  if(IsoSys){
+	    if(SysUp)
 		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
 	      if(SysDn)
 		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
 	    }
 	    else
 	      isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
-            recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
-            if(GenMuonsAccPt2_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_);
-            else trackingSF2 = GetSF(h_muTrkLowPtSF, GenMuonsAccEta2_);
 
-            if(MuonsPromptNum_ == 2){
+	    if(IDSys){
+	      if(SysUp)
+		recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+	      if(SysDn)
+		recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))-GetSFUnc(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+	    }
+	    else
+	      recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
+	    
+	    if(TrackRecoSys){
+	      if(GenMuonsAccPt2_ > 10){
+		if(SysUp)
+		  trackingSF2 = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta2_,0.01);
+		if(SysDn)
+		  trackingSF2 = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta2_,0.01);
+	      }
+	      else{
+		if(SysUp)
+		  trackingSF2 = GetSF(h_muTrkLowPtSF, GenMuonsAccEta2_)+GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta2_,0.01);
+		if(SysDn)
+		  trackingSF2 = GetSF(h_muTrkLowPtSF, GenMuonsAccEta2_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta2_,0.01);
+	      }
+	    }
+	    else{
+	      if(GenMuonsAccPt_ > 10)
+		trackingSF2 = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_);
+	      else
+		trackingSF2 = GetSF(h_muTrkLowPtSF, GenMuonsAccEta2_);
+	    }
+	    
+	    if(MuonsPromptNum_ == 2){
                 double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * isoSF2 * recoSF2 * trackingSF2;
 
                 h_di_nTwoFoundTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -860,25 +986,78 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  
 	  if(IsoSys){
 	    if(SysUp)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    if(SysDn)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	  }
 	  else
 	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-       
-	  recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-	  trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+
+
+	  if(IDSys){
+	    if(SysUp)
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	    if(SysDn)
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	  }
+	  else
+	    recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+
+	  if(TrackRecoSys){
+	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
+	      if(SysUp)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	      if(SysDn)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	    }
+	    else{
+	      if(SysUp)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	      if(SysDn)
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	    }
+	  }
+	  else
+	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+
+ 
 	  if(IsoSys){
 	    if(SysUp)
-	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.01);
+	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
 	    if(SysDn)
-	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.01);
+	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
 	  }
 	  else
 	    isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
-	  recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
-	  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_); 
+
+
+	  if(IDSys){
+	    if(SysUp)
+	      recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
+	    if(SysDn)
+	      recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
+	  }
+	  else
+	    recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
+
+
+	  if(TrackRecoSys){
+	    if(GenElectronsAccPt2_<20 || GenElectronsAccPt2_>80){
+	      if(SysUp)
+		trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_,0.01);
+	      if(SysDn)
+		trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_,0.01);
+	    }
+	    else{
+	      if(SysUp)
+		trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_,0.0);
+	      if(SysDn)
+		trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_,0.0);
+	    }
+	  }
+	  else
+	    trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_); 
+
 	  
 	  if(ElectronsPromptNum_ == 2){
                 double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * isoSF2 * recoSF2 * trackingSF2;
@@ -929,20 +1108,72 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 
-            recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-            if(GenMuonsAccPt_ > 10) trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-            else trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 
+	    if(IDSys){
+	      if(SysUp)
+		recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      if(SysDn)
+		recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	    }
+	    else
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    
+	    if(TrackRecoSys){
+	      if(GenMuonsAccPt_ > 10){
+		if(SysUp)
+		  trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+		if(SysDn)
+		  trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
+	      }
+	      else{
+		if(SysUp)
+		  trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+		if(SysDn)
+		  trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+	      }
+	    }
+	    else{
+	      if(GenMuonsAccPt_ > 10)
+		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
+	      else
+		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
+	    }
+	    
 	    if(IsoSys){
 	      if(SysUp)
-		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	      if(SysDn)
-		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.01);
+		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    }
 	    else
 	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-            trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+
+	    if(IDSys){
+	      if(SysUp)
+		recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	      if(SysDn)
+		recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	    }
+	    else
+	      recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
+	    
+	    if(TrackRecoSys){
+	      if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
+		if(SysUp)
+		  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+		if(SysDn)
+		  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	      }
+	      else{
+		if(SysUp)
+		  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+		if(SysDn)
+		  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	      }
+	    }
+	    else
+	      trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
+	    
 
             if(ElectronsPromptNum_ == 1 && MuonsPromptNum_ == 1){
                 double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF * isoSF2 * recoSF2 * trackingSF2;
