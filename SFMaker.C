@@ -20,9 +20,10 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
   
   SearchBins_ = new SearchBins(true);
   SearchBins_BTags_ = new SearchBins(true);
-  
+    
   bTagBins = {0, 0, 0, 0};
-  
+  //  int Scalesize=9;
+  //*AR-180315--histograms and vector of histograms are redefined for every new tree
   // Initialize Histograms
   TH1::SetDefaultSumw2();
   unsigned nSB = SearchBins_->GetNbins();
@@ -103,6 +104,42 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     std::cout<<"----------------"<<std::endl;
     std::cout<<"DeltaPhi Cut: "<<useDeltaPhiCut<<std::endl;
     std::cout<<"----------------"<<std::endl;
+
+    //    vector<TH1*> Vec_scale_el_nOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SF_SB,Vec_scale_el_nLostOnePrompt_SB,Vec_scale_el_SFCR_SB,Vec_scale_el_SFSR_SB;
+    
+    //    vector<TH1*> Vec_scale_mu_nOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SF_SB,Vec_scale_mu_nLostOnePrompt_SB,Vec_scale_mu_SFCR_SB,Vec_scale_mu_SFSR_SB;
+    
+    if(ScaleAccSys){
+      
+      char tempname[200];
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	sprintf(tempname,"h_scale_el_nOnePrompt_SB_%d",iacc);
+	Vec_scale_el_nOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_el_nFoundOnePrompt_SB_%d",iacc);
+	Vec_scale_el_nFoundOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nFoundOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_el_nFoundOnePrompt_SF_SB_%d",iacc);
+	Vec_scale_el_nFoundOnePrompt_SF_SB.push_back(static_cast<TH1*>(h_el_nFoundOnePrompt_SF_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_el_nLostOnePrompt_SB_%d",iacc);
+	Vec_scale_el_nLostOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nLostOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_el_SFCR_SB_%d",iacc);
+	Vec_scale_el_SFCR_SB.push_back(static_cast<TH1*>(h_el_SFCR_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_el_SFSR_SB_%d",iacc);
+	Vec_scale_el_SFSR_SB.push_back(static_cast<TH1*>(h_el_SFSR_SB->Clone(tempname)));
+	
+	sprintf(tempname,"h_scale_mu_nOnePrompt_SB_%d",iacc);
+	Vec_scale_mu_nOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_mu_nFoundOnePrompt_SB_%d",iacc);
+	Vec_scale_mu_nFoundOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nFoundOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_mu_nFoundOnePrompt_SF_SB_%d",iacc);
+	Vec_scale_mu_nFoundOnePrompt_SF_SB.push_back(static_cast<TH1*>(h_mu_nFoundOnePrompt_SF_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_mu_nLostOnePrompt_SB_%d",iacc);
+	Vec_scale_mu_nLostOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nLostOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_mu_SFCR_SB_%d",iacc);
+	Vec_scale_mu_SFCR_SB.push_back(static_cast<TH1*>(h_mu_SFCR_SB->Clone(tempname)));
+	sprintf(tempname,"h_scale_mu_SFSR_SB_%d",iacc);
+	Vec_scale_mu_SFSR_SB.push_back(static_cast<TH1*>(h_mu_SFSR_SB->Clone(tempname)));
+      }
+    }
 }
 
 Bool_t SFMaker::Process(Long64_t entry)
@@ -352,6 +389,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	//	std::cout<<" currFileName "<<currFileName<<endl;
 	//
+	//*AR- 180315-for every new tree find corresponding skimtree
 	string skimName="tree_TTJets_SingleLeptFromT.root";
 	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
@@ -460,6 +498,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     }   
     */
     //*AR-Nov27,2017-following if loop was introduced to ignore negative weight events. After ignoring those, SFSR for exotic and single top samples are found to be better in agreement with Simon's results
+
+    //*AR- 180315-Here onward execution happens for every new event.
     if(Weight < 0)
       return kTRUE;
     //      std::cout<<" entry "<<entry<<" negative event weight "<<endl;
@@ -709,6 +749,12 @@ Bool_t SFMaker::Process(Long64_t entry)
 	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
 	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  if(ScaleAccSys){
+	    for(int iacc=0; iacc < Scalesize; iacc++){
+	      //	      std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" scaleweight "<<ScaleWeights->at(iacc)<<endl;
+	      Vec_scale_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	    }
+	  }
 	  if(IsoSys){
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
@@ -768,19 +814,51 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }
+	    
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+
 	  }else if(includeIsotrkVeto && MuonsPromptNum_ == 0 && MuonTracksPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * trackingSF;
 	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }
+
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+
 	  }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
 	    //*AR, 20180102- if IsotrkVeto is applied, following histograms filled only when there is no reco muon. If IsotrkVeto is not applied, following histograms filled when there is no muon and no isolated track
 	    h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }
+
 	  }else{
 	    std::cout<<"SingleMu: "<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
 	  }
@@ -789,6 +867,12 @@ Bool_t SFMaker::Process(Long64_t entry)
     	if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 1){
 	  h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	  h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  if(ScaleAccSys){
+	    for(int iacc=0; iacc < Scalesize; iacc++){
+	      Vec_scale_el_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	    }
+	  }
+
 	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
 	  if(IsoSys){
 	    if(SysUp)
@@ -840,20 +924,47 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    
 	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }
+	    
 	    //std::cout<<" h_el_nFoundOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
 	    
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+	    
 	  }else if(includeIsotrkVeto && ElectronsPromptNum_ == 0 && ElectronTracksPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * trackingSF;
 	    
 	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }	    
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }    
 	  }else if(ElectronsPromptNum_ == 0 && (!includeIsotrkVeto || ElectronTracksPromptNum_ == 0)){
 	    h_el_nLostOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_scale_el_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }	    
 	  }else{
 	    std::cout<<"SingleElec: "<<ElectronsPromptNum_<<"+"<<ElectronTracksPromptNum_<<std::endl;
 	  }	
@@ -1295,34 +1406,99 @@ void SFMaker::Terminate()
 	h_el_nOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
+      if(ScaleAccSys){
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_el_nOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_el_nOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_el_nOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
       if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_el_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_el_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
 	h_el_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_el_nFoundOnePrompt_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
       }
       if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_el_nLostOnePrompt_SB->SetBinContent(nX, 0);
             std::cout<<"h_el_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_el_nLostOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_el_nLostOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_el_nLostOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
       if(h_mu_nOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-        }
+      }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_mu_nOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_mu_nOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_mu_nOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
       if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_mu_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
       }
       if(h_mu_nFoundOnePrompt_SF_SB->GetBinContent(nX) < 0){
 	h_mu_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_mu_nFoundOnePrompt_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
       if(h_mu_nLostOnePrompt_SB->GetBinContent(nX) < 0){
-            h_mu_nLostOnePrompt_SB->SetBinContent(nX, 0);
-            std::cout<<"h_mu_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
-      }        
+	h_mu_nLostOnePrompt_SB->SetBinContent(nX, 0);
+	std::cout<<"h_mu_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
+      }
+      if(ScaleAccSys){ 
+	for(int iacc=0; iacc < Scalesize; iacc++){
+	  if(Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_scale_mu_nLostOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
       if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
 	h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_di_nTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1374,7 +1550,14 @@ void SFMaker::Terminate()
     h_el_SFSR_SB->Add(h_el_nOnePrompt_SB);
     h_el_SFSR_SB->Add(h_el_nFoundOnePrompt_SF_SB, -1);
     h_el_SFSR_SB->Divide(h_el_nLostOnePrompt_SB);
-
+    if(ScaleAccSys){ 
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	Vec_scale_el_SFSR_SB.at(iacc)->Reset();
+	Vec_scale_el_SFSR_SB.at(iacc)->Add(Vec_scale_el_nOnePrompt_SB.at(iacc));
+	Vec_scale_el_SFSR_SB.at(iacc)->Add(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc), -1);
+	Vec_scale_el_SFSR_SB.at(iacc)->Divide(Vec_scale_el_nLostOnePrompt_SB.at(iacc));
+      }
+    }
     h_mu_SFSR_etaPt->Reset();
     h_mu_SFSR_etaPt->Add(h_mu_nOnePrompt_etaPt);
     h_mu_SFSR_etaPt->Add(h_mu_nFoundOnePrompt_SF_etaPt, -1);
@@ -1385,14 +1568,29 @@ void SFMaker::Terminate()
     h_mu_SFSR_SB->Add(h_mu_nFoundOnePrompt_SF_SB, -1);
     h_mu_SFSR_SB->Divide(h_mu_nLostOnePrompt_SB);
 
-
+    if(ScaleAccSys){ 
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	Vec_scale_mu_SFSR_SB.at(iacc)->Reset();
+	Vec_scale_mu_SFSR_SB.at(iacc)->Add(Vec_scale_mu_nOnePrompt_SB.at(iacc));
+	Vec_scale_mu_SFSR_SB.at(iacc)->Add(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc), -1);
+	Vec_scale_mu_SFSR_SB.at(iacc)->Divide(Vec_scale_mu_nLostOnePrompt_SB.at(iacc));
+      }
+    }
     // SF for CRs
     h_mu_SFCR_etaPt->Divide(h_mu_nFoundOnePrompt_SF_etaPt, h_mu_nFoundOnePrompt_etaPt);
 	h_mu_SFCR_SB->Divide(h_mu_nFoundOnePrompt_SF_SB, h_mu_nFoundOnePrompt_SB);
-
+	if(ScaleAccSys){ 
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    Vec_scale_mu_SFCR_SB.at(iacc)->Divide(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_mu_nFoundOnePrompt_SB.at(iacc));
+	  }
+	}
 	h_el_SFCR_etaPt->Divide(h_el_nFoundOnePrompt_SF_etaPt, h_el_nFoundOnePrompt_etaPt);
 	h_el_SFCR_SB->Divide(h_el_nFoundOnePrompt_SF_SB, h_el_nFoundOnePrompt_SB);
-
+	if(ScaleAccSys){ 
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    Vec_scale_el_SFCR_SB.at(iacc)->Divide(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_el_nFoundOnePrompt_SB.at(iacc));
+	  }
+	}
 
     // Save histograms
 	h_el_nOnePrompt_etaPt->Write();
@@ -1403,6 +1601,14 @@ void SFMaker::Terminate()
 	h_el_nFoundOnePrompt_SF_SB->Write();
 	h_el_nLostOnePrompt_etaPt->Write();
 	h_el_nLostOnePrompt_SB->Write();
+	if(ScaleAccSys){ 
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    Vec_scale_el_nOnePrompt_SB.at(iacc)->Write();
+	    Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->Write();
+	    Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Write();
+	    Vec_scale_el_nLostOnePrompt_SB.at(iacc)->Write();
+	  }
+	}
 	/*
     SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_el_nOnePrompt_SB, outPutFile);
@@ -1419,7 +1625,7 @@ void SFMaker::Terminate()
     h_el_nLostOnePrompt_SB->Divide(h_el_nOnePrompt_SB);
     SaveEff(h_el_nLostOnePrompt_SB, outPutFile);
 */
-    for(int nX = 1; nX <= h_el_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
+	for(int nX = 1; nX <= h_el_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
         h_el_SFCR_SB->SetBinError(nX, 0);
         h_el_SFSR_SB->SetBinError(nX, 0);
 
@@ -1429,14 +1635,30 @@ void SFMaker::Terminate()
         // Fix for sample with negative weights
         if(h_el_SFCR_SB->GetBinContent(nX) > 1) h_el_SFCR_SB->SetBinContent(nX, 1);
         if(h_el_SFSR_SB->GetBinContent(nX) < 1) h_el_SFSR_SB->SetBinContent(nX, 1);
-    }
-
-    SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
-    SaveEff(h_el_SFCR_SB, outPutFile);
+	if(ScaleAccSys){ 
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    Vec_scale_el_SFCR_SB.at(iacc)->SetBinError(nX, 0);
+	    Vec_scale_el_SFSR_SB.at(iacc)->SetBinError(nX, 0);
+	    if(Vec_scale_el_SFCR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_scale_el_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_scale_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_scale_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);  
+	    if(Vec_scale_el_SFCR_SB.at(iacc)->GetBinContent(nX) > 1) Vec_scale_el_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_scale_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_scale_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
+	  }
+	}
+	}
+	SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
+	SaveEff(h_el_SFCR_SB, outPutFile);
 
     SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
     SaveEff(h_el_SFSR_SB, outPutFile);
-
+      
+    if(ScaleAccSys){ 
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	SaveEff(Vec_scale_el_SFCR_SB.at(iacc),outPutFile);
+	SaveEff(Vec_scale_el_SFSR_SB.at(iacc),outPutFile);
+      }
+    }
+    
     h_mu_nOnePrompt_etaPt->Write();
     h_mu_nOnePrompt_SB->Write();
     h_mu_nFoundOnePrompt_etaPt->Write();
@@ -1445,6 +1667,14 @@ void SFMaker::Terminate()
     h_mu_nFoundOnePrompt_SF_SB->Write();
     h_mu_nLostOnePrompt_etaPt->Write();
     h_mu_nLostOnePrompt_SB->Write();
+    if(ScaleAccSys){ 
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	Vec_scale_mu_nOnePrompt_SB.at(iacc)->Write();
+	Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->Write();
+	Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Write();
+	Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->Write();
+      }
+    }
     /*  
     SaveEff(h_mu_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_mu_nOnePrompt_SB, outPutFile);
@@ -1471,15 +1701,30 @@ void SFMaker::Terminate()
         // Fix for sample with negative weights
         if(h_mu_SFCR_SB->GetBinContent(nX) > 1) h_mu_SFCR_SB->SetBinContent(nX, 1);
         if(h_mu_SFSR_SB->GetBinContent(nX) < 1) h_mu_SFSR_SB->SetBinContent(nX, 1);
+	if(ScaleAccSys){ 
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    Vec_scale_mu_SFCR_SB.at(iacc)->SetBinError(nX, 0);
+	    Vec_scale_mu_SFSR_SB.at(iacc)->SetBinError(nX, 0);
+	    if(Vec_scale_mu_SFCR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_scale_mu_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_scale_mu_SFSR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_scale_mu_SFSR_SB.at(iacc)->SetBinContent(nX, 1);  
+	    if(Vec_scale_mu_SFCR_SB.at(iacc)->GetBinContent(nX) > 1) Vec_scale_mu_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_scale_mu_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_scale_mu_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
+	  }
+	}
     }
-
     SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFCR_SB, outPutFile);
-
+    
     SaveEff(h_mu_SFSR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFSR_SB, outPutFile);
-
-
+    
+    if(ScaleAccSys){ 
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	SaveEff(Vec_scale_mu_SFCR_SB.at(iacc),outPutFile);
+	SaveEff(Vec_scale_mu_SFSR_SB.at(iacc),outPutFile);
+      }
+    }
+    
     ///////////////
     /// Dileptonic
     ////////////

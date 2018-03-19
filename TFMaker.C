@@ -12,7 +12,7 @@ void TFMaker::Begin(TTree * /*tree*/)
 }
 
 void TFMaker::SlaveBegin(TTree * /*tree*/)
-{
+{ //*AR-180314: This loop runs for every new tree
   // The SlaveBegin() function is called after the Begin() function.
   // When running with PROOF SlaveBegin() is called on each slave server.
   // The tree argument is deprecated (on PROOF 0 is passed).
@@ -55,12 +55,32 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
   std::cout<<"----------------"<<std::endl;
   std::cout<<"DeltaPhi Cut: "<<useDeltaPhiCut<<std::endl;
   std::cout<<"----------------"<<std::endl;
+  
+  if(ScaleAccSys){
+    char tempname[200];
+    for(int iacc=0; iacc < Scalesize; iacc++){
+      sprintf(tempname,"h_scale_CR_SB_%d",iacc);
+      Vec_scale_CR_SB_copy.push_back(static_cast<TH1*>(h_CR_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_scale_SR_SB_%d",iacc);
+      Vec_scale_SR_SB_copy.push_back(static_cast<TH1*>(h_SR_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_scale_0L1L_SB_%d",iacc);
+      Vec_scale_0L1L_SB.push_back(static_cast<TH1*>(h_0L1L_SB->Clone(tempname)));
+    
+      sprintf(tempname,"h_scale_CR_SF_SB_%d",iacc);
+      Vec_scale_CR_SF_SB_copy.push_back(static_cast<TH1*>(h_CR_SF_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_scale_SR_SF_SB_%d",iacc);
+      Vec_scale_SR_SF_SB_copy.push_back(static_cast<TH1*>(h_SR_SF_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_scale_0L1L_SF_SB_%d",iacc);
+      Vec_scale_0L1L_SF_SB.push_back(static_cast<TH1*>(h_0L1L_SF_SB->Clone(tempname)));
+    }
+    std::cout<<" first ScaleAcc**** "<<endl;
+  }
 }
 
 Bool_t TFMaker::Process(Long64_t entry)
 {
-
-  //  std::cout<<"***TFMaker::Process***"<<" entry "<<entry<<std::endl;
+  //*AR-180314: This loop runs for every new event
+  //std::cout<<"***TFMaker::Process***"<<" entry "<<entry<<std::endl;
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
@@ -94,6 +114,7 @@ Bool_t TFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTags = 0;
+    vector<double> Vec_SF;
 
   //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
     if(JECSys){ 
@@ -136,7 +157,7 @@ Bool_t TFMaker::Process(Long64_t entry)
       HT3JetHTMaskvec= Order_the_Vec(HT3JetVec,HT3JetHTMaskvec);   
       MHT3JetHTMaskvec= Order_the_Vec(MHT3JetVec,MHT3JetHTMaskvec);    
       HT3JetHadronFlavorvec= Order_the_Vec(HT3JetVec,HT3JetHadronFlavorvec);   
-      MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);         MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
+      MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);          MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
       HT3JetVec= Order_the_Vec(HT3JetVec);
       MHT3JetVec= Order_the_Vec(MHT3JetVec);      
       /*
@@ -198,7 +219,7 @@ Bool_t TFMaker::Process(Long64_t entry)
     if(JECSys)
       Bin_ = SearchBins_->GetBinNumber(newHT,newMHT,newNJets,newBTags);
     else
-      Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
+      Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags); //BTags are real btags read from ntuple 
 
     if(Bin_ > 900) return kTRUE;
 
@@ -241,7 +262,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 
     double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
-
+    //*AR-180314-Name of skimfile won't change from event to event, so this loop has to be run only for every new tree
     if(currentTree != treeName){
         treeName = currentTree;
 
@@ -288,11 +309,12 @@ Bool_t TFMaker::Process(Long64_t entry)
 
 	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
         // Make sure you don't have negative number of events per sample
+	//*AR-180314-Histograms h_CR_SB,h_SR_SB,h_CR_SF_SB,h_SR_SF_SB are written newly for every tree
         PushHist(h_CR_SB_copy, h_CR_SB);
         PushHist(h_SR_SB_copy, h_SR_SB);
         PushHist(h_CR_SF_SB_copy, h_CR_SF_SB);
         PushHist(h_SR_SF_SB_copy, h_SR_SF_SB);
-
+	//*AR-180314-individual SF histograms and vector of SF histograms to be used need to be reset for every new tree( and not for event).
         // Open histograms for SFs
         if(SFCR_histFile!=0 || SFSR_histFile!=0){
             h_el_SFCR_etaPt = 0;
@@ -308,14 +330,29 @@ Bool_t TFMaker::Process(Long64_t entry)
             h_di_SFCR_SB = 0;
             h_di_SFSR_SB = 0;
 
+	    //*AR-As we are using push_back for every new tree, we need to clear existing vector of SFs before pushing SF histograms corresponding to new tree. 
+	    Vec_scale_el_SFSR_SB.clear();
+	    Vec_scale_el_SFCR_SB.clear();
+	    Vec_scale_mu_SFSR_SB.clear();
+	    Vec_scale_mu_SFCR_SB.clear();
+	    /*
+	    for(int iacc=0; iacc < Vec_scale_el_SFCR_SB.size(); iacc++){
+	      Vec_scale_el_SFSR_SB.at(iacc)->Reset(); 
+	      Vec_scale_el_SFCR_SB.at(iacc)->Reset();
+	      Vec_scale_mu_SFSR_SB.at(iacc)->Reset(); 
+	      Vec_scale_mu_SFCR_SB.at(iacc)->Reset();
+	    }
+*/
             SFCR_histFile->Close();
             SFCR_histFile = 0;
             SFSR_histFile->Close();
             SFSR_histFile = 0;
+	    
         }
 
         TString SFCR_histFile_path = "";
         TString SFSR_histFile_path = "";
+	//*AR-180314-Selects appropriate SF file based on tree name. 
         if((std::string(currFileName.Data()).find(std::string("TTJets"))) != std::string::npos){
             SFCR_histFile_path = "SFCR_0.root";
             SFSR_histFile_path = "SFSR_0.root";
@@ -333,27 +370,52 @@ Bool_t TFMaker::Process(Long64_t entry)
 	//	std::cout<<" SFCR_histFile_path "<<SFCR_histFile_path<<endl;
         SFCR_histFile = TFile::Open(SFCR_histFile_path, "READ");
         SFSR_histFile = TFile::Open(SFSR_histFile_path, "READ");
-        h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
-        h_el_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB")->Clone();
-        h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
-        h_mu_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB")->Clone();
-        h_di_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_di_SFCR_SB")->Clone();
+	//* AR 180314--For scale systematics we have vector of SF histograms to be read while for nominal case only one histogram of every type 
+	if(ScaleAccSys){
+	  char tempname[200];
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    sprintf(tempname,"h_scale_el_SFCR_SB_%d",iacc);
+	    h_el_SFCR_SB = (TH1D*)SFCR_histFile->FindObjectAny(tempname);
+	    Vec_scale_el_SFCR_SB.push_back(h_el_SFCR_SB);
 
-        h_el_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_el_SFSR_etaPt")->Clone();
-        h_el_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB")->Clone();        
-        h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
-        h_mu_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB")->Clone();
-        h_di_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_di_SFSR_SB")->Clone();
+	    sprintf(tempname,"h_scale_el_SFSR_SB_%d",iacc);
+	    h_el_SFSR_SB = (TH1D*)SFSR_histFile->FindObjectAny(tempname);
+	    Vec_scale_el_SFSR_SB.push_back(h_el_SFSR_SB);
 
-        if(h_di_SFCR_SB->GetNbinsX() < 100){
+	    sprintf(tempname,"h_scale_mu_SFCR_SB_%d",iacc);
+	    h_mu_SFCR_SB = (TH1D*)SFCR_histFile->FindObjectAny(tempname);
+	    Vec_scale_mu_SFCR_SB.push_back(h_mu_SFCR_SB);
+
+	    sprintf(tempname,"h_scale_mu_SFSR_SB_%d",iacc);
+	    h_mu_SFSR_SB = (TH1D*)SFSR_histFile->FindObjectAny(tempname);
+	    Vec_scale_mu_SFSR_SB.push_back(h_mu_SFSR_SB);
+	  }
+	  std::cout<<" second ScaleAcc**** "<<endl; 
+	  std::cout<<" size "<<Vec_scale_mu_SFSR_SB.size()<<endl;
+	}
+	else{
+	  h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
+	  h_el_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB")->Clone();
+	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
+	  h_mu_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB")->Clone();
+	  h_di_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_di_SFCR_SB")->Clone();
+	  
+	  h_el_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_el_SFSR_etaPt")->Clone();
+	  h_el_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB")->Clone();        
+	  h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
+	  h_mu_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB")->Clone();
+	  h_di_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_di_SFSR_SB")->Clone();
+	  
+	  if(h_di_SFCR_SB->GetNbinsX() < 100){
             useCombinedBinsCR = true;
             std::cout<<"Using combined bins in CR"<<std::endl;
-        }
-        if(h_di_SFSR_SB->GetNbinsX() < 100){
+	  }
+	  if(h_di_SFSR_SB->GetNbinsX() < 100){
             useCombinedBinsSR = true;
             std::cout<<"Using combined bins in SR"<<std::endl;
-        }
-
+	  }
+	}
+	
 	//* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
         if(doISRcorr){
             h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
@@ -374,7 +436,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 
             TFile *skimFile = TFile::Open(SkimFile, "READ");
             btagcorr->SetEffs(skimFile);
-
+	    
             btagcorr->SetCalib(path_bTagCalib);        
             //if(runOnSignalMC){
             //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
@@ -419,6 +481,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         if(Weight < 0) Weight *= -1;
     }   
     */
+    //*AR-180314--Here onward execution happens for every event
     if(Weight < 0)
       return kTRUE;
 
@@ -440,7 +503,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec);
       else
 	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
-
+      
 	if(JECSys)
 	  bTagBins = {SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,0), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,1), SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,2), newNJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newHT,newMHT,newNJets,3)};
 	else
@@ -533,7 +596,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         std::cout << "WARNING! Number of isoPionTracks is not correct! Skipping event." << std::endl;
         return kTRUE;
     }
-
+    
     // Match iso leptons/tracks to gen leptons
     // Apply SFs only to prompts
     for(unsigned i=0; i< GenElectronsAccNum_; i++){
@@ -624,61 +687,122 @@ Bool_t TFMaker::Process(Long64_t entry)
     //*AR, 180101- Steps up to here are similar to those in SFMaker.C
 
     Weight *= scaleFactorWeight;
-
+    
     int nLoops = 1;
     if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
     for(int i = 0; i < nLoops; i++){
     	double WeightBtagProb = Weight*bTagProb.at(i);
     	unsigned bTagBin = bTagBins.at(i);
-
+	
     	// CONTROL REGION
         if(ElectronsNum_ + MuonsNum_ == 1){
             double SF = 1;
-            double binSF = Bin_;
-            if(useCombinedBinsCR){
+            double binSF = Bin_; //based on (HT,MHT,Njet,Nbtag_true)
+	    if(useCombinedBinsCR){
 	      //*AR-180302-JEC Sys is considered here as it leads to change in the search bins, hence to remain consistent with search bins of histograms used in evaluating SFs. 
 	      if(JECSys)
 		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
 	      else
 		binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
 	    }
+	    
             if(ElectronsNum_ == 1){
                 mtw = Electrons_MTW->at(0);
 		//*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
                 if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
-                    SF = GetSF(h_el_SFCR_SB, binSF); 
-                }
+		  if(ScaleAccSys){ 
+		    Vec_SF.clear();
+		    for(int iacc=0; iacc < Scalesize; iacc++){		  
+		      Vec_SF.push_back(GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF));
+		      //		      std::cout<<" btags "<<BTags<<" binSF "<<binSF<<" binSF_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF)<<" bTagBin "<<bTagBin<<" bTagBin_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), bTagBin)<<endl;
+		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_1 "<< Vec_SF.size()<<endl;
+		    }
+		  }
+		  else
+		    SF = GetSF(h_el_SFCR_SB,binSF);
+		} //end of if GenElectronsAccNum_ == 1
 		//else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
 		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
                 //}
 		else{
+		  if(ScaleAccSys){ 
+		    Vec_SF.clear();
+		    for(int iacc=0; iacc < Scalesize; iacc++){
+		      Vec_SF.push_back(1);
+		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
+		    }
+		    std::cout<<" forth ScaleAcc**** "<<endl; 
+		  }
+		  else
                     SF = 1;
                 }
 
                 // Don't correct for non-prompts
-                if(ElectronsPromptNum_==0) SF = 1;
+                if(ElectronsPromptNum_==0){
+		  if(ScaleAccSys){ 
+		    Vec_SF.clear();
+		    for(int iacc=0; iacc < Scalesize; iacc++){
+		      Vec_SF.push_back(1);
+		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_3 "<< Vec_SF.size()<<endl;
+		    }
+		  }
+		  else
+		    SF = 1;
+		}
             }
             if(MuonsNum_ == 1){
                 mtw = Muons_MTW->at(0);
                 if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
-                    SF = GetSF(h_mu_SFCR_SB, binSF); 
+                  if(ScaleAccSys){ 
+		    Vec_SF.clear();
+		    for(int iacc=0; iacc < Scalesize; iacc++){
+		      Vec_SF.push_back(GetSF(Vec_scale_mu_SFCR_SB.at(iacc), binSF)); 
+		    }
+		  }
+		  else
+		    SF = GetSF(h_mu_SFCR_SB, binSF); 
                 }
 		//else if((GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 2) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
 		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
                 //}
 		else{
-                    SF = 1;
+		  if(ScaleAccSys){
+		    Vec_SF.clear(); 
+		    for(int iacc=0; iacc < Scalesize; iacc++){
+		      Vec_SF.push_back(1);
+		    }
+		  }
+		  else
+		    SF = 1;
                 }
 
                 // Don't correct for non-prompts
-                if(MuonsPromptNum_==0) SF = 1;
+                if(MuonsPromptNum_==0){
+		  if(ScaleAccSys){
+		    Vec_SF.clear(); 
+		    for(int iacc=0; iacc < Scalesize; iacc++){
+		      Vec_SF.push_back(1);
+		    }
+		  }
+		  else
+		    SF = 1;
+		}
             }
 
 	    //*AR-180101-skips event if mT>100
             if(mtw > 100) return kTRUE;
         
-            h_CR_SB_copy->Fill(bTagBin, WeightBtagProb);
-            h_CR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){ 
+		Vec_scale_CR_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+
+		Vec_scale_CR_SF_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
+	      }
+	    }
+	    else{
+	      h_CR_SB_copy->Fill(bTagBin, WeightBtagProb);
+	      h_CR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
+	    }
         }
 
         // SIGNAL REGION
@@ -693,24 +817,61 @@ Bool_t TFMaker::Process(Long64_t entry)
 	      else
 		binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
 	    }
-            if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
-                SF = GetSF(h_el_SFSR_SB, binSF); 
-            }else if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
-                SF = GetSF(h_mu_SFSR_SB, binSF); 
-            }
+	    if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
+	      if(ScaleAccSys){
+		Vec_SF.clear(); 
+		for(int iacc=0; iacc < Scalesize; iacc++){
+		  Vec_SF.push_back(GetSF(Vec_scale_el_SFSR_SB.at(iacc), binSF)); 
+		}
+	      }
+	      else
+		SF = GetSF(h_el_SFSR_SB,binSF);
+	    }
+
+	    else if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
+	      if(ScaleAccSys){ 
+		Vec_SF.clear();
+		for(int iacc=0; iacc < Scalesize; iacc++){
+		  //		  std::cout<<" ele "<<GenElectronsAccNum_<<" mu "<<GenMuonsAccNum_<<" third ScaleAcc**** "<<endl;
+		  //		  SF=GetSF(Vec_scale_mu_SFSR_SB.at(iacc), binSF); 
+		  Vec_SF.push_back(GetSF(Vec_scale_mu_SFSR_SB.at(iacc), binSF));
+		  //		  std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" scale "<<GetSF(Vec_scale_mu_SFSR_SB.at(iacc),binSF)<<endl;
+
+		  //		  Vec_SF.push_back(GetSF(Vec_scale_mu_SFSR_SB.at(iacc), binSF)); 
+		}
+		
+	      }
+	      else
+		SF = GetSF(h_mu_SFSR_SB, binSF); 
+	    }
 	    //else if(GenElectronsAccNum_ + GenMuonsAccNum_ == 2){
 	    //  SF = GetSF(h_di_SFSR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF); 
             //}
 	    else{
-                SF = 1;
-            }
+	      if(ScaleAccSys){ 
+		Vec_SF.clear();
+		for(int iacc=0; iacc < Scalesize; iacc++){
+		  Vec_SF.push_back(1);
+		}
+	      }
+	      else
+		SF = 1;
+	    }
 
-            h_SR_SB_copy->Fill(bTagBin, WeightBtagProb);
-            h_SR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
-        }
+	    if(ScaleAccSys){
+	      for(int iacc=0; iacc < Scalesize; iacc++){ 
+		Vec_scale_SR_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+		Vec_scale_SR_SF_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
+	      }
+	    }
+	    else{
+	      h_SR_SB_copy->Fill(bTagBin, WeightBtagProb);
+	      h_SR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
+	    }
+	}
         
     }
-
+    
     return kTRUE;
 }
 
@@ -765,23 +926,50 @@ void TFMaker::Terminate()
     PushHist(h_SR_SF_SB_copy, h_SR_SF_SB);
 
 
-    h_0L1L_SB->Reset();
-    h_0L1L_SB->Divide(h_SR_SB, h_CR_SB);
-
-    h_0L1L_SF_SB->Reset();
-    h_0L1L_SF_SB->Divide(h_SR_SF_SB, h_CR_SF_SB);
+    if(ScaleAccSys){
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	Vec_scale_0L1L_SB.at(iacc)->Reset();
+	Vec_scale_0L1L_SF_SB.at(iacc)->Reset();
+	Vec_scale_0L1L_SB.at(iacc)->Divide(Vec_scale_SR_SB_copy.at(iacc),Vec_scale_CR_SB_copy.at(iacc));
+	Vec_scale_0L1L_SF_SB.at(iacc)->Divide(Vec_scale_SR_SF_SB_copy.at(iacc),Vec_scale_CR_SF_SB_copy.at(iacc));
+      }
+    }
+    else{
+      h_0L1L_SF_SB->Reset();
+      h_0L1L_SF_SB->Divide(h_SR_SF_SB, h_CR_SF_SB);
+    }
 
     for(int nX = 1; nX <= h_0L1L_SB->GetXaxis()->GetNbins(); ++nX){
-        if(h_0L1L_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SB (Bin "<<nX<<") negative value"<<std::endl;
-        if(h_0L1L_SF_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+	if(ScaleAccSys){
+	  for(int iacc=0; iacc < Scalesize; iacc++){
+	    if(Vec_scale_0L1L_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_scale_0L1L_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	    if(Vec_scale_0L1L_SF_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_scale_0L1L_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+	else{
+	  if(h_0L1L_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SB (Bin "<<nX<<") negative value"<<std::endl;
+	  if(h_0L1L_SF_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+	}
     }
-    h_CR_SB->Write();
-    h_CR_SF_SB->Write();
-    h_SR_SB->Write();
-    h_SR_SF_SB->Write();
-    h_0L1L_SB->Write();
-    h_0L1L_SF_SB->Write();
-
+    
+    if(ScaleAccSys){
+      for(int iacc=0; iacc < Scalesize; iacc++){
+	Vec_scale_CR_SB_copy.at(iacc)->Write();
+	Vec_scale_SR_SB_copy.at(iacc)->Write();
+	Vec_scale_CR_SF_SB_copy.at(iacc)->Write();
+	Vec_scale_SR_SF_SB_copy.at(iacc)->Write();
+	Vec_scale_0L1L_SB.at(iacc)->Write();
+	Vec_scale_0L1L_SF_SB.at(iacc)->Write();
+      }
+    }
+    else{
+      h_CR_SB->Write();
+      h_CR_SF_SB->Write();
+      h_SR_SB->Write();
+      h_SR_SF_SB->Write();
+      h_0L1L_SB->Write();
+      h_0L1L_SF_SB->Write();
+    }
     /*
     SaveEff(h_CR_SB, outPutFile);
     SaveEff(h_CR_SF_SB, outPutFile);

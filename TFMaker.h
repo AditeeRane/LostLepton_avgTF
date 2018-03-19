@@ -40,9 +40,9 @@ const bool doTopPtReweighting = false;
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
 const bool JECSys=false; //false by default
+const bool ScaleAccSys=true;
 const bool SysUp=false;
 const bool SysDn=true;
-
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
 // Path to Skims for btag reweighting
@@ -74,6 +74,8 @@ const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
 const double csvForBtag=0.8484;
+int Scalesize=9;
+//vector<double> *Vec_SF;
 
 
 class TFMaker : public TSelector {
@@ -90,6 +92,8 @@ class TFMaker : public TSelector {
   std::vector<int>Order_the_Vec(std::vector<TVector3> vec,std::vector<int> vecTwo);
   std::vector<bool>Order_the_Vec(std::vector<TVector3> vec,std::vector<bool> vecTwo);
   std::vector<TLorentzVector>Order_the_Vec(std::vector<TVector3> vec,std::vector<TLorentzVector> vecTwo);
+
+vector<TH1*> Vec_scale_el_SFCR_SB,Vec_scale_el_SFSR_SB,Vec_scale_mu_SFCR_SB,Vec_scale_mu_SFSR_SB,Vec_scale_CR_SB_copy,Vec_scale_CR_SF_SB_copy,Vec_scale_SR_SB_copy,Vec_scale_SR_SF_SB_copy,Vec_scale_0L1L_SB,Vec_scale_0L1L_SF_SB;
 
   // Histograms
   TFile *SFCR_histFile = 0;
@@ -247,6 +251,8 @@ class TFMaker : public TSelector {
   std::vector<string>  *TriggerNames=0;
   std::vector<int>    *TriggerPass=0;
   std::vector<int>     *TriggerPrescales=0;
+  std::vector<double> *ScaleWeights=0;
+
   Double_t        Weight;
   Double_t        puWeight;
   Double_t        madHT;
@@ -331,6 +337,7 @@ class TFMaker : public TSelector {
   TBranch        *b_TriggerNames=0;   //!
   TBranch        *b_TriggerPass=0;   //!
   TBranch        *b_TriggerPrescales=0;   //!
+  TBranch        *b_ScaleWeights=0;
   TBranch        *b_Weight=0;   //!
   TBranch        *b_puWeight=0;   //!
   TBranch        *b_madHT=0;
@@ -520,10 +527,12 @@ void TFMaker::Init(TTree *tree)
   
 
   //if(!runOnData){
+
     fChain->SetBranchStatus("Weight", 1);
     fChain->SetBranchStatus("Jets_hadronFlavor", 1);
     fChain->SetBranchStatus("madHT", 1);
     fChain->SetBranchStatus("TrueNumInteractions", 1);
+    fChain->SetBranchStatus("ScaleWeights",1);
   //} 
   //if(runOnSignalMC){
   //  fChain->SetBranchStatus("SusyLSPMass", 1);
@@ -614,6 +623,7 @@ void TFMaker::Init(TTree *tree)
   }  
   //if(!runOnData){
     fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
+    fChain->SetBranchAddress("ScaleWeights", &ScaleWeights, &b_ScaleWeights);
     fChain->SetBranchAddress("Jets_hadronFlavor", &Jets_hadronFlavor, &b_Jets_hadronFlavor);
     fChain->SetBranchAddress("madHT", &madHT, &b_madHT);
     fChain->SetBranchAddress("TrueNumInteractions", &TrueNumInteractions, &b_TrueNumInteractions);
