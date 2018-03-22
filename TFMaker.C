@@ -75,6 +75,26 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
     }
     std::cout<<" first ScaleAcc**** "<<endl;
   }
+
+  if(PDFAccSys){
+    char tempname[200];
+    for(int iacc=0; iacc < PDFsize; iacc++){
+      sprintf(tempname,"h_PDF_CR_SB_%d",iacc);
+      Vec_PDF_CR_SB_copy.push_back(static_cast<TH1*>(h_CR_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_PDF_SR_SB_%d",iacc);
+      Vec_PDF_SR_SB_copy.push_back(static_cast<TH1*>(h_SR_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_PDF_0L1L_SB_%d",iacc);
+      Vec_PDF_0L1L_SB.push_back(static_cast<TH1*>(h_0L1L_SB->Clone(tempname)));
+    
+      sprintf(tempname,"h_PDF_CR_SF_SB_%d",iacc);
+      Vec_PDF_CR_SF_SB_copy.push_back(static_cast<TH1*>(h_CR_SF_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_PDF_SR_SF_SB_%d",iacc);
+      Vec_PDF_SR_SF_SB_copy.push_back(static_cast<TH1*>(h_SR_SF_SB_copy->Clone(tempname)));
+      sprintf(tempname,"h_PDF_0L1L_SF_SB_%d",iacc);
+      Vec_PDF_0L1L_SF_SB.push_back(static_cast<TH1*>(h_0L1L_SF_SB->Clone(tempname)));
+    }
+    std::cout<<" first PDFAcc**** "<<endl;
+  }
 }
 
 Bool_t TFMaker::Process(Long64_t entry)
@@ -310,6 +330,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
         // Make sure you don't have negative number of events per sample
 	//*AR-180314-Histograms h_CR_SB,h_SR_SB,h_CR_SF_SB,h_SR_SF_SB are written newly for every tree
+	//*AR-180322-At this step, these are just empty, declared histograms.
         PushHist(h_CR_SB_copy, h_CR_SB);
         PushHist(h_SR_SB_copy, h_SR_SB);
         PushHist(h_CR_SF_SB_copy, h_CR_SF_SB);
@@ -335,6 +356,11 @@ Bool_t TFMaker::Process(Long64_t entry)
 	    Vec_scale_el_SFCR_SB.clear();
 	    Vec_scale_mu_SFSR_SB.clear();
 	    Vec_scale_mu_SFCR_SB.clear();
+	    Vec_PDF_el_SFSR_SB.clear();
+	    Vec_PDF_el_SFCR_SB.clear();
+	    Vec_PDF_mu_SFSR_SB.clear();
+	    Vec_PDF_mu_SFCR_SB.clear();
+
 	    /*
 	    for(int iacc=0; iacc < Vec_scale_el_SFCR_SB.size(); iacc++){
 	      Vec_scale_el_SFSR_SB.at(iacc)->Reset(); 
@@ -393,7 +419,32 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  std::cout<<" second ScaleAcc**** "<<endl; 
 	  std::cout<<" size "<<Vec_scale_mu_SFSR_SB.size()<<endl;
 	}
+
+	else if(PDFAccSys){
+	  char tempname[200];
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    sprintf(tempname,"h_PDF_el_SFCR_SB_%d",iacc);
+	    h_el_SFCR_SB = (TH1D*)SFCR_histFile->FindObjectAny(tempname);
+	    Vec_PDF_el_SFCR_SB.push_back(h_el_SFCR_SB);
+
+	    sprintf(tempname,"h_PDF_el_SFSR_SB_%d",iacc);
+	    h_el_SFSR_SB = (TH1D*)SFSR_histFile->FindObjectAny(tempname);
+	    Vec_PDF_el_SFSR_SB.push_back(h_el_SFSR_SB);
+
+	    sprintf(tempname,"h_PDF_mu_SFCR_SB_%d",iacc);
+	    h_mu_SFCR_SB = (TH1D*)SFCR_histFile->FindObjectAny(tempname);
+	    Vec_PDF_mu_SFCR_SB.push_back(h_mu_SFCR_SB);
+
+	    sprintf(tempname,"h_PDF_mu_SFSR_SB_%d",iacc);
+	    h_mu_SFSR_SB = (TH1D*)SFSR_histFile->FindObjectAny(tempname);
+	    Vec_PDF_mu_SFSR_SB.push_back(h_mu_SFSR_SB);
+	  }
+	  std::cout<<" second PDFAcc**** "<<endl; 
+	  std::cout<<" size "<<Vec_PDF_mu_SFSR_SB.size()<<endl;
+	}
+	  
 	else{
+	  //	  std::cout<<" segvio1**** "<<endl;
 	  h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
 	  h_el_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB")->Clone();
 	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
@@ -531,7 +582,6 @@ Bool_t TFMaker::Process(Long64_t entry)
         w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
         Weight *= w_pu;
     }
-
 // We are only interested in the GenLeptons that pass the acceptance, including isotrk veto! (i.e. abs(eta)<2.5, pT>5)
     for(unsigned i=0; i< GenElectrons->size(); i++){
         if(GenElectrons->at(i).Pt() > 5. && std::abs(GenElectrons->at(i).Eta()) < 2.5){
@@ -691,117 +741,172 @@ Bool_t TFMaker::Process(Long64_t entry)
     int nLoops = 1;
     if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
     for(int i = 0; i < nLoops; i++){
-    	double WeightBtagProb = Weight*bTagProb.at(i);
-    	unsigned bTagBin = bTagBins.at(i);
+      double WeightBtagProb = Weight*bTagProb.at(i);
+      unsigned bTagBin = bTagBins.at(i);
+      //      std::cout<<" segvio2**** "<<endl;
+      // CONTROL REGION
+      if(ElectronsNum_ + MuonsNum_ == 1){ //*AR-180322--these are just reco objects, not matched to gen objects yet
+	double SF = 1;
+	double binSF = bTagBin; //based on (HT,MHT,Njet,Nbtag_true)
+	//	    double bTagBin = (double)bTagBins.at(i);
 	
-    	// CONTROL REGION
-        if(ElectronsNum_ + MuonsNum_ == 1){
-            double SF = 1;
-            double binSF = Bin_; //based on (HT,MHT,Njet,Nbtag_true)
-	    if(useCombinedBinsCR){
-	      //*AR-180302-JEC Sys is considered here as it leads to change in the search bins, hence to remain consistent with search bins of histograms used in evaluating SFs. 
-	      if(JECSys)
-		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
-	      else
-		binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
+	if(useCombinedBinsCR){
+	  //*AR-180302-JEC Sys is considered here as it leads to change in the search bins, hence to remain consistent with search bins of histograms used in evaluating SFs. 
+	  if(JECSys)
+	    binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
+	  else
+	    binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
+	}
+	
+	if(ElectronsNum_ == 1){
+	  mtw = Electrons_MTW->at(0);
+	  //*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
+	  if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
+	    if(ScaleAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < Scalesize; iacc++){		  
+		Vec_SF.push_back(GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF));
+		//		      std::cout<<" btags "<<BTags<<" binSF "<<binSF<<" binSF_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF)<<" bTagBin "<<bTagBin<<" bTagBin_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF)<<endl;
+		//		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_1 "<< Vec_SF.size()<<endl;
+	      }
 	    }
-	    
-            if(ElectronsNum_ == 1){
-                mtw = Electrons_MTW->at(0);
-		//*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
-                if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
-		  if(ScaleAccSys){ 
-		    Vec_SF.clear();
-		    for(int iacc=0; iacc < Scalesize; iacc++){		  
-		      Vec_SF.push_back(GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF));
-		      //		      std::cout<<" btags "<<BTags<<" binSF "<<binSF<<" binSF_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), binSF)<<" bTagBin "<<bTagBin<<" bTagBin_SF "<<GetSF(Vec_scale_el_SFCR_SB.at(iacc), bTagBin)<<endl;
-		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_1 "<< Vec_SF.size()<<endl;
-		    }
-		  }
-		  else
-		    SF = GetSF(h_el_SFCR_SB,binSF);
-		} //end of if GenElectronsAccNum_ == 1
-		//else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
-		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
-                //}
-		else{
-		  if(ScaleAccSys){ 
-		    Vec_SF.clear();
-		    for(int iacc=0; iacc < Scalesize; iacc++){
-		      Vec_SF.push_back(1);
-		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
-		    }
-		    std::cout<<" forth ScaleAcc**** "<<endl; 
-		  }
-		  else
-                    SF = 1;
-                }
+	    else if(PDFAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < PDFsize; iacc++){		  
+		Vec_SF.push_back(GetSF(Vec_PDF_el_SFCR_SB.at(iacc), binSF));
+		//		      std::cout<<" btags "<<BTags<<" binSF "<<binSF<<" binSF_SF "<<GetSF(Vec_PDF_el_SFCR_SB.at(iacc), binSF)<<" bTagBin "<<bTagBin<<" bTagBin_SF "<<GetSF(Vec_PDF_el_SFCR_SB.at(iacc), binSF)<<endl;
+		//		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_1 "<< Vec_SF.size()<<endl;
+	      }
+	    }
+	    else
+	      SF = GetSF(h_el_SFCR_SB,binSF);
+	  } //end of if GenElectronsAccNum_ == 1
+	  //else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
+	  //  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
+	  //}
+	  else{ //*AR-180321--corresponding to fake reconstructed electrons
+	    if(ScaleAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_SF.push_back(1);
+		//		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
+	      }
+	      std::cout<<" forth ScaleAcc**** "<<endl; 
+	    }
+	    else if(PDFAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_SF.push_back(1);
+		//std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
+	      }
+	      std::cout<<" forth PDFAcc**** "<<endl; 
+	    }
+	    else
+	      SF = 1;
+	  }
 
                 // Don't correct for non-prompts
-                if(ElectronsPromptNum_==0){
-		  if(ScaleAccSys){ 
-		    Vec_SF.clear();
-		    for(int iacc=0; iacc < Scalesize; iacc++){
-		      Vec_SF.push_back(1);
-		      std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_3 "<< Vec_SF.size()<<endl;
-		    }
-		  }
-		  else
-		    SF = 1;
-		}
-            }
-            if(MuonsNum_ == 1){
-                mtw = Muons_MTW->at(0);
-                if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
-                  if(ScaleAccSys){ 
-		    Vec_SF.clear();
-		    for(int iacc=0; iacc < Scalesize; iacc++){
-		      Vec_SF.push_back(GetSF(Vec_scale_mu_SFCR_SB.at(iacc), binSF)); 
-		    }
-		  }
-		  else
-		    SF = GetSF(h_mu_SFCR_SB, binSF); 
-                }
-		//else if((GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 2) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
-		//  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
-                //}
-		else{
-		  if(ScaleAccSys){
-		    Vec_SF.clear(); 
-		    for(int iacc=0; iacc < Scalesize; iacc++){
-		      Vec_SF.push_back(1);
-		    }
-		  }
-		  else
-		    SF = 1;
-                }
-
-                // Don't correct for non-prompts
-                if(MuonsPromptNum_==0){
-		  if(ScaleAccSys){
-		    Vec_SF.clear(); 
-		    for(int iacc=0; iacc < Scalesize; iacc++){
-		      Vec_SF.push_back(1);
-		    }
-		  }
-		  else
-		    SF = 1;
-		}
-            }
-
-	    //*AR-180101-skips event if mT>100
+	  if(ElectronsPromptNum_==0){
+	    if(ScaleAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_SF.push_back(1);
+		//std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_3 "<< Vec_SF.size()<<endl;
+	      }
+	    }
+	    else if(PDFAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_SF.push_back(1);
+		//std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_3 "<< Vec_SF.size()<<endl;
+	      }
+	    }
+	    else
+	      SF = 1;
+	  }
+	}
+	if(MuonsNum_ == 1){
+	  mtw = Muons_MTW->at(0);
+	  if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
+	    if(ScaleAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_SF.push_back(GetSF(Vec_scale_mu_SFCR_SB.at(iacc), binSF)); 
+	      }
+	    }
+	    else if(PDFAccSys){ 
+	      Vec_SF.clear();
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_SF.push_back(GetSF(Vec_PDF_mu_SFCR_SB.at(iacc), binSF)); 
+	      }
+	    }
+	    else
+	      SF = GetSF(h_mu_SFCR_SB, binSF); 
+	  }
+	  //else if((GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 2) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
+	  //  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
+	  //}
+	  else{
+	    if(ScaleAccSys){
+	      Vec_SF.clear(); 
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_SF.push_back(1);
+	      }
+	    }
+	    else if(PDFAccSys){
+	      Vec_SF.clear(); 
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_SF.push_back(1);
+	      }
+	    }
+	    else
+	      SF = 1;
+	  }
+	  
+	  // Don't correct for non-prompts
+	  if(MuonsPromptNum_==0){
+	    if(ScaleAccSys){
+	      Vec_SF.clear(); 
+	      for(int iacc=0; iacc < Scalesize; iacc++){
+		Vec_SF.push_back(1);
+	      }
+	    }
+	    else if(PDFAccSys){
+	      Vec_SF.clear(); 
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_SF.push_back(1);
+	      }
+	    }
+	    else
+	      SF = 1;
+	  }
+	}
+	
+	//*AR-180101-skips event if mT>100
             if(mtw > 100) return kTRUE;
         
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){ 
-		Vec_scale_CR_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+		Vec_scale_CR_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*ScaleWeights->at(iacc));
 
-		Vec_scale_CR_SF_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
+		Vec_scale_CR_SF_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
+	      }
+	    }
+	    else if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){ 
+		Vec_PDF_CR_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*PDFWeights->at(iacc));
+		//		if(iacc==0 && binSF==137)
+		//std::cout<<" evt "<<entry<<" loop "<<i<<" true b "<<BTags<<" sf "<< Vec_SF.at(iacc)<<endl;
+		//		if(iacc==9 && binSF==137)
+		//std::cout<<" evt "<<entry<<" loop "<<i<<" true b "<<BTags<<" Weight "<<Weight<<" bProb "<<bTagProb.at(i)<<" WeightBtagProb in CR "<<WeightBtagProb<< " PDF_9 "<<PDFWeights->at(iacc)<<" PDF_10 "<<PDFWeights->at(iacc+1)<<endl;
+		Vec_PDF_CR_SF_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*PDFWeights->at(iacc)*Vec_SF.at(iacc));
 	      }
 	    }
 	    else{
-	      h_CR_SB_copy->Fill(bTagBin, WeightBtagProb);
-	      h_CR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
+	      h_CR_SB_copy->Fill(binSF, WeightBtagProb);
+	      //if(binSF==137)
+	      //std::cout<<" evt "<<entry<<" loop "<<i<<" true b "<<BTags<<" sf "<< SF<<endl;
+	      h_CR_SF_SB_copy->Fill(binSF, WeightBtagProb*SF);
 	    }
         }
 
@@ -810,7 +915,9 @@ Bool_t TFMaker::Process(Long64_t entry)
             if(GenElectronsNum_ + GenMuonsNum_ == 0) return kTRUE;
 
             double SF = 1;
-            double binSF = Bin_;
+	    //            double binSF = Bin_;
+	    double binSF = bTagBin;
+
             if(useCombinedBinsSR){
 	      if(JECSys)
 		binSF = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
@@ -822,6 +929,12 @@ Bool_t TFMaker::Process(Long64_t entry)
 		Vec_SF.clear(); 
 		for(int iacc=0; iacc < Scalesize; iacc++){
 		  Vec_SF.push_back(GetSF(Vec_scale_el_SFSR_SB.at(iacc), binSF)); 
+		}
+	      }
+	      else if(PDFAccSys){
+		Vec_SF.clear(); 
+		for(int iacc=0; iacc < PDFsize; iacc++){
+		  Vec_SF.push_back(GetSF(Vec_PDF_el_SFSR_SB.at(iacc), binSF)); 
 		}
 	      }
 	      else
@@ -839,6 +952,17 @@ Bool_t TFMaker::Process(Long64_t entry)
 
 		  //		  Vec_SF.push_back(GetSF(Vec_scale_mu_SFSR_SB.at(iacc), binSF)); 
 		}
+	      }
+	      else if(PDFAccSys){ 
+		Vec_SF.clear();
+		for(int iacc=0; iacc < PDFsize; iacc++){
+		  //		  std::cout<<" ele "<<GenElectronsAccNum_<<" mu "<<GenMuonsAccNum_<<" third PDFAcc**** "<<endl;
+		  //		  SF=GetSF(Vec_PDF_mu_SFSR_SB.at(iacc), binSF); 
+		  Vec_SF.push_back(GetSF(Vec_PDF_mu_SFSR_SB.at(iacc), binSF));
+		  //		  std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" PDF "<<GetSF(Vec_PDF_mu_SFSR_SB.at(iacc),binSF)<<endl;
+
+		  //		  Vec_SF.push_back(GetSF(Vec_PDF_mu_SFSR_SB.at(iacc), binSF)); 
+		}
 		
 	      }
 	      else
@@ -854,19 +978,35 @@ Bool_t TFMaker::Process(Long64_t entry)
 		  Vec_SF.push_back(1);
 		}
 	      }
+	      else if(PDFAccSys){ 
+		Vec_SF.clear();
+		for(int iacc=0; iacc < PDFsize; iacc++){
+		  Vec_SF.push_back(1);
+		}
+	      }
 	      else
 		SF = 1;
 	    }
 
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){ 
-		Vec_scale_SR_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
-		Vec_scale_SR_SF_SB_copy.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
+		Vec_scale_SR_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*ScaleWeights->at(iacc));
+		Vec_scale_SR_SF_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*ScaleWeights->at(iacc)*Vec_SF.at(iacc));
 	      }
 	    }
+	    else if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){ 
+		//if(iacc==9 && binSF==137)
+		//std::cout<<" evt "<<entry<<" loop "<<i<<" true b "<<BTags<<" Weight "<<Weight<<" bProb "<<bTagProb.at(i)<<" WeightBtagProb in SR "<<WeightBtagProb<< " PDF_9 "<<PDFWeights->at(iacc)<<" PDF_10 "<<PDFWeights->at(iacc+1)<<endl;
+		
+		Vec_PDF_SR_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*PDFWeights->at(iacc));
+		Vec_PDF_SR_SF_SB_copy.at(iacc)->Fill(binSF,WeightBtagProb*PDFWeights->at(iacc)*Vec_SF.at(iacc));
+	      }
+	    }
+
 	    else{
-	      h_SR_SB_copy->Fill(bTagBin, WeightBtagProb);
-	      h_SR_SF_SB_copy->Fill(bTagBin, WeightBtagProb*SF);
+	      h_SR_SB_copy->Fill(binSF, WeightBtagProb);
+	      h_SR_SF_SB_copy->Fill(binSF, WeightBtagProb*SF);
 	    }
 	}
         
@@ -934,7 +1074,17 @@ void TFMaker::Terminate()
 	Vec_scale_0L1L_SF_SB.at(iacc)->Divide(Vec_scale_SR_SF_SB_copy.at(iacc),Vec_scale_CR_SF_SB_copy.at(iacc));
       }
     }
+    else if(PDFAccSys){
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	Vec_PDF_0L1L_SB.at(iacc)->Reset();
+	Vec_PDF_0L1L_SF_SB.at(iacc)->Reset();
+	Vec_PDF_0L1L_SB.at(iacc)->Divide(Vec_PDF_SR_SB_copy.at(iacc),Vec_PDF_CR_SB_copy.at(iacc));
+	Vec_PDF_0L1L_SF_SB.at(iacc)->Divide(Vec_PDF_SR_SF_SB_copy.at(iacc),Vec_PDF_CR_SF_SB_copy.at(iacc));
+      }
+    }
     else{
+      h_0L1L_SB->Reset();
+      h_0L1L_SB->Divide(h_SR_SB, h_CR_SB);
       h_0L1L_SF_SB->Reset();
       h_0L1L_SF_SB->Divide(h_SR_SF_SB, h_CR_SF_SB);
     }
@@ -944,6 +1094,12 @@ void TFMaker::Terminate()
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    if(Vec_scale_0L1L_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_scale_0L1L_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
 	    if(Vec_scale_0L1L_SF_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_scale_0L1L_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+	else if(PDFAccSys){
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    if(Vec_PDF_0L1L_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_PDF_0L1L_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	    if(Vec_PDF_0L1L_SF_SB.at(iacc)->GetBinContent(nX) < 0)std::cout<<"Vec_PDF_0L1L_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
 	  }
 	}
 	else{
@@ -960,6 +1116,16 @@ void TFMaker::Terminate()
 	Vec_scale_SR_SF_SB_copy.at(iacc)->Write();
 	Vec_scale_0L1L_SB.at(iacc)->Write();
 	Vec_scale_0L1L_SF_SB.at(iacc)->Write();
+      }
+    }
+    else if(PDFAccSys){
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	Vec_PDF_CR_SB_copy.at(iacc)->Write();
+	Vec_PDF_SR_SB_copy.at(iacc)->Write();
+	Vec_PDF_CR_SF_SB_copy.at(iacc)->Write();
+	Vec_PDF_SR_SF_SB_copy.at(iacc)->Write();
+	Vec_PDF_0L1L_SB.at(iacc)->Write();
+	Vec_PDF_0L1L_SF_SB.at(iacc)->Write();
       }
     }
     else{

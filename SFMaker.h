@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false;
@@ -48,7 +48,8 @@ const bool JECSys=false;//false by default
 const bool IsoSys=false;//false by default
 const bool IDSys=false;//false by default
 const bool TrackRecoSys=false;
-const bool ScaleAccSys=true;
+const bool ScaleAccSys=false;
+const bool PDFAccSys=true;
 
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
@@ -121,6 +122,7 @@ const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
 const double csvForBtag=0.8484;
 int Scalesize=9;
+int PDFsize=101;
 class SFMaker : public TSelector {
  public :
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -177,6 +179,10 @@ class SFMaker : public TSelector {
   vector<TH1*> Vec_scale_el_nOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SF_SB,Vec_scale_el_nLostOnePrompt_SB,Vec_scale_el_SFCR_SB,Vec_scale_el_SFSR_SB;
 
   vector<TH1*> Vec_scale_mu_nOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SF_SB,Vec_scale_mu_nLostOnePrompt_SB,Vec_scale_mu_SFCR_SB,Vec_scale_mu_SFSR_SB;
+
+  vector<TH1*> Vec_PDF_el_nOnePrompt_SB, Vec_PDF_el_nFoundOnePrompt_SB, Vec_PDF_el_nFoundOnePrompt_SF_SB,Vec_PDF_el_nLostOnePrompt_SB,Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB;
+
+  vector<TH1*> Vec_PDF_mu_nOnePrompt_SB, Vec_PDF_mu_nFoundOnePrompt_SB, Vec_PDF_mu_nFoundOnePrompt_SF_SB,Vec_PDF_mu_nLostOnePrompt_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu_SFSR_SB;
 
   //Stuff
   std::string fname; // for fetching file name
@@ -303,7 +309,7 @@ class SFMaker : public TSelector {
   std::vector<bool>    *Jets_HTMask=0;
   std::vector<double>  *Jets_jecUnc=0;
   std::vector<double> *ScaleWeights=0;
-
+  std::vector<double> *PDFWeights=0;
   Double_t        METPhi;
   Double_t        MET;
   Double_t        PFCaloMETRatio;
@@ -405,6 +411,7 @@ class SFMaker : public TSelector {
   TBranch        *b_Weight=0;   //!
   TBranch        *b_puWeight=0;   //!
   TBranch        *b_ScaleWeights=0;
+  TBranch        *b_PDFWeights=0;
   TBranch        *b_madHT=0;
   TBranch        *b_SusyLSPMass=0;
   TBranch        *b_SusyMotherMass=0;
@@ -620,6 +627,7 @@ void SFMaker::Init(TTree *tree)
   //if(!runOnData){
     fChain->SetBranchStatus("Weight", 1);
     fChain->SetBranchStatus("ScaleWeights",1);
+    fChain->SetBranchStatus("PDFweights",1);
     fChain->SetBranchStatus("Jets_hadronFlavor", 1);
     fChain->SetBranchStatus("madHT", 1);
     fChain->SetBranchStatus("TrueNumInteractions", 1);
@@ -714,6 +722,7 @@ void SFMaker::Init(TTree *tree)
   //if(!runOnData){
     fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
     fChain->SetBranchAddress("ScaleWeights", &ScaleWeights, &b_ScaleWeights);
+    fChain->SetBranchAddress("PDFweights", &PDFWeights, &b_PDFWeights);
     fChain->SetBranchAddress("Jets_hadronFlavor", &Jets_hadronFlavor, &b_Jets_hadronFlavor);
     fChain->SetBranchAddress("madHT", &madHT, &b_madHT);
     fChain->SetBranchAddress("TrueNumInteractions", &TrueNumInteractions, &b_TrueNumInteractions);

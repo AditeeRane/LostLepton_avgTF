@@ -139,7 +139,40 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 	sprintf(tempname,"h_scale_mu_SFSR_SB_%d",iacc);
 	Vec_scale_mu_SFSR_SB.push_back(static_cast<TH1*>(h_mu_SFSR_SB->Clone(tempname)));
       }
-    }
+    } //end of if(ScaleAccSys)
+
+    if(PDFAccSys){
+      
+      char tempname[200];
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	sprintf(tempname,"h_PDF_el_nOnePrompt_SB_%d",iacc);
+	Vec_PDF_el_nOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_el_nFoundOnePrompt_SB_%d",iacc);
+	Vec_PDF_el_nFoundOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nFoundOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_el_nFoundOnePrompt_SF_SB_%d",iacc);
+	Vec_PDF_el_nFoundOnePrompt_SF_SB.push_back(static_cast<TH1*>(h_el_nFoundOnePrompt_SF_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_el_nLostOnePrompt_SB_%d",iacc);
+	Vec_PDF_el_nLostOnePrompt_SB.push_back(static_cast<TH1*>(h_el_nLostOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_el_SFCR_SB_%d",iacc);
+	Vec_PDF_el_SFCR_SB.push_back(static_cast<TH1*>(h_el_SFCR_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_el_SFSR_SB_%d",iacc);
+	Vec_PDF_el_SFSR_SB.push_back(static_cast<TH1*>(h_el_SFSR_SB->Clone(tempname)));
+	
+	sprintf(tempname,"h_PDF_mu_nOnePrompt_SB_%d",iacc);
+	Vec_PDF_mu_nOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_mu_nFoundOnePrompt_SB_%d",iacc);
+	Vec_PDF_mu_nFoundOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nFoundOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_mu_nFoundOnePrompt_SF_SB_%d",iacc);
+	Vec_PDF_mu_nFoundOnePrompt_SF_SB.push_back(static_cast<TH1*>(h_mu_nFoundOnePrompt_SF_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_mu_nLostOnePrompt_SB_%d",iacc);
+	Vec_PDF_mu_nLostOnePrompt_SB.push_back(static_cast<TH1*>(h_mu_nLostOnePrompt_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_mu_SFCR_SB_%d",iacc);
+	Vec_PDF_mu_SFCR_SB.push_back(static_cast<TH1*>(h_mu_SFCR_SB->Clone(tempname)));
+	sprintf(tempname,"h_PDF_mu_SFSR_SB_%d",iacc);
+	Vec_PDF_mu_SFSR_SB.push_back(static_cast<TH1*>(h_mu_SFSR_SB->Clone(tempname)));
+      }
+    } //end of if(PDFAccSys)
+
 }
 
 Bool_t SFMaker::Process(Long64_t entry)
@@ -755,6 +788,13 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      Vec_scale_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	    }
 	  }
+	  if(PDFAccSys){
+	    for(int iacc=0; iacc < PDFsize; iacc++){
+	      //std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" PDFweight "<<PDFWeights->at(iacc)<<endl;
+	      Vec_PDF_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
+	    }
+	  }
+
 	  if(IsoSys){
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
@@ -820,6 +860,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 		Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	      }
 	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
+	      }
+	    }
 	    
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
@@ -827,6 +872,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*PDFWeights->at(iacc));
 	      }
 	    }
 
@@ -840,12 +890,22 @@ Bool_t SFMaker::Process(Long64_t entry)
 		Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	      }
 	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
+	      }
+	    }
 
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*PDFWeights->at(iacc));
 	      }
 	    }
 
@@ -856,6 +916,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_mu_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
 	      }
 	    }
 
@@ -870,6 +935,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  if(ScaleAccSys){
 	    for(int iacc=0; iacc < Scalesize; iacc++){
 	      Vec_scale_el_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	    }
+	  }
+	  if(PDFAccSys){
+	    for(int iacc=0; iacc < PDFsize; iacc++){
+	      Vec_PDF_el_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
 	    }
 	  }
 
@@ -929,6 +999,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 		Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	      }
 	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
+	      }
+	    }
 	    
 	    //std::cout<<" h_el_nFoundOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
 	    
@@ -937,6 +1012,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*PDFWeights->at(iacc));
 	      }
 	    }
 	    
@@ -950,11 +1030,22 @@ Bool_t SFMaker::Process(Long64_t entry)
 		Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	      }
 	    }	    
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_el_nFoundOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
+	      }
+	    }	    
+
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
+	      }
+	    }    
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*PDFWeights->at(iacc));
 	      }
 	    }    
 	  }else if(ElectronsPromptNum_ == 0 && (!includeIsotrkVeto || ElectronTracksPromptNum_ == 0)){
@@ -963,6 +1054,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_el_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
+	      }
+	    }	    
+	    if(PDFAccSys){
+	      for(int iacc=0; iacc < PDFsize; iacc++){
+		Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
 	      }
 	    }	    
 	  }else{
@@ -1414,6 +1510,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_el_nOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_el_nOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_el_nOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1423,6 +1528,14 @@ void SFMaker::Terminate()
 	  if(Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
 	    Vec_scale_el_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
 	    std::cout<<"Vec_scale_el_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_el_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_el_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_el_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
 	  }
 	}
       }
@@ -1439,6 +1552,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_el_nFoundOnePrompt_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_el_nLostOnePrompt_SB->SetBinContent(nX, 0);
             std::cout<<"h_el_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1451,6 +1573,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_el_nLostOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_mu_nOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1463,6 +1594,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_mu_nOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_mu_nOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_mu_nOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1472,6 +1612,14 @@ void SFMaker::Terminate()
 	  if(Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
 	    Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
 	    std::cout<<"Vec_scale_mu_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_mu_nFoundOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
 	  }
 	}
       }
@@ -1487,6 +1635,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_mu_nFoundOnePrompt_SF_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_mu_nLostOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nLostOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nLostOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1499,6 +1656,15 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      if(PDFAccSys){ 
+	for(int iacc=0; iacc < PDFsize; iacc++){
+	  if(Vec_PDF_mu_nLostOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
+	    Vec_PDF_mu_nLostOnePrompt_SB.at(iacc)->SetBinContent(nX, 0);
+	    std::cout<<"Vec_PDF_mu_nLostOnePrompt_SB iacc "<<iacc<<" Bin "<<nX<<std::endl;
+	  }
+	}
+      }
+
       if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
 	h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_di_nTwoPrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
@@ -1558,6 +1724,15 @@ void SFMaker::Terminate()
 	Vec_scale_el_SFSR_SB.at(iacc)->Divide(Vec_scale_el_nLostOnePrompt_SB.at(iacc));
       }
     }
+    if(PDFAccSys){ 
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	Vec_PDF_el_SFSR_SB.at(iacc)->Reset();
+	Vec_PDF_el_SFSR_SB.at(iacc)->Add(Vec_PDF_el_nOnePrompt_SB.at(iacc));
+	Vec_PDF_el_SFSR_SB.at(iacc)->Add(Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc), -1);
+	Vec_PDF_el_SFSR_SB.at(iacc)->Divide(Vec_PDF_el_nLostOnePrompt_SB.at(iacc));
+      }
+    }
+
     h_mu_SFSR_etaPt->Reset();
     h_mu_SFSR_etaPt->Add(h_mu_nOnePrompt_etaPt);
     h_mu_SFSR_etaPt->Add(h_mu_nFoundOnePrompt_SF_etaPt, -1);
@@ -1576,6 +1751,15 @@ void SFMaker::Terminate()
 	Vec_scale_mu_SFSR_SB.at(iacc)->Divide(Vec_scale_mu_nLostOnePrompt_SB.at(iacc));
       }
     }
+    if(PDFAccSys){ 
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	Vec_PDF_mu_SFSR_SB.at(iacc)->Reset();
+	Vec_PDF_mu_SFSR_SB.at(iacc)->Add(Vec_PDF_mu_nOnePrompt_SB.at(iacc));
+	Vec_PDF_mu_SFSR_SB.at(iacc)->Add(Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc), -1);
+	Vec_PDF_mu_SFSR_SB.at(iacc)->Divide(Vec_PDF_mu_nLostOnePrompt_SB.at(iacc));
+      }
+    }
+
     // SF for CRs
     h_mu_SFCR_etaPt->Divide(h_mu_nFoundOnePrompt_SF_etaPt, h_mu_nFoundOnePrompt_etaPt);
 	h_mu_SFCR_SB->Divide(h_mu_nFoundOnePrompt_SF_SB, h_mu_nFoundOnePrompt_SB);
@@ -1584,11 +1768,22 @@ void SFMaker::Terminate()
 	    Vec_scale_mu_SFCR_SB.at(iacc)->Divide(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_mu_nFoundOnePrompt_SB.at(iacc));
 	  }
 	}
+	if(PDFAccSys){ 
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    Vec_PDF_mu_SFCR_SB.at(iacc)->Divide(Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc),Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc));
+	  }
+	}
+
 	h_el_SFCR_etaPt->Divide(h_el_nFoundOnePrompt_SF_etaPt, h_el_nFoundOnePrompt_etaPt);
 	h_el_SFCR_SB->Divide(h_el_nFoundOnePrompt_SF_SB, h_el_nFoundOnePrompt_SB);
 	if(ScaleAccSys){ 
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    Vec_scale_el_SFCR_SB.at(iacc)->Divide(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_el_nFoundOnePrompt_SB.at(iacc));
+	  }
+	}
+	if(PDFAccSys){ 
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    Vec_PDF_el_SFCR_SB.at(iacc)->Divide(Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_PDF_el_nFoundOnePrompt_SB.at(iacc));
 	  }
 	}
 
@@ -1609,6 +1804,15 @@ void SFMaker::Terminate()
 	    Vec_scale_el_nLostOnePrompt_SB.at(iacc)->Write();
 	  }
 	}
+	if(PDFAccSys){ 
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    Vec_PDF_el_nOnePrompt_SB.at(iacc)->Write();
+	    Vec_PDF_el_nFoundOnePrompt_SB.at(iacc)->Write();
+	    Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc)->Write();
+	    Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->Write();
+	  }
+	}
+
 	/*
     SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_el_nOnePrompt_SB, outPutFile);
@@ -1645,6 +1849,17 @@ void SFMaker::Terminate()
 	    if(Vec_scale_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_scale_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
 	  }
 	}
+	if(PDFAccSys){ 
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    Vec_PDF_el_SFCR_SB.at(iacc)->SetBinError(nX, 0);
+	    Vec_PDF_el_SFSR_SB.at(iacc)->SetBinError(nX, 0);
+	    if(Vec_PDF_el_SFCR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_PDF_el_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_PDF_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_PDF_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);  
+	    if(Vec_PDF_el_SFCR_SB.at(iacc)->GetBinContent(nX) > 1) Vec_PDF_el_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_PDF_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_PDF_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
+	  }
+	}
+
 	}
 	SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
 	SaveEff(h_el_SFCR_SB, outPutFile);
@@ -1656,6 +1871,12 @@ void SFMaker::Terminate()
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_el_SFCR_SB.at(iacc),outPutFile);
 	SaveEff(Vec_scale_el_SFSR_SB.at(iacc),outPutFile);
+      }
+    }
+    if(PDFAccSys){ 
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	SaveEff(Vec_PDF_el_SFCR_SB.at(iacc),outPutFile);
+	SaveEff(Vec_PDF_el_SFSR_SB.at(iacc),outPutFile);
       }
     }
     
@@ -1675,6 +1896,16 @@ void SFMaker::Terminate()
 	Vec_scale_mu_nLostOnePrompt_SB.at(iacc)->Write();
       }
     }
+
+    if(PDFAccSys){ 
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	Vec_PDF_mu_nOnePrompt_SB.at(iacc)->Write();
+	Vec_PDF_mu_nFoundOnePrompt_SB.at(iacc)->Write();
+	Vec_PDF_mu_nFoundOnePrompt_SF_SB.at(iacc)->Write();
+	Vec_PDF_mu_nLostOnePrompt_SB.at(iacc)->Write();
+      }
+    }
+
     /*  
     SaveEff(h_mu_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_mu_nOnePrompt_SB, outPutFile);
@@ -1711,6 +1942,17 @@ void SFMaker::Terminate()
 	    if(Vec_scale_mu_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_scale_mu_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
 	  }
 	}
+	if(PDFAccSys){ 
+	  for(int iacc=0; iacc < PDFsize; iacc++){
+	    Vec_PDF_mu_SFCR_SB.at(iacc)->SetBinError(nX, 0);
+	    Vec_PDF_mu_SFSR_SB.at(iacc)->SetBinError(nX, 0);
+	    if(Vec_PDF_mu_SFCR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_PDF_mu_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_PDF_mu_SFSR_SB.at(iacc)->GetBinContent(nX) < 1e-8) Vec_PDF_mu_SFSR_SB.at(iacc)->SetBinContent(nX, 1);  
+	    if(Vec_PDF_mu_SFCR_SB.at(iacc)->GetBinContent(nX) > 1) Vec_PDF_mu_SFCR_SB.at(iacc)->SetBinContent(nX, 1);
+	    if(Vec_PDF_mu_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_PDF_mu_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
+	  }
+	}
+
     }
     SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFCR_SB, outPutFile);
@@ -1722,6 +1964,13 @@ void SFMaker::Terminate()
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_mu_SFCR_SB.at(iacc),outPutFile);
 	SaveEff(Vec_scale_mu_SFSR_SB.at(iacc),outPutFile);
+      }
+    }
+
+    if(PDFAccSys){ 
+      for(int iacc=0; iacc < PDFsize; iacc++){
+	SaveEff(Vec_PDF_mu_SFCR_SB.at(iacc),outPutFile);
+	SaveEff(Vec_PDF_mu_SFSR_SB.at(iacc),outPutFile);
       }
     }
     
