@@ -271,7 +271,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       }
       
       */
-      
+      //*AR-180327-Order_the_Vec(v1,v2), returns ordered v2 but not v1. To order v1, we used function Order_the_Vec(v1)
       HT3JetCSVvec= Order_the_Vec(HT3JetVec,HT3JetCSVvec);   
       MHT3JetCSVvec= Order_the_Vec(MHT3JetVec,MHT3JetCSVvec);    
       HT3JetHTMaskvec= Order_the_Vec(HT3JetVec,HT3JetHTMaskvec);   
@@ -484,16 +484,22 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  //  std::cout<<"***Seg Vio***"<<std::endl;
 	  
 	  TFile *skimFile = TFile::Open(SkimFile, "READ");
+	  //*AR-180323: In the skimfile, efficiencies are not saved, but histograms for numerator and denominator are available, from which efficiencies are derived.
 	  btagcorr->SetEffs(skimFile);
 	  //	    std::cout<<" skimFile "<<skimFile<<endl;
-	  btagcorr->SetCalib(path_bTagCalib);        
+	  btagcorr->SetCalib(path_bTagCalib); //*AR-180324:[1]Calls for a method BTagCalibrationS, which reads csv file "CSVv2_Moriond17_B_H_mod.csv"[2] Creates instance of class BTagCalibrationReaderS, with input parameters as "medium(1)" operating point, "central" systematics and vector for other systematics {"up","down"}.[3] On this instance of a class "load" method is called thrice. First with input parameters(csv file from [1],flav B, measurement"comb"), secondly with input parameters (csv file from [1],flav C, measurement"comb") and thirdly with input parameters (csv file from [1],flav udsg, measurement"incl")          
+	  if(BtagSys){
+	    btagcorr->SetBtagSFunc(-1);
+	    btagcorr->SetCtagSFunc(-1);
+	    btagcorr->SetMistagSFunc(-1);
+	  }
 	  //if(runOnSignalMC){
 	  //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
 	  //  btagcorr->SetFastSim(true);
 	  //}
 	  //else
-	  btagcorr->SetFastSim(false);
-        }
+	  btagcorr->SetFastSim(false); //*AR-180324:Turns FastSim false
+        } //end of doBTagCorr
 	
         /*if(runOnSignalMC){
           if((std::string(currentTree.Data()).find(std::string("T1"))) != std::string::npos || (std::string(currentTree.Data()).find(std::string("T5"))) != std::string::npos){
@@ -553,9 +559,9 @@ Bool_t SFMaker::Process(Long64_t entry)
     
     if(doBTagCorr){
       if(JECSys)
-	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec);
+	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec); //*AR-180326--In short this function returns (efficiency,SF,SF if fastsim), where efficiency means probability for a given jet to have that flavor and SF means SF for that jet based on it's pT, eta, flav and whether wanted central/up/down SF.
       else
-	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
+	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);//*AR-these are jets up to |eta|<5 GeV.
       if(useCombinedBins){
 	bTagBins = {Bin_, Bin_, Bin_, Bin_};
       }
@@ -565,7 +571,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	else
 	  bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};
       }  
-    }
+    } //end OF doBTagCorr
     else{
       bTagProb = {1, 0, 0, 0};
       bTagBins = {Bin_, 0, 0, 0};
@@ -798,9 +804,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  if(IsoSys){
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	    if(SysDn)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	  }
 	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
@@ -1071,9 +1077,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 	    if(IsoSys){
 	      if(SysUp)
-		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	      if(SysDn)
-		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	    }
 	    else
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
@@ -1112,9 +1118,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  
 	  if(IsoSys){
 	    if(SysUp)
-		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.014);
 	      if(SysDn)
-		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
+		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.014);
 	    }
 	    else
 	      isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
@@ -1308,9 +1314,9 @@ Bool_t SFMaker::Process(Long64_t entry)
             h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
 	    if(IsoSys){
 	      if(SysUp)
-		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	      if(SysDn)
-		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	    }
 	    else
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
@@ -1783,7 +1789,7 @@ void SFMaker::Terminate()
 	}
 	if(PDFAccSys){ 
 	  for(int iacc=0; iacc < PDFsize; iacc++){
-	    Vec_PDF_el_SFCR_SB.at(iacc)->Divide(Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_PDF_el_nFoundOnePrompt_SB.at(iacc));
+	   Vec_PDF_el_SFCR_SB.at(iacc)->Divide(Vec_PDF_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_PDF_el_nFoundOnePrompt_SB.at(iacc));
 	  }
 	}
 

@@ -40,10 +40,12 @@ const bool doTopPtReweighting = false;
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
 const bool JECSys=false; //false by default
-const bool ScaleAccSys=true;
+const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
+const bool BtagSys=false;
+const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;
-const bool SysDn=true;
+const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
 // Path to Skims for btag reweighting
@@ -243,6 +245,10 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
 
   Double_t        METPhi;
   Double_t        MET;
+  std::vector<double> *METUp=0;
+  std::vector<double> *METDown=0;
+  std::vector<double> *METPhiUp=0;
+  std::vector<double> *METPhiDown=0;
   Double_t        PFCaloMETRatio;
   Double_t        MHT;
   Double_t        MHTPhi;
@@ -330,6 +336,10 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch        *b_Jets_HTMask=0;   //!
   TBranch        *b_METPhi=0;   //!
   TBranch        *b_MET=0;   //!
+  TBranch *b_METUp=0; //!
+  TBranch *b_METDown=0; //!
+  TBranch *b_METPhiUp=0; //!
+  TBranch *b_METPhiDown=0; //!
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
@@ -508,6 +518,10 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_HTMask", 1);
   fChain->SetBranchStatus("METPhi", 1);
   fChain->SetBranchStatus("MET", 1);
+  fChain->SetBranchStatus("METUp", 1);
+  fChain->SetBranchStatus("METDown", 1);
+  fChain->SetBranchStatus("METPhiUp", 1);
+  fChain->SetBranchStatus("METPhiDown", 1);
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
@@ -608,6 +622,10 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("Jets_HTMask", &Jets_HTMask, &b_Jets_HTMask);
   fChain->SetBranchAddress("METPhi", &METPhi, &b_METPhi);
   fChain->SetBranchAddress("MET", &MET, &b_MET);
+  fChain->SetBranchAddress("METUp", &METUp, &b_METUp);
+  fChain->SetBranchAddress("METDown", &METDown, &b_METDown);
+  fChain->SetBranchAddress("METPhiUp", &METPhiUp, &b_METPhiUp);
+  fChain->SetBranchAddress("METPhiDown", &METPhiDown, &b_METPhiDown);
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);

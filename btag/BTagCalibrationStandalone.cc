@@ -421,7 +421,7 @@ BTagCalibrationReaderS::BTagCalibrationReaderImplS::BTagCalibrationReaderImplS(
   sysType_(sysType),
   tmpData_(3),
   useAbsEta_(3, true)
-{
+{// *AR: We have other Sys Types as " up" and "down"..
   for (const std::string & ost : otherSysTypes) {
     if (otherSysTypeReaders_.count(ost)) {
 std::cerr << "ERROR in BTagCalibrationS: "
@@ -430,8 +430,7 @@ std::cerr << "ERROR in BTagCalibrationS: "
 throw std::exception();
     }
     otherSysTypeReaders_[ost] = std::auto_ptr<BTagCalibrationReaderImplS>(
-        new BTagCalibrationReaderImplS(op, ost)
-    );
+									  new BTagCalibrationReaderImplS(op, ost)    ); //*AR--in our case it is {medium,"up"} and {medium,"down"}
   }
 }
 
@@ -450,11 +449,12 @@ throw std::exception();
   BTagEntryS::Parameters params(op_, measurementType, sysType_);
   const std::vector<BTagEntryS> &entries = c.getEntries(params);
 
+  //*AR--180324--Runs over number of rows in .csv file
   for (const auto &be : entries) {
     if (be.params.jetFlavor != jf) {
       continue;
     }
-
+    //*AR--180324--Save details in a row of .csv file to "te"
     TmpEntry te;
     te.etaMin = be.params.etaMin;
     te.etaMax = be.params.etaMax;
@@ -467,11 +467,12 @@ throw std::exception();
       te.func = TF1("", be.formula.c_str(),
                     be.params.discrMin, be.params.discrMax);
     } else {
+      //*AR--180324--In our case op_ is medium, so this loop executes
       te.func = TF1("", be.formula.c_str(),
                     be.params.ptMin, be.params.ptMax);
     }
 
-    tmpData_[be.params.jetFlavor].push_back(te);
+    tmpData_[be.params.jetFlavor].push_back(te); //*AR-180323--at end of all entries in .csv file, we get vector tmpData_ of size 3(corresponding to 3 flavours), where elements of tmpData_ are TmpEntries(te) and each TmpEntry is a list of parameters. 
     if (te.etaMin < 0) {
       useAbsEta_[be.params.jetFlavor] = false;
     }
@@ -495,8 +496,9 @@ double BTagCalibrationReaderS::BTagCalibrationReaderImplS::eval(
 
   // search linearly through eta, pt and discr ranges and eval
   // future: find some clever data structure based on intervals
-  const auto &entries = tmpData_.at(jf);
-  for (unsigned i=0; i<entries.size(); ++i) {
+  const auto &entries = tmpData_.at(jf); //*AR-180323-tmpData_.at(jf) is a vector of tmpentries, where each tmpentry is a list of parameters 
+  for (unsigned i=0; i<entries.size(); ++i) { //*AR--180323--loop over tmpentries
+    //*AR-180323:finds tmpentry in whose pT, eta range, given jet falls, and uses it's func function to get SF.
     const auto &e = entries.at(i);
     if (
       e.etaMin <= eta && eta < e.etaMax                   // find eta
@@ -522,10 +524,10 @@ double BTagCalibrationReaderS::BTagCalibrationReaderImplS::eval_auto_bounds(
                                              float pt,
                                              float discr) const
 {
-  auto sf_bounds = min_max_pt(jf, eta, discr);
+  auto sf_bounds = min_max_pt(jf, eta, discr);//*AR- returns pair of (min_pT,max_pT) for given flavor  
   float pt_for_eval = pt;
   bool is_out_of_bounds = false;
-
+  //*AR: if pT of a jet is out of (pTmax, pTmin), reevaluate it's pT
   if (pt < sf_bounds.first) {
     pt_for_eval = sf_bounds.first + .0001;
     is_out_of_bounds = true;
@@ -533,7 +535,7 @@ double BTagCalibrationReaderS::BTagCalibrationReaderImplS::eval_auto_bounds(
     pt_for_eval = sf_bounds.second - .0001;
     is_out_of_bounds = true;
   }
-
+  //*AR-180323---sys cam be central/up/down. sysType_=central
   // get central SF (and maybe return)
   double sf = eval(jf, eta, pt_for_eval, discr);
   if (sys == sysType_) {
@@ -562,12 +564,12 @@ std::pair<float, float> BTagCalibrationReaderS::BTagCalibrationReaderImplS::min_
                                                float eta,
                                                float discr) const
 {
-  bool use_discr = (op_ == BTagEntryS::OP_RESHAPING);
+  bool use_discr = (op_ == BTagEntryS::OP_RESHAPING);//*AR--180323--for us it is op_=medium, so this is 0.
   if (useAbsEta_[jf] && eta < 0) {
-    eta = -eta;
+    eta = -eta;   //*AR--180323--ensures "eta" read is always positive.
   }
 
-  const auto &entries = tmpData_.at(jf);
+  const auto &entries = tmpData_.at(jf);  //*AR, 180323-tmpData_.at(jf) is a vector of TmpEntries, where TmpEntries is a list of parameters associated to jet falling into jf flavor category. 
   float min_pt = -1., max_pt = -1.;
   for (const auto & e: entries) {
     if (
@@ -584,7 +586,7 @@ std::pair<float, float> BTagCalibrationReaderS::BTagCalibrationReaderImplS::min_
           min_pt = min_pt < e.ptMin ? min_pt : e.ptMin;
           max_pt = max_pt > e.ptMax ? max_pt : e.ptMax;
         }
-      } else {
+      } else { //*AR-180323:this is executed for us as use_discr=0
         min_pt = min_pt < e.ptMin ? min_pt : e.ptMin;
         max_pt = max_pt > e.ptMax ? max_pt : e.ptMax;
       }

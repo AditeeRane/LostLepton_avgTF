@@ -80,15 +80,18 @@ class BTagCorrector {
 			vector<double> prob(4,0.0);
 			prob[0] = 1.0;
 			
-			//first loop over jets
+			//first loop over jets 
+			//*AR--Declares a vector of size Jets->size() and all it's elements to be an empty vector of double.
 			vector<vector<double> > sfEffLists = vector<vector<double> >(Jets->size(),vector<double>());
 			for(unsigned ja = 0; ja < Jets->size(); ++ja){
 				//HT jet cuts
+			  //*AR-180323-If given jet is HT masked, skip that jet.
 				if(!Jets_HTMask->at(ja)) continue;
 				
 				//get sf and eff values (checks if already calculated)
-				InitSFEff(Jets->at(ja).Pt(), Jets->at(ja).Eta(), Jets_flavor->at(ja), sfEffLists[ja]);
-				double eps_a = sfEffLists[ja][0]*sfEffLists[ja][1]*sfEffLists[ja][2];
+				//*AR-180323-Uses jet pt, eta, flavor as an input to InitSFEff
+				InitSFEff(Jets->at(ja).Pt(), Jets->at(ja).Eta(), Jets_flavor->at(ja), sfEffLists[ja]); //*AR-180323- //returns sfEffLists which will be a vector<eff, SF, SF if Fastsim(=1 if FastSim=false)>
+				double eps_a = sfEffLists[ja][0]*sfEffLists[ja][1]*sfEffLists[ja][2];  //*AR- product of eff, SF, SF if fastSim
 				
 				//jet index, pt, eta, flavor, eff, sf, cf
 				if(debug) cout << "Jet " << ja << ": " << Jets->at(ja).Pt() << ", " << fabs(Jets->at(ja).Eta()) << ", " << abs(Jets_flavor->at(ja)) 
@@ -118,16 +121,16 @@ class BTagCorrector {
 									<< ", " << sfEffLists[jb][0] << ", " << sfEffLists[jb][1] << ", " << sfEffLists[jb][2] << endl;
 					
 					//calculate prob(1 b-tag)
-					subprob1 *= (1-eps_b);
+					subprob1 *= (1-eps_b);//*AR-180323--At end of loop over "jb", this gives probability of all jets being not btagged except "ja" th jet. 
 					
 					//sub-sub-probability for following calculations
 					double subsubprob2 = 1.0;
 					
 					//third loop over jets (only for jb>ja)
-					if(jb<ja) continue;
+					if(jb<ja) continue; //*AR-180323--[ja]and [jb] are the two btagged jets to be considered while others as not btagged. So we do not want to double count prob by considering ([ja],[jb]) and ([jb],[ja]) separately.
 					for(unsigned jc = 0; jc < Jets->size(); ++jc){
 						//skip the same jet
-						if(jc==jb || jc==ja) continue;
+					  if(jc==jb || jc==ja) continue; //*AR-180323--this ensures jc>jb>ja.
 						
 						//HT jet cuts
 						if(!Jets_HTMask->at(jc)) continue;
@@ -142,11 +145,11 @@ class BTagCorrector {
 						
 						//calculate prob(2 b-tags)
 						subsubprob2 *= (1-eps_c);
-					}
+					} //end of loop over jc
 					
 					//add up sub-sub-prob
 					subprob2 += eps_b*subsubprob2;
-				}
+				}  //end of loop over jb
 				
 				//add up sub-probs
 				prob[1] += eps_a*subprob1;
@@ -286,6 +289,7 @@ class BTagCorrector {
 		
 		//helper function
 		void InitSFEff(double pt, double eta, int flav, vector<double>& sfEffList){
+		  //*AR- In short this function returns (efficiency,SF,SF if fastsim), where efficiency means probability for a given jet to have that flavor and SF means SF for that jet based on it's pT, eta, flav and whether wanted central/up/down SF.
 			//avoid rerunning this
 			if(sfEffList.size()>0) return;
 			
@@ -297,7 +301,10 @@ class BTagCorrector {
 			sfEffList = vector<double>(3,1.0); //eff, sf (central, up, or down), cf (central, up, or down)
 			
 			if(flav==5){ //b-tag
+			  //*AR-if jet flavor is "b", get efficiency/probability of it being real "b" as a function of jet's pT,eta
 				sfEffList[0] = h_eff_b->GetBinContent(h_eff_b->FindBin(pt,eta));
+				//*AR-180323--"btagSFunc"="central"/"up"/"down", "FLAV_B=0"
+
 				sfEffList[1] = reader.eval_auto_bounds(btagSFunc,BTagEntryS::FLAV_B,eta,pt);
 				if(fastsim){
 					sfEffList[2] = readerFast.eval_auto_bounds(btagCFunc,BTagEntryS::FLAV_B,eta,pt);

@@ -45,12 +45,12 @@ const bool useFilterData = true; // false for FastSim since not simulated
 const bool SysUp=false;
 const bool SysDn=true;
 const bool JECSys=false;//false by default
-const bool IsoSys=false;//false by default
+const bool IsoSys=true;//false by default
 const bool IDSys=false;//false by default
 const bool TrackRecoSys=false;
 const bool ScaleAccSys=false;
-const bool PDFAccSys=true;
-
+const bool PDFAccSys=false;
+const bool BtagSys=false;
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 

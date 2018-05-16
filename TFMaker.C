@@ -488,7 +488,12 @@ Bool_t TFMaker::Process(Long64_t entry)
             TFile *skimFile = TFile::Open(SkimFile, "READ");
             btagcorr->SetEffs(skimFile);
 	    
-            btagcorr->SetCalib(path_bTagCalib);        
+            btagcorr->SetCalib(path_bTagCalib);
+	    if(BtagSys){
+	      btagcorr->SetBtagSFunc(-1); 
+	      btagcorr->SetCtagSFunc(-1);
+	      btagcorr->SetMistagSFunc(-1);
+	    }        
             //if(runOnSignalMC){
             //  btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
             //  btagcorr->SetFastSim(true);
@@ -760,6 +765,25 @@ Bool_t TFMaker::Process(Long64_t entry)
 	
 	if(ElectronsNum_ == 1){
 	  mtw = Electrons_MTW->at(0);
+	  //*AR-180329--why METUp, METDown sizes are 7
+	  /*	  for(unsigned int k=0;k<METUp->size();k++){
+	    std::cout<<" k "<<k<<" met up"<<METUp->at(k)<<endl;
+	  }
+	  for(unsigned int k=0;k<METDown->size();k++){
+	    std::cout<<" k "<<k<<" met down"<<METDown->at(k)<<endl;
+	  }
+*/
+	  //	  std::cout<<" up "<<METUp->size()<<" dn "<<METDown->size()<<endl;
+	  //*AR--180329--MTSys has propagation of JEC uncertainties to MET, hence METUp need not be greater than MET and METDn need not be less than MET.
+	  if(MTSys){
+	    if(SysUp)
+	      mtw = MTWCalculator(METUp->at(1),METPhiUp->at(1), Electrons->at(0).Pt(), Electrons->at(0).Phi(), 0);
+	    if(SysDn)
+	      mtw = MTWCalculator(METDown->at(1),METPhiDown->at(1), Electrons->at(0).Pt(), Electrons->at(0).Phi(), 0);
+	  }
+
+	  //	 double  mtwCalc =  MTWCalculator(MET,METPhi, Electrons->at(0).Pt(), Electrons->at(0).Phi(), 0);
+	 //	 std::cout<<" mtw "<<mtw<<" mtwCalc "<<mtwCalc<<endl;
 	  //*AR-180101-here although scale factor is read from histogram file, if reco electron is not prompt(matching to gen electron), scale factor is reset to 1 later, which is expected as SF histograms are filled based on number of reco electrons/muons which are prompt.
 	  if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0){
 	    if(ScaleAccSys){ 
@@ -827,6 +851,14 @@ Bool_t TFMaker::Process(Long64_t entry)
 	}
 	if(MuonsNum_ == 1){
 	  mtw = Muons_MTW->at(0);
+	  //std::cout<<" met "<<MET<<" up1 "<<METUp->at(1)<<" dn1 "<<METDown->at(1)<<endl;
+	  if(MTSys){
+	    if(SysUp)
+	      mtw = MTWCalculator(METUp->at(1),METPhiUp->at(1), Muons->at(0).Pt(), Muons->at(0).Phi(), 0);
+	    if(SysDn)
+	      mtw = MTWCalculator(METDown->at(1),METPhiDown->at(1), Muons->at(0).Pt(), Muons->at(0).Phi(), 0);
+	  }
+
 	  if(GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1){
 	    if(ScaleAccSys){ 
 	      Vec_SF.clear();

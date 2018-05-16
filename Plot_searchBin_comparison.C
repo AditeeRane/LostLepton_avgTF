@@ -43,13 +43,15 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //  sprintf(tempname,"ARElog115_GenInfo_HadTauEstimation_stacked.root");
   //  sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
-  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_SingleMuon_V12_.root");
+  //  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_SingleMuon_V12_.root");
+  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
 
-  sprintf(tempnameAvg,"HadTauDataPredDirectbyAvgTF.root");
+  //  sprintf(tempnameAvg,"HadtauPrediction_0_Data_WithBtagSF.root");
+  sprintf(tempnameAvg,"HadtauPrediction_0_MC_WithBtagSF.root");
 
   // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
-  bool doData = true;
+  bool doData = false;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
@@ -220,7 +222,10 @@ else{
     //*AR-180124--Reads Moriond histogram 
       EstHistTemp=(TH1D*) dPre->Get(tempname)->Clone();
       EstHistDTemp=(TH1D*) dPre->Get(tempname)->Clone();
-      //      EstHistTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
+   
+      //      EstHistTemp->Scale(35900);
+      //EstHistDTemp->Scale(35900);
+   //      EstHistTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
       //      EstHistDTemp=(TH1D*) dPre->Get("totalPred_LL")->Clone();
       //*AR-180124--NjNbcorr=false for hadtau data prediction from Moriond
       if(NjNbcorr){
@@ -241,18 +246,22 @@ else{
 	  bin++;
 	}
       }
-  }
+  } //end of doData
   else{
     if(doClosurewoIsoTrackVeto){
       EstHistTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
       EstHistDTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
     }else{
-   
+//EstHist is not Moriond exp/pre  
+      EstHistTemp=(TH1D*)LLFile->Get(tempname)->Clone();
+      EstHistDTemp=(TH1D*)LLFile->Get(tempname)->Clone();
+      EstHistTemp->Scale(35900);
 //EstHist is Moriond exp/pre
+      /*
       tempstack=(THStack*)LLFile->Get(tempname)->Clone();
       EstHistTemp=(TH1D*) tempstack->GetStack()->Last();
       EstHistDTemp=(TH1D*) tempstack->GetStack()->Last();
-      EstHistTemp->Scale(35.9/3);
+      EstHistTemp->Scale(35.9/3); */
       //EstHistDTemp->Scale(35.9/3);
       //*AR-180124--NjNbcorr=true for hadtau MC prediction from Moriond
       if(NjNbcorr){
@@ -609,13 +618,14 @@ else{
 
   // Legend & texts
   if(doData) sprintf(tempname,"Prediction from data");
-  else sprintf(tempname,"Prediction from data"); //data-->MC
+  else sprintf(tempname,"Prediction from MC"); //data-->MC
   catLeg1->SetHeader(tempname);
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
   sprintf(tempname,"Average TF Prediction");
   catLeg1->AddEntry(GenHist,tempname,"pe");
-  //sprintf(tempname,"MC Expectation");
-  sprintf(tempname,"Event-by-Event");
+  sprintf(tempname,"MC Expectation");
+  //sprintf(tempname,"MC Expectation using BtagProb");
+  //  sprintf(tempname,"Event-by-Event");
   catLeg1->AddEntry(EstHist,tempname);
   catLeg1->Draw();
 
