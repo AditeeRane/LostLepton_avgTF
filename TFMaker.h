@@ -154,14 +154,16 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   BTagCorrector *btagcorr = 0;
   std::vector<double> bTagProb;
   std::vector<unsigned int> bTagBins;
+  std::vector<unsigned int> BinforMTEff;
   Double_t		  topPtSF;
   std::vector<double> topPt;
 
   TH1D* h_muIsoTrack_NJetsunc = 0;
   TH1D* h_elecIsoTrack_NJetsunc = 0;
   TH1D* h_pionIsoTrack_NJetsunc = 0;
-
-
+  TH1D* h_CR_AfterMT=0;
+  TH1D* h_CR_BeforeMT=0;
+  TH1D*  h_MTEff=0;
   TString treeName = " ";
 
 

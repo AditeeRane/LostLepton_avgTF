@@ -74,6 +74,7 @@ public:
   void PrintUsed();
   void PrintUsedCombined();
   Bin* GetSearchBin(int i);
+  vector<double> GetBinMedian(int i);
   
   ~SearchBins(){}
 private:
@@ -267,6 +268,18 @@ Bin* SearchBins::GetSearchBin(int i){
 	if(i>(int)bins_.size()) std::cout<<"You are trying to access a bin that does not exist!"<<std::endl;
 	return &(bins_.at(i-1));
 }
+vector<double> SearchBins::GetBinMedian(int i){
+  vector<double> BinVariables;
+  double HTx=(bins_[i].getHTmin()+bins_[i].getHTmax())/2;
+  double MHTx=(bins_[i].getMHTmin()+bins_[i].getMHTmax())/2;
+  int NJetx=(int)((bins_[i].getNJetsmin()+bins_[i].getNJetsmax())/2);
+  int NBTagx=(int)((bins_[i].getBTagsmin()+bins_[i].getBTagsmax())/2);
+  BinVariables.push_back(HTx);
+  BinVariables.push_back(MHTx);
+  BinVariables.push_back(NJetx);
+  BinVariables.push_back(NBTagx);
+  return BinVariables;
+}
 
 unsigned int SearchBins::GetBinNumber(double HT, double MHT, int NJets, int BTags)
 {
@@ -288,8 +301,8 @@ unsigned int SearchBins::GetBinNumber(double HT, double MHT, int NJets, int BTag
 	  }
   }
   if(match==-1)
-  {
-    //std::cout<<"Error event fits in no bin! HT: "<<HT<<", MHT: "<<MHT<<", NJets: "<<NJets<<", BTags: "<<BTags<<std::endl;
+    {
+      //std::cout<<"Error event fits in no bin! HT: "<<HT<<", MHT: "<<MHT<<", NJets: "<<NJets<<", BTags: "<<BTags<<std::endl;
   	nSkipped++;
   }
   if(match>0)

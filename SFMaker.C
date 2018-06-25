@@ -348,7 +348,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     GenMuonsNum_ = GenMuons->size();
     GenElectronsNum_ = GenElectrons->size();
 
-    //*AR, 180101- Only consider events which have atleast one gen electron or one gen muon.
+    //*AR, 180101- Only consider events which have passed filters and atleast one gen electron or one gen muon.
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
     if(JECSys){
@@ -623,7 +623,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 */
     GenMuonsAccNum_ = GenMuonsAcc.size();
     GenElectronsAccNum_ = GenElectronsAcc.size();
-    //*AR-180101---Skip the event if there is no electron and no muon with pT>5 and abs(eta)<2.5
+    //*AR-180101---Skip the event if there is no electron and no muon with pT>5 and abs(eta)<2.5=> Survived events: events which passed filters and have atleast one gen lepton(ele or muon) with pT>5 and abs(eta)<2.5
     if(GenMuonsAccNum_ + GenElectronsAccNum_ == 0) return kTRUE;
 
     //*AR-180101---Call first two leading muons or electrons by special names
@@ -644,11 +644,15 @@ Bool_t SFMaker::Process(Long64_t entry)
             GenElectronsAccEta2_ = GenElectronsAcc.at(1).Eta();
         }
     }
-
+    //*AR-180606: Get number of reco electrons and muons in the event
     ElectronsNum_ = Electrons->size();
     MuonsNum_ = Muons->size();
 
-    // get isoTrack collection from full TAP collection
+    // Check isoTrack collection saved in tree using full TAP collection
+    //isoElectronTracks: #electron tracks with track isolation<0.2 and mT<100
+    //isoMuonTracks: #muon tracks with track isolation<0.2 and mT<100
+    //isopionTracks: #pion tracks with track isolation<0.1 and mT<100
+
     //*AR-180101---Skips event if number of isolated tracks obtained from TAP selection and those provided by isotrack collection in tree are not same 
     //*AR-180102---Q. isolated track needs track isolation<0.2 and mT<100 for electrons, muons and track isolation<0.1 and mT<100 for pions, why there is no pT cut >5 for leptonic track and >10 for hadronic track?
     isoTracksNum = isoMuonTracksNum + isoPionTracksNum + isoElectronTracksNum;
@@ -685,8 +689,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     // Match iso leptons/tracks to gen leptons
     // Apply SFs only to prompts
-    // *AR-180101---Reco objects which match to gen obects within acceptane, call them by special names
-    // *AR-180102---matching is done in terms of delta_pT/pT<0.1 and deltaR<0.03 for both isolated reco electrons and reco isolated tracks 
+    // *AR-180101---Reco objects which match to gen objects based on condition: delta_pT/pT<0.1 and deltaR<0.03 for both isolated reco electrons and reco isolated tracks 
+    //GenElectronsAccNum_: gen electrons with abs(eta)<2.5, pT>5    
     for(unsigned i=0; i< GenElectronsAccNum_; i++){
       bool matched = false;
         for(unsigned j=0; j< ElectronsNum_; j++){
@@ -763,8 +767,8 @@ Bool_t SFMaker::Process(Long64_t entry)
                 break;
             }
         }
-    }
-
+    }//*AR-180606-end of loop over gen muons
+    //*AR-180606:Skip event if cases of (matched lepton+matched tracks) exceed number of gen leptons(ele/muons withpT>5 and eta<2.5), that is avoids double counting.
     if(GenMuonsAccNum_ < MuonsPromptNum_ + MuonTracksPromptNum_ || GenElectronsAccNum_ < ElectronsPromptNum_ + ElectronTracksPromptNum_){
         std::cout<<"Mu:"<<GenMuonsAccNum_<<"->"<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
         std::cout<<"El:"<<GenElectronsAccNum_<<"->"<<ElectronsPromptNum_<<"+"<<ElectronTracksPromptNum_<<std::endl;
@@ -1011,7 +1015,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      }
 	    }
 	    
-	    //std::cout<<" h_el_nFoundOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
+	    //std::cout<<"h_el_nFoundOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
 	    
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);

@@ -17,12 +17,22 @@ class ISRCorrector {
 		void SetWeights(TH1* weights, TH1* all){
 			if(!weights) return;
 			//normalize weights using overall NJetsISR spectrum so total number of gen events will stay the same
+			//std::cout<<" numerator exists "<<endl;
 			h_weights = (TH1*)weights->Clone();
+			//std::cout<<" h_weights_1 "<<h_weights->GetBinContent(1)<<endl;
 			h_njetsisr = all;
+			//std::cout<<" all_1 "<<all->GetBinContent(1)<<endl;
+
+			h_njetsisr =(TH1*)all->Clone();
+			//std::cout<<" denominator exists "<<endl;
 			double A_LO = h_njetsisr->Integral(0,h_njetsisr->GetNbinsX()+1);
+			//std::cout<<" A_LO "<<A_LO<<endl;
 			TH1* h_njetsisrW = (TH1*)all->Clone();
+			//std::cout<<" h_njetsisrW_1 "<<h_njetsisrW->GetBinContent(1)<<endl;
 			h_njetsisrW->Multiply(h_weights);
+			//std::cout<<" h_njetsisrW_1_modified "<<h_njetsisrW->GetBinContent(1)<<endl;
 			double A_NLO = h_njetsisrW->Integral(0,h_njetsisrW->GetNbinsX()+1);
+			//std::cout<<" A_NLO "<<A_NLO<<endl;		
 			h_weights->Scale(A_LO/A_NLO);
 		}
 		

@@ -42,21 +42,22 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_LL.root");
 
   //  sprintf(tempname,"ARElog115_GenInfo_HadTauEstimation_stacked.root");
-  //  sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
-  //  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_SingleMuon_V12_.root");
-  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
-
+  //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
+  sprintf(tempname,"ARElog116_35.9ifb_HadTauEstimation_data_formatted_V12.root");
+  //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
+  
   //  sprintf(tempnameAvg,"HadtauPrediction_0_Data_WithBtagSF.root");
-  sprintf(tempnameAvg,"HadtauPrediction_0_MC_WithBtagSF.root");
-
-  // true: do closure test (MC prediction vs MC truth)
+  //  sprintf(tempnameAvg,"HadtauPrediction_0_MC_WithBtagSF.root");
+  //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
+  sprintf(tempnameAvg,"Prediction_0_Data_MET_HadTau_binSFCorrected_withCSHist.root");
+ // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
-  bool doData = false;
+  bool doData = true;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
   bool showSystematics = false;
-  bool NjNbcorr=false;
+  bool NjNbcorr=false; //true only for MC prediction from Moriond
   bool doClosurewoIsoTrackVeto = false;
 
   ///////////////////////////////////////////////////////////////////////////////////////////
@@ -202,16 +203,21 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   if(option.find("QCD")!=string::npos)search_x_max=223.+0.5;
   double search_x_min=1.-0.5;
 
-  TDirectory *dPre = 0;
+  //  TDirectory *dPre = 0;
+  TDirectory *dPre =(TDirectory*) LLFile;
   //TDirectory *dExp = (TDirectory*)LLFileAvg->Get("Expectation");
   TDirectory *dExp = (TDirectory*) LLFileAvg;
   THStack *tempstack;
   //  char tempname[200];
   //*AR-180124--Reads Moriond histogram
-  sprintf(tempname,"%s","searchH_b");
+  //  sprintf(tempname,"%s","totalPred_LL");
+  sprintf(tempname,"%s","searchBin_nominal");
+
   if(doData){
-    //    dPre = (TDirectory*)LLFile->Get("Prediction_data");
-    dPre = (TDirectory*) LLFile;
+    //  dPre = (TDirectory*)LLFile->Get("Prediction_data");
+    //    dPre = (TDirectory*)LLFile->Get("searchBin_nominal");
+    
+  // dPre = (TDirectory*) LLFile;
   }
   /*
 else{
@@ -252,16 +258,18 @@ else{
       EstHistTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
       EstHistDTemp=(TH1D*) dPre->Get("totalPred_woIsoTrack_LL_MC")->Clone();
     }else{
-//EstHist is not Moriond exp/pre  
+//if EstHist is not Moriond exp/pre  
+      /*  
       EstHistTemp=(TH1D*)LLFile->Get(tempname)->Clone();
       EstHistDTemp=(TH1D*)LLFile->Get(tempname)->Clone();
       EstHistTemp->Scale(35900);
-//EstHist is Moriond exp/pre
-      /*
+*/
+//if EstHist is Moriond exp/pre
+      
       tempstack=(THStack*)LLFile->Get(tempname)->Clone();
       EstHistTemp=(TH1D*) tempstack->GetStack()->Last();
       EstHistDTemp=(TH1D*) tempstack->GetStack()->Last();
-      EstHistTemp->Scale(35.9/3); */
+      EstHistTemp->Scale(35.9/3); 
       //EstHistDTemp->Scale(35.9/3);
       //*AR-180124--NjNbcorr=true for hadtau MC prediction from Moriond
       if(NjNbcorr){
@@ -623,9 +631,9 @@ else{
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
   sprintf(tempname,"Average TF Prediction");
   catLeg1->AddEntry(GenHist,tempname,"pe");
-  sprintf(tempname,"MC Expectation");
+  //  sprintf(tempname,"MC Expectation");
   //sprintf(tempname,"MC Expectation using BtagProb");
-  //  sprintf(tempname,"Event-by-Event");
+  sprintf(tempname,"Event-by-Event");
   catLeg1->AddEntry(EstHist,tempname);
   catLeg1->Draw();
 
@@ -685,7 +693,7 @@ else{
       //*AR-180124----for prediction vs prediction
       sprintf(ytitlename,"#frac{Avg TF}{Evt-by-Evt} ");
       //*AR-180124----for MC exp vs prediction
-      //    sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
+      //sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
 
       numerator->SetMaximum(ymax_bottom);
       numerator->SetMinimum(ymin_bottom);

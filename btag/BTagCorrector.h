@@ -177,7 +177,7 @@ class BTagCorrector {
 				//HT jet cuts
 				if(!Jets_HTMask[ja]) continue;
 				
-				//get sf and eff values (checks if already calculated)
+				//get sf and eff values (checks if already calculated) as a function of jet pt, eta, flavour
 				InitSFEff(Jets[ja].Pt(), Jets[ja].Eta(), Jets_flavor[ja], sfEffLists[ja]);
 				double eps_a = sfEffLists[ja][0]*sfEffLists[ja][1]*sfEffLists[ja][2];
 				

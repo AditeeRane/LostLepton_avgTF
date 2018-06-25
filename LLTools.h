@@ -69,6 +69,23 @@ static double GetSignalTriggerEffWeight(Double_t MHT) {
   else return 1.00;
 }
 
+static double GetSignalTriggerEffWeight(Double_t HT,Double_t MHT) {
+  if(HT>1500){
+    if (MHT<250) return 0;
+    else if(MHT<300) return 0.88;
+    else if (MHT<350) return 0.93;
+    else if (MHT<500) return 0.928;
+    else return 0.984;
+  }
+  else{
+    if (MHT<250) return 0;
+    else if(MHT<300) return 0.981;
+    else if (MHT<350) return 0.988;
+    else if (MHT<500) return 0.993;
+    else return 0.989;
+  }
+}
+
 static std::pair<double,double> EvalSF(TH2 *hist, Double_t xVal, Double_t yVal) {
   // Dont use overflow bins!
   if(xVal < hist->GetXaxis()->GetXmin() )

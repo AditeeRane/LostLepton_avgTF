@@ -32,12 +32,12 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs = true; //check:true only for data
 
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
@@ -48,13 +48,14 @@ const bool runOnNtuples = true;
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
 // Useful for T2tt corridor studies
+//*AR:180621-"true" only for genMHT version of signal contamination
 const bool useGenHTMHT = false;
 
 // Do top-pt reweightung
 const bool topPTreweight = false;
 
 // pu
-const TString path_puHist("pu/PileupHistograms_0721_63mb_pm5.root");
+const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
 const string path_bTagCalib("btag/CSVv2_Moriond17_B_H_mod.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
@@ -92,7 +93,7 @@ class Prediction : public TSelector {
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
   void resetValues();
   bool FiltersPass();
-
+  vector<string> skmInput(string mom);
   
   //Options
   bool useTrigger = false;
@@ -100,7 +101,7 @@ class Prediction : public TSelector {
   bool doPUreweighting = false;
   bool doBTagCorr = true;
   bool doISRcorr = false; 
-  bool useFilterData = true;
+  bool useFilterData = false;
 
   // output variables
   std::string fname; // for fetching file name
@@ -109,14 +110,14 @@ class Prediction : public TSelector {
   string currentFile;
   TFile* pufile = 0;
   TH1* puhist = 0;
-
+  
   std::vector<std::pair<double, double>> xsecsT1T5;
   std::vector<std::pair<double, double>> xsecsT2;
   std::vector<std::pair<double, double>> *xsecs = 0;
 
   // Output
   TH1D* h_Prediction = 0;
-
+  TH1D* h_CSStat = 0;
   // TFs
   TH1D* h_0L1L_SB = 0;
   TH1D* h_0L1L_SF_SB = 0;
@@ -138,7 +139,8 @@ class Prediction : public TSelector {
   std::vector<double> topPt;
 
   TString treeName = " ";
-
+  string SkimFilePath=" ";
+  string OldSkimFilePath=" ";
 
   SearchBins *SearchBins_ =0;
   SearchBins *SearchBinsQCD_ =0;
@@ -347,6 +349,7 @@ void Prediction::Init(TTree *tree)
   // Apply weights if trigger not simulated
   //if(runOnStandardModelMC) useTriggerEffWeight = true; // not derived yet
   if(runOnSignalMC && !useGenHTMHT) useTriggerEffWeight = true;
+
   // Do PU reweighting. true for signal scan
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
@@ -417,20 +420,27 @@ void Prediction::Init(TTree *tree)
   std::string str_xsecT1T5;
   while (std::getline(signal_xsecT1T5, str_xsecT1T5))
   {
+    //TObjArray * TString::Tokenize ( const TString &  delim)
+    // This function is used to isolate sequential tokens in a TString.
+    //These tokens are separated in the string by at least one of the characters in delim. 
     TObjArray *tokens = TString(str_xsecT1T5).Tokenize(",");
     //std::cout<<((TObjString *)(tokens->At(0)))->String()<<"; "<<((TObjString *)(tokens->At(1)))->String()<<";"<<std::endl;
+    //makes vector of pair like: (220,2259.15):(mass,xsec)
     xsecsT1T5.push_back(std::make_pair(std::atof(((TObjString *)(tokens->At(0)))->String()), std::atof(((TObjString *)(tokens->At(1)))->String())));
   }
-
+  //AR-180618- Ex. :ifstream  userstream(“file1.txt”); The userstream is the name of the object and file1.txt is the name of the file. When the object is created file is automatically open. There is no need of explicitly opening the file.
   std::ifstream signal_xsecT2(path_xsecT2);
   std::string str_xsecT2;
+  //AR-180618- New line is saved under str_xsecT2
   while (std::getline(signal_xsecT2, str_xsecT2))
-  {
+    {
+      
     TObjArray *tokens = TString(str_xsecT2).Tokenize(",");
     //std::cout<<((TObjString *)(tokens->At(0)))->String()<<"; "<<((TObjString *)(tokens->At(1)))->String()<<";"<<std::endl;
+    
     xsecsT2.push_back(std::make_pair(std::atof(((TObjString *)(tokens->At(0)))->String()), std::atof(((TObjString *)(tokens->At(1)))->String())));
   }
-
+  
   if(runOnSignalMC){
     // ISR setup
     isrfile = TFile::Open(path_ISRcorr, "READ");
@@ -439,7 +449,7 @@ void Prediction::Init(TTree *tree)
 
   if(doPUreweighting){
     pufile = TFile::Open(path_puHist,"READ");
-    puhist = (TH1*)pufile->Get("pu_weights_central");
+    puhist = (TH1*)pufile->Get("pu_weights_down");
   }
 
   fChain->SetBranchStatus("*",0);

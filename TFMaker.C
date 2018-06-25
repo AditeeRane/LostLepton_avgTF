@@ -21,7 +21,7 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
   SearchBins_BTags_ = new SearchBins(true);
 
   bTagBins = {0, 0, 0, 0};
-
+  BinforMTEff = {0, 0, 0, 0};
   // Initialize Histograms
   TH1::SetDefaultSumw2();
   unsigned nSB = SearchBins_->GetNbins();
@@ -40,6 +40,10 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
   h_CR_SF_SB_copy = new TH1D("h_CR_SF_SB_copy", "h_CR_SF_SB_copy", nSB, 0.5, nSB+0.5);
   h_SR_SF_SB_copy = new TH1D("h_SR_SF_SB_copy", "h_SR_SF_SB_copy", nSB, 0.5, nSB+0.5);
 
+  h_CR_BeforeMT = new TH1D("h_CR_BeforeMT","h_CR_BeforeMT",nSB, 0.5, nSB+0.5);
+  h_CR_AfterMT = new TH1D("h_CR_AfterMT","h_CR_AfterMT",nSB, 0.5, nSB+0.5);
+  h_MTEff = new TH1D("h_MTEff","h_MTEff",nSB, 0.5, nSB+0.5);
+
   GetOutputList()->Add(h_CR_SB);
   GetOutputList()->Add(h_SR_SB);
   GetOutputList()->Add(h_0L1L_SB);
@@ -51,6 +55,10 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_SR_SB_copy);
   GetOutputList()->Add(h_CR_SF_SB_copy);
   GetOutputList()->Add(h_SR_SF_SB_copy);
+
+  GetOutputList()->Add(h_CR_BeforeMT);
+  GetOutputList()->Add(h_CR_AfterMT);
+  GetOutputList()->Add(h_MTEff);
 
   std::cout<<"----------------"<<std::endl;
   std::cout<<"DeltaPhi Cut: "<<useDeltaPhiCut<<std::endl;
@@ -233,7 +241,7 @@ Bool_t TFMaker::Process(Long64_t entry)
     GenElectronsNum_ = GenElectrons->size();
     MuonsNum_ = Muons->size();
     ElectronsNum_ = Electrons->size();
-
+    //Consider only events with atleast one lepton at gen level.
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
 
     if(JECSys)
@@ -555,6 +563,7 @@ Bool_t TFMaker::Process(Long64_t entry)
     }
 
     if(doBTagCorr){
+      BinforMTEff= {Bin_, 0, 0, 0};
       if(JECSys)
 	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec);
       else
@@ -601,7 +610,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 
     GenMuonsAccNum_ = GenMuonsAcc.size();
     GenElectronsAccNum_ = GenElectronsAcc.size();
-
+    //*AR: Here note that unlike SFMaker.C, we do not skip events if there is no gen lepton with pT>5 and eta<2.5
     //Define some helpful variables
     if(GenMuonsAccNum_ > 0){
         GenMuonsAccPt_ = GenMuonsAcc.at(0).Pt();
@@ -652,7 +661,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         return kTRUE;
     }
     
-    // Match iso leptons/tracks to gen leptons
+    // Match iso leptons/tracks to gen leptons: ElectronsPromptNum_,ElectronTracksPromptNum_,MuonsPromptNum_, MuonTrcksPromptNum_: number of reco leptons and tracks matching to gen electrons/muons with pT>5 and eta<2.5
     // Apply SFs only to prompts
     for(unsigned i=0; i< GenElectronsAccNum_; i++){
         bool matched = false;
@@ -731,6 +740,7 @@ Bool_t TFMaker::Process(Long64_t entry)
             }
         }
     }
+    //*AR-180606:Skip event if cases of (matched lepton+matched tracks) exceed number of gen leptons(ele/muons withpT>5 and eta<2.5), that is avoids double counting.
 
     if(GenMuonsAccNum_ < MuonsPromptNum_ + MuonTracksPromptNum_ || GenElectronsAccNum_ < ElectronsPromptNum_ + ElectronTracksPromptNum_){
         std::cout<<"Mu:"<<GenMuonsAccNum_<<"->"<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
@@ -748,8 +758,9 @@ Bool_t TFMaker::Process(Long64_t entry)
     for(int i = 0; i < nLoops; i++){
       double WeightBtagProb = Weight*bTagProb.at(i);
       unsigned bTagBin = bTagBins.at(i);
+      unsigned GetBinforMTEff=BinforMTEff.at(i);
       //      std::cout<<" segvio2**** "<<endl;
-      // CONTROL REGION
+      // CONTROL REGION: if there is electron at reco level, get it's mT
       if(ElectronsNum_ + MuonsNum_ == 1){ //*AR-180322--these are just reco objects, not matched to gen objects yet
 	double SF = 1;
 	double binSF = bTagBin; //based on (HT,MHT,Njet,Nbtag_true)
@@ -762,7 +773,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  else
 	    binSF = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
 	}
-	
+	//*AR: 180606: Three caes are considered here
+	//1] there is a reco electron and gen electron with pT>5 and eta<2.5: Use SF(binSF) 2] there is a reco electron but no gen electron with pT>5 and eta<2.5 (gen lepton out of acceptance): SF=1 3] there is a reco electron and gen electron with pT>5 and eta<2.5 but no matched reco electron to gen electron: failed matching: SF=1 
 	if(ElectronsNum_ == 1){
 	  mtw = Electrons_MTW->at(0);
 	  //*AR-180329--why METUp, METDown sizes are 7
@@ -804,11 +816,11 @@ Bool_t TFMaker::Process(Long64_t entry)
 	    }
 	    else
 	      SF = GetSF(h_el_SFCR_SB,binSF);
-	  } //end of if GenElectronsAccNum_ == 1
+	  } //end of if GenElectronsAccNum_ == 1, ie gen electron with pT>5 and eta<2.5
 	  //else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
 	  //  SF = GetSF(h_di_SFCR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF);
 	  //}
-	  else{ //*AR-180321--corresponding to fake reconstructed electrons
+	  else{ //*AR-180321--there is reco electron but no gen electron with pt>5 and eta<2.5, i.e corresponding to fake, out of acceptance reconstructed electrons
 	    if(ScaleAccSys){ 
 	      Vec_SF.clear();
 	      for(int iacc=0; iacc < Scalesize; iacc++){
@@ -827,7 +839,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	    }
 	    else
 	      SF = 1;
-	  }
+	  } //end of else of "if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0)"
 
                 // Don't correct for non-prompts
 	  if(ElectronsPromptNum_==0){
@@ -849,8 +861,13 @@ Bool_t TFMaker::Process(Long64_t entry)
 	      SF = 1;
 	  }
 	}
+	//Similar three cases as for electrons
 	if(MuonsNum_ == 1){
 	  mtw = Muons_MTW->at(0);
+	  if( GenMuonsAccNum_ == 1 && Muons->at(0).Pt()>20 && abs(Muons->at(0).Eta())<2.1){
+	    std::cout<<" entry "<<entry<<" i "<<i<<"beforeMT.. "<<" MuonsNum_ "<<MuonsNum_<<" electronsNum_ "<<ElectronsNum_<<" mtw "<<mtw<<endl;
+	    h_CR_BeforeMT->Fill(GetBinforMTEff,Weight);
+	  }
 	  //std::cout<<" met "<<MET<<" up1 "<<METUp->at(1)<<" dn1 "<<METDown->at(1)<<endl;
 	  if(MTSys){
 	    if(SysUp)
@@ -912,11 +929,16 @@ Bool_t TFMaker::Process(Long64_t entry)
 	    else
 	      SF = 1;
 	  }
-	}
+	} //end of if(MuonsNum_ == 1)
 	
-	//*AR-180101-skips event if mT>100
+	//*AR-180101-skips event if the electron/muon found at reco level has mT>100
             if(mtw > 100) return kTRUE;
-        
+	    std::cout<<" entry "<<entry<<" i "<<i<<"afterMT.. "<<" MuonsNum_ "<<MuonsNum_<<" electronsNum_ "<<ElectronsNum_<<" mtw "<<mtw<<endl;
+
+	    if(MuonsNum_ == 1 && GenMuonsAccNum_ == 1 && Muons->at(0).Pt()>20 && abs(Muons->at(0).Eta())<2.1){
+	      std::cout<<" entry "<<entry<<" i "<<i<<"now fill afterMT.. "<<" mtw "<<mtw<<" GetBinforMTEff "<<GetBinforMTEff<<endl;
+	      h_CR_AfterMT->Fill(GetBinforMTEff,Weight);
+	    }
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){ 
 		Vec_scale_CR_SB_copy.at(iacc)->Fill(binSF, WeightBtagProb*ScaleWeights->at(iacc));
@@ -944,7 +966,10 @@ Bool_t TFMaker::Process(Long64_t entry)
 
         // SIGNAL REGION
         if(ElectronsNum_ + MuonsNum_ == 0 && isoTracksNum == 0){
-            if(GenElectronsNum_ + GenMuonsNum_ == 0) return kTRUE;
+	  //Four cases possible here:
+	  //1] No lepton at gen level: skip event as SR requires there is a lepton at gen level but no lepton at reco level 2] there was gen electron with pt>5 and eta<2.5: use ele_SF in SR 3] there was gen muon with pt>5 and eta<2.5: use muon_SF in SR 4] no gen electron/muon with pt>5 and eta<2.5(out of acceptance) : use SF=1
+
+            if(GenElectronsNum_ + GenMuonsNum_ == 0) return kTRUE; 
 
             double SF = 1;
 	    //            double binSF = Bin_;
@@ -999,7 +1024,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	      }
 	      else
 		SF = GetSF(h_mu_SFSR_SB, binSF); 
-	    }
+	    } //end of (GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1)
 	    //else if(GenElectronsAccNum_ + GenMuonsAccNum_ == 2){
 	    //  SF = GetSF(h_di_SFSR_SB, binSF)*GetSF(h_di_SFSR_SB, binSF); 
             //}
@@ -1091,12 +1116,14 @@ void TFMaker::Terminate()
     h_CR_SF_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_copy"));
     h_SR_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SB_copy"));
     h_SR_SF_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_copy"));
-
+    h_CR_BeforeMT = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_BeforeMT"));
+    h_CR_AfterMT = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_AfterMT"));
+    h_MTEff = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MTEff"));
+    std::cout<<" seg vio1 "<<endl;
     PushHist(h_CR_SB_copy, h_CR_SB);
     PushHist(h_SR_SB_copy, h_SR_SB);
     PushHist(h_CR_SF_SB_copy, h_CR_SF_SB);
     PushHist(h_SR_SF_SB_copy, h_SR_SF_SB);
-
 
     if(ScaleAccSys){
       for(int iacc=0; iacc < Scalesize; iacc++){
@@ -1119,6 +1146,10 @@ void TFMaker::Terminate()
       h_0L1L_SB->Divide(h_SR_SB, h_CR_SB);
       h_0L1L_SF_SB->Reset();
       h_0L1L_SF_SB->Divide(h_SR_SF_SB, h_CR_SF_SB);
+      h_MTEff->Reset();
+      h_MTEff->Add(h_CR_AfterMT);
+      h_MTEff->Divide(h_CR_BeforeMT);
+      
     }
 
     for(int nX = 1; nX <= h_0L1L_SB->GetXaxis()->GetNbins(); ++nX){
@@ -1167,6 +1198,9 @@ void TFMaker::Terminate()
       h_SR_SF_SB->Write();
       h_0L1L_SB->Write();
       h_0L1L_SF_SB->Write();
+      h_CR_BeforeMT->Write(); 
+      h_CR_AfterMT->Write(); 
+      h_MTEff->Write();
     }
     /*
     SaveEff(h_CR_SB, outPutFile);
