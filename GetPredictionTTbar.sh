@@ -15,7 +15,7 @@ for TTbarStr in HT_1200_2500 HT_600_800 HT_800_1200 HT_2500_Inf DiLept T_SingleL
     export SubmitFile=submitScriptTTbar_${TTbarStr}.jdl
     if [ -e ${SubmitFile} ]; then
 	rm ${SubmitFile}
-o    fi
+    fi
     let a=1
     Njobs=`ls InputFiles_TTbar/filelist_Spring15_TTJets_${TTbarStr}_* | wc -l `
     #let njobs=Njobs - a
