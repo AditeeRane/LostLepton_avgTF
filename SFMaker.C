@@ -805,7 +805,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 	  }
 
-	  if(IsoSys){
+	  if(IsoMuSys){
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
@@ -815,7 +815,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 
-	  if(IDSys){
+	  if(IDMuSys){
 	    //	    std::pair<double, double> MyPair;
 	    //MyPair=EvalSF(h_muIDSF,GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    //	    std::cout<<" pt "<<GenMuonsAccPt_<<" eta "<<GenMuonsAccEta_<<" MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<endl;
@@ -827,7 +827,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	  
-	  if(TrackRecoSys){
+	  if(TrackRecoMuSys){
 	    if(GenMuonsAccPt_ > 10){
 	      if(SysUp)
 		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
@@ -920,7 +920,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 
 	  }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
-	    //*AR, 20180102- if IsotrkVeto is applied, following histograms filled only when there is no reco muon. If IsotrkVeto is not applied, following histograms filled when there is no muon and no isolated track
+	    //*AR, 20180102- if IsotrkVeto is applied, following histograms filled only when there is no reco muon and no isolated track. If IsotrkVeto is not applied, following histograms filled when there is no muon (independent of number of isolated tracks)
 	    h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 	    if(ScaleAccSys){
@@ -954,7 +954,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 
 	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
-	  if(IsoSys){
+	  if(IsoEleSys){
 	    if(SysUp)
 	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    if(SysDn)
@@ -963,7 +963,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 
-	  if(IDSys){
+	  if(IDEleSys){
 	    //	    std::pair<double, double> MyPair;
 	    //MyPair=EvalSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	    //std::cout<<" pt "<<GenElectronsAccPt_<<" eta "<<GenElectronsAccEta_<<" ElePair_1 "<<MyPair.first<<" ElePair_2 "<<MyPair.second<<endl;
@@ -976,7 +976,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	  //*AR-180306---According to lepton SF twiki, 1% systematics should be added on top for electrons with pt<20 or >80 GeV, as Scale factors are found to be flat with pT. Nevertheless the pT dependence is hard to verify below 20GeV and above 80 GeV.
-	  if(TrackRecoSys){
+	  if(TrackRecoEleSys){
 	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
 	      if(SysUp)
 		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
@@ -1079,7 +1079,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         if(GenMuonsAccNum_ == 2 && GenElectronsAccNum_ == 0){
             h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
 
-	    if(IsoSys){
+	    if(IsoMuSys){
 	      if(SysUp)
 		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	      if(SysDn)
@@ -1089,7 +1089,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    
 
-	  if(IDSys){
+	  if(IDMuSys){
 	    if(SysUp)
 	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
 	    if(SysDn)
@@ -1099,7 +1099,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 
 
-	  if(TrackRecoSys){
+	  if(TrackRecoMuSys){
 	    if(GenMuonsAccPt_ > 10){
 	      if(SysUp)
 		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
@@ -1120,7 +1120,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 	  }
 	  
-	  if(IsoSys){
+	  if(IsoMuSys){
 	    if(SysUp)
 		isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.014);
 	      if(SysDn)
@@ -1129,7 +1129,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      isoSF2 = GetSF(h_muIsoSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
 
-	    if(IDSys){
+	    if(IDMuSys){
 	      if(SysUp)
 		recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_))+GetSFUnc(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_),0.01);
 	      if(SysDn)
@@ -1138,7 +1138,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      recoSF2 = GetSF(h_muIDSF, GenMuonsAccPt2_, std::abs(GenMuonsAccEta2_));
 	    
-	    if(TrackRecoSys){
+	    if(TrackRecoMuSys){
 	      if(GenMuonsAccPt2_ > 10){
 		if(SysUp)
 		  trackingSF2 = GetSF(h_muTrkHighPtSF, GenMuonsAccEta2_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta2_,0.01);
@@ -1201,7 +1201,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 2){
 	  h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
 	  
-	  if(IsoSys){
+	  if(IsoEleSys){
 	    if(SysUp)
 	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    if(SysDn)
@@ -1211,7 +1211,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 
 
-	  if(IDSys){
+	  if(IDEleSys){
 	    if(SysUp)
 	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	    if(SysDn)
@@ -1220,7 +1220,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 
-	  if(TrackRecoSys){
+	  if(TrackRecoEleSys){
 	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
 	      if(SysUp)
 		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
@@ -1238,7 +1238,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
 
  
-	  if(IsoSys){
+	  if(IsoEleSys){
 	    if(SysUp)
 	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
 	    if(SysDn)
@@ -1248,7 +1248,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
 
 
-	  if(IDSys){
+	  if(IDEleSys){
 	    if(SysUp)
 	      recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_),0.0);
 	    if(SysDn)
@@ -1258,7 +1258,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt2_, std::abs(GenElectronsAccEta2_));
 
 
-	  if(TrackRecoSys){
+	  if(TrackRecoEleSys){
 	    if(GenElectronsAccPt2_<20 || GenElectronsAccPt2_>80){
 	      if(SysUp)
 		trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta2_, GenElectronsAccPt2_,0.01);
@@ -1316,7 +1316,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 
         if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 1){
             h_di_nTwoPrompt_SB->Fill(bTagBin, WeightBtagProb);
-	    if(IsoSys){
+	    if(IsoMuSys){
 	      if(SysUp)
 		isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
 	      if(SysDn)
@@ -1326,7 +1326,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 
 
-	    if(IDSys){
+	    if(IDMuSys){
 	      if(SysUp)
 		recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
 	      if(SysDn)
@@ -1335,7 +1335,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    
-	    if(TrackRecoSys){
+	    if(TrackRecoMuSys){
 	      if(GenMuonsAccPt_ > 10){
 		if(SysUp)
 		  trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
@@ -1356,7 +1356,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
 	    }
 	    
-	    if(IsoSys){
+	    if(IsoEleSys){
 	      if(SysUp)
 		isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	      if(SysDn)
@@ -1365,7 +1365,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      isoSF2 = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 
-	    if(IDSys){
+	    if(IDEleSys){
 	      if(SysUp)
 		recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
 	      if(SysDn)
@@ -1374,7 +1374,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      recoSF2 = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	    
-	    if(TrackRecoSys){
+	    if(TrackRecoEleSys){
 	      if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
 		if(SysUp)
 		  trackingSF2 = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);

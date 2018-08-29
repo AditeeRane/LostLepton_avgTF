@@ -529,12 +529,6 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     LLPlusHadTau_TFRefHist_copy=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("LLPlusHadTau_TFRefHist_copy");     
     LLPlusHadTau_TFRefHist_copy->Reset();
 
-    //223(QCD) bin error histogram
-    TH1D* LLPlusHadTau_TFErrHist_input=(TH1D*) RefTFFile->Get("h_0L1L_SF_SB")->Clone("LLPlusHadTau_TFErrHist_input");
-    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefHist);
-
-    TH1D *LLPlusHadTau_TFErrHist=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("LLPlusHadTau_TFErrHist");
-    LLPlusHadTau_TFErrHist->Reset();
     
     //Reference TF with btag probability considered    
     sprintf(tempname,"TFLLPlusHadTau_JECRefWithBtagProb_binSFcorrected.root");
@@ -542,6 +536,12 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     printf("Opened %s\n",tempname);
     TFRefWithBtagProbHist=(TH1D*) RefTFWithBtagProbFile->Get("h_0L1L_SF_SB")->Clone("TFRefWithBtagProbHist");
 
+    //223(QCD) bin error histogram
+    TH1D* LLPlusHadTau_TFErrHist_input=(TH1D*) RefTFFile->Get("h_0L1L_SF_SB")->Clone("LLPlusHadTau_TFErrHist_input");
+    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefWithBtagProbHist);
+
+    TH1D *LLPlusHadTau_TFErrHist=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("LLPlusHadTau_TFErrHist");
+    LLPlusHadTau_TFErrHist->Reset();
 
     //TFBtagSysDn with btag probability considered
     sprintf(tempname,"TFLLPlusHadTau_BtagDnWithBtagProb_binSFcorrected.root");
@@ -552,7 +552,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     searchBin_LLPlusHadTau_BMistagDn->Reset(); //[0.5,223.5]
 
     //TFJECSysDn with btag probability considered 
-    sprintf(tempname,"TFLLPlusHadTau_JECDn_binSFcorrected.root");
+    sprintf(tempname,"TFLLPlusHadTau_JECDn_CorrectedHadTauJECDn_binSFcorrected_btagProbforHadTau.root");
     TFile * TFJECSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
     TH1D * searchBin_LLPlusHadTau_JECSysDn_input=(TH1D*) TFJECSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_LLPlusHadTau_JECSysDn_input");//x axis[0.5,223.5]
@@ -560,7 +560,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     searchBin_LLPlusHadTau_JECSysDn->Reset(); //[0.5,223.5]
 
     //TFMTSysDn with btag probability considered
-    sprintf(tempname,"TFLLPlusHadTau_MTDn_binSFcorrected.root");
+    sprintf(tempname,"TFLLPlusHadTau_MTDn_binSFcorrected_btagProbforHadTau.root");
     TFile * TFMTSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
     TH1D * searchBin_MTSysDn_input=(TH1D*) TFMTSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MTSysDn_input");//x axis[0.5,223.5]
@@ -587,21 +587,37 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     searchBin_LLPlusHadTau_AccSysScaleDn->Reset(); //[0.5,223.5]
 
     //MuonTrackRecoDn with btag probability considered
-    sprintf(tempname,"TFLLPlusHadTau_TrackRecoDn_binSFcorrected.root");
-    TFile * TFTrackRecoSysDnFile = TFile::Open(tempname,"R");
+    sprintf(tempname,"TFLLPlusHadTau_MuTrkRecoDn_binSFcorrected.root");
+    TFile * TFMuTrackRecoSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_MuRecoSysDn_input=(TH1D*) TFTrackRecoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuRecoSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_MuRecoSysDn_input=(TH1D*) TFMuTrackRecoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuRecoSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_MuRecoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_MuRecoSysDn");
     searchBin_MuRecoSysDn->Reset(); //[0.5,223.5]
 
+    //ElectronTrackRecoDn with btag probability considered
+    sprintf(tempname,"TFLLPlusHadTau_EleTrkRecoDn_binSFcorrected.root");
+    TFile * TFEleTrackRecoSysDnFile = TFile::Open(tempname,"R");
+    printf("Opened %s\n",tempname);
+    TH1D * searchBin_EleRecoSysDn_input=(TH1D*) TFEleTrackRecoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_EleRecoSysDn_input");//x axis[0.5,223.5]
+    TH1D *searchBin_EleRecoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_EleRecoSysDn");
+    searchBin_EleRecoSysDn->Reset(); //[0.5,223.5]
+
 
     //MuonIsoSysDn with btag probability considered
-    sprintf(tempname,"TFLLPlusHadTau_IsoDn_binSFcorrected.root");
-    TFile * TFIsoSysDnFile = TFile::Open(tempname,"R");
+    sprintf(tempname,"TFLLPlusHadTau_MuIsoDn_binSFcorrected.root");
+    TFile * TFMuIsoSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_MuIsoSysDn_input=(TH1D*) TFIsoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuIsoSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_MuIsoSysDn_input=(TH1D*) TFMuIsoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuIsoSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_MuIsoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_MuIsoSysDn");
     searchBin_MuIsoSysDn->Reset(); //[0.5,223.5]
+
+    //ElectronIsoSysDn with btag probability considered
+    sprintf(tempname,"TFLLPlusHadTau_EleIsoDn_binSFcorrected.root");
+    TFile * TFEleIsoSysDnFile = TFile::Open(tempname,"R");
+    printf("Opened %s\n",tempname);
+    TH1D * searchBin_EleIsoSysDn_input=(TH1D*) TFEleIsoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_EleIsoSysDn_input");//x axis[0.5,223.5]
+    TH1D *searchBin_EleIsoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_EleIsoSysDn");
+    searchBin_EleIsoSysDn->Reset(); //[0.5,223.5]
 
 
     TH1D * closureRatio = (TH1D*)DataEstFile->Get("h_Prediction")->Clone("closureRatio");
@@ -669,9 +685,9 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     }
     takeDiffForSys(searchBin_LLPlusHadTau_BMistagDn_input,TFRefWithBtagProbHist);
     QCDToSearchBin(searchBin_LLPlusHadTau_BMistagDn_input,searchBin_LLPlusHadTau_BMistagDn);
-    takeDiffForSys(searchBin_LLPlusHadTau_JECSysDn_input,TFRefHist);
+    takeDiffForSys(searchBin_LLPlusHadTau_JECSysDn_input,TFRefWithBtagProbHist);
     QCDToSearchBin(searchBin_LLPlusHadTau_JECSysDn_input,searchBin_LLPlusHadTau_JECSysDn);  
-    takeDiffForSys(searchBin_MTSysDn_input,TFRefHist);
+    takeDiffForSys(searchBin_MTSysDn_input,TFRefWithBtagProbHist);
     QCDToSearchBin(searchBin_MTSysDn_input,searchBin_MTSysDn); 
     
     //Instead of using accErrPropagation(), we used takeDiffForSys() here for PDF and scale systematics. 
@@ -684,11 +700,18 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     takeDiffForSys(searchBin_LLPlusHadTau_AccSysScaleDn_input,searchBin_LLPlusHadTau_AccSysScaleRef_input);
     QCDToSearchBin(searchBin_LLPlusHadTau_AccSysScaleDn_input,searchBin_LLPlusHadTau_AccSysScaleDn);  
 
-    takeDiffForSys(searchBin_MuRecoSysDn_input,TFRefHist);
+    takeDiffForSys(searchBin_MuRecoSysDn_input,TFRefWithBtagProbHist);
     QCDToSearchBin(searchBin_MuRecoSysDn_input,searchBin_MuRecoSysDn); 
 
-    takeDiffForSys(searchBin_MuIsoSysDn_input,TFRefHist);
+    takeDiffForSys(searchBin_EleRecoSysDn_input,TFRefWithBtagProbHist);
+    QCDToSearchBin(searchBin_EleRecoSysDn_input,searchBin_EleRecoSysDn); 
+
+    takeDiffForSys(searchBin_MuIsoSysDn_input,TFRefWithBtagProbHist);
     QCDToSearchBin(searchBin_MuIsoSysDn_input,searchBin_MuIsoSysDn); 
+
+    takeDiffForSys(searchBin_EleIsoSysDn_input,TFRefWithBtagProbHist);
+    QCDToSearchBin(searchBin_EleIsoSysDn_input,searchBin_EleIsoSysDn); 
+
 
     QCDToSearchBin(LLPlusHadTau_TFErrHist_input,LLPlusHadTau_TFErrHist);
     QCDToSearchBin(TFRefHist,LLPlusHadTau_TFRefHist_copy);
@@ -723,7 +746,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     reLabel(searchBin_LLPlusHadTau_BMistagDn);
     searchBin_LLPlusHadTau_BMistagDn->Write("totalPredBMistagDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_JECSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.95,1.05);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.94,1.06);
     reLabel(searchBin_LLPlusHadTau_JECSysDn);
     searchBin_LLPlusHadTau_JECSysDn->Write("totalPred_JECSysDown_LLPlusHadTau");
     searchBin_MTSysDn->Add(searchBin_one);
@@ -738,15 +761,29 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.000,1.006);
     reLabel(searchBin_LLPlusHadTau_AccSysScaleDn);
     searchBin_LLPlusHadTau_AccSysScaleDn->Write("totalPredLepAccQsquareSysDown_LLPlusHadTau");
+
     searchBin_MuRecoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuRecoSysDn,1.012,1.022);
+    CorrectLowStatBins(searchBin_MuRecoSysDn,1.008,1.012);
     reLabel(searchBin_MuRecoSysDn);
     searchBin_MuRecoSysDn->Write("totalPredMuRecoSysDown_LLPlusHadTau");
 
+    searchBin_EleRecoSysDn->Add(searchBin_one);
+    CorrectLowStatBins(searchBin_EleRecoSysDn,1.005,1.008);
+    reLabel(searchBin_EleRecoSysDn);
+    searchBin_EleRecoSysDn->Write("totalPredEleRecoSysDown_LLPlusHadTau");
+
     searchBin_MuIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIsoSysDn,1.012,1.016);
+    CorrectLowStatBins(searchBin_MuIsoSysDn,1.01,1.018);
     reLabel(searchBin_MuIsoSysDn);
     searchBin_MuIsoSysDn->Write("totalPredMuIsoSysDown_LLPlusHadTau");
+
+    searchBin_EleIsoSysDn->Add(searchBin_one);
+    CorrectLowStatBins(searchBin_EleIsoSysDn,1.003,1.007);
+    reLabel(searchBin_EleIsoSysDn);
+    searchBin_EleIsoSysDn->Write("totalPredEleIsoSysDown_LLPlusHadTau");
+
+
+
     fileOut.Close();
   }
 }
@@ -788,7 +825,6 @@ void accErrPropagation(TH1* sys, TH1* input_nominal){
   
 }
 
-
 void CorrectLowStatBins(TH1* sys, double ymin, double ymax){
   TH1* input_sys=(TH1*)sys->Clone("input_sys");
   sys->Reset();
@@ -804,7 +840,29 @@ void CorrectLowStatBins(TH1* sys, double ymin, double ymax){
       sys->SetBinContent(ibin,binVal);
   }
 }
-
+/*
+void CorrectLowStatBins(TH1* sys, double ymin, double ymax){
+  TH1* input_sys=(TH1*)sys->Clone("input_sys");
+  double avg;
+  sys->Reset();
+  sys->SetLineColor(1);
+  sys->SetFillColor(0);
+  for (int ibin=1;ibin<=sys->GetNbinsX();ibin++){
+    double binVal=input_sys->GetBinContent(ibin);
+    if(ibin==sys->GetNbinsX())
+      avg=input_sys->GetBinContent(ibin-1);
+    else if(ibin==1)
+      avg=input_sys->GetBinContent(ibin+1);
+    else
+      avg=(input_sys->GetBinContent(ibin-1)+input_sys->GetBinContent(ibin+1))/2;
+    double ratio=binVal/avg;
+    if(ratio>1.01 || ratio<0.99)
+      sys->SetBinContent(ibin,avg); 
+    else
+      sys->SetBinContent(ibin,binVal);
+  }
+}
+*/
 void QCDToSearchBin(TH1* input, TH1* output){
   SearchBins * SearchBins_ = new SearchBins(false); //returns array with indx[0,173]
   SearchBins * SearchBinsQCD_ = new SearchBins(true); //returns array with indx[0,222]
@@ -1010,6 +1068,15 @@ void reLabel(TH1* output){
 	    else
 	      sprintf(hname,"totalPredMuRecoSysDown_LL");
 	  }
+
+	  else if(histname.find("EleRecoSys")!=string::npos){
+	    sprintf(binlabel, "LL_eleRecoSys");
+	    if(histname.find("Up")!=string::npos)
+	      sprintf(hname,"totalPredEleRecoSysUp_LL");
+	    else
+	      sprintf(hname,"totalPredEleRecoSysDown_LL");
+	  }
+
 	  /*
 	  else if(histname.find("LL_MuIsoSys")!=string::npos){
 	    sprintf(binlabel, "LL_muIsoSys");
@@ -1025,6 +1092,13 @@ void reLabel(TH1* output){
 	      sprintf(hname,"totalPredMuIsoSysUp_LL");
 	    else
 	      sprintf(hname,"totalPredMuIsoSysDown_LL");
+	  }
+	  else if(histname.find("EleIsoSys")!=string::npos){
+	    sprintf(binlabel, "LL_eleIsoSys");
+	    if(histname.find("Up")!=string::npos)
+	      sprintf(hname,"totalPredEleIsoSysUp_LL");
+	    else
+	      sprintf(hname,"totalPredEleIsoSysDown_LL");
 	  }
 	  else if(histname.find("MuRecoIso")!=string::npos){
 	    sprintf(binlabel, "llp_muRecoStat");
