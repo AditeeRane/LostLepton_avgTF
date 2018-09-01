@@ -32,12 +32,12 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
@@ -99,7 +99,7 @@ class Prediction : public TSelector {
   bool useTrigger = false;
   bool useTriggerEffWeight = false;
   bool doPUreweighting = false;
-  bool doBTagCorr = true;
+  bool doBTagCorr = false;  //do not change this value here, later it is turned "true" for !data
   bool doISRcorr = false; 
   bool useFilterData = false;
 
@@ -118,6 +118,16 @@ class Prediction : public TSelector {
   // Output
   TH1D* h_Prediction = 0;
   TH1D* h_CSStat = 0;
+  TH1D* h_HT_Exp=0;
+  TH1D* h_MHT_Exp=0;
+  TH1D* h_NJet_Exp=0;
+  TH1D* h_NBtag_Exp=0;
+  TH1D* h_HT_Pre=0;
+  TH1D* h_MHT_Pre=0;
+  TH1D* h_NJet_Pre=0;
+  TH1D* h_NBtag_Pre=0;
+
+
   // TFs
   TH1D* h_0L1L_SB = 0;
   TH1D* h_0L1L_SF_SB = 0;

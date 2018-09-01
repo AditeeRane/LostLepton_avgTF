@@ -33,8 +33,30 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   unsigned nSB = SearchBins_->GetNbins();
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
+  h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
+  h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
+  h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
+  h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
+
+  h_HT_Pre =new TH1D("h_HT_Pre","h_HT_Pre",12,100,2500);
+  h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
+  h_NJet_Pre =new TH1D("h_NJet_Pre","h_NJet_Pre",10,2,12);
+  h_NBtag_Pre =new TH1D("h_NBtag_Pre","h_NBtag_Pre",5,0,5);
+
+
   GetOutputList()->Add(h_Prediction);
   GetOutputList()->Add(h_CSStat);
+
+  GetOutputList()->Add(h_HT_Exp);
+  GetOutputList()->Add(h_MHT_Exp);
+  GetOutputList()->Add(h_NJet_Exp);
+  GetOutputList()->Add(h_NBtag_Exp);
+
+  GetOutputList()->Add(h_HT_Pre);
+  GetOutputList()->Add(h_MHT_Pre);
+  GetOutputList()->Add(h_NJet_Pre);
+  GetOutputList()->Add(h_NBtag_Pre);
+
   std::cout<<"Run on Data: "<<runOnData<<std::endl;
   std::cout<<"Run on SM MC: "<<runOnStandardModelMC<<std::endl;
   std::cout<<"Run on Signal MC: "<<runOnSignalMC<<std::endl;
@@ -383,7 +405,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(!runOnSignalMC)
       Weight *= scaleFactorWeight;
   }
-  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
+  //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
 
   int nLoops = 1;
   if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
@@ -408,11 +430,25 @@ Bool_t Prediction::Process(Long64_t entry)
     }
     //std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
     h_CSStat->Fill(bTagBin, WeightBtagProb);
+    h_HT_Exp->Fill(HT,WeightBtagProb);
+    h_MHT_Exp->Fill(MHT,WeightBtagProb);
+    h_NJet_Exp->Fill(NJets,WeightBtagProb);
+    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+    
+    h_HT_Pre->Fill(HT,WeightBtagProb*TF);
+    h_MHT_Pre->Fill(MHT,WeightBtagProb*TF);
+    h_NJet_Pre->Fill(NJets,WeightBtagProb*TF);
+    if(doBTagCorr)
+      h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
+    else
+      h_NBtag_Pre->Fill(BTags,WeightBtagProb*TF);
+    
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
-    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
-    if(bTagBin==2)
+    //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
+    /*  
+  if(bTagBin==2)
       std::cout<<" entry "<<entry<<" nLoops "<<i<<" bin "<<bTagBin<<" binQCD "<<bTagBinQCD<<" weight "<<Weight<<" BtagProb "<<bTagProb.at(i)<<" final wt "<<WeightBtagProb<<" h_CSStat "<<h_CSStat->GetBinContent(2)<<" h_Prediction "<<h_Prediction->GetBinContent(2)<<endl;
-
+*/
   }
 
   return kTRUE;
@@ -441,13 +477,36 @@ void Prediction::Terminate()
   std::cout<<"***Prediction::Terminate***"<<std::endl;
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
+  h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
+  h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
+  h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
+  h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
+
+  h_HT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Pre"));
+  h_MHT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Pre"));
+  h_NJet_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Pre"));
+  h_NBtag_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Pre"));
+
   TFile *outPutFile = new TFile(fileName,"RECREATE"); ;
   outPutFile->cd();
+  /*
   for(unsigned int i=1; i<=174;i++){
     std::cout<<" i "<<i<<" binVal "<<h_Prediction->GetBinContent(i)<<endl;
   }
+*/
   h_Prediction->Write();
   h_CSStat->Write();
+  h_HT_Exp->Write();
+  h_MHT_Exp->Write();
+  h_NJet_Exp->Write();
+  h_NBtag_Exp->Write();
+
+  h_HT_Pre->Write();
+  h_MHT_Pre->Write();
+  h_NJet_Pre->Write();
+  h_NBtag_Pre->Write();
+
+
   outPutFile->Close();
 
   cout << "Saved output to " << fileName << endl;

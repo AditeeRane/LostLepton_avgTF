@@ -28,6 +28,11 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
   TH1::SetDefaultSumw2();
   unsigned nSB = SearchBins_->GetNbins();
     if(useCombinedBins) nSB = SearchBins_->GetNbinsCombined();
+    h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
+    h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
+    h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
+    h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
+    
     h_el_nOnePrompt_etaPt = new TH2D("h_el_nOnePrompt_etaPt", "h_el_nOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_nOnePrompt_SB = new TH1D("h_el_nOnePrompt_SB", "h_el_nOnePrompt_SB", nSB, 0.5, nSB+0.5);    
     h_el_nFoundOnePrompt_etaPt = new TH2D("h_el_nFoundOnePrompt_etaPt", "h_el_nFoundOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
@@ -66,6 +71,13 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     h_di_SFCR_SB = new TH1D("h_di_SFCR_SB", "h_di_SFCR_SB", nSB, 0.5, nSB+0.5);
     h_di_SFSR_SB = new TH1D("h_di_SFSR_SB", "h_di_SFSR_SB", nSB, 0.5, nSB+0.5);
 
+    GetOutputList()->Add(h_HT_Exp);
+    GetOutputList()->Add(h_MHT_Exp);
+    GetOutputList()->Add(h_NJet_Exp);
+    GetOutputList()->Add(h_NBtag_Exp);
+    
+
+
     GetOutputList()->Add(h_el_nOnePrompt_etaPt);
     GetOutputList()->Add(h_el_nOnePrompt_SB);
     GetOutputList()->Add(h_el_nFoundOnePrompt_etaPt);
@@ -78,6 +90,7 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     GetOutputList()->Add(h_el_SFCR_SB);
     GetOutputList()->Add(h_el_SFSR_etaPt);
     GetOutputList()->Add(h_el_SFSR_SB);
+
 
     GetOutputList()->Add(h_mu_nOnePrompt_etaPt);
     GetOutputList()->Add(h_mu_nOnePrompt_SB);
@@ -920,6 +933,13 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 
 	  }else if(MuonsPromptNum_ == 0 && (!includeIsotrkVeto || MuonTracksPromptNum_ == 0)){
+
+
+	    h_HT_Exp->Fill(HT,WeightBtagProb);
+	    h_MHT_Exp->Fill(MHT,WeightBtagProb);
+	    h_NJet_Exp->Fill(NJets,WeightBtagProb);
+	    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+
 	    //*AR, 20180102- if IsotrkVeto is applied, following histograms filled only when there is no reco muon and no isolated track. If IsotrkVeto is not applied, following histograms filled when there is no muon (independent of number of isolated tracks)
 	    h_mu_nLostOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -1059,6 +1079,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      }
 	    }    
 	  }else if(ElectronsPromptNum_ == 0 && (!includeIsotrkVeto || ElectronTracksPromptNum_ == 0)){
+	    h_HT_Exp->Fill(HT,WeightBtagProb);
+	    h_MHT_Exp->Fill(MHT,WeightBtagProb);
+	    h_NJet_Exp->Fill(NJets,WeightBtagProb);
+	    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+	    
 	    h_el_nLostOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 	    if(ScaleAccSys){
@@ -1468,6 +1493,11 @@ void SFMaker::Terminate()
 
     TFile *outPutFile = new TFile(fileName,"RECREATE");
 
+    h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
+    h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
+    h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
+    h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
+    
     h_el_nOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_nOnePrompt_etaPt"));
     h_el_nOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nOnePrompt_SB"));
     h_el_nFoundOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_etaPt"));
@@ -1798,6 +1828,14 @@ void SFMaker::Terminate()
 	}
 
     // Save histograms
+
+	h_HT_Exp->Write();
+	h_MHT_Exp->Write();
+	h_NJet_Exp->Write();
+	h_NBtag_Exp->Write();
+	
+
+
 	h_el_nOnePrompt_etaPt->Write();
 	h_el_nOnePrompt_SB->Write();
 	h_el_nFoundOnePrompt_etaPt->Write();

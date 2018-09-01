@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false;
@@ -49,7 +49,7 @@ const bool IsoMuSys=false;//false by default
 const bool IsoEleSys=false;
 const bool IDMuSys=false;//false by default
 const bool IDEleSys=false;
-const bool TrackRecoMuSys=true;
+const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
 const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
@@ -141,6 +141,12 @@ class SFMaker : public TSelector {
   std::vector<TLorentzVector>Order_the_Vec(std::vector<TVector3> vec,std::vector<TLorentzVector> vecTwo);
 
   // Histograms
+
+  TH1D* h_HT_Exp=0;
+  TH1D* h_MHT_Exp=0;
+  TH1D* h_NJet_Exp=0;
+  TH1D* h_NBtag_Exp=0;
+
   TH2D* h_el_nOnePrompt_etaPt = 0;
   TH1D* h_el_nOnePrompt_SB = 0;
   TH2D* h_el_nFoundOnePrompt_etaPt = 0;
