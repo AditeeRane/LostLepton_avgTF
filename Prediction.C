@@ -430,11 +430,14 @@ Bool_t Prediction::Process(Long64_t entry)
     }
     //std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
     h_CSStat->Fill(bTagBin, WeightBtagProb);
-    h_HT_Exp->Fill(HT,WeightBtagProb);
-    h_MHT_Exp->Fill(MHT,WeightBtagProb);
-    h_NJet_Exp->Fill(NJets,WeightBtagProb);
-    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
-    
+    h_HT_Exp->Fill(HT,WeightBtagProb*TF);
+    h_MHT_Exp->Fill(MHT,WeightBtagProb*TF);
+    h_NJet_Exp->Fill(NJets,WeightBtagProb*TF);
+    if(doBTagCorr)
+      h_NBtag_Exp->Fill(i,WeightBtagProb*TF);
+    else
+      h_NBtag_Exp->Fill(BTags,WeightBtagProb*TF);
+    /*
     h_HT_Pre->Fill(HT,WeightBtagProb*TF);
     h_MHT_Pre->Fill(MHT,WeightBtagProb*TF);
     h_NJet_Pre->Fill(NJets,WeightBtagProb*TF);
@@ -442,7 +445,7 @@ Bool_t Prediction::Process(Long64_t entry)
       h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
     else
       h_NBtag_Pre->Fill(BTags,WeightBtagProb*TF);
-    
+    */
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
     /*  
@@ -481,12 +484,12 @@ void Prediction::Terminate()
   h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
   h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
   h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
-
+  /*
   h_HT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Pre"));
   h_MHT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Pre"));
   h_NJet_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Pre"));
   h_NBtag_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Pre"));
-
+*/
   TFile *outPutFile = new TFile(fileName,"RECREATE"); ;
   outPutFile->cd();
   /*
