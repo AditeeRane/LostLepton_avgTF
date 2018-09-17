@@ -292,7 +292,7 @@ Bool_t Prediction::Process(Long64_t entry)
           btagcorr->SetFastSim(true);
         }
         else btagcorr->SetFastSim(false);
-      }
+      } //end of if(doBTagCorr)
       
       //*AR- Get a vector of pairs (susymothermass, xsec) based on name of new tree
       if(runOnSignalMC){ //false for SM MC
