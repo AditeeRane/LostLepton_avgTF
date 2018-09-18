@@ -122,6 +122,15 @@ class Prediction : public TSelector {
   TH1D* h_MHT_Exp=0;
   TH1D* h_NJet_Exp=0;
   TH1D* h_NBtag_Exp=0;
+  TH1D* h_DphiOne_Exp=0;
+  TH1D* h_DphiTwo_Exp=0;
+  TH1D* h_DphiThree_Exp=0;
+  TH1D* h_DphiFour_Exp=0;
+  TH1D* h_LepPt_Exp=0;
+  TH1D* h_LepEta_Exp=0;
+  TH1D* h_LepPhi_Exp=0;
+
+
   TH1D* h_HT_Pre=0;
   TH1D* h_MHT_Pre=0;
   TH1D* h_NJet_Pre=0;
@@ -167,7 +176,8 @@ class Prediction : public TSelector {
   
   UShort_t Bin_, BinQCD_;
 
-  
+  Int_t NMuons=-1;
+  Int_t NElectrons=-1;
   // Declaration of leaf types
   UInt_t          RunNum;
   UInt_t          LumiBlockNum;
@@ -196,6 +206,10 @@ class Prediction : public TSelector {
   Int_t           isoMuonTracksNum;
   Int_t           isoPionTracksNum;
   Bool_t          JetID;
+  std::vector<bool> *Muons_passIso=0;
+  std::vector<bool> *Electrons_passIso=0;
+
+
   std::vector<TLorentzVector> *Jets=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
@@ -264,6 +278,9 @@ class Prediction : public TSelector {
   TBranch        *b_isoElectronTracksNum=0;   //!
   TBranch        *b_isoMuonTracksNum=0;   //!
   TBranch        *b_isoPionTracksNum=0;   //!
+  TBranch        *b_Muons_passIso=0;
+  TBranch        *b_Electrons_passIso=0;
+
   TBranch        *b_JetID=0;   //!
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
@@ -288,6 +305,8 @@ class Prediction : public TSelector {
   TBranch        *b_Weight=0;   //!
   TBranch        *b_puWeight=0;   //!
   TBranch        *b_madHT=0;
+  TBranch        *b_NMuons=0;
+  TBranch        *b_NElectrons=0;
   TBranch        *b_SusyLSPMass=0;
   TBranch        *b_SusyMotherMass=0;
   TBranch        *b_TrueNumInteractions=0;
@@ -510,6 +529,8 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("TriggerPrescales", 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
+  fChain->SetBranchStatus("Muons_passIso",1);
+  fChain->SetBranchStatus("Electrons_passIso",1);
   if(topPTreweight){
     fChain->SetBranchStatus("GenParticles", 1);
     fChain->SetBranchStatus("GenParticles_PdgId", 1);
@@ -546,7 +567,10 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("Muons_tightID", 1);
   fChain->SetBranchStatus("Electrons_mediumID", 1);
   fChain->SetBranchStatus("Electrons_tightID", 1);
-
+  fChain->SetBranchStatus("NMuons",1);
+  fChain->SetBranchStatus("NElectrons",1); 
+  fChain->SetBranchAddress("NMuons", &NMuons, &b_NMuons);
+  fChain->SetBranchAddress("NElectrons", &NElectrons, &b_NElectrons);
   fChain->SetBranchAddress("RunNum", &RunNum, &b_RunNum);
   fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
   fChain->SetBranchAddress("EvtNum", &EvtNum, &b_EvtNum);
@@ -589,6 +613,9 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("TriggerNames", &TriggerNames, &b_TriggerNames);
   fChain->SetBranchAddress("TriggerPass", &TriggerPass, &b_TriggerPass);
   fChain->SetBranchAddress("TriggerPrescales", &TriggerPrescales, &b_TriggerPrescales);
+  fChain->SetBranchAddress("Muons_passIso", &Muons_passIso, &b_Muons_passIso);
+  fChain->SetBranchAddress("Electrons_passIso", &Electrons_passIso, &b_Electrons_passIso);
+
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
   if(topPTreweight){
