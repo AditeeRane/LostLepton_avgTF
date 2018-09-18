@@ -37,6 +37,13 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
   h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
   h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
+  h_DphiOne_Exp =new TH1D("h_DphiOne_Exp","h_DphiOne_Exp",32,0,3.2);
+  h_DphiTwo_Exp =new TH1D("h_DphiTwo_Exp","h_DphiTwo_Exp",32,0,3.2);
+  h_DphiThree_Exp =new TH1D("h_DphiThree_Exp","h_DphiThree_Exp",32,0,3.2);
+  h_DphiFour_Exp =new TH1D("h_DphiFour_Exp","h_DphiFour_Exp",32,0,3.2);
+  h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
+  h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
+  h_LepPhi_Exp=new TH1D("h_LepPhi_Exp","h_LepPhi_Exp",7,-3.5,3.5);
 
   h_HT_Pre =new TH1D("h_HT_Pre","h_HT_Pre",12,100,2500);
   h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
@@ -45,12 +52,20 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 
   GetOutputList()->Add(h_Prediction);
-  GetOutputList()->Add(h_CSStat);
+  GetOutputList()->Add(h_CSStat); //one lepton CS
 
   GetOutputList()->Add(h_HT_Exp);
   GetOutputList()->Add(h_MHT_Exp);
   GetOutputList()->Add(h_NJet_Exp);
   GetOutputList()->Add(h_NBtag_Exp);
+  GetOutputList()->Add(h_DphiOne_Exp);
+  GetOutputList()->Add(h_DphiTwo_Exp);
+  GetOutputList()->Add(h_DphiThree_Exp);
+  GetOutputList()->Add(h_DphiFour_Exp);
+  GetOutputList()->Add(h_LepPt_Exp);
+  GetOutputList()->Add(h_LepEta_Exp);
+  GetOutputList()->Add(h_LepPhi_Exp); 
+
 
   GetOutputList()->Add(h_HT_Pre);
   GetOutputList()->Add(h_MHT_Pre);
@@ -68,17 +83,21 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
   //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
+
   resetValues();
   fChain->GetTree()->GetEntry(entry);
-
+  //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
-
   MuonsNum_ = Muons->size();
   ElectronsNum_ = Electrons->size();
+  //*AR: 180917: NMuons and NElectrons are number of isolated electrons and muons
+  //MuonsNum_ = NMuons;
+  //  ElectronsNum_ = NElectrons;
   double newGenHT=0;double newGenMHT=0;
   TVector3 temp3Vec;
   vector<TVector3>GenHT3JetVec,GenMHT3JetVec;
   TVector3 newGenMHT3Vec;
+  //*AR: 180917- only for signal
   if(runOnSignalMC && useGenHTMHT){
     for(unsigned j = 0; j < GenJets->size(); ++j){
       temp3Vec.SetPtEtaPhi(GenJets->at(j).Pt(),GenJets->at(j).Eta(),GenJets->at(j).Phi());
@@ -94,10 +113,35 @@ Bool_t Prediction::Process(Long64_t entry)
       newGenMHT3Vec-=GenMHT3JetVec[i]; 
     }  
     newGenMHT=newGenMHT3Vec.Pt();
+  } //end of runOnSignalMC
+
+  //only considers single isolated lepton events
+  if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+  double LepPt=-99.0;
+  double LepEta=-99.0;
+  double LepPhi=-99.0;
+
+  if(MuonsNum_==1){
+    for(unsigned int i=0;i<Muons->size();i++){
+    	LepPt=Muons->at(i).Pt();
+	LepEta=Muons->at(i).Eta();
+	LepPhi=Muons->at(i).Phi();
+      
+    }
   }
 
-  //only considers single lepton events
-  if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+  if(ElectronsNum_==1){
+    for(unsigned int i=0;i<Electrons->size();i++){
+   	LepPt=Electrons->at(i).Pt();
+	LepEta=Electrons->at(i).Eta();
+	LepPhi=Electrons->at(i).Phi();
+    }
+  }
+
+  if(LepPt<20 || fabs(LepEta)>2.1) 
+    return kTRUE;
+
+  //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
   }
@@ -105,13 +149,17 @@ Bool_t Prediction::Process(Long64_t entry)
     if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
   }
 
+  //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
+  //for low dphi: only events with either of dphis<(0.5,0.5,0.3,0.3)
   if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
   if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
-  //*AR-180606:Consider events with one lepton at reco level and mT<100(no pT, eta cuts)
+  //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
   if(MuonsNum_==1 && ElectronsNum_==0){
     mtw =  Muons_MTW->at(0);
     //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
+
+    //*AR: 180917- Gets skimfile for signal and standard model MC
     if(runOnSignalMC)
       SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
     if(runOnStandardModelMC)
@@ -128,8 +176,13 @@ Bool_t Prediction::Process(Long64_t entry)
   if(mtw > 100) return kTRUE;
   //std::cout<<" passed mT cut "<<endl;
   isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
+  /*
+  for(unsigned i=0;i<TriggerNames->size();i++){
+    std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
+  }
+*/  
   //  std::cout<<" 42 "<<TriggerNames->at(42)<<" 43 "<<TriggerNames->at(43)<<" 44 "<<TriggerNames->at(44)<<" 46 "<<TriggerNames->at(46)<<" 47 "<<TriggerNames->at(47)<<" 48 "<<TriggerNames->at(48)<<endl;
-  // Signal triggers
+  // Signal region MET triggers applied only for data
   if(useTrigger) if(!TriggerPass->at(42) && !TriggerPass->at(43) &&!TriggerPass->at(44) && !TriggerPass->at(46) && !TriggerPass->at(47) && !TriggerPass->at(48)) return kTRUE;
 
   if(runOnSignalMC && useGenHTMHT){
@@ -142,6 +195,7 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
   std::cout<<" evt falling in search bin "<<endl;
+  //*AR: 180917- Initialization of vectors
   bTagProb = {1, 0, 0, 0};
   bTagBins = {Bin_, 0, 0, 0};
   bTagBinsQCD = {BinQCD_, 0, 0, 0};
@@ -249,7 +303,7 @@ Bool_t Prediction::Process(Long64_t entry)
       TFile *skimFile = TFile::Open(SkimFile, "READ");	
 
       //*AR: 180619-Sets attributes of isrcorr and btagcorr for a new tree 
-      if(doISRcorr){//false
+      if(doISRcorr){//true only for signal MC
 	TFile *skimFile = TFile::Open(SkimFile, "READ");
 	h_njetsisr = (TH1*)skimFile->Get("NJetsISR");
 	//        h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
@@ -272,7 +326,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
       }
       
-      if(doBTagCorr){
+      if(doBTagCorr){ //true only for signal and standard model mc
         if(btagcorr!=0){
           delete btagcorr;
           btagcorr = 0;
@@ -292,7 +346,7 @@ Bool_t Prediction::Process(Long64_t entry)
           btagcorr->SetFastSim(true);
         }
         else btagcorr->SetFastSim(false);
-      }
+      } //end of if(doBTagCorr)
       
       //*AR- Get a vector of pairs (susymothermass, xsec) based on name of new tree
       if(runOnSignalMC){ //false for SM MC
@@ -344,7 +398,7 @@ Bool_t Prediction::Process(Long64_t entry)
       if(Weight < 0) Weight *= -1;
     }
 
-    
+    //*AR:180917:skip negative wt events
     if(Weight < 0)
       return kTRUE;
     
@@ -357,13 +411,13 @@ Bool_t Prediction::Process(Long64_t entry)
     }
 
 
-    if(doISRcorr){ //false
+    if(doISRcorr){ //true for signal mc
       w_isr = isrcorr->GetCorrection(NJetsISR);
       Weight *= w_isr;
       //std::cout<<" weight_afterISRcorr "<<Weight<<endl;
     }
 
-    if(doBTagCorr){
+    if(doBTagCorr){ //true for signal and standard model mc
       bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
       if(runOnSignalMC && useGenHTMHT){
 	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};  
@@ -381,7 +435,7 @@ Bool_t Prediction::Process(Long64_t entry)
     Weight *= 0.99;
     //std::cout<<" weight_afterJetID "<<Weight<<endl;
   }
-
+  //*AR: true only for signal MC and useGenHTMHT=false
   if(useTriggerEffWeight){ // false for SM MC
     //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
     if(runOnSignalMC){
@@ -392,7 +446,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   }
 
-  if(doPUreweighting){
+  if(doPUreweighting){ //true only for signal mc
     w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
     Weight *= w_pu;
     //std::cout<<" weight_afterpu "<<Weight<<endl;
@@ -422,37 +476,42 @@ Bool_t Prediction::Process(Long64_t entry)
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
     //std::cout<<" WeightBtagProb "<<WeightBtagProb<<endl;
     double TF = -1;
-    if(applySFs){
+    if(applySFs){ //true for data
       TF = h_0L1L_SF_SB->GetBinContent(bTagBinQCD);
       if(TF < 0) TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
-    }else{
+    }else{ //true for SM and signal MC
       TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
     }
     //std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
+    //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
-    h_HT_Exp->Fill(HT,WeightBtagProb*TF);
-    h_MHT_Exp->Fill(MHT,WeightBtagProb*TF);
-    h_NJet_Exp->Fill(NJets,WeightBtagProb*TF);
-    if(doBTagCorr)
-      h_NBtag_Exp->Fill(i,WeightBtagProb*TF);
-    else
-      h_NBtag_Exp->Fill(BTags,WeightBtagProb*TF);
-    /*
+    h_HT_Exp->Fill(HT,WeightBtagProb);
+    h_MHT_Exp->Fill(MHT,WeightBtagProb);
+    h_NJet_Exp->Fill(NJets,WeightBtagProb);
+    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+    h_DphiOne_Exp->Fill(DeltaPhi1,WeightBtagProb);
+    h_DphiTwo_Exp->Fill(DeltaPhi2,WeightBtagProb);
+    h_DphiThree_Exp->Fill(DeltaPhi3,WeightBtagProb);
+    h_DphiFour_Exp->Fill(DeltaPhi4,WeightBtagProb);
+    h_LepPt_Exp->Fill(LepPt,WeightBtagProb);
+    h_LepEta_Exp->Fill(LepEta,WeightBtagProb);
+    h_LepPhi_Exp->Fill(LepPhi,WeightBtagProb);
+    //*AR: 180917- These histograms represent yield in SR as TF is applied
     h_HT_Pre->Fill(HT,WeightBtagProb*TF);
     h_MHT_Pre->Fill(MHT,WeightBtagProb*TF);
     h_NJet_Pre->Fill(NJets,WeightBtagProb*TF);
-    if(doBTagCorr)
+    if(doBTagCorr) //true for signal and SM MC
       h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
-    else
+    else //true for data
       h_NBtag_Pre->Fill(BTags,WeightBtagProb*TF);
-    */
+    
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
     /*  
   if(bTagBin==2)
       std::cout<<" entry "<<entry<<" nLoops "<<i<<" bin "<<bTagBin<<" binQCD "<<bTagBinQCD<<" weight "<<Weight<<" BtagProb "<<bTagProb.at(i)<<" final wt "<<WeightBtagProb<<" h_CSStat "<<h_CSStat->GetBinContent(2)<<" h_Prediction "<<h_Prediction->GetBinContent(2)<<endl;
 */
-  }
+  } //end of loop over nLoops
 
   return kTRUE;
 }
@@ -484,12 +543,22 @@ void Prediction::Terminate()
   h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
   h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
   h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
-  /*
+  h_DphiOne_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOne_Exp"));
+  h_DphiTwo_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwo_Exp"));
+  h_DphiThree_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThree_Exp"));
+  h_DphiFour_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFour_Exp"));
+  h_LepPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPt_Exp"));
+  h_LepEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta_Exp"));
+  h_LepPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhi_Exp"));
+
+
+
+
   h_HT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Pre"));
   h_MHT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Pre"));
   h_NJet_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Pre"));
   h_NBtag_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Pre"));
-*/
+
   TFile *outPutFile = new TFile(fileName,"RECREATE"); ;
   outPutFile->cd();
   /*
@@ -503,6 +572,14 @@ void Prediction::Terminate()
   h_MHT_Exp->Write();
   h_NJet_Exp->Write();
   h_NBtag_Exp->Write();
+  h_DphiOne_Exp->Write();
+  h_DphiTwo_Exp->Write();
+  h_DphiThree_Exp->Write();
+  h_DphiFour_Exp->Write(); 
+
+  h_LepPt_Exp->Write(); 
+  h_LepEta_Exp->Write(); 
+  h_LepPhi_Exp->Write(); 
 
   h_HT_Pre->Write();
   h_MHT_Pre->Write();
