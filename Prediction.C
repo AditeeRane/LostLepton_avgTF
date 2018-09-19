@@ -117,6 +117,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //only considers single isolated lepton events
   if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+  if(ElectronsNum_ != 1) return kTRUE;
   double LepPt=-99.0;
   double LepEta=-99.0;
   double LepPhi=-99.0;
