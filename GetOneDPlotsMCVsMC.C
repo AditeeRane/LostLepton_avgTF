@@ -194,26 +194,26 @@ void GetOneDPlotsMCVsMC(char const * Var,char const * Sample,char const * TTbarL
   //  hTTbarLLHadtau->Add(hTTbarHadtau);
 
 
-  canvas_up->SetLogy();
+  //  canvas_up->SetLogy();
   hTTbarHadtau->Draw();
-  //hTTbarHadtau->GetYaxis()->SetRangeUser(0,ymax);
+  hTTbarHadtau->GetYaxis()->SetRangeUser(0,ymax);
   
   hTTbarLL->Draw("same");
 
   TLegend *tl=new TLegend(0.57,0.7,0.87,0.87);
-  //  TLegend *tl=new TLegend(0.77,0.78,0.89,0.89); 
+  //TLegend *tl=new TLegend(0.77,0.78,0.89,0.89); 
   tl->AddEntry(hTTbarHadtau, "Data_16");
   tl->AddEntry(hTTbarLL, "Data_17"); 
   tl->SetLineColor(kWhite);
   tl->Draw("same");
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
-  ttext->DrawLatex(GetRatioXmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
+  ttext->DrawLatex(GetRatioXmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
 
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatex(GetRatioXmax-3*binSize, 1.1*ymax , "35.9fb^{-1} (13TeV)");
+  ttexlumi->DrawLatex(GetRatioXmax-3*binSize, 1*ymax , "35.9fb^{-1} (13TeV)");
 
   
   gPad->Modified();
