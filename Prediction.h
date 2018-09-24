@@ -30,7 +30,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
