@@ -117,6 +117,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //only considers single isolated lepton events
   if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+  if(ElectronsNum_ !=1) return kTRUE;
   double LepPt=-99.0;
   double LepEta=-99.0;
   double LepPhi=-99.0;
@@ -151,7 +152,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
   //for low dphi: only events with either of dphis<(0.5,0.5,0.3,0.3)
-  //if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
+  if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
   if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
   //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
