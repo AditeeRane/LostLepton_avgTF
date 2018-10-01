@@ -35,8 +35,14 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
   h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
+  h_MET_Exp =new TH1D("h_MET_Exp","h_MET_Exp",16,200,1000);
+  h_MHTPhi_Exp=new TH1D("h_MHTPhi_Exp","h_MHTPhi_Exp",7,-3.5,3.5);
+  h_METPhi_Exp=new TH1D("h_METPhi_Exp","h_METPhi_Exp",7,-3.5,3.5);
+  h_mT_Exp=new TH1D("h_mT_Exp","h_mT_Exp",20,0,100);
   h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
   h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
+  h_NBtagclean_Exp =new TH1D("h_NBtagclean_Exp","h_NBtagclean_Exp",5,0,5);
+
   h_DphiOne_Exp =new TH1D("h_DphiOne_Exp","h_DphiOne_Exp",32,0,3.2);
   h_DphiTwo_Exp =new TH1D("h_DphiTwo_Exp","h_DphiTwo_Exp",32,0,3.2);
   h_DphiThree_Exp =new TH1D("h_DphiThree_Exp","h_DphiThree_Exp",32,0,3.2);
@@ -56,8 +62,14 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_HT_Exp);
   GetOutputList()->Add(h_MHT_Exp);
+  GetOutputList()->Add(h_MET_Exp);
+  GetOutputList()->Add(h_METPhi_Exp);
+  GetOutputList()->Add(h_MHTPhi_Exp);
+  GetOutputList()->Add(h_mT_Exp);
   GetOutputList()->Add(h_NJet_Exp);
   GetOutputList()->Add(h_NBtag_Exp);
+  GetOutputList()->Add(h_NBtagclean_Exp);
+
   GetOutputList()->Add(h_DphiOne_Exp);
   GetOutputList()->Add(h_DphiTwo_Exp);
   GetOutputList()->Add(h_DphiThree_Exp);
@@ -97,6 +109,16 @@ Bool_t Prediction::Process(Long64_t entry)
   TVector3 temp3Vec;
   vector<TVector3>GenHT3JetVec,GenMHT3JetVec;
   TVector3 newGenMHT3Vec;
+  int BTagsfrmCSV=0;
+  //  if(BTags>0)
+  //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
+
+  for(unsigned j = 0; j < Jets->size(); ++j){
+    double jetCSV=Jets_bDiscriminatorCSV->at(j);
+    if(jetCSV>csvForBtag && Jets->at(j).Pt() > 30 && fabs(Jets->at(j).Eta())<2.4)
+      BTagsfrmCSV++;
+  }
+ 
   //*AR: 180917- only for signal
   if(runOnSignalMC && useGenHTMHT){
     for(unsigned j = 0; j < GenJets->size(); ++j){
@@ -189,15 +211,15 @@ Bool_t Prediction::Process(Long64_t entry)
   if(useTrigger) if(!TriggerPass->at(108) && !TriggerPass->at(110) &&!TriggerPass->at(114) && !TriggerPass->at(124) && !TriggerPass->at(126) && !TriggerPass->at(129)) return kTRUE;
 
   if(runOnSignalMC && useGenHTMHT){
-    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTags);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTags);
+    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
   }
   else{
-    Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(HT,MHT,NJets,BTags);
+    Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
   }
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
-  std::cout<<" evt falling in search bin "<<endl;
+  //  std::cout<<" evt falling in search bin "<<endl;
   //*AR: 180917- Initialization of vectors
   bTagProb = {1, 0, 0, 0};
   bTagBins = {Bin_, 0, 0, 0};
@@ -466,7 +488,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   int nLoops = 1;
   if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
-  //*AR-180530: if(!runOnData),then bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);bTagBins=bTagBinsQCD = {(HT,MHT,NJet,0),(HT,MHT,NJet,1),(HT,MHT,NJet,2),(HT,MHT,NJet,3)}; else bTagProb = {1, 0, 0, 0} and bTagBins=bTagBinsQCD ={(HT,MHT,NJets,BTags),0,0,0}.
+  //*AR-180530: if(!runOnData),then bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);bTagBins=bTagBinsQCD = {(HT,MHT,NJet,0),(HT,MHT,NJet,1),(HT,MHT,NJet,2),(HT,MHT,NJet,3)}; else bTagProb = {1, 0, 0, 0} and bTagBins=bTagBinsQCD ={(HT,MHT,NJets,BTagsfrmCSV),0,0,0}.
   // This is because we do not know jet flavours in case of data hence can not calculate btag probability. There is jets_flavour branch saved also for data, but it has zero content.  
   /*
     for(int i=0;i<Jets->size();i++){
@@ -490,8 +512,14 @@ Bool_t Prediction::Process(Long64_t entry)
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
     h_MHT_Exp->Fill(MHT,WeightBtagProb);
+    h_MET_Exp->Fill(MET,WeightBtagProb);
+    h_MHTPhi_Exp->Fill(MHTPhi,WeightBtagProb);
+    h_METPhi_Exp->Fill(METPhi,WeightBtagProb);
+    h_mT_Exp->Fill(mtw,WeightBtagProb);
     h_NJet_Exp->Fill(NJets,WeightBtagProb);
-    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+    h_NBtag_Exp->Fill(BTagsfrmCSV,WeightBtagProb);
+    h_NBtagclean_Exp->Fill(BTagsclean,WeightBtagProb);
+
     h_DphiOne_Exp->Fill(DeltaPhi1,WeightBtagProb);
     h_DphiTwo_Exp->Fill(DeltaPhi2,WeightBtagProb);
     h_DphiThree_Exp->Fill(DeltaPhi3,WeightBtagProb);
@@ -506,7 +534,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(doBTagCorr) //true for signal and SM MC
       h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
     else //true for data
-      h_NBtag_Pre->Fill(BTags,WeightBtagProb*TF);
+      h_NBtag_Pre->Fill(BTagsfrmCSV,WeightBtagProb*TF);
     
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
@@ -544,8 +572,14 @@ void Prediction::Terminate()
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
   h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
   h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
+  h_MET_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MET_Exp"));
+  h_MHTPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhi_Exp"));
+  h_METPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METPhi_Exp"));
+  h_mT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mT_Exp"));
   h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
   h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
+  h_NBtagclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagclean_Exp"));
+
   h_DphiOne_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOne_Exp"));
   h_DphiTwo_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwo_Exp"));
   h_DphiThree_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThree_Exp"));
@@ -573,8 +607,13 @@ void Prediction::Terminate()
   h_CSStat->Write();
   h_HT_Exp->Write();
   h_MHT_Exp->Write();
+  h_MHTPhi_Exp->Write();
+  h_MET_Exp->Write();
+  h_METPhi_Exp->Write();
+  h_mT_Exp->Write();
   h_NJet_Exp->Write();
   h_NBtag_Exp->Write();
+  h_NBtagclean_Exp->Write();
   h_DphiOne_Exp->Write();
   h_DphiTwo_Exp->Write();
   h_DphiThree_Exp->Write();

@@ -167,7 +167,7 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
   hTTbarLL->Scale(35900.0/41486.0);
   hTTbarLL->SetLineColor(kRed);
-  hTTbarLL->SetLineWidth(1);
+  hTTbarLL->SetLineWidth(2);
   hTTbarLL->SetMarkerStyle(22);
   hTTbarLL->SetMarkerColor(kRed);
   double xmin=hTTbarLL->GetXaxis()->GetXmin();
@@ -186,8 +186,15 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
 
   //  hTTbarHadtau->SetFillStyle(3144);
   hTTbarHadtau->SetLineColor(kBlue);
+  hTTbarHadtau->SetLineWidth(2);
+  hTTbarHadtau->SetMarkerStyle(24);
+  hTTbarHadtau->SetMarkerColor(kBlue);
+
+  /*
+  hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetMarkerStyle(21);
   hTTbarHadtau->SetMarkerSize(0.0001);
+*/
   ////  TH1D *hTTbarLLHadtau=(TH1D *) hTTbarLL->Clone("hTTbarLLHadtau");
   //  hTTbarLLHadtau->Add(hTTbarHadtau);
 
@@ -396,11 +403,11 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
 
 void GetSearchBinPlotMCVsMC(){
 
-  //  GetSearchBinPlotMCVsMC(5000,"CSStat","DataCSStat","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
+  //GetSearchBinPlotMCVsMC(5000,"CSStat","DataCSStat","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
 
-  //  GetSearchBinPlotMCVsMC(5100,"CSStat","DataCSStat_LowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
+  GetSearchBinPlotMCVsMC(5100,"CSStat","DataCSStat_LowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
 
-  GetSearchBinPlotMCVsMC(5100,"Prediction","Prediction_HighDphi","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist_Sep21_V15_00.root","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist.root","LLPlusHadtau",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
+  //  GetSearchBinPlotMCVsMC(5100,"Prediction","Prediction_HighDphi","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist_Sep21_V15_00.root","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist.root","LLPlusHadtau",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
 
   /*
   GetOneDPlotsMCVsMC(1000,"MHT","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","Data16/Data17",1,0,16,200,1000,0.5,1.5,80000);

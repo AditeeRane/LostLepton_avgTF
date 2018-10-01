@@ -115,7 +115,13 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   double dw_height_offset = 0.040; // KH, added to put the bottom one closer to the top panel
  
   // set pad size
-  canvas_up->SetPad(0., 1 - up_height +0.01, 0.97, 1.);
+  //*AR: canvas_up:(0,0.21,0.97,1): original giving plots for paper
+  //  canvas_up->SetPad(0., 1 - up_height +0.01, 0.97, 1.);
+  //*AR:Due to overlap of up and down pad, here ymin is readjusted to recover low values in top plot, which used to be hidden due to above overlap.
+
+  canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
+
+  //*AR: canvas_dw:(0,0.04,0.97,0.3)
   canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
@@ -174,6 +180,9 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
 
   _fileTTbarLL->cd();
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  //*AR:B:E vs F
+  //  hTTbarLL->Scale(13498.0/27987.0);
+  //*AR:16 Vs 17
   hTTbarLL->Scale(35900.0/41486.0);
   hTTbarLL->SetLineColor(kRed);
   hTTbarLL->SetLineWidth(2);
@@ -204,6 +213,14 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   
   if(logx)
     canvas_up->SetLogx();
+
+  
+  if(hTTbarHadtau->GetMaximum()>hTTbarLL->GetMaximum())
+    hTTbarLL->SetMaximum(hTTbarHadtau->GetMaximum());
+  /*
+  if(hTTbarHadtau->GetMinimum()<hTTbarLL->GetMinimum())
+    hTTbarLL->SetMinimum(hTTbarHadtau->GetMinimum());
+*/
   hTTbarLL->Draw("e");
   hTTbarHadtau->Draw("esame");
   //  hTTbarHadtau->GetYaxis()->SetRangeUser(0,ymax);
@@ -212,8 +229,15 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  TLegend *tl=new TLegend(0.77,0.78,0.89,0.89); 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   tl->SetHeader(header);
+ 
+  //*AR:B:E vs F 
+ //  tl->AddEntry(hTTbarHadtau, "2017(F)");
+  //tl->AddEntry(hTTbarLL, "2017(B:E)"); 
+
   tl->AddEntry(hTTbarHadtau, "Data_16");
   tl->AddEntry(hTTbarLL, "Data_17"); 
+
+
   tl->SetLineColor(kWhite);
   tl->Draw("same");
   TLatex * ttext = new TLatex();
@@ -225,8 +249,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
   //  ttexlumi->DrawLatex(GetRatioXmax-10*binSize, ymaximum , "35.9fb^{-1} (13TeV)");
-  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "35.9fb^{-1} (13TeV)");
 
+  //*AR:B:E vs F   
+  //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
+  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "35.9fb^{-1} (13TeV)");
   
   gPad->Modified();
   
@@ -238,7 +264,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   cOne->GetXaxis()->SetTitle(RatioLabelX);
   cOne->GetYaxis()->SetTitle(RatioLabelY);
   canvas_dw->cd();
-  cOne->Draw();
+  cOne->Draw("e");
   
   cOne->GetXaxis()->SetTitleOffset(0.9);
   cOne->GetXaxis()->SetTitleSize(0.13);
@@ -274,6 +300,54 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
 
 void GetOneDPlotsMCVsMC(){
   /*
+  
+  GetOneDPlotsMCVsMC(1000,"MHT","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","17(F)/17(B:E)",1,0,16,200,1000,0.5,1.5,25000);
+  
+  GetOneDPlotsMCVsMC(1100,"HT","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"HT","17(F)/17(B:E)",1,0,12,100,2500,0.5,1.5,22000);
+
+  GetOneDPlotsMCVsMC(1200,"NJet","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NJet","17(F)/17(B:E)",1,0,10,2,12,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1300,"NBtag","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NBtag","17(F)/17(B:E)",1,0,5,0,5,0.5,1.5,30000);
+
+  GetOneDPlotsMCVsMC(1400,"DphiOne","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,15000);
+
+
+  GetOneDPlotsMCVsMC(1500,"DphiTwo","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{2},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,4500);
+
+  GetOneDPlotsMCVsMC(1600,"DphiThree","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{3},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,4000);
+
+  GetOneDPlotsMCVsMC(1700,"DphiFour","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{4},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,2000);
+
+  GetOneDPlotsMCVsMC(1800,"LepPt","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.57,0.7,0.87,0.87,"Lep_pT","17(F)/17(B:E)",1,0,20,0,1000,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(1900,"LepEta","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","17(F)/17(B:E)",0,0,10,-2.5,2.5,0.5,1.5,3500);
+
+  GetOneDPlotsMCVsMC(2000,"LepPhi","BCDEVsF_HighDphi","Prediction_0_Data_MET_V15bcde_.root","Prediction_0_Data_MET_V15f_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","17(F)/17(B:E)",0,0,7,-3.5,3.5,0.5,1.5,3600);
+   
+  
+  GetOneDPlotsMCVsMC(1310,"NBtag","BCDEVsF_HighDphiMu","Prediction_0_Data_MET_V15bcdeMu_.root","Prediction_0_Data_MET_V15fMu_.root","#mu CS",0.57,0.7,0.87,0.87,"NBtag","17(F)/17(B:E)",1,0,5,0,5,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1410,"DphiOne","BCDEVsF_HighDphiMu","Prediction_0_Data_MET_V15bcdeMu_.root","Prediction_0_Data_MET_V15fMu_.root","#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,8000);
+
+  GetOneDPlotsMCVsMC(1810,"LepPt","BCDEVsF_HighDphiMu","Prediction_0_Data_MET_V15bcdeMu_.root","Prediction_0_Data_MET_V15fMu_.root","#mu CS",0.57,0.7,0.87,0.87,"Lep_pT","17(F)/17(B:E)",1,0,20,0,1000,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(1910,"LepEta","BCDEVsF_HighDphiMu","Prediction_0_Data_MET_V15bcdeMu_.root","Prediction_0_Data_MET_V15fMu_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","17(F)/17(B:E)",0,0,10,-2.5,2.5,0.5,1.5,1900);
+
+  GetOneDPlotsMCVsMC(2010,"LepPhi","BCDEVsF_HighDphiMu","Prediction_0_Data_MET_V15bcdeMu_.root","Prediction_0_Data_MET_V15fMu_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","17(F)/17(B:E)",0,0,7,-3.5,3.5,0.5,1.5,2020);
+
+
+  GetOneDPlotsMCVsMC(1320,"NBtag","BCDEVsF_HighDphiEle","Prediction_0_Data_MET_V15bcdeEle_.root","Prediction_0_Data_MET_V15fEle_.root","e CS",0.57,0.7,0.87,0.87,"NBtag","17(F)/17(B:E)",1,0,5,0,5,0.5,1.5,20000);
+
+    GetOneDPlotsMCVsMC(1420,"DphiOne","BCDEVsF_HighDphiEle","Prediction_0_Data_MET_V15bcdeEle_.root","Prediction_0_Data_MET_V15fEle_.root","e CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","17(F)/17(B:E)",1,0,32,0,3.2,0.5,1.5,8000);
+
+  GetOneDPlotsMCVsMC(1820,"LepPt","BCDEVsF_HighDphiEle","Prediction_0_Data_MET_V15bcdeEle_.root","Prediction_0_Data_MET_V15fEle_.root","e CS",0.57,0.7,0.87,0.87,"Lep_pT","17(F)/17(B:E)",1,0,20,0,1000,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1920,"LepEta","BCDEVsF_HighDphiEle","Prediction_0_Data_MET_V15bcdeEle_.root","Prediction_0_Data_MET_V15fEle_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#eta","17(F)/17(B:E)",0,0,10,-2.5,2.5,0.5,1.5,1650);
+
+  GetOneDPlotsMCVsMC(2020,"LepPhi","BCDEVsF_HighDphiEle","Prediction_0_Data_MET_V15bcdeEle_.root","Prediction_0_Data_MET_V15fEle_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#phi","17(F)/17(B:E)",0,0,7,-3.5,3.5,0.5,1.5,1650);
+*/
+  /*
+  
   GetOneDPlotsMCVsMC(1000,"MHT","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","Data16/Data17",1,0,16,200,1000,0.5,1.5,80000);
 
   GetOneDPlotsMCVsMC(1100,"HT","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","Data16/Data17",1,0,12,100,2500,0.5,1.5,50000);
@@ -284,52 +358,44 @@ void GetOneDPlotsMCVsMC(){
 
   GetOneDPlotsMCVsMC(1310,"NBtag","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,60000);
 
-  GetOneDPlotsMCVsMC(1320,"NBtag","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,50000);
+  GetOneDPlotsMCVsMC(1320,"NBtag","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,30000);
 
   GetOneDPlotsMCVsMC(1400,"DphiOne","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,50000);
 
-  GetOneDPlotsMCVsMC(1410,"DphiOne","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,25000);
+  GetOneDPlotsMCVsMC(1410,"DphiOne","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,30000);
 
   GetOneDPlotsMCVsMC(1420,"DphiOne","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,25000);
 
   GetOneDPlotsMCVsMC(1500,"DphiTwo","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{2},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,25000);
-  */
-  GetOneDPlotsMCVsMC(1600,"DphiThree","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{3},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,15000);
-  /*
-  GetOneDPlotsMCVsMC(1700,"DphiFour","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{4},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,6000);
+  
+    GetOneDPlotsMCVsMC(1600,"DphiThree","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{3},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,15000);
+  
+  GetOneDPlotsMCVsMC(1700,"DphiFour","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"#delta#phi(j_{4},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,6200);
 
   GetOneDPlotsMCVsMC(1800,"LepPt","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"Lep_pT","Data16/Data17",1,0,20,0,1000,0.5,1.5,50000);
   
   GetOneDPlotsMCVsMC(1810,"LepPt","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.57,0.7,0.87,0.87,"Lep_pT","Data16/Data17",1,0,20,0,1000,0.5,1.5,25000);
 
   GetOneDPlotsMCVsMC(1820,"LepPt","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.57,0.7,0.87,0.87,"Lep_pT","Data16/Data17",1,0,20,0,1000,0.5,1.5,25000);
-
-  GetOneDPlotsMCVsMC(1900,"LepEta","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,13000);
-  */
-  //  GetOneDPlotsMCVsMC(1910,"LepEta","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,7200);
-
-  //  GetOneDPlotsMCVsMC(1920,"LepEta","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,6200);
-
-  //GetOneDPlotsMCVsMC(2000,"LepPhi","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,12800);
-
-  //GetOneDPlotsMCVsMC(2010,"LepPhi","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,7000);
-
-  //GetOneDPlotsMCVsMC(2020,"LepPhi","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,5800);
-
-
-
-
-
-
-
-
-
-
   
+  GetOneDPlotsMCVsMC(1900,"LepEta","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,13000);
+  
+    GetOneDPlotsMCVsMC(1910,"LepEta","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,7200);
+
+    GetOneDPlotsMCVsMC(1920,"LepEta","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#eta","Data16/Data17",0,0,10,-2.5,2.5,0.5,1.5,5800);
+
+  GetOneDPlotsMCVsMC(2000,"LepPhi","Data1LLowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,12800);
+
+  GetOneDPlotsMCVsMC(2010,"LepPhi","Data1LLowDphiMu","Prediction_0_Data_MET_Sep20LowDphiMu_V15_.root","Prediction_0_Data_MET_Sep20LowDphiMu_V12_.root","#mu CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,7000);
+
+  GetOneDPlotsMCVsMC(2020,"LepPhi","Data1LLowDphiEle","Prediction_0_Data_MET_Sep20LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep20LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,5600);
+
+*/
+  /*
   
   GetOneDPlotsMCVsMC(1000,"MHT","Data1LHighDphi","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","Data16/Data17",1,0,16,200,1000,0.5,1.5,60000);
 
-  GetOneDPlotsMCVsMC(1100,"HT","Data1LHighDphi","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"MHT","Data16/Data17",1,0,12,100,2500,0.5,1.5,60000);
+  GetOneDPlotsMCVsMC(1100,"HT","Data1LHighDphi","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"HT","Data16/Data17",1,0,12,100,2500,0.5,1.5,60000);
 
   GetOneDPlotsMCVsMC(1200,"NJet","Data1LHighDphi","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NJet","Data16/Data17",1,0,10,2,12,0.5,1.5,30000);
 
@@ -338,7 +404,7 @@ void GetOneDPlotsMCVsMC(){
 
   GetOneDPlotsMCVsMC(1310,"NBtag","Data1LHighDphiMu","Prediction_0_Data_MET_Sep18Mu_V15_.root","Prediction_0_Data_MET_Sep19Mu_V12_.root","#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,40000);
 
-  GetOneDPlotsMCVsMC(1320,"NBtag","Data1LHighDphiEle","Prediction_0_Data_MET_Sep18Ele_V15_.root","Prediction_0_Data_MET_Sep19Ele_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,32000);
+  GetOneDPlotsMCVsMC(1320,"NBtag","Data1LHighDphiEle","Prediction_0_Data_MET_Sep18Ele_V15_.root","Prediction_0_Data_MET_Sep19Ele_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,20000);
 
   GetOneDPlotsMCVsMC(1400,"DphiOne","Data1LHighDphi","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","Data16/Data17",1,0,32,0,3.2,0.5,1.5,32000);
 
@@ -371,6 +437,33 @@ void GetOneDPlotsMCVsMC(){
   GetOneDPlotsMCVsMC(2020,"LepPhi","Data1LHighDphiEle","Prediction_0_Data_MET_Sep18Ele_V15_.root","Prediction_0_Data_MET_Sep19Ele_V12_.root","e CS",0.47,0.3,0.77,0.47,"Lep_#phi","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,4200);
 
 
+
+  GetOneDPlotsMCVsMC(2120,"MHTPhi","Data1LHighDphiEle","Prediction_0_Data_MET_Sep27Ele_V15_.root","Prediction_0_Data_MET_Sep27Ele_V12_.root","e CS",0.47,0.3,0.77,0.47,"#phi(MHT)","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,4100);
+
+  GetOneDPlotsMCVsMC(2220,"METPhi","Data1LHighDphiEle","Prediction_0_Data_MET_Sep27Ele_V15_.root","Prediction_0_Data_MET_Sep27Ele_V12_.root","e CS",0.47,0.3,0.77,0.47,"#phi(MET)","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,4050);
+
+  GetOneDPlotsMCVsMC(2320,"MET","Data1LHighDphiEle","Prediction_0_Data_MET_Sep27Ele_V15_.root","Prediction_0_Data_MET_Sep27Ele_V12_.root","e CS",0.57,0.7,0.87,0.87,"MET","Data16/Data17",1,0,16,200,1000,0.5,1.5,9000);
+
+  GetOneDPlotsMCVsMC(2420,"mT","Data1LHighDphiEle","Prediction_0_Data_MET_Sep27Ele_V15_.root","Prediction_0_Data_MET_Sep27Ele_V12_.root","e CS",0.47,0.3,0.77,0.47,"mT","Data16/Data17",1,0,20,0,100,0.5,1.5,2500);
+  
+  GetOneDPlotsMCVsMC(2520,"NBtagclean","Data1LHighDphiEle","Prediction_0_Data_MET_Sep27Ele_V15_.root","Prediction_0_Data_MET_Sep27Ele_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtagclean","Data16/Data17",1,0,5,0,5,0.5,1.5,30000);
+  */
+  /*
+  GetOneDPlotsMCVsMC(2120,"MHTPhi","Data1LLowDphiEle","Prediction_0_Data_MET_Sep27LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep27LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"#phi(MHT)","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,5700);
+
+  GetOneDPlotsMCVsMC(2220,"METPhi","Data1LLowDphiEle","Prediction_0_Data_MET_Sep27LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep27LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"#phi(MET)","Data16/Data17",0,0,7,-3.5,3.5,0.5,1.5,5700);
+
+  GetOneDPlotsMCVsMC(2320,"MET","Data1LLowDphiEle","Prediction_0_Data_MET_Sep27LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep27LowDphiEle_V12_.root","e CS",0.57,0.7,0.87,0.87,"MET","Data16/Data17",1,0,16,200,1000,0.5,1.5,10000);
+
+  GetOneDPlotsMCVsMC(2420,"mT","Data1LLowDphiEle","Prediction_0_Data_MET_Sep27LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep27LowDphiEle_V12_.root","e CS",0.47,0.3,0.77,0.47,"mT","Data16/Data17",1,0,20,0,100,0.5,1.5,6000);
+  
+  GetOneDPlotsMCVsMC(2520,"NBtagclean","Data1LLowDphiEle","Prediction_0_Data_MET_Sep27LowDphiEle_V15_.root","Prediction_0_Data_MET_Sep27LowDphiEle_V12_.root","e CS",0.57,0.7,0.87,0.87,"NBtagclean","Data16/Data17",1,0,5,0,5,0.5,1.5,30000);
+*/
+
+
+  GetOneDPlotsMCVsMC(1300,"NBtag","Data1LHighDphi","Prediction_0_Data_MET_Sep28CorrectedBtagPtEta_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,80000);
+
+  GetOneDPlotsMCVsMC(1300,"NBtag","Data1LLowDphi","Prediction_0_Data_MET_Sep28LowDphiCorrectedBtagPtEta_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,120000);
 
 
 }
