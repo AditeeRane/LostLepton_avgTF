@@ -35,8 +35,13 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
   h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
+  h_MET_Exp =new TH1D("h_MET_Exp","h_MET_Exp",16,200,1000);
+  h_MHTPhi_Exp=new TH1D("h_MHTPhi_Exp","h_MHTPhi_Exp",7,-3.5,3.5);
+  h_METPhi_Exp=new TH1D("h_METPhi_Exp","h_METPhi_Exp",7,-3.5,3.5);
+  h_mT_Exp=new TH1D("h_mT_Exp","h_mT_Exp",20,0,100);
   h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
   h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
+ 
   h_DphiOne_Exp =new TH1D("h_DphiOne_Exp","h_DphiOne_Exp",32,0,3.2);
   h_DphiTwo_Exp =new TH1D("h_DphiTwo_Exp","h_DphiTwo_Exp",32,0,3.2);
   h_DphiThree_Exp =new TH1D("h_DphiThree_Exp","h_DphiThree_Exp",32,0,3.2);
@@ -44,6 +49,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
   h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
   h_LepPhi_Exp=new TH1D("h_LepPhi_Exp","h_LepPhi_Exp",7,-3.5,3.5);
+  h_NBtagclean_Exp =new TH1D("h_NBtagclean_Exp","h_NBtagclean_Exp",5,0,5);
 
   h_HT_Pre =new TH1D("h_HT_Pre","h_HT_Pre",12,100,2500);
   h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
@@ -56,8 +62,14 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_HT_Exp);
   GetOutputList()->Add(h_MHT_Exp);
+  GetOutputList()->Add(h_MET_Exp); 
+  GetOutputList()->Add(h_METPhi_Exp);
+  GetOutputList()->Add(h_MHTPhi_Exp);
+  GetOutputList()->Add(h_mT_Exp);
+
   GetOutputList()->Add(h_NJet_Exp);
   GetOutputList()->Add(h_NBtag_Exp);
+  GetOutputList()->Add(h_NBtagclean_Exp);
   GetOutputList()->Add(h_DphiOne_Exp);
   GetOutputList()->Add(h_DphiTwo_Exp);
   GetOutputList()->Add(h_DphiThree_Exp);
@@ -488,8 +500,15 @@ Bool_t Prediction::Process(Long64_t entry)
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
     h_MHT_Exp->Fill(MHT,WeightBtagProb);
+    h_MET_Exp->Fill(MET,WeightBtagProb);
+    h_MHTPhi_Exp->Fill(MHTPhi,WeightBtagProb);
+    h_METPhi_Exp->Fill(METPhi,WeightBtagProb);
+    h_mT_Exp->Fill(mtw,WeightBtagProb);
+
     h_NJet_Exp->Fill(NJets,WeightBtagProb);
     h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+    h_NBtagclean_Exp->Fill(BTagsclean,WeightBtagProb);
+
     h_DphiOne_Exp->Fill(DeltaPhi1,WeightBtagProb);
     h_DphiTwo_Exp->Fill(DeltaPhi2,WeightBtagProb);
     h_DphiThree_Exp->Fill(DeltaPhi3,WeightBtagProb);
@@ -542,8 +561,15 @@ void Prediction::Terminate()
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
   h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
   h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
+  h_MET_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MET_Exp"));
+  h_MHTPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhi_Exp"));
+  h_METPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METPhi_Exp"));
+  h_mT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mT_Exp"));
+
   h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
   h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
+  h_NBtagclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagclean_Exp"));
+
   h_DphiOne_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOne_Exp"));
   h_DphiTwo_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwo_Exp"));
   h_DphiThree_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThree_Exp"));
@@ -571,8 +597,15 @@ void Prediction::Terminate()
   h_CSStat->Write();
   h_HT_Exp->Write();
   h_MHT_Exp->Write();
+  h_MHTPhi_Exp->Write();
+  h_MET_Exp->Write();
+  h_METPhi_Exp->Write();
+  h_mT_Exp->Write();
+
   h_NJet_Exp->Write();
   h_NBtag_Exp->Write();
+  h_NBtagclean_Exp->Write();
+ 
   h_DphiOne_Exp->Write();
   h_DphiTwo_Exp->Write();
   h_DphiThree_Exp->Write();

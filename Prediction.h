@@ -120,8 +120,13 @@ class Prediction : public TSelector {
   TH1D* h_CSStat = 0;
   TH1D* h_HT_Exp=0;
   TH1D* h_MHT_Exp=0;
+  TH1D* h_MHTPhi_Exp=0;
+  TH1D* h_MET_Exp=0;
+  TH1D* h_METPhi_Exp=0;
+  TH1D* h_mT_Exp=0;
   TH1D* h_NJet_Exp=0;
   TH1D* h_NBtag_Exp=0;
+  TH1D* h_NBtagclean_Exp=0;
   TH1D* h_DphiOne_Exp=0;
   TH1D* h_DphiTwo_Exp=0;
   TH1D* h_DphiThree_Exp=0;
@@ -185,6 +190,7 @@ class Prediction : public TSelector {
   Bool_t           BadChargedCandidateFilter;
   Bool_t           BadPFMuonFilter;
   Int_t           BTags;
+  Int_t           BTagsclean;
   Int_t          CSCTightHaloFilter;
   Double_t        DeltaPhi1;
   Double_t        DeltaPhi2;
@@ -256,6 +262,7 @@ class Prediction : public TSelector {
   TBranch        *b_LumiBlockNum=0;   //!
   TBranch        *b_EvtNum=0;   //!
   TBranch        *b_BTags=0;   //!
+  TBranch        *b_BTagsclean=0; 
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
   TBranch        *b_CSCTightHaloFilter=0;   //!
@@ -487,6 +494,8 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("LumiBlockNum", 1);
   fChain->SetBranchStatus("EvtNum", 1);
   fChain->SetBranchStatus("BTags", 1);
+  fChain->SetBranchStatus("BTagsclean", 1);
+
   fChain->SetBranchStatus("DeltaPhi1", 1);
   fChain->SetBranchStatus("DeltaPhi2", 1);
   fChain->SetBranchStatus("DeltaPhi3", 1);
@@ -575,6 +584,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
   fChain->SetBranchAddress("EvtNum", &EvtNum, &b_EvtNum);
   fChain->SetBranchAddress("BTags", &BTags, &b_BTags);
+  fChain->SetBranchAddress("BTagsclean", &BTagsclean, &b_BTagsclean);
   fChain->SetBranchAddress("DeltaPhi1", &DeltaPhi1, &b_DeltaPhi1);
   fChain->SetBranchAddress("DeltaPhi2", &DeltaPhi2, &b_DeltaPhi2);
   fChain->SetBranchAddress("DeltaPhi3", &DeltaPhi3, &b_DeltaPhi3);
