@@ -34,6 +34,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
+  h_HT5_Exp =new TH1D("h_HT5_Exp","h_HT5_Exp",12,100,2500);
+
   h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
   h_MET_Exp =new TH1D("h_MET_Exp","h_MET_Exp",16,200,1000);
   h_MHTPhi_Exp=new TH1D("h_MHTPhi_Exp","h_MHTPhi_Exp",7,-3.5,3.5);
@@ -41,7 +43,6 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_mT_Exp=new TH1D("h_mT_Exp","h_mT_Exp",20,0,100);
   h_NJet_Exp =new TH1D("h_NJet_Exp","h_NJet_Exp",10,2,12);
   h_NBtag_Exp =new TH1D("h_NBtag_Exp","h_NBtag_Exp",5,0,5);
-  h_NBtagclean_Exp =new TH1D("h_NBtagclean_Exp","h_NBtagclean_Exp",5,0,5);
 
   h_DphiOne_Exp =new TH1D("h_DphiOne_Exp","h_DphiOne_Exp",32,0,3.2);
   h_DphiTwo_Exp =new TH1D("h_DphiTwo_Exp","h_DphiTwo_Exp",32,0,3.2);
@@ -50,6 +51,47 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
   h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
   h_LepPhi_Exp=new TH1D("h_LepPhi_Exp","h_LepPhi_Exp",7,-3.5,3.5);
+
+  h_HTclean_Exp =new TH1D("h_HTclean_Exp","h_HTclean_Exp",12,100,2500);
+  h_HT5clean_Exp =new TH1D("h_HT5clean_Exp","h_HT5clean_Exp",12,100,2500);
+  h_MHTclean_Exp =new TH1D("h_MHTclean_Exp","h_MHTclean_Exp",16,200,1000);
+  h_METclean_Exp =new TH1D("h_METclean_Exp","h_METclean_Exp",16,200,1000);
+  h_MHTPhiclean_Exp=new TH1D("h_MHTPhiclean_Exp","h_MHTPhiclean_Exp",7,-3.5,3.5);
+  h_METPhiclean_Exp=new TH1D("h_METPhiclean_Exp","h_METPhiclean_Exp",7,-3.5,3.5);
+  h_mTclean_Exp=new TH1D("h_mTclean_Exp","h_mTclean_Exp",20,0,100);
+  h_NJetclean_Exp =new TH1D("h_NJetclean_Exp","h_NJetclean_Exp",10,2,12);
+  h_NBtagclean_Exp =new TH1D("h_NBtagclean_Exp","h_NBtagclean_Exp",5,0,5);
+
+  h_DphiOneclean_Exp =new TH1D("h_DphiOneclean_Exp","h_DphiOneclean_Exp",32,0,3.2);
+  h_DphiTwoclean_Exp =new TH1D("h_DphiTwoclean_Exp","h_DphiTwoclean_Exp",32,0,3.2);
+  h_DphiThreeclean_Exp =new TH1D("h_DphiThreeclean_Exp","h_DphiThreeclean_Exp",32,0,3.2);
+  h_DphiFourclean_Exp =new TH1D("h_DphiFourclean_Exp","h_DphiFourclean_Exp",32,0,3.2);
+  h_LepPtclean_Exp=new TH1D("h_LepPtclean_Exp","h_LepPtclean_Exp",20,0.0,1000.0);
+  h_LepEtaclean_Exp=new TH1D("h_LepEtaclean_Exp","h_LepEtaclean_Exp",10,-2.5,2.5);
+  h_LepPhiclean_Exp=new TH1D("h_LepPhiclean_Exp","h_LepPhiclean_Exp",7,-3.5,3.5);
+
+  h_HTv2Recipe_Exp =new TH1D("h_HTv2Recipe_Exp","h_HTv2Recipe_Exp",12,100,2500);
+  h_MHTv2Recipe_Exp =new TH1D("h_MHTv2Recipe_Exp","h_MHTv2Recipe_Exp",16,200,1000);
+  h_MHTPhiv2Recipe_Exp=new TH1D("h_MHTPhiv2Recipe_Exp","h_MHTPhiv2Recipe_Exp",7,-3.5,3.5);
+  h_NJetv2Recipe_Exp =new TH1D("h_NJetv2Recipe_Exp","h_NJetv2Recipe_Exp",10,2,12);
+  h_NBtagv2Recipe_Exp =new TH1D("h_NBtagv2Recipe_Exp","h_NBtagv2Recipe_Exp",5,0,5);
+
+  h_DphiOnev2Recipe_Exp =new TH1D("h_DphiOnev2Recipe_Exp","h_DphiOnev2Recipe_Exp",32,0,3.2);
+  h_DphiTwov2Recipe_Exp =new TH1D("h_DphiTwov2Recipe_Exp","h_DphiTwov2Recipe_Exp",32,0,3.2);
+  h_DphiThreev2Recipe_Exp =new TH1D("h_DphiThreev2Recipe_Exp","h_DphiThreev2Recipe_Exp",32,0,3.2);
+  h_DphiFourv2Recipe_Exp =new TH1D("h_DphiFourv2Recipe_Exp","h_DphiFourv2Recipe_Exp",32,0,3.2);
+
+
+  h_MHTOrig_Exp =new TH1D("h_MHTOrig_Exp","h_MHTOrig_Exp",16,200,1000);
+  h_METOrig_Exp =new TH1D("h_METOrig_Exp","h_METOrig_Exp",16,200,1000);
+  h_MHTPhiOrig_Exp=new TH1D("h_MHTPhiOrig_Exp","h_MHTPhiOrig_Exp",7,-3.5,3.5);
+  h_METPhiOrig_Exp=new TH1D("h_METPhiOrig_Exp","h_METPhiOrig_Exp",7,-3.5,3.5);
+
+  h_DphiOneOrig_Exp =new TH1D("h_DphiOneOrig_Exp","h_DphiOneOrig_Exp",32,0,3.2);
+  h_DphiTwoOrig_Exp =new TH1D("h_DphiTwoOrig_Exp","h_DphiTwoOrig_Exp",32,0,3.2);
+  h_DphiThreeOrig_Exp =new TH1D("h_DphiThreeOrig_Exp","h_DphiThreeOrig_Exp",32,0,3.2);
+  h_DphiFourOrig_Exp =new TH1D("h_DphiFourOrig_Exp","h_DphiFourOrig_Exp",32,0,3.2);
+
 
   h_HT_Pre =new TH1D("h_HT_Pre","h_HT_Pre",12,100,2500);
   h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
@@ -61,6 +103,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_CSStat); //one lepton CS
 
   GetOutputList()->Add(h_HT_Exp);
+  GetOutputList()->Add(h_HT5_Exp);
+
   GetOutputList()->Add(h_MHT_Exp);
   GetOutputList()->Add(h_MET_Exp);
   GetOutputList()->Add(h_METPhi_Exp);
@@ -68,8 +112,6 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_mT_Exp);
   GetOutputList()->Add(h_NJet_Exp);
   GetOutputList()->Add(h_NBtag_Exp);
-  GetOutputList()->Add(h_NBtagclean_Exp);
-
   GetOutputList()->Add(h_DphiOne_Exp);
   GetOutputList()->Add(h_DphiTwo_Exp);
   GetOutputList()->Add(h_DphiThree_Exp);
@@ -77,6 +119,44 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_LepPt_Exp);
   GetOutputList()->Add(h_LepEta_Exp);
   GetOutputList()->Add(h_LepPhi_Exp); 
+
+
+  GetOutputList()->Add(h_HTclean_Exp);
+  GetOutputList()->Add(h_HT5clean_Exp);
+  GetOutputList()->Add(h_MHTclean_Exp);
+  GetOutputList()->Add(h_METclean_Exp);
+  GetOutputList()->Add(h_METPhiclean_Exp);
+  GetOutputList()->Add(h_MHTPhiclean_Exp);
+  GetOutputList()->Add(h_mTclean_Exp);
+  GetOutputList()->Add(h_NJetclean_Exp);
+  GetOutputList()->Add(h_NBtagclean_Exp);
+  GetOutputList()->Add(h_DphiOneclean_Exp);
+  GetOutputList()->Add(h_DphiTwoclean_Exp);
+  GetOutputList()->Add(h_DphiThreeclean_Exp);
+  GetOutputList()->Add(h_DphiFourclean_Exp);
+  GetOutputList()->Add(h_LepPtclean_Exp);
+  GetOutputList()->Add(h_LepEtaclean_Exp);
+  GetOutputList()->Add(h_LepPhiclean_Exp); 
+
+  GetOutputList()->Add(h_HTv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTPhiv2Recipe_Exp);
+  GetOutputList()->Add(h_NJetv2Recipe_Exp);
+  GetOutputList()->Add(h_NBtagv2Recipe_Exp);
+  GetOutputList()->Add(h_DphiOnev2Recipe_Exp);
+  GetOutputList()->Add(h_DphiTwov2Recipe_Exp);
+  GetOutputList()->Add(h_DphiThreev2Recipe_Exp);
+  GetOutputList()->Add(h_DphiFourv2Recipe_Exp);
+
+
+  GetOutputList()->Add(h_MHTOrig_Exp);
+  GetOutputList()->Add(h_METOrig_Exp);
+  GetOutputList()->Add(h_METPhiOrig_Exp);
+  GetOutputList()->Add(h_MHTPhiOrig_Exp);
+  GetOutputList()->Add(h_DphiOneOrig_Exp);
+  GetOutputList()->Add(h_DphiTwoOrig_Exp);
+  GetOutputList()->Add(h_DphiThreeOrig_Exp);
+  GetOutputList()->Add(h_DphiFourOrig_Exp);
 
 
   GetOutputList()->Add(h_HT_Pre);
@@ -110,6 +190,19 @@ Bool_t Prediction::Process(Long64_t entry)
   vector<TVector3>GenHT3JetVec,GenMHT3JetVec;
   TVector3 newGenMHT3Vec;
   int BTagsfrmCSV=0;
+
+  vector<TVector3>Jetsv2Recipe;
+  vector<double> JetsCSVv2Recipe;
+  HTv2Recipe=-99.;
+  MHTv2Recipe=-99.;
+  MHTPhiv2Recipe=-99.;
+  TVector3 MHT3Vecv2Recipe;
+  int NJetv2Recipe=0;
+  int NBtagv2Recipe=0;
+  DeltaPhi1v2Recipe=-99.;
+  DeltaPhi2v2Recipe=-99.;
+  DeltaPhi3v2Recipe=-99.;
+  DeltaPhi4v2Recipe=-99.;
   //  if(BTags>0)
   //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
 
@@ -118,7 +211,44 @@ Bool_t Prediction::Process(Long64_t entry)
     if(jetCSV>csvForBtag && Jets->at(j).Pt() > 30 && fabs(Jets->at(j).Eta())<2.4)
       BTagsfrmCSV++;
   }
- 
+
+  for(unsigned j = 0; j < Jets->size(); ++j){
+    double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
+    //std::cout<<" raw pt "<<jetPtv2Recipe<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+    if(jetPtv2Recipe >50 && (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
+      temp3Vec.SetPtEtaPhi(Jets->at(j).Pt(),Jets->at(j).Eta(),Jets->at(j).Phi());
+      Jetsv2Recipe.push_back(temp3Vec);
+      JetsCSVv2Recipe.push_back(Jets_bDiscriminatorCSV->at(j));
+    }
+  }
+  
+  //  std::cout<<" jetPtv2Recipe.size "<<Jetsv2Recipe.size()<<endl;
+  
+  for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
+    if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<2.4){
+      HTv2Recipe+=Jetsv2Recipe[i].Pt();
+      NJetsv2Recipe++;
+      if(JetsCSVv2Recipe[i]>csvForBtag)
+	BTagsv2Recipe++;
+    }
+    if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<5.0){
+      MHT3Vecv2Recipe-=Jetsv2Recipe[i];
+    }
+  }
+  if(MHT3Vecv2Recipe.Pt()!=0){
+    MHTv2Recipe=MHT3Vecv2Recipe.Pt(); 
+    MHTPhiv2Recipe=MHT3Vecv2Recipe.Phi();
+  }
+  if(Jetsv2Recipe.size()>0){
+    DeltaPhi1v2Recipe=Jetsv2Recipe[0].Phi()-MHTPhiv2Recipe;
+    if(Jetsv2Recipe.size()>1)
+      DeltaPhi2v2Recipe=Jetsv2Recipe[1].Phi()-MHTPhiv2Recipe;
+    if(Jetsv2Recipe.size()>2)
+      DeltaPhi3v2Recipe=Jetsv2Recipe[2].Phi()-MHTPhiv2Recipe;
+    if(Jetsv2Recipe.size()>3)
+      DeltaPhi4v2Recipe=Jetsv2Recipe[3].Phi()-MHTPhiv2Recipe;
+  }
+  //  std::cout<<" seg vio "<<endl;
   //*AR: 180917- only for signal
   if(runOnSignalMC && useGenHTMHT){
     for(unsigned j = 0; j < GenJets->size(); ++j){
@@ -137,35 +267,40 @@ Bool_t Prediction::Process(Long64_t entry)
     newGenMHT=newGenMHT3Vec.Pt();
   } //end of runOnSignalMC
 
-  //only considers single isolated lepton events
-  if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
   double LepPt=-99.0;
   double LepEta=-99.0;
   double LepPhi=-99.0;
+  
+  //only considers single isolated lepton events
+  if(!GetSignalRegHists){
+    if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
 
-  if(MuonsNum_==1){
-    for(unsigned int i=0;i<Muons->size();i++){
-      if(Muons_passIso->at(i)){
-	LepPt=Muons->at(i).Pt();
-	LepEta=Muons->at(i).Eta();
-	LepPhi=Muons->at(i).Phi();
+    if(MuonsNum_==1){
+      for(unsigned int i=0;i<Muons->size();i++){
+	if(Muons_passIso->at(i)){
+	  LepPt=Muons->at(i).Pt();
+	  LepEta=Muons->at(i).Eta();
+	  LepPhi=Muons->at(i).Phi();
+	}
       }
     }
-  }
 
-  if(ElectronsNum_==1){
-    for(unsigned int i=0;i<Electrons->size();i++){
-      if(Electrons_passIso->at(i)){
-	LepPt=Electrons->at(i).Pt();
-	LepEta=Electrons->at(i).Eta();
-	LepPhi=Electrons->at(i).Phi();
+    if(ElectronsNum_==1){
+      for(unsigned int i=0;i<Electrons->size();i++){
+	if(Electrons_passIso->at(i)){
+	  LepPt=Electrons->at(i).Pt();
+	  LepEta=Electrons->at(i).Eta();
+	  LepPhi=Electrons->at(i).Phi();
+	}
       }
     }
-  }
 
-  if(LepPt<20 || fabs(LepEta)>2.1) 
-    return kTRUE;
-
+    if(LepPt<20 || fabs(LepEta)>2.1) 
+      return kTRUE;
+  } //end of if(!GetSignalRegHists)
+  else
+    if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
+  
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -180,33 +315,42 @@ Bool_t Prediction::Process(Long64_t entry)
   if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
   //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
-  if(MuonsNum_==1 && ElectronsNum_==0){
-    mtw =  Muons_MTW->at(0);
-    //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
-
-    //*AR: 180917- Gets skimfile for signal and standard model MC
-    if(runOnSignalMC)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
-    if(runOnStandardModelMC)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
-  }else if(MuonsNum_==0 && ElectronsNum_==1){
-    mtw =  Electrons_MTW->at(0);
-    //std::cout<<" entry "<<entry<<" 1e event "<<endl;
-    if(runOnSignalMC)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLe";
-    if(runOnStandardModelMC)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLe";
-  }
-  //do not consider event if mT>100 
-  if(mtw > 100) return kTRUE;
-  //std::cout<<" passed mT cut "<<endl;
+  if(!GetSignalRegHists){
+    if(MuonsNum_==1 && ElectronsNum_==0){
+      mtw =  Muons_MTW->at(0);
+      
+      //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
+      
+      //*AR: 180917- Gets skimfile for signal and standard model MC
+      if(runOnSignalMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
+      if(runOnStandardModelMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
+    }else if(MuonsNum_==0 && ElectronsNum_==1){
+      mtw =  Electrons_MTW->at(0);
+      //std::cout<<" entry "<<entry<<" 1e event "<<endl;
+      if(runOnSignalMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLe";
+      if(runOnStandardModelMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLe";
+    }
+    //do not consider event if mT>100 
+    if(mtw > 100) return kTRUE;
+  }//end of if(!GetSignalRegHists)
+//std::cout<<" passed mT cut "<<endl;
   isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
-  /*
+  if(GetSignalRegHists){
+    if(isoTracksNum !=0){
+      std::cout<<" isotrack nonzero "<<endl;
+      return kTRUE;
+    }
+  }
+/*
   for(unsigned i=0;i<TriggerNames->size();i++){
     std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
   }
 */  
-  //  std::cout<<" 42 "<<TriggerNames->at(42)<<" 43 "<<TriggerNames->at(43)<<" 44 "<<TriggerNames->at(44)<<" 46 "<<TriggerNames->at(46)<<" 47 "<<TriggerNames->at(47)<<" 48 "<<TriggerNames->at(48)<<endl;
+//  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
   // Signal region MET triggers applied only for data
   if(useTrigger) if(!TriggerPass->at(108) && !TriggerPass->at(110) &&!TriggerPass->at(114) && !TriggerPass->at(124) && !TriggerPass->at(126) && !TriggerPass->at(129)) return kTRUE;
 
@@ -263,7 +407,15 @@ Bool_t Prediction::Process(Long64_t entry)
   //std::cout<<" entry "<<entry<<" *** Seg Vio2 *** "<<endl;
   double madHTcut=0.0;
   //char SkimFile[500];
-     
+  if(runOnData){
+    TString currentTree = TString(fChain->GetCurrentFile()->GetName());
+    TObjArray *optionArray = currentTree.Tokenize("/");
+    TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+    currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
+    //    std::cout<<" currentFile "<<currentFile<<endl;
+  }
+
+
   if(!runOnData){
     //    string GetFastSimSkim=Skmname.c_str();
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
@@ -435,7 +587,7 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
 
-
+   
     if(doISRcorr){ //true for signal mc
       w_isr = isrcorr->GetCorrection(NJetsISR);
       Weight *= w_isr;
@@ -455,6 +607,92 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   } //end of if(!runOnData)
   
+  if(runOnData && RunSelectiveEvents){
+    //std::cout<<" RunSelectiveEvents before unblinding "<<endl;
+    vector<int> RunBCDE;
+    //    ifstream ifile("2017BCDE.json");
+    bool MatchRun=false;      
+
+    //   vector<int> RunF;
+    if(currentFile.find("Run2017B")!=string::npos || currentFile.find("Run2017C")!=string::npos || currentFile.find("Run2017D")!=string::npos || currentFile.find("Run2017E")!=string::npos){
+      //std::cout<<" bcde file "<<endl;
+      ifstream ifile("2017BCDE.json");
+
+      char filenames[500];
+      //      char[500] filenames;
+      while(ifile.getline(filenames, 500) )
+	{
+	  //	  RunBCDE.clear();
+	  char *p;
+	  const char s[2] = " ";
+	  //int itrr=-1;
+	  
+	  p = strtok (filenames,s);
+	  //   std::cout<<" eventN "<<eventN<<" p"<<p<<" ****** seg vio****** "<<endl;
+	  
+	  unsigned int CheckRunNum=atoi(p);
+	  //  std::cout<<" EvtNum "<<EvtNum<<" p "<<p<<" checkRun "<<CheckRunNum<<" runtrue "<<RunNum<<endl;
+	  if(CheckRunNum != RunNum)
+	    continue;
+	  else{
+	    MatchRun=true;
+	    break;
+	  }
+	}
+      ifile.close();
+      
+    }
+    if(currentFile.find("Run2017F")!=string::npos){
+      //      std::cout<<" f file "<<endl;
+      ifstream ifile("2017F.json");
+      char filenames[500];
+      //      char[500] filenames;
+      while(ifile.getline(filenames, 500) )
+	{
+	  //	  RunBCDE.clear();
+	  char *p;
+	  const char s[2] = " ";
+	  //int itrr=-1;
+	  
+	  p = strtok (filenames,s);
+	  //   std::cout<<" eventN "<<eventN<<" p"<<p<<" ****** seg vio****** "<<endl;
+	  
+	  unsigned int CheckRunNum=atoi(p);
+	  //	  std::cout<<" EvtNum "<<EvtNum<<" p "<<p<<" checkRun "<<CheckRunNum<<" runtrue "<<RunNum<<endl;
+	  if(CheckRunNum != RunNum)
+	    continue;
+	  else{
+	    MatchRun=true;
+	    break;
+	  }
+	}
+      ifile.close();
+
+    }
+    
+    if(!MatchRun){
+      //      std::cout<<" EvtNum "<<EvtNum<<" runtrue "<<RunNum<<" no match found in json "<<endl;
+      return kTRUE;
+    }
+    
+    if(RunNum == 299370 && LumiBlockNum>442){
+      std::cout<<" skip event "<<endl;
+      return kTRUE;
+    }
+    if(RunNum == 305178 && LumiBlockNum==75){
+      //      std::cout<<" skip event "<<endl;
+      return kTRUE;
+    }
+    if(RunNum == 305365 && LumiBlockNum>273){
+      //      std::cout<<" skip event "<<endl;
+      return kTRUE;
+    }
+
+    std::cout<<" passed event "<<" evt "<<EvtNum<<" run "<<RunNum<<" lumi "<<LumiBlockNum<<endl;
+
+  }
+
+
   if(runOnSignalMC){
     //Account for efficiency of JetID since we cannot apply it on fastSim
     Weight *= 0.99;
@@ -511,6 +749,7 @@ Bool_t Prediction::Process(Long64_t entry)
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
+    h_HT5_Exp->Fill(HT5,WeightBtagProb);
     h_MHT_Exp->Fill(MHT,WeightBtagProb);
     h_MET_Exp->Fill(MET,WeightBtagProb);
     h_MHTPhi_Exp->Fill(MHTPhi,WeightBtagProb);
@@ -518,8 +757,6 @@ Bool_t Prediction::Process(Long64_t entry)
     h_mT_Exp->Fill(mtw,WeightBtagProb);
     h_NJet_Exp->Fill(NJets,WeightBtagProb);
     h_NBtag_Exp->Fill(BTagsfrmCSV,WeightBtagProb);
-    h_NBtagclean_Exp->Fill(BTagsclean,WeightBtagProb);
-
     h_DphiOne_Exp->Fill(DeltaPhi1,WeightBtagProb);
     h_DphiTwo_Exp->Fill(DeltaPhi2,WeightBtagProb);
     h_DphiThree_Exp->Fill(DeltaPhi3,WeightBtagProb);
@@ -527,6 +764,45 @@ Bool_t Prediction::Process(Long64_t entry)
     h_LepPt_Exp->Fill(LepPt,WeightBtagProb);
     h_LepEta_Exp->Fill(LepEta,WeightBtagProb);
     h_LepPhi_Exp->Fill(LepPhi,WeightBtagProb);
+
+
+    h_HTclean_Exp->Fill(HTclean,WeightBtagProb);
+    h_HT5clean_Exp->Fill(HT5clean,WeightBtagProb);   
+    h_MHTclean_Exp->Fill(MHTclean,WeightBtagProb);
+    h_METclean_Exp->Fill(METclean,WeightBtagProb);
+    h_MHTPhiclean_Exp->Fill(MHTPhiclean,WeightBtagProb);
+    h_METPhiclean_Exp->Fill(METPhiclean,WeightBtagProb);
+    h_mTclean_Exp->Fill(mtw,WeightBtagProb);
+    h_NJetclean_Exp->Fill(NJetsclean,WeightBtagProb);
+    h_NBtagclean_Exp->Fill(BTagsfrmCSV,WeightBtagProb);
+    h_DphiOneclean_Exp->Fill(DeltaPhi1clean,WeightBtagProb);
+    h_DphiTwoclean_Exp->Fill(DeltaPhi2clean,WeightBtagProb);
+    h_DphiThreeclean_Exp->Fill(DeltaPhi3clean,WeightBtagProb);
+    h_DphiFourclean_Exp->Fill(DeltaPhi4clean,WeightBtagProb);
+    h_LepPtclean_Exp->Fill(LepPt,WeightBtagProb);
+    h_LepEtaclean_Exp->Fill(LepEta,WeightBtagProb);
+    h_LepPhiclean_Exp->Fill(LepPhi,WeightBtagProb);
+
+    h_HTv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
+    h_MHTv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+    h_MHTPhiv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
+    h_NJetv2Recipe_Exp->Fill(NJetsv2Recipe,WeightBtagProb);
+    h_NBtagv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    h_DphiOnev2Recipe_Exp->Fill(DeltaPhi1v2Recipe,WeightBtagProb);
+    h_DphiTwov2Recipe_Exp->Fill(DeltaPhi2v2Recipe,WeightBtagProb);
+    h_DphiThreev2Recipe_Exp->Fill(DeltaPhi3v2Recipe,WeightBtagProb);
+    h_DphiFourv2Recipe_Exp->Fill(DeltaPhi4v2Recipe,WeightBtagProb);
+
+
+    h_MHTOrig_Exp->Fill(MHTOrig,WeightBtagProb);
+    h_METOrig_Exp->Fill(METOrig,WeightBtagProb);
+    h_MHTPhiOrig_Exp->Fill(MHTPhiOrig,WeightBtagProb);
+    h_METPhiOrig_Exp->Fill(METPhiOrig,WeightBtagProb);
+    h_DphiOneOrig_Exp->Fill(DeltaPhi1Orig,WeightBtagProb);
+    h_DphiTwoOrig_Exp->Fill(DeltaPhi2Orig,WeightBtagProb);
+    h_DphiThreeOrig_Exp->Fill(DeltaPhi3Orig,WeightBtagProb);
+    h_DphiFourOrig_Exp->Fill(DeltaPhi4Orig,WeightBtagProb);
+    
     //*AR: 180917- These histograms represent yield in SR as TF is applied
     h_HT_Pre->Fill(HT,WeightBtagProb*TF);
     h_MHT_Pre->Fill(MHT,WeightBtagProb*TF);
@@ -571,6 +847,7 @@ void Prediction::Terminate()
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
   h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
+  h_HT5_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT5_Exp"));
   h_MHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Exp"));
   h_MET_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MET_Exp"));
   h_MHTPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhi_Exp"));
@@ -578,8 +855,6 @@ void Prediction::Terminate()
   h_mT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mT_Exp"));
   h_NJet_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Exp"));
   h_NBtag_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Exp"));
-  h_NBtagclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagclean_Exp"));
-
   h_DphiOne_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOne_Exp"));
   h_DphiTwo_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwo_Exp"));
   h_DphiThree_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThree_Exp"));
@@ -587,6 +862,45 @@ void Prediction::Terminate()
   h_LepPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPt_Exp"));
   h_LepEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta_Exp"));
   h_LepPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhi_Exp"));
+
+
+  h_HTclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTclean_Exp"));
+  h_HT5clean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT5clean_Exp"));
+  h_MHTclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTclean_Exp"));
+  h_METclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METclean_Exp"));
+  h_MHTPhiclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiclean_Exp"));
+  h_METPhiclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METPhiclean_Exp"));
+  h_mTclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mTclean_Exp"));
+  h_NJetclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetclean_Exp"));
+  h_NBtagclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagclean_Exp"));
+  h_DphiOneclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOneclean_Exp"));
+  h_DphiTwoclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwoclean_Exp"));
+  h_DphiThreeclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThreeclean_Exp"));
+  h_DphiFourclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFourclean_Exp"));
+  h_LepPtclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPtclean_Exp"));
+  h_LepEtaclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtaclean_Exp"));
+  h_LepPhiclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhiclean_Exp"));
+
+
+  h_HTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_Exp"));
+  h_MHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_Exp"));
+  h_MHTPhiv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiv2Recipe_Exp"));
+  h_NJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetv2Recipe_Exp"));
+  h_NBtagv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagv2Recipe_Exp"));
+  h_DphiOnev2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOnev2Recipe_Exp"));
+  h_DphiTwov2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwov2Recipe_Exp"));
+  h_DphiThreev2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThreev2Recipe_Exp"));
+  h_DphiFourv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFourv2Recipe_Exp"));
+
+
+  h_MHTOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTOrig_Exp"));
+  h_METOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METOrig_Exp"));
+  h_MHTPhiOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiOrig_Exp"));
+  h_METPhiOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_METPhiOrig_Exp"));
+  h_DphiOneOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOneOrig_Exp"));
+  h_DphiTwoOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwoOrig_Exp"));
+  h_DphiThreeOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThreeOrig_Exp"));
+  h_DphiFourOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFourOrig_Exp"));
 
 
 
@@ -606,6 +920,7 @@ void Prediction::Terminate()
   h_Prediction->Write();
   h_CSStat->Write();
   h_HT_Exp->Write();
+  h_HT5_Exp->Write();  
   h_MHT_Exp->Write();
   h_MHTPhi_Exp->Write();
   h_MET_Exp->Write();
@@ -613,15 +928,52 @@ void Prediction::Terminate()
   h_mT_Exp->Write();
   h_NJet_Exp->Write();
   h_NBtag_Exp->Write();
-  h_NBtagclean_Exp->Write();
   h_DphiOne_Exp->Write();
   h_DphiTwo_Exp->Write();
   h_DphiThree_Exp->Write();
   h_DphiFour_Exp->Write(); 
-
   h_LepPt_Exp->Write(); 
   h_LepEta_Exp->Write(); 
   h_LepPhi_Exp->Write(); 
+
+
+  h_HTclean_Exp->Write();
+  h_HT5clean_Exp->Write();
+  h_MHTclean_Exp->Write();
+  h_MHTPhiclean_Exp->Write();
+  h_METclean_Exp->Write();
+  h_METPhiclean_Exp->Write();
+  h_mTclean_Exp->Write();
+  h_NJetclean_Exp->Write();
+  h_NBtagclean_Exp->Write();
+  h_DphiOneclean_Exp->Write();
+  h_DphiTwoclean_Exp->Write();
+  h_DphiThreeclean_Exp->Write();
+  h_DphiFourclean_Exp->Write(); 
+  h_LepPtclean_Exp->Write(); 
+  h_LepEtaclean_Exp->Write(); 
+  h_LepPhiclean_Exp->Write(); 
+
+
+  h_HTv2Recipe_Exp->Write();
+  h_MHTv2Recipe_Exp->Write();
+  h_MHTPhiv2Recipe_Exp->Write();
+  h_NJetv2Recipe_Exp->Write();
+  h_NBtagv2Recipe_Exp->Write();
+  h_DphiOnev2Recipe_Exp->Write();
+  h_DphiTwov2Recipe_Exp->Write();
+  h_DphiThreev2Recipe_Exp->Write();
+  h_DphiFourv2Recipe_Exp->Write(); 
+
+
+  h_MHTOrig_Exp->Write();
+  h_MHTPhiOrig_Exp->Write();
+  h_METOrig_Exp->Write();
+  h_METPhiOrig_Exp->Write();
+  h_DphiOneOrig_Exp->Write();
+  h_DphiTwoOrig_Exp->Write();
+  h_DphiThreeOrig_Exp->Write();
+  h_DphiFourOrig_Exp->Write(); 
 
   h_HT_Pre->Write();
   h_MHT_Pre->Write();

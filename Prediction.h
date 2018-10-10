@@ -35,6 +35,9 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
+bool GetSignalRegHists= true;
+//*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
+bool RunSelectiveEvents= true;
 
 // Use TFs with/without SFs
 const bool applySFs = true; //check:true only for data
@@ -119,6 +122,7 @@ class Prediction : public TSelector {
   TH1D* h_Prediction = 0;
   TH1D* h_CSStat = 0;
   TH1D* h_HT_Exp=0;
+  TH1D* h_HT5_Exp=0;
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
   TH1D* h_MET_Exp=0;
@@ -126,7 +130,6 @@ class Prediction : public TSelector {
   TH1D* h_mT_Exp=0;
   TH1D* h_NJet_Exp=0;
   TH1D* h_NBtag_Exp=0;
-  TH1D* h_NBtagclean_Exp=0;
   TH1D* h_DphiOne_Exp=0;
   TH1D* h_DphiTwo_Exp=0;
   TH1D* h_DphiThree_Exp=0;
@@ -134,6 +137,42 @@ class Prediction : public TSelector {
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
   TH1D* h_LepPhi_Exp=0;
+
+  TH1D* h_HTclean_Exp=0;
+  TH1D* h_HT5clean_Exp=0;
+  TH1D* h_MHTclean_Exp=0;
+  TH1D* h_MHTPhiclean_Exp=0;
+  TH1D* h_METclean_Exp=0;
+  TH1D* h_METPhiclean_Exp=0;
+  TH1D* h_mTclean_Exp=0;
+  TH1D* h_NJetclean_Exp=0;
+  TH1D* h_NBtagclean_Exp=0;
+  TH1D* h_DphiOneclean_Exp=0;
+  TH1D* h_DphiTwoclean_Exp=0;
+  TH1D* h_DphiThreeclean_Exp=0;
+  TH1D* h_DphiFourclean_Exp=0;
+  TH1D* h_LepPtclean_Exp=0;
+  TH1D* h_LepEtaclean_Exp=0;
+  TH1D* h_LepPhiclean_Exp=0;
+
+  TH1D* h_HTv2Recipe_Exp=0;
+  TH1D* h_MHTv2Recipe_Exp=0;
+  TH1D* h_MHTPhiv2Recipe_Exp=0;
+  TH1D* h_NJetv2Recipe_Exp=0;
+  TH1D* h_NBtagv2Recipe_Exp=0;
+  TH1D* h_DphiOnev2Recipe_Exp=0;
+  TH1D* h_DphiTwov2Recipe_Exp=0;
+  TH1D* h_DphiThreev2Recipe_Exp=0;
+  TH1D* h_DphiFourv2Recipe_Exp=0;
+
+  TH1D* h_MHTOrig_Exp=0;
+  TH1D* h_MHTPhiOrig_Exp=0;
+  TH1D* h_METOrig_Exp=0;
+  TH1D* h_METPhiOrig_Exp=0;
+  TH1D* h_DphiOneOrig_Exp=0;
+  TH1D* h_DphiTwoOrig_Exp=0;
+  TH1D* h_DphiThreeOrig_Exp=0;
+  TH1D* h_DphiFourOrig_Exp=0;
 
 
   TH1D* h_HT_Pre=0;
@@ -191,11 +230,27 @@ class Prediction : public TSelector {
   Bool_t           BadPFMuonFilter;
   Int_t           BTags;
   Int_t           BTagsclean;
+  Int_t           BTagsv2Recipe;
   Int_t          CSCTightHaloFilter;
   Double_t        DeltaPhi1;
   Double_t        DeltaPhi2;
   Double_t        DeltaPhi3;
   Double_t        DeltaPhi4;
+  Double_t        DeltaPhi1clean;
+  Double_t        DeltaPhi2clean;
+  Double_t        DeltaPhi3clean;
+  Double_t        DeltaPhi4clean;
+  Double_t        DeltaPhi1v2Recipe;
+  Double_t        DeltaPhi2v2Recipe;
+  Double_t        DeltaPhi3v2Recipe;
+  Double_t        DeltaPhi4v2Recipe;
+
+  Double_t        DeltaPhi1Orig;
+  Double_t        DeltaPhi2Orig;
+  Double_t        DeltaPhi3Orig;
+  Double_t        DeltaPhi4Orig;
+
+
   Int_t           globalTightHalo2016Filter;
   Int_t           EcalDeadCellTriggerPrimitiveFilter;
   Int_t           eeBadScFilter;
@@ -205,6 +260,11 @@ class Prediction : public TSelector {
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
+  Double_t        HTclean;
+  Double_t        HTv2Recipe; 
+  Double_t        HT5;
+  Double_t        HT5clean;
+
   Double_t        GenHT;
   Double_t        GenMHT;
   std::vector<TLorentzVector> *GenJets=0;
@@ -219,15 +279,31 @@ class Prediction : public TSelector {
   std::vector<TLorentzVector> *Jets=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
+  std::vector<double>     *Jets_jecFactor=0;
   std::vector<int>     *Jets_hadronFlavor=0;
   std::vector<int>     *Jets_chargedHadronEnergyFraction=0;
   std::vector<bool>    *Jets_HTMask=0;
   Double_t        METPhi;
   Double_t        MET;
+  Double_t        METPhiclean;
+  Double_t        METclean;
+  Double_t        METPhiOrig;
+  Double_t        METOrig;
+
   Double_t        PFCaloMETRatio;
   Double_t        MHT;
   Double_t        MHTPhi;
+  Double_t        MHTclean;
+  Double_t        MHTPhiclean;
+  Double_t        MHTv2Recipe;
+  Double_t        MHTPhiv2Recipe;
+
+  Double_t        MHTOrig;
+  Double_t        MHTPhiOrig;
+
   Int_t           NJets;
+  Int_t           NJetsclean;
+  Int_t           NJetsv2Recipe;
   Int_t           NVtx;
   std::vector<TLorentzVector> *ElectronsNoIso=0;
   std::vector<TLorentzVector> *Electrons=0;
@@ -270,6 +346,17 @@ class Prediction : public TSelector {
   TBranch        *b_DeltaPhi2=0;   //!
   TBranch        *b_DeltaPhi3=0;   //!
   TBranch        *b_DeltaPhi4=0;   //!
+
+  TBranch        *b_DeltaPhi1clean=0;   //!
+  TBranch        *b_DeltaPhi2clean=0;   //!
+  TBranch        *b_DeltaPhi3clean=0;   //!
+  TBranch        *b_DeltaPhi4clean=0;   //!
+
+  TBranch        *b_DeltaPhi1Orig=0;   //!
+  TBranch        *b_DeltaPhi2Orig=0;   //!
+  TBranch        *b_DeltaPhi3Orig=0;   //!
+  TBranch        *b_DeltaPhi4Orig=0;   //!
+
   TBranch        *b_globalTightHalo2016Filter=0;   //!
   TBranch        *b_EcalDeadCellTriggerPrimitiveFilter=0;   //!
   TBranch        *b_eeBadScFilter=0;   //!
@@ -279,6 +366,10 @@ class Prediction : public TSelector {
   TBranch        *b_HBHENoiseFilter=0;   //!
   TBranch        *b_HBHEIsoNoiseFilter=0;   //!
   TBranch        *b_HT=0;   //!
+  TBranch        *b_HTclean=0;   //!
+  TBranch        *b_HT5=0;   //!
+  TBranch        *b_HT5clean=0;   //!
+
   TBranch        *b_GenHT=0;   //!
   TBranch        *b_GenMHT=0;   //!
   TBranch        *b_GenJets=0;   //!
@@ -292,15 +383,29 @@ class Prediction : public TSelector {
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
+  TBranch        *b_Jets_jecFactor=0;   //!
+
   TBranch        *b_Jets_hadronFlavor=0;   //!
   TBranch        *b_Jets_chargedHadronEnergyFraction=0;   //!
   TBranch        *b_Jets_HTMask=0;   //!
   TBranch        *b_METPhi=0;   //!
   TBranch        *b_MET=0;   //!
+  TBranch        *b_METPhiclean=0;   //!
+  TBranch        *b_METclean=0;   //!
+  TBranch        *b_METPhiOrig=0;   //!
+  TBranch        *b_METOrig=0;   //!
+
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
+  TBranch        *b_MHTclean=0;   //!
+  TBranch        *b_MHTPhiclean=0;   //!
+  TBranch        *b_MHTOrig=0;   //!
+  TBranch        *b_MHTPhiOrig=0;   //!
+
   TBranch        *b_NJets=0;   //!
+  TBranch        *b_NJetsclean=0;   //!
+
   TBranch        *b_NVtx=0;   //!
   TBranch        *b_ElectronsNoIso=0;   //!
   TBranch        *b_Electrons=0;   //!
@@ -500,6 +605,15 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("DeltaPhi2", 1);
   fChain->SetBranchStatus("DeltaPhi3", 1);
   fChain->SetBranchStatus("DeltaPhi4", 1);
+  fChain->SetBranchStatus("DeltaPhi1clean", 1);
+  fChain->SetBranchStatus("DeltaPhi2clean", 1);
+  fChain->SetBranchStatus("DeltaPhi3clean", 1);
+  fChain->SetBranchStatus("DeltaPhi4clean", 1);
+  fChain->SetBranchStatus("DeltaPhi1Orig", 1);
+  fChain->SetBranchStatus("DeltaPhi2Orig", 1);
+  fChain->SetBranchStatus("DeltaPhi3Orig", 1);
+  fChain->SetBranchStatus("DeltaPhi4Orig", 1);
+
   if(!runOnSignalMC){
     //fChain->SetBranchStatus("CSCTightHaloFilter", 1);
     fChain->SetBranchStatus("EcalDeadCellTriggerPrimitiveFilter", 1);
@@ -515,19 +629,30 @@ void Prediction::Init(TTree *tree)
   }
   fChain->SetBranchStatus("Electrons", 1);
   fChain->SetBranchStatus("HT", 1);
+  fChain->SetBranchStatus("HTclean", 1);
+  fChain->SetBranchStatus("HT5", 1);
+  fChain->SetBranchStatus("HT5clean", 1);
+
   fChain->SetBranchStatus("isoElectronTracks", 1);
   fChain->SetBranchStatus("isoMuonTracks", 1);
   fChain->SetBranchStatus("isoPionTracks", 1);
   fChain->SetBranchStatus("JetID", 1);
   fChain->SetBranchStatus("Jets", 1);
   fChain->SetBranchStatus("Jets_HTMask", 1);
-  fChain->SetBranchStatus("METPhi", 1);
-  fChain->SetBranchStatus("MET", 1);
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
-  fChain->SetBranchStatus("MHT", 1);
-  fChain->SetBranchStatus("MHTPhi", 1);
+
+  fChain->SetBranchStatus("METPhiclean", 1);
+  fChain->SetBranchStatus("METclean", 1);
+  fChain->SetBranchStatus("MHTclean", 1);
+  fChain->SetBranchStatus("MHTPhiclean", 1);
+  fChain->SetBranchStatus("NJetsclean", 1);
+
+  fChain->SetBranchStatus("METPhiOrig", 1);
+  fChain->SetBranchStatus("METOrig", 1);
+  fChain->SetBranchStatus("MHTOrig", 1);
+  fChain->SetBranchStatus("MHTPhiOrig", 1);
+
   fChain->SetBranchStatus("Muons", 1);
-  fChain->SetBranchStatus("NJets", 1);
   fChain->SetBranchStatus("NVtx", 1);
   fChain->SetBranchStatus("ElectronsNoIso", 1);
   fChain->SetBranchStatus("Electrons", 1);
@@ -538,6 +663,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("TriggerPrescales", 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
+  fChain->SetBranchStatus("Jets_jecFactor", 1); 
   fChain->SetBranchStatus("Muons_passIso",1);
   fChain->SetBranchStatus("Electrons_passIso",1);
   if(topPTreweight){
@@ -584,11 +710,41 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
   fChain->SetBranchAddress("EvtNum", &EvtNum, &b_EvtNum);
   fChain->SetBranchAddress("BTags", &BTags, &b_BTags);
-  fChain->SetBranchAddress("BTagsclean", &BTagsclean, &b_BTagsclean);
   fChain->SetBranchAddress("DeltaPhi1", &DeltaPhi1, &b_DeltaPhi1);
   fChain->SetBranchAddress("DeltaPhi2", &DeltaPhi2, &b_DeltaPhi2);
   fChain->SetBranchAddress("DeltaPhi3", &DeltaPhi3, &b_DeltaPhi3);
   fChain->SetBranchAddress("DeltaPhi4", &DeltaPhi4, &b_DeltaPhi4);
+  fChain->SetBranchAddress("HT", &HT, &b_HT);
+  fChain->SetBranchAddress("HTclean", &HTclean, &b_HTclean);
+  fChain->SetBranchAddress("HT5", &HT5, &b_HT5);
+  fChain->SetBranchAddress("HT5clean", &HT5clean, &b_HT5clean);
+  fChain->SetBranchAddress("METPhi", &METPhi, &b_METPhi);
+  fChain->SetBranchAddress("MET", &MET, &b_MET);
+  fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
+  fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);
+  fChain->SetBranchAddress("NJets", &NJets, &b_NJets);
+  fChain->SetBranchAddress("BTagsclean", &BTagsclean, &b_BTagsclean);
+  fChain->SetBranchAddress("DeltaPhi1clean", &DeltaPhi1clean, &b_DeltaPhi1clean);
+  fChain->SetBranchAddress("DeltaPhi2clean", &DeltaPhi2clean, &b_DeltaPhi2clean);
+  fChain->SetBranchAddress("DeltaPhi3clean", &DeltaPhi3clean, &b_DeltaPhi3clean);
+  fChain->SetBranchAddress("DeltaPhi4clean", &DeltaPhi4clean, &b_DeltaPhi4clean);
+  fChain->SetBranchAddress("METPhiclean", &METPhiclean, &b_METPhiclean);
+  fChain->SetBranchAddress("METclean", &METclean, &b_METclean);
+  fChain->SetBranchAddress("MHTclean", &MHTclean, &b_MHTclean);
+  fChain->SetBranchAddress("MHTPhiclean", &MHTPhiclean, &b_MHTPhiclean);
+  fChain->SetBranchAddress("NJetsclean", &NJetsclean, &b_NJetsclean);
+
+  fChain->SetBranchAddress("DeltaPhi1Orig", &DeltaPhi1Orig, &b_DeltaPhi1Orig);
+  fChain->SetBranchAddress("DeltaPhi2Orig", &DeltaPhi2Orig, &b_DeltaPhi2Orig);
+  fChain->SetBranchAddress("DeltaPhi3Orig", &DeltaPhi3Orig, &b_DeltaPhi3Orig);
+  fChain->SetBranchAddress("DeltaPhi4Orig", &DeltaPhi4Orig, &b_DeltaPhi4Orig);
+  fChain->SetBranchAddress("METPhiOrig", &METPhiOrig, &b_METPhiOrig);
+  fChain->SetBranchAddress("METOrig", &METOrig, &b_METOrig);
+  fChain->SetBranchAddress("MHTOrig", &MHTOrig, &b_MHTOrig);
+  fChain->SetBranchAddress("MHTPhiOrig", &MHTPhiOrig, &b_MHTPhiOrig);
+
+  fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
+
   if(!runOnSignalMC){
     //fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
     fChain->SetBranchAddress("EcalDeadCellTriggerPrimitiveFilter", &EcalDeadCellTriggerPrimitiveFilter, &b_EcalDeadCellTriggerPrimitiveFilter);
@@ -602,19 +758,13 @@ void Prediction::Init(TTree *tree)
       fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
     }
   }
-  fChain->SetBranchAddress("HT", &HT, &b_HT);
   fChain->SetBranchAddress("isoElectronTracks", &isoElectronTracksNum, &b_isoElectronTracksNum);
   fChain->SetBranchAddress("isoMuonTracks", &isoMuonTracksNum, &b_isoMuonTracksNum);
   fChain->SetBranchAddress("isoPionTracks", &isoPionTracksNum, &b_isoPionTracksNum);
   fChain->SetBranchAddress("JetID", &JetID, &b_JetID);
   fChain->SetBranchAddress("Jets", &Jets, &b_Jets);
   fChain->SetBranchAddress("Jets_HTMask", &Jets_HTMask, &b_Jets_HTMask);
-  fChain->SetBranchAddress("METPhi", &METPhi, &b_METPhi);
-  fChain->SetBranchAddress("MET", &MET, &b_MET);
-  fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
-  fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
-  fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);
-  fChain->SetBranchAddress("NJets", &NJets, &b_NJets);
+
   fChain->SetBranchAddress("NVtx", &NVtx, &b_NVtx);
   fChain->SetBranchAddress("ElectronsNoIso", &ElectronsNoIso, &b_ElectronsNoIso);
   fChain->SetBranchAddress("Electrons", &Electrons, &b_Electrons);
@@ -628,6 +778,8 @@ void Prediction::Init(TTree *tree)
 
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
+  fChain->SetBranchAddress("Jets_jecFactor", &Jets_jecFactor, &b_Jets_jecFactor);
+
   if(topPTreweight){
     fChain->SetBranchAddress("GenParticles", &GenParticles, &b_GenParticles);
     fChain->SetBranchAddress("GenParticles_PdgId", &GenParticles_PdgId, &b_GenParticles_PdgId);
