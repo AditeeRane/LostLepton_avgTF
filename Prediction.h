@@ -120,9 +120,11 @@ class Prediction : public TSelector {
 
   // Output
   TH1D* h_Prediction = 0;
+  TH1D* h_YieldCutFlow=0;
   TH1D* h_CSStat = 0;
   TH1D* h_HT_Exp=0;
   TH1D* h_HT5_Exp=0;
+  TH1D* h_HTRatio_Exp=0;
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
   TH1D* h_MET_Exp=0;
@@ -137,6 +139,27 @@ class Prediction : public TSelector {
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
   TH1D* h_LepPhi_Exp=0;
+  TH1D* h_rawJetPtforHT_Exp=0;
+  TH1D* h_rawJetPtforMHTminusHT_Exp=0; 
+  TH2D* h_rawJetPtvsEtaforHT_Exp=0;
+  TH2D* h_rawJetPtvsEtaforMHTminusHT_Exp=0; 
+  TH1D* h_JetPtforHTLead_Exp=0;
+  TH1D* h_JetEtaforHTLead_Exp=0;
+  TH1D* h_JetPtforHTNotLead_Exp=0;
+  TH1D* h_JetEtaforHTNotLead_Exp=0;
+  TH1D* h_JetPtforHT_Exp=0;
+  TH1D* h_JetEtaforHT_Exp=0;
+  TH2D* h_JetPtvsHTRatioforHT_Exp=0;
+  TH2D* h_JetPtvsEtaforHT_Exp=0;
+  TH1D* h_JetPtforMHTminusHTLead_Exp=0;
+  TH1D* h_JetEtaforMHTminusHTLead_Exp=0;
+  TH1D* h_JetPtforMHTminusHTNotLead_Exp=0;
+  TH1D* h_JetEtaforMHTminusHTNotLead_Exp=0;
+  TH1D* h_JetPtforMHTminusHT_Exp=0;
+  TH1D* h_JetEtaforMHTminusHT_Exp=0;
+
+  TH2D* h_JetPtvsEtaforMHTminusHT_Exp=0;
+  TH2D* h_JetPtvsHTRatioforMHTminusHT_Exp=0;
 
   TH1D* h_HTclean_Exp=0;
   TH1D* h_HT5clean_Exp=0;
@@ -156,14 +179,123 @@ class Prediction : public TSelector {
   TH1D* h_LepPhiclean_Exp=0;
 
   TH1D* h_HTv2Recipe_Exp=0;
+  TH1D* h_HT5v2Recipe_Exp=0;
+  TH1D* h_HTRatiov2Recipe_Exp=0;
   TH1D* h_MHTv2Recipe_Exp=0;
   TH1D* h_MHTPhiv2Recipe_Exp=0;
   TH1D* h_NJetv2Recipe_Exp=0;
+  TH1D* h_NJetforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_NBtagv2Recipe_Exp=0;
-  TH1D* h_DphiOnev2Recipe_Exp=0;
-  TH1D* h_DphiTwov2Recipe_Exp=0;
-  TH1D* h_DphiThreev2Recipe_Exp=0;
-  TH1D* h_DphiFourv2Recipe_Exp=0;
+
+
+
+
+  TH1D* h_rawJetPtforHTv2Recipe_Exp=0;
+  TH1D* h_rawJetPtforMHTminusHTv2Recipe_Exp=0; 
+  TH2D* h_rawJetPtvsEtaforHTv2Recipe_Exp=0;
+  TH2D* h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp=0; 
+
+  TH1D* h_JetPtforHTv2RecipeLead_Exp=0;
+  TH1D* h_JetEtaforHTv2RecipeLead_Exp=0;
+  TH1D* h_JetPhiforHTv2RecipeLead_Exp=0;
+  TH1D* h_JetPtforHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetEtaforHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetPhiforHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetPtforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforHTv2Recipe_Exp=0;
+  TH1D* h_DphiOneforHTv2Recipe_Exp=0;
+  TH1D* h_DphiTwoforHTv2Recipe_Exp=0;
+  TH1D* h_DphiThreeforHTv2Recipe_Exp=0;
+  TH1D* h_DphiFourforHTv2Recipe_Exp=0;
+  TH1D* h_chargedEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_chargedHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_chargedHadronMultiplicityforHTv2Recipe_Exp=0;  
+  TH1D* h_chargedMultiplicityforHTv2Recipe_Exp=0;
+  TH1D* h_electronEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_electronMultiplicityforHTv2Recipe_Exp=0;
+  TH1D* h_hadronFlavorforHTv2Recipe_Exp=0; 
+  TH1D* h_hfEMEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_hfHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_multiplicityforHTv2Recipe_Exp=0; 
+  TH1D* h_muonEnergyFractionforHTv2Recipe_Exp=0; 
+  TH1D* h_muonMultiplicityforHTv2Recipe_Exp=0; 
+  TH1D* h_neutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_neutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_neutralHadronMultiplicityforHTv2Recipe_Exp=0; 
+  TH1D* h_neutralMultiplicityforHTv2Recipe_Exp=0;
+  TH1D* h_photonEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_photonMultiplicityforHTv2Recipe_Exp=0;
+  TH1D* h_qgLikelihoodforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsEtaforHTv2Recipe_Exp=0;
+  TH2D* h_JetIdxvsEtaforHTv2Recipe_Exp=0;
+  TH2D* h_JetMultvsEtaforHTv2Recipe_Exp=0;
+
+  TH2D* h_JetPtvsHTRatioforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvschargedHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsDPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavschargedEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavschargedHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+
+  TH1D* h_JetPtforMHTminusHTv2RecipeLead_Exp=0;
+  TH1D* h_JetEtaforMHTminusHTv2RecipeLead_Exp=0;
+  TH1D* h_JetPhiforMHTminusHTv2RecipeLead_Exp=0;
+  TH1D* h_JetPtforMHTminusHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetEtaforMHTminusHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetPhiforMHTminusHTv2RecipeNotLead_Exp=0;
+  TH1D* h_JetPtforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_DphiOneforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_DphiTwoforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_DphiThreeforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_DphiFourforMHTminusHTv2Recipe_Exp=0;
+      
+  TH1D* h_chargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_chargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_chargedHadronMultiplicityforMHTminusHTv2Recipe_Exp=0;  
+  TH1D* h_chargedMultiplicityforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_electronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_electronMultiplicityforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_hadronFlavorforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_multiplicityforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_muonEnergyFractionforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_muonMultiplicityforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_neutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_neutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_neutralHadronMultiplicityforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_neutralMultiplicityforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_photonEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_photonMultiplicityforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_qgLikelihoodforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsEtaforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetMultvsEtaforMHTminusHTv2Recipe_Exp=0;
+
+  TH2D* h_JetPtvsHTRatioforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsDPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+
 
   TH1D* h_MHTOrig_Exp=0;
   TH1D* h_MHTPhiOrig_Exp=0;
@@ -245,6 +377,16 @@ class Prediction : public TSelector {
   Double_t        DeltaPhi3v2Recipe;
   Double_t        DeltaPhi4v2Recipe;
 
+  Double_t        HTDeltaPhi1v2Recipe;
+  Double_t        HTDeltaPhi2v2Recipe;
+  Double_t        HTDeltaPhi3v2Recipe;
+  Double_t        HTDeltaPhi4v2Recipe;
+
+  Double_t        MHTminusHTDeltaPhi1v2Recipe;
+  Double_t        MHTminusHTDeltaPhi2v2Recipe;
+  Double_t        MHTminusHTDeltaPhi3v2Recipe;
+  Double_t        MHTminusHTDeltaPhi4v2Recipe;
+
   Double_t        DeltaPhi1Orig;
   Double_t        DeltaPhi2Orig;
   Double_t        DeltaPhi3Orig;
@@ -262,7 +404,10 @@ class Prediction : public TSelector {
   Double_t        HT;
   Double_t        HTclean;
   Double_t        HTv2Recipe; 
+  Double_t        HT5v2Recipe;
+  Double_t        HTRatiov2Recipe; 
   Double_t        HT5;
+  Double_t        HTRatio;
   Double_t        HT5clean;
 
   Double_t        GenHT;
@@ -275,13 +420,28 @@ class Prediction : public TSelector {
   std::vector<bool> *Muons_passIso=0;
   std::vector<bool> *Electrons_passIso=0;
 
-
   std::vector<TLorentzVector> *Jets=0;
+  std::vector<double>     *Jets_chargedEmEnergyFraction=0;
+  std::vector<int>     *Jets_chargedHadronMultiplicity=0;
+  std::vector<int>     *Jets_chargedMultiplicity=0;
+  std::vector<double>     *Jets_electronEnergyFraction=0;
+  std::vector<int>     *Jets_electronMultiplicity=0;
+  std::vector<double>     *Jets_hfEMEnergyFraction=0;
+  std::vector<double>     *Jets_hfHadronEnergyFraction=0;
+  std::vector<int>     *Jets_multiplicity=0;
+  std::vector<int>     *Jets_muonMultiplicity=0;
+  std::vector<double>     *Jets_neutralEmEnergyFraction=0;
+  std::vector<double>     *Jets_neutralHadronEnergyFraction=0;
+  std::vector<int>     *Jets_neutralHadronMultiplicity=0;
+  std::vector<int>     *Jets_neutralMultiplicity=0;
+  std::vector<double>     *Jets_photonEnergyFraction=0;
+  std::vector<int>     *Jets_photonMultiplicity=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
   std::vector<double>     *Jets_jecFactor=0;
+  
   std::vector<int>     *Jets_hadronFlavor=0;
-  std::vector<int>     *Jets_chargedHadronEnergyFraction=0;
+  std::vector<double>     *Jets_chargedHadronEnergyFraction=0;
   std::vector<bool>    *Jets_HTMask=0;
   Double_t        METPhi;
   Double_t        MET;
@@ -304,6 +464,7 @@ class Prediction : public TSelector {
   Int_t           NJets;
   Int_t           NJetsclean;
   Int_t           NJetsv2Recipe;
+  Int_t           NJetsforMHTminusHTv2Recipe;
   Int_t           NVtx;
   std::vector<TLorentzVector> *ElectronsNoIso=0;
   std::vector<TLorentzVector> *Electrons=0;
@@ -384,6 +545,22 @@ class Prediction : public TSelector {
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
   TBranch        *b_Jets_jecFactor=0;   //!
+  TBranch        *b_Jets_chargedEmEnergyFraction=0;
+  TBranch        *b_Jets_chargedHadronMultiplicity=0;
+  TBranch        *b_Jets_chargedMultiplicity=0;
+  TBranch        *b_Jets_electronEnergyFraction=0;
+  TBranch        *b_Jets_electronMultiplicity=0;
+  TBranch        *b_Jets_hfEMEnergyFraction=0;
+  TBranch        *b_Jets_hfHadronEnergyFraction=0;
+  TBranch        *b_Jets_multiplicity=0;
+  TBranch        *b_Jets_muonMultiplicity=0;
+  TBranch        *b_Jets_neutralEmEnergyFraction=0;
+  TBranch        *b_Jets_neutralHadronEnergyFraction=0;
+  TBranch        *b_Jets_neutralHadronMultiplicity=0;
+  TBranch        *b_Jets_neutralMultiplicity=0;
+  TBranch        *b_Jets_photonEnergyFraction=0;
+  TBranch        *b_Jets_photonMultiplicity=0;
+  TBranch        *b_Jets_qgLikelihood=0;
 
   TBranch        *b_Jets_hadronFlavor=0;   //!
   TBranch        *b_Jets_chargedHadronEnergyFraction=0;   //!
@@ -663,7 +840,22 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("TriggerPrescales", 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
-  fChain->SetBranchStatus("Jets_jecFactor", 1); 
+  fChain->SetBranchStatus("Jets_jecFactor", 1);
+  fChain->SetBranchStatus("Jets_chargedEmEnergyFraction", 1); 
+  fChain->SetBranchStatus("Jets_chargedHadronMultiplicity", 1);
+  fChain->SetBranchStatus("Jets_chargedMultiplicity", 1);
+  fChain->SetBranchStatus("Jets_electronEnergyFraction", 1);
+  fChain->SetBranchStatus("Jets_electronMultiplicity", 1);
+  fChain->SetBranchStatus("Jets_hfEMEnergyFraction", 1); 
+  fChain->SetBranchStatus("Jets_hfHadronEnergyFraction", 1); 
+  fChain->SetBranchStatus("Jets_multiplicity", 1);
+  fChain->SetBranchStatus("Jets_muonMultiplicity", 1); 
+  fChain->SetBranchStatus("Jets_neutralEmEnergyFraction", 1); 
+  fChain->SetBranchStatus("Jets_neutralHadronEnergyFraction", 1);
+  fChain->SetBranchStatus("Jets_neutralHadronMultiplicity", 1);
+  fChain->SetBranchStatus("Jets_neutralMultiplicity", 1);
+  fChain->SetBranchStatus("Jets_photonEnergyFraction", 1);
+  fChain->SetBranchStatus("Jets_photonMultiplicity",1);
   fChain->SetBranchStatus("Muons_passIso",1);
   fChain->SetBranchStatus("Electrons_passIso",1);
   if(topPTreweight){
@@ -687,7 +879,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("GenJets", 1);
     fChain->SetBranchStatus("Jets_chargedHadronEnergyFraction", 1);
   }
-
+  fChain->SetBranchStatus("Jets_chargedHadronEnergyFraction", 1);
   //if(useGenHTMHT){
   //  fChain->SetBranchStatus("GenHT", 1);
   //  fChain->SetBranchStatus("GenMHT", 1);
@@ -779,6 +971,21 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
   fChain->SetBranchAddress("Jets_jecFactor", &Jets_jecFactor, &b_Jets_jecFactor);
+  fChain->SetBranchAddress("Jets_chargedEmEnergyFraction", &Jets_chargedEmEnergyFraction, &b_Jets_chargedEmEnergyFraction);
+  fChain->SetBranchAddress("Jets_chargedHadronMultiplicity", &Jets_chargedHadronMultiplicity, &b_Jets_chargedHadronMultiplicity);
+  fChain->SetBranchAddress("Jets_chargedMultiplicity", &Jets_chargedMultiplicity, &b_Jets_chargedMultiplicity);
+  fChain->SetBranchAddress("Jets_electronEnergyFraction", &Jets_electronEnergyFraction, &b_Jets_electronEnergyFraction);
+  fChain->SetBranchAddress("Jets_electronMultiplicity", &Jets_electronMultiplicity, &b_Jets_electronMultiplicity);
+  fChain->SetBranchAddress("Jets_hfEMEnergyFraction", &Jets_hfEMEnergyFraction, &b_Jets_hfEMEnergyFraction);
+  fChain->SetBranchAddress("Jets_hfHadronEnergyFraction", &Jets_hfHadronEnergyFraction, &b_Jets_hfHadronEnergyFraction);
+  fChain->SetBranchAddress("Jets_multiplicity", &Jets_multiplicity, &b_Jets_multiplicity);
+  fChain->SetBranchAddress("Jets_muonMultiplicity", &Jets_muonMultiplicity, &b_Jets_muonMultiplicity);
+  fChain->SetBranchAddress("Jets_neutralEmEnergyFraction", &Jets_neutralEmEnergyFraction, &b_Jets_neutralEmEnergyFraction);
+  fChain->SetBranchAddress("Jets_neutralHadronEnergyFraction", &Jets_neutralHadronEnergyFraction, &b_Jets_neutralHadronEnergyFraction);
+  fChain->SetBranchAddress("Jets_neutralHadronMultiplicity", &Jets_neutralHadronMultiplicity, &b_Jets_neutralHadronMultiplicity);
+  fChain->SetBranchAddress("Jets_neutralMultiplicity", &Jets_neutralMultiplicity, &b_Jets_neutralMultiplicity);
+  fChain->SetBranchAddress("Jets_photonEnergyFraction", &Jets_photonEnergyFraction, &b_Jets_photonEnergyFraction);
+  fChain->SetBranchAddress("Jets_photonMultiplicity", &Jets_photonMultiplicity, &b_Jets_photonMultiplicity);
 
   if(topPTreweight){
     fChain->SetBranchAddress("GenParticles", &GenParticles, &b_GenParticles);
@@ -799,6 +1006,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("GenJets", &GenJets, &b_GenJets);
     fChain->SetBranchAddress("Jets_chargedHadronEnergyFraction", &Jets_chargedHadronEnergyFraction, &b_Jets_chargedHadronEnergyFraction);
   }
+  fChain->SetBranchAddress("Jets_chargedHadronEnergyFraction", &Jets_chargedHadronEnergyFraction, &b_Jets_chargedHadronEnergyFraction);
 
   //if(useGenHTMHT){
   //  fChain->SetBranchAddress("GenHT", &GenHT, &b_GenHT);

@@ -7,6 +7,12 @@
 #include <cstdio>
 
 
+//*AR: 181016: use this definition of function if histograms to be compared from two files have different names
+
+//void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+
+
+//*AR: 181016: use this definition of function if histograms to be compared from two files have same name and comment unnecessry lines in code accordingly
 
 void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
   
@@ -174,7 +180,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
   sprintf(cname,"h_%s_Exp_%s",Var,Sample);
-  sprintf(hnameRev,"h_%s_Exp",Var);
+  //sprintf(hnameRev,"h_%s_Exp",VarTwo);
   //  if(var.find("MHTOrig")!=string::npos)
   //sprintf(hnameRev,"h_MHT_Exp");
   TFile *_fileTTbarLL = TFile::Open(TTbarLL); 
@@ -184,7 +190,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  TFile *_fileData = TFile::Open(DataPred);
 
   _fileTTbarLL->cd();
-  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_MHTv2Recipe_Exp");
+  //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_NJetv2Recipe_Exp");
+  //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_MHTv2Recipe_Exp");
+  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+
   //*AR:B:E vs F
   //  hTTbarLL->Scale(13498.0/27987.0);
   //*AR:16 Vs 17
@@ -204,7 +213,11 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
 
   _fileTTbarHadtau->cd();
-  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
+  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
+  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
+  //    TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
+
   //  hTTbarHadtau->Scale(5000.0/35900.0);
   hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetMarkerColor(kBlue);
@@ -243,12 +256,19 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   tl->SetHeader(header);
  
   //*AR:B:E vs F 
-  //tl->AddEntry(hTTbarHadtau, "2017(F)");
+  //  tl->AddEntry(hTTbarHadtau, "2017(F)");
   //  tl->AddEntry(hTTbarLL, "2017(B:E)"); 
 
-  tl->AddEntry(hTTbarHadtau, "Data17:Org");
-  tl->AddEntry(hTTbarLL, "Data17:v2"); 
 
+  //  tl->AddEntry(hTTbarHadtau, "Data17F:v1");
+  //  tl->AddEntry(hTTbarLL, "Data17F:v2"); 
+
+  tl->AddEntry(hTTbarHadtau, "Data17(F)-METv2");
+  tl->AddEntry(hTTbarLL, "Data17(B:E)-METv2"); 
+
+  //  tl->AddEntry(hTTbarHadtau, "Data17(F)");
+  //  tl->AddEntry(hTTbarLL, "Data17(B:E)");
+ 
 
   tl->SetLineColor(kWhite);
   tl->Draw("same");
@@ -271,8 +291,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   gPad->Modified();
   
   TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
-  cOne=(TH1D *) hTTbarLL->Clone("Ratio");
-  cOne->Divide(hTTbarHadtau);
+  cOne=(TH1D *) hTTbarHadtau->Clone("Ratio");
+  cOne->Divide(hTTbarLL);
   gStyle->SetPadBottomMargin(0.3);
   cOne->SetTitle(0);
   cOne->GetXaxis()->SetTitle(RatioLabelX);
@@ -579,8 +599,177 @@ void GetOneDPlotsMCVsMC(){
 
 */
 
-  /*
+  /*  
+  //B:E vs F- MET-v1
+
   
+  GetOneDPlotsMCVsMC(1000,"MHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","F/B:E",1,0,16,200,1000,0.5,1.5,15000);
+
+  GetOneDPlotsMCVsMC(1100,"HT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"HT","F/B:E",1,0,12,100,2500,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(1200,"NJet","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NJet","F/B:E",1,0,10,2,12,0.5,1.5,22000);
+
+  GetOneDPlotsMCVsMC(1300,"MHTPhi","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MHT)","F/B:E",0,0,7,-3.5,3.5,0.5,1.5,5400);
+
+  GetOneDPlotsMCVsMC(1400,"METPhi","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MET)","F/B:E",0,0,7,-3.5,3.5,0.5,1.5,5500);
+
+  GetOneDPlotsMCVsMC(1500,"MET","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MET","F/B:E",1,0,16,200,1000,0.5,1.5,10000);
+
+  GetOneDPlotsMCVsMC(1600,"NBtag","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NBtag","F/B:E",1,0,5,0,5,0.5,1.5,30000);
+
+  GetOneDPlotsMCVsMC(1700,"DphiOne","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","F/B:E",1,0,32,0,3.2,0.5,1.5,9000);
+
+  GetOneDPlotsMCVsMC(1800,"DphiTwo","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.3,0.87,0.47,"#delta#phi(j_{2},MHT)","F/B:E",1,0,32,0,3.2,0.5,1.5,2100);
+
+  GetOneDPlotsMCVsMC(1900,"DphiThree","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.3,0.87,0.47,"#delta#phi(j_{3},MHT)","F/B:E",1,0,32,0,3.2,0.5,1.5,1300);
+
+  GetOneDPlotsMCVsMC(2000,"DphiFour","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.3,0.87,0.47,"#delta#phi(j_{4},MHT)","F/B:E",1,0,32,0,3.2,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2100,"JetEtaforHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2200,"JetPtforHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2101,"JetEtaforHTLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2201,"JetPtforHTLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2102,"JetEtaforHTNotLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2202,"JetPtforHTNotLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2300,"rawJetPtforHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2400,"JetEtaforMHTminusHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5.,5.,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2500,"JetPtforMHTminusHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2401,"JetEtaforMHTminusHTLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5.,5.,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2501,"JetPtforMHTminusHTLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2402,"JetEtaforMHTminusHTNotLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5.,5.,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2502,"JetPtforMHTminusHTNotLead","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2600,"rawJetPtforMHTminusHT","Data0LHighDphi_BEVsF_v1","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  */
+  
+
+
+  
+  
+  
+  //B:E vs F- MET-v2  
+  
+  GetOneDPlotsMCVsMC(1050,"MHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","F/B:E",1,0,16,200,1000,0.5,1.5,15000);
+
+  GetOneDPlotsMCVsMC(1150,"HTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"HT","F/B:E",1,0,12,100,2500,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(1250,"NJetv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NJet","F/B:E",1,0,10,2,12,0.5,1.5,22000);
+
+  GetOneDPlotsMCVsMC(1251,"NJetforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NJet","F/B:E",1,0,12,0,12,0.5,1.5,22000);
+
+  GetOneDPlotsMCVsMC(1350,"MHTPhiv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MHT)","F/B:E",0,0,7,-3.5,3.5,0.5,1.5,5400);
+
+  //  GetOneDPlotsMCVsMC(1450,"METPhiv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MET)","F/B:E",0,0,7,-3.5,3.5,0.5,1.5,5500);
+
+  //  GetOneDPlotsMCVsMC(1550,"METv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MET","F/B:E",1,0,16,200,1000,0.5,1.5,10000);
+
+  GetOneDPlotsMCVsMC(1650,"NBtagv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NBtag","F/B:E",1,0,5,0,5,0.5,1.5,30000);
+
+  GetOneDPlotsMCVsMC(1750,"DphiOneforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,9000);
+
+  GetOneDPlotsMCVsMC(1850,"DphiTwoforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,2100);
+
+  GetOneDPlotsMCVsMC(1950,"DphiThreeforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.6,0.87,0.77,"#delta#phi(j_{3},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,1300);
+
+  GetOneDPlotsMCVsMC(2050,"DphiFourforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.27,0.7,0.57,0.87,"#delta#phi(j_{4},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2150,"JetEtaforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2250,"JetPtforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2350,"JetPhiforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.2,0.87,0.37,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2151,"JetEtaforHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2251,"JetPtforHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2351,"JetPhiforHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.2,0.87,0.37,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2152,"JetEtaforHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,50,-2.5,2.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2252,"JetPtforHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2352,"JetPhiforHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.3,0.87,0.47,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2450,"rawJetPtforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2550,"chargedEmEnergyFractionforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"ChaEmFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2650,"neutralEmEnergyFractionforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuEmFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2750,"chargedHadronEnergyFractionforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.5,0.87,0.67,"ChaHadFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2850,"neutralHadronEnergyFractionforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuHadFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2950,"chargedHadronMultiplicityforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"ChaHadMultiplicity_{jet}","F/B:E",1,0,100,0.0,100.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(3050,"neutralHadronMultiplicityforHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuHadMultiplicity_{jet}","F/B:E",1,0,20,0.0,20.0,0.5,1.5,520);
+
+
+
+
+
+
+  GetOneDPlotsMCVsMC(1750,"DphiOneforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,9000);
+
+  GetOneDPlotsMCVsMC(1850,"DphiTwoforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,2100);
+
+  GetOneDPlotsMCVsMC(1950,"DphiThreeforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{3},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,1300);
+
+  GetOneDPlotsMCVsMC(2050,"DphiFourforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.27,0.7,0.57,0.87,"#delta#phi(j_{4},MHT)","F/B:E",0,0,32,0,3.2,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2150,"JetEtaforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5,5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2250,"JetPtforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2350,"JetPhiforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2151,"JetEtaforMHTminusHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5.,5.,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2251,"JetPtforMHTminusHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2351,"JetPhiforMHTminusHTv2RecipeLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.7,0.67,0.87,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2152,"JetEtaforMHTminusHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.37,0.3,0.67,0.47,"#eta_{jet}","F/B:E",0,0,100,-5.,5.,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2252,"JetPtforMHTminusHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2352,"JetPhiforMHTminusHTv2RecipeNotLead","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"#phi_{jet}","F/B:E",0,0,70,-3.5,3.5,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2450,"rawJetPtforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"pT_{jet}","F/B:E",1,0,20,0.0,1000.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2550,"chargedEmEnergyFractionforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"CharEmFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2650,"neutralEmEnergyFractionforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuEmFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2750,"chargedHadronEnergyFractionforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"CharHadFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2850,"neutralHadronEnergyFractionforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuHadFraction_{jet}","F/B:E",1,0,20,0.0,1.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(2950,"chargedHadronMultiplicityforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"CharHadMultiplicity_{jet}","F/B:E",1,0,100,0.0,100.0,0.5,1.5,520);
+
+  GetOneDPlotsMCVsMC(3050,"neutralHadronMultiplicityforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuHadMultiplicity_{jet}","F/B:E",1,0,20,0.0,20.0,0.5,1.5,520);
+
+
+
+
+
+
+
+  /* 
 
   GetOneDPlotsMCVsMC(1000,"MHT","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","Data17/Data16",1,0,16,200,1000,0.5,1.5,30000);
 
@@ -630,8 +819,8 @@ void GetOneDPlotsMCVsMC(){
 
   GetOneDPlotsMCVsMC(1710,"DphiFourOrig","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root ","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"#delta#phi(j_{4},MHT)","Data17/Data16",0,0,32,0,3.2,0.5,1.5,1200);
 */
-
   /*
+ 
   GetOneDPlotsMCVsMC(1020,"MHTv2Recipe","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","Data17/Data16",0,0,16,200,1000,0.5,1.5,30000);
 
   GetOneDPlotsMCVsMC(1120,"HTv2Recipe","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"HT","Data17/Data16",1,0,12,100,2500,0.5,1.5,45000);
@@ -653,11 +842,61 @@ void GetOneDPlotsMCVsMC(){
   GetOneDPlotsMCVsMC(1620,"DphiThreev2Recipe","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"#delta#phi(j_{3},MHT)","Data17/Data16",0,0,32,0,3.2,0.5,1.5,2200);
 
   GetOneDPlotsMCVsMC(1720,"DphiFourv2Recipe","Data0LHighDphi_FVs16","Prediction_0_Data_MET_Oct02_fhadd_.root ","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"#delta#phi(j_{4},MHT)","Data17/Data16",0,0,32,0,3.2,0.5,1.5,1200);
+  
   */
 
+  /*
+  //v2Vsv1: F
+
+  GetOneDPlotsMCVsMC(1020,"MHTv2Recipe","MHT","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"MHT","v2/v1",0,0,16,200,1000,0.5,1.5,30000);
+  
+  GetOneDPlotsMCVsMC(1120,"HTv2Recipe","HT","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"HT","v2/v1",1,0,12,100,2500,0.5,1.5,45000);
+
+  GetOneDPlotsMCVsMC(1220,"NJetv2Recipe","NJet","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"NJet","v2/v1",1,0,10,2,12,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(2120,"MHTPhiv2Recipe","MHTPhi","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MHT)","v2/v1",0,0,7,-3.5,3.5,0.5,1.5,5600);
+
+  //GetOneDPlotsMCVsMC(2220,"METPhiv2Recipe","METPhi","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.47,0.2,0.77,0.37,"#phi(MET)","v2/v1",0,0,7,-3.5,3.5,0.5,1.5,5900);
+
+  //GetOneDPlotsMCVsMC(2320,"METv2Recipe","MET","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"MET","v2/v1",1,0,16,200,1000,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1320,"NBtagv2Recipe","NBtag","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"NBtag","v2/v1",1,0,5,0,5,0.5,1.5,50500);
+
+  GetOneDPlotsMCVsMC(1420,"DphiOnev2Recipe","DphiOne","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","v2/v1",1,0,32,0,3.2,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1520,"DphiTwov2Recipe","DphiTwo","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,4200);
+
+  GetOneDPlotsMCVsMC(1620,"DphiThreev2Recipe","DphiThree","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{3},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,2200);
+
+  GetOneDPlotsMCVsMC(1720,"DphiFourv2Recipe","DphiFour","Data0LHighDphi_v2Vsv1_f","Prediction_0_Data_MET_Oct16f_V15f_v2Baseline.root ","Prediction_0_Data_MET_Oct16f_V15f_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{4},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,1200);
+*/
+
+  /*
+  //v2Vsv1: B:E
 
 
+  
 
-  GetOneDPlotsMCVsMC(1025,"MHTv2Recipe","Data0LHighDphi_OrgVsV2","Prediction_0_Data_MET_Oct02_fhadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","v2/Org",0,0,16,200,1000,0.5,1.5,30000);
+  GetOneDPlotsMCVsMC(1020,"MHTv2Recipe","MHT","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"MHT","v2/v1",0,0,16,200,1000,0.5,1.5,30000);
+  
+  GetOneDPlotsMCVsMC(1120,"HTv2Recipe","HT","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"HT","v2/v1",1,0,12,100,2500,0.5,1.5,45000);
 
+  GetOneDPlotsMCVsMC(1220,"NJetv2Recipe","NJet","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"NJet","v2/v1",1,0,10,2,12,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(2120,"MHTPhiv2Recipe","MHTPhi","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.47,0.3,0.77,0.47,"#phi(MHT)","v2/v1",0,0,7,-3.5,3.5,0.5,1.5,5600);
+
+  //GetOneDPlotsMCVsMC(2220,"METPhiv2Recipe","METPhi","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.47,0.2,0.77,0.37,"#phi(MET)","v2/v1",0,0,7,-3.5,3.5,0.5,1.5,5900);
+
+  //GetOneDPlotsMCVsMC(2320,"METv2Recipe","MET","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"MET","v2/v1",1,0,16,200,1000,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1320,"NBtagv2Recipe","NBtag","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.57,0.7,0.87,0.87,"NBtag","v2/v1",1,0,5,0,5,0.5,1.5,50500);
+
+  GetOneDPlotsMCVsMC(1420,"DphiOnev2Recipe","DphiOne","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","v2/v1",1,0,32,0,3.2,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(1520,"DphiTwov2Recipe","DphiTwo","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,4200);
+
+  GetOneDPlotsMCVsMC(1620,"DphiThreev2Recipe","DphiThree","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{3},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,2200);
+
+  GetOneDPlotsMCVsMC(1720,"DphiFourv2Recipe","DphiFour","Data0LHighDphi_v2Vsv1_be","Prediction_0_Data_MET_Oct16be_V15bcde_v2Baseline.root ","Prediction_0_Data_MET_Oct16be_V15bcde_DefaultBaseline.root","0L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{4},MHT)","v2/v1",0,0,32,0,3.2,0.5,1.5,1200);
+*/
 }
