@@ -30,7 +30,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
@@ -386,6 +386,21 @@ class Prediction : public TSelector {
   Double_t        MHTminusHTDeltaPhi2v2Recipe;
   Double_t        MHTminusHTDeltaPhi3v2Recipe;
   Double_t        MHTminusHTDeltaPhi4v2Recipe;
+
+  Double_t        MHTminusHTPt1v2Recipe;
+  Double_t        MHTminusHTPt2v2Recipe;
+  Double_t        MHTminusHTPt3v2Recipe;
+  Double_t        MHTminusHTPt4v2Recipe;
+
+  Double_t        MHTminusHTEta1v2Recipe;
+  Double_t        MHTminusHTEta2v2Recipe;
+  Double_t        MHTminusHTEta3v2Recipe;
+  Double_t        MHTminusHTEta4v2Recipe;
+
+  Double_t        MHTminusHTPhi1v2Recipe;
+  Double_t        MHTminusHTPhi2v2Recipe;
+  Double_t        MHTminusHTPhi3v2Recipe;
+  Double_t        MHTminusHTPhi4v2Recipe;
 
   Double_t        DeltaPhi1Orig;
   Double_t        DeltaPhi2Orig;

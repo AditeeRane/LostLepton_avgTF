@@ -502,6 +502,21 @@ Bool_t Prediction::Process(Long64_t entry)
   MHTminusHTDeltaPhi3v2Recipe=-99.;
   MHTminusHTDeltaPhi4v2Recipe=-99.;
 
+  MHTminusHTPt1v2Recipe=-99.;
+  MHTminusHTPt2v2Recipe=-99.;
+  MHTminusHTPt3v2Recipe=-99.;
+  MHTminusHTPt4v2Recipe=-99.;
+
+  MHTminusHTEta1v2Recipe=-99.;
+  MHTminusHTEta2v2Recipe=-99.;
+  MHTminusHTEta3v2Recipe=-99.;
+  MHTminusHTEta4v2Recipe=-99.;
+
+  MHTminusHTPhi1v2Recipe=-99.;
+  MHTminusHTPhi2v2Recipe=-99.;
+  MHTminusHTPhi3v2Recipe=-99.;
+  MHTminusHTPhi4v2Recipe=-99.;
+
 
   int HTJetsDefault=0;
   int HTJetsv2=0;
@@ -582,15 +597,30 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //*AR-181017: get Dphi for leading 4 (MHT-HT) jets
 
-  if(MHTminusHTJetsIdxv2Recipe.size()>0)
+  if(MHTminusHTJetsIdxv2Recipe.size()>0){
+    MHTminusHTPt1v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt();
+    MHTminusHTEta1v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Eta();
+    MHTminusHTPhi1v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Phi();
     MHTminusHTDeltaPhi1v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Phi() - MHTPhiv2Recipe ));
-  if(MHTminusHTJetsIdxv2Recipe.size()>1)
+  }
+  if(MHTminusHTJetsIdxv2Recipe.size()>1){
+    MHTminusHTPt2v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt();
+    MHTminusHTEta2v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Eta();
+    MHTminusHTPhi2v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Phi();
     MHTminusHTDeltaPhi2v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Phi() - MHTPhiv2Recipe ));
-  if(MHTminusHTJetsIdxv2Recipe.size()>2)
+  }
+  if(MHTminusHTJetsIdxv2Recipe.size()>2){
+    MHTminusHTPt3v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[2]).Pt();
+    MHTminusHTEta3v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[2]).Eta();
+    MHTminusHTPhi3v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[2]).Phi();
     MHTminusHTDeltaPhi3v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[2]).Phi() - MHTPhiv2Recipe ));
-  if(MHTminusHTJetsIdxv2Recipe.size()>3)
+  }
+  if(MHTminusHTJetsIdxv2Recipe.size()>3){
+    MHTminusHTPt4v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[3]).Pt();
+    MHTminusHTEta4v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[3]).Eta();
+    MHTminusHTPhi4v2Recipe=Jets->at(MHTminusHTJetsIdxv2Recipe[3]).Phi();
     MHTminusHTDeltaPhi4v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[3]).Phi() - MHTPhiv2Recipe ));
-
+  }
  
   //END OF Recalculation of search variables
 
@@ -744,8 +774,8 @@ Bool_t Prediction::Process(Long64_t entry)
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
 
   h_YieldCutFlow->Fill(0);
-  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>400 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>400 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1))) 
-    return kTRUE;
+  //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>400 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>400 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1))) 
+  //return kTRUE;
   h_YieldCutFlow->Fill(1);
   
   //  std::cout<<" evt falling in search bin "<<endl;
@@ -1072,11 +1102,16 @@ Bool_t Prediction::Process(Long64_t entry)
       //      std::cout<<" skip event "<<endl;
       return kTRUE;
     }
-    
-    //    std::cout<<" passed event "<<" evt "<<EvtNum<<" run "<<RunNum<<" lumi "<<LumiBlockNum<<endl;
+    double leadHTJetPT=-99;
+    if(HTJetsIdxv2Recipe.size()>0)
+      leadHTJetPT=Jets->at(HTJetsIdxv2Recipe[0]).Pt();
 
+    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>400 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>400 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1))) {
+      //  std::cout<<" currentFile "<<currentFile<<endl;
+      std::cout<<"        passed event "<<" evt "<<EvtNum<<" run "<<RunNum<<" lumi "<<LumiBlockNum<<" HT "<<HTv2Recipe<<" MHT "<<MHTv2Recipe<<" NJets "<<NJetsv2Recipe<<" Btag "<<BTagsv2Recipe<<" HT5 "<<HT5v2Recipe<<" HTRatio "<<HT5v2Recipe/HTv2Recipe<<" HTJet_pt1 "<<leadHTJetPT <<" NJetsforMHTminusHT "<<NJetsforMHTminusHTv2Recipe<<" MHTPhi "<< MHTPhiv2Recipe<<" MHTminusHTJet_pt1 "<<MHTminusHTPt1v2Recipe<<" MHTminusHTJet_eta1 "<<MHTminusHTEta1v2Recipe<<" MHTminusHTJet_phi1 "<<MHTminusHTPhi1v2Recipe<<" MHTminusHTJet_dphi1 "<<MHTminusHTDeltaPhi1v2Recipe<<" MHTminusHTJet_pt2 "<<MHTminusHTPt2v2Recipe<<" MHTminusHTJet_eta2 "<<MHTminusHTEta2v2Recipe<<" MHTminusHTJet_phi2 "<<MHTminusHTPhi2v2Recipe<<" MHTminusHTJet_dphi2 "<<MHTminusHTDeltaPhi2v2Recipe<<" MHTminusHTJet_pt3 "<<MHTminusHTPt3v2Recipe<<" MHTminusHTJet_eta3 "<<MHTminusHTEta3v2Recipe<<" MHTminusHTJet_phi3 "<<MHTminusHTPhi3v2Recipe<<" MHTminusHTJet_dphi3 "<<MHTminusHTDeltaPhi3v2Recipe<<" MHTminusHTJet_pt4 "<<MHTminusHTPt4v2Recipe<<" MHTminusHTJet_eta4 "<<MHTminusHTEta4v2Recipe<<" MHTminusHTJet_phi4 "<<MHTminusHTPhi4v2Recipe<<" MHTminusHTJet_dphi4 "<<MHTminusHTDeltaPhi4v2Recipe<<endl;
+    }
   } //end of if(runOnData && RunSelectiveEvents)
-
+  
 
   if(runOnSignalMC){
     //Account for efficiency of JetID since we cannot apply it on fastSim
@@ -1115,6 +1150,7 @@ Bool_t Prediction::Process(Long64_t entry)
   double LeadMHTminusHTJetPt=-99;
   bool foundLeadHTJet=false;
   bool foundLeadMHTminusHTJet=false;
+  /*
   for(unsigned j = 0; j < Jets->size(); ++j){
     if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) <2.4){
       double rawPt=Jets->at(j).Pt()/Jets_jecFactor->at(j);
@@ -1160,13 +1196,13 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   }  //end of jet pT, eta distribution in default case
     
-  
+  */
   //*AR:181016-jet pT, eta distribution of those contributing to HT and excess ones contributing to  MHT after applying MET-v2 recipe
   double LeadHTJetv2RecipePt=-99;
   double LeadMHTminusHTJetv2RecipePt=-99;
   bool foundLeadHTJetv2Recipe=false;
   bool foundLeadMHTminusHTJetv2Recipe=false;
-
+  /*
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
     int jetIdx=HTJetsIdxv2Recipe[i]; 
     double rawPt=Jets->at(jetIdx).Pt()/Jets_jecFactor->at(jetIdx);
@@ -1222,11 +1258,11 @@ Bool_t Prediction::Process(Long64_t entry)
     h_JetPtvschargedHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx));
     h_JetPtvsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx));
   }
+*/
 
 
 
-
-
+  /*
   for(unsigned int i=0;i<MHTminusHTJetsIdxv2Recipe.size();i++){
     int jetIdx=MHTminusHTJetsIdxv2Recipe[i]; 
     double rawPt=Jets->at(jetIdx).Pt()/Jets_jecFactor->at(jetIdx);
@@ -1283,6 +1319,7 @@ Bool_t Prediction::Process(Long64_t entry)
     h_JetPtvschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx));
     h_JetPtvsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx));
   }
+*/
   
   /*
 
@@ -1408,6 +1445,7 @@ Bool_t Prediction::Process(Long64_t entry)
     std::cout<<" flavour "<<abs(Jets_flavor->at(i))<<endl;
     }
   */
+  /*
   for(int i = 0; i < nLoops; i++){
     double WeightBtagProb = Weight*bTagProb.at(i);
     unsigned bTagBin = bTagBins.at(i);
@@ -1502,12 +1540,8 @@ Bool_t Prediction::Process(Long64_t entry)
     
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
-    /*  
-  if(bTagBin==2)
-      std::cout<<" entry "<<entry<<" nLoops "<<i<<" bin "<<bTagBin<<" binQCD "<<bTagBinQCD<<" weight "<<Weight<<" BtagProb "<<bTagProb.at(i)<<" final wt "<<WeightBtagProb<<" h_CSStat "<<h_CSStat->GetBinContent(2)<<" h_Prediction "<<h_Prediction->GetBinContent(2)<<endl;
-*/
   } //end of loop over nLoops
-
+  */
   return kTRUE;
 }
 
