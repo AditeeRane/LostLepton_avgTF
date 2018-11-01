@@ -30,7 +30,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
@@ -127,6 +127,8 @@ class Prediction : public TSelector {
   TH1D* h_HTRatio_Exp=0;
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
+  //  TH2D* h_MHTPhivsHTRatio_Exp=0;
+
   TH1D* h_MET_Exp=0;
   TH1D* h_METPhi_Exp=0;
   TH1D* h_mT_Exp=0;
@@ -182,7 +184,13 @@ class Prediction : public TSelector {
   TH1D* h_HT5v2Recipe_Exp=0;
   TH1D* h_HTRatiov2Recipe_Exp=0;
   TH1D* h_MHTv2Recipe_Exp=0;
+  TH2D* h_HTvsMHTforLowNJetv2Recipe_Exp=0;
+  TH2D* h_HTvsMHTforHighNJetv2Recipe_Exp=0;
+
+
   TH1D* h_MHTPhiv2Recipe_Exp=0;
+  TH2D* h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=0;
+  TH2D* h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=0;
   TH1D* h_NJetv2Recipe_Exp=0;
   TH1D* h_NJetforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_NBtagv2Recipe_Exp=0;
@@ -194,7 +202,6 @@ class Prediction : public TSelector {
   TH1D* h_rawJetPtforMHTminusHTv2Recipe_Exp=0; 
   TH2D* h_rawJetPtvsEtaforHTv2Recipe_Exp=0;
   TH2D* h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp=0; 
-
   TH1D* h_JetPtforHTv2RecipeLead_Exp=0;
   TH1D* h_JetEtaforHTv2RecipeLead_Exp=0;
   TH1D* h_JetPhiforHTv2RecipeLead_Exp=0;
@@ -232,18 +239,34 @@ class Prediction : public TSelector {
   TH2D* h_JetMultvsEtaforHTv2Recipe_Exp=0;
 
   TH2D* h_JetPtvsHTRatioforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsHTRatioforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsHTRatioforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsDPhiLeadforHTv2Recipe_Exp=0;
+  TH2D* h_MHTPhivsJetPhiforHTv2Recipe_Exp=0;
+  TH2D* h_RecHTRatiovsDPhiforHTv2Recipe_Exp=0;
+  TH2D* h_RecHTRatiovsDPhiforAllv2Recipe_Exp=0;
+
   TH2D* h_JetPtvsPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbyneutralHadronFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbychargedEMFractionforHTv2Recipe_Exp=0;
+
+  TH2D* h_JetEtavsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
+
   TH2D* h_JetPtvschargedHadronEnergyFractionforHTv2Recipe_Exp=0;
+
   TH2D* h_JetPtvsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
+
   TH2D* h_JetEtavsPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetEtavsDPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedEmEnergyFractionforHTv2Recipe_Exp=0;
-  TH2D* h_JetEtavsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedHadronEnergyFractionforHTv2Recipe_Exp=0;
-  TH2D* h_JetEtavsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
 
   TH1D* h_JetPtforMHTminusHTv2RecipeLead_Exp=0;
   TH1D* h_JetEtaforMHTminusHTv2RecipeLead_Exp=0;
@@ -279,22 +302,38 @@ class Prediction : public TSelector {
   TH1D* h_photonMultiplicityforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_qgLikelihoodforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsEtaforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforHighPtforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetMultvsEtaforMHTminusHTv2Recipe_Exp=0;
 
   TH2D* h_JetPtvsHTRatioforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsHTRatioforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsHTRatioforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp=0;
+
+  TH2D* h_MHTPhivsJetPhiforMHTminusHTv2Recipe_Exp=0; 
+  TH2D* h_RecHTRatiovsDPhiforMHTminusHTv2Recipe_Exp=0;
+
   TH2D* h_JetPtvsPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbyneutralHadronFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsneutralEMbychargedEMFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+
+
   TH2D* h_JetPtvschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
-  TH2D* h_JetEtavsPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
+
   TH2D* h_JetEtavsDPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
-  TH2D* h_JetEtavsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
-  TH2D* h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp=0;
 
 
   TH1D* h_MHTOrig_Exp=0;
@@ -360,6 +399,7 @@ class Prediction : public TSelector {
   ULong64_t       EvtNum;
   Bool_t           BadChargedCandidateFilter;
   Bool_t           BadPFMuonFilter;
+  Bool_t           ecalBadCalibFilter;
   Int_t           BTags;
   Int_t           BTagsclean;
   Int_t           BTagsv2Recipe;
@@ -387,21 +427,6 @@ class Prediction : public TSelector {
   Double_t        MHTminusHTDeltaPhi3v2Recipe;
   Double_t        MHTminusHTDeltaPhi4v2Recipe;
 
-  Double_t        MHTminusHTPt1v2Recipe;
-  Double_t        MHTminusHTPt2v2Recipe;
-  Double_t        MHTminusHTPt3v2Recipe;
-  Double_t        MHTminusHTPt4v2Recipe;
-
-  Double_t        MHTminusHTEta1v2Recipe;
-  Double_t        MHTminusHTEta2v2Recipe;
-  Double_t        MHTminusHTEta3v2Recipe;
-  Double_t        MHTminusHTEta4v2Recipe;
-
-  Double_t        MHTminusHTPhi1v2Recipe;
-  Double_t        MHTminusHTPhi2v2Recipe;
-  Double_t        MHTminusHTPhi3v2Recipe;
-  Double_t        MHTminusHTPhi4v2Recipe;
-
   Double_t        DeltaPhi1Orig;
   Double_t        DeltaPhi2Orig;
   Double_t        DeltaPhi3Orig;
@@ -421,6 +446,7 @@ class Prediction : public TSelector {
   Double_t        HTv2Recipe; 
   Double_t        HT5v2Recipe;
   Double_t        HTRatiov2Recipe; 
+  Double_t        RecHTRatiov2Recipe;
   Double_t        HT5;
   Double_t        HTRatio;
   Double_t        HT5clean;
@@ -517,6 +543,7 @@ class Prediction : public TSelector {
   TBranch        *b_BTagsclean=0; 
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
+  TBranch        *b_ecalBadCalibFilter=0;
   TBranch        *b_CSCTightHaloFilter=0;   //!
   TBranch        *b_DeltaPhi1=0;   //!
   TBranch        *b_DeltaPhi2=0;   //!
@@ -807,12 +834,13 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("DeltaPhi4Orig", 1);
 
   if(!runOnSignalMC){
-    //fChain->SetBranchStatus("CSCTightHaloFilter", 1);
+    fChain->SetBranchStatus("CSCTightHaloFilter", 1);
     fChain->SetBranchStatus("EcalDeadCellTriggerPrimitiveFilter", 1);
     fChain->SetBranchStatus("eeBadScFilter", 1);
     //fChain->SetBranchStatus("eeBadSc4Filter", 1);    
     fChain->SetBranchStatus("HBHENoiseFilter", 1);
     fChain->SetBranchStatus("HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("ecalBadCalibFilter", 1); 
     if(runOnData){
       fChain->SetBranchStatus("globalTightHalo2016Filter", 1);
       fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
@@ -953,12 +981,14 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
 
   if(!runOnSignalMC){
-    //fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
+    fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
     fChain->SetBranchAddress("EcalDeadCellTriggerPrimitiveFilter", &EcalDeadCellTriggerPrimitiveFilter, &b_EcalDeadCellTriggerPrimitiveFilter);
     fChain->SetBranchAddress("eeBadScFilter", &eeBadScFilter, &b_eeBadScFilter);
     //fChain->SetBranchAddress("eeBadSc4Filter", &eeBadSc4Filter, &b_eeBadSc4Filter);    
     fChain->SetBranchAddress("HBHENoiseFilter", &HBHENoiseFilter, &b_HBHENoiseFilter);
     fChain->SetBranchAddress("HBHEIsoNoiseFilter", &HBHEIsoNoiseFilter, &b_HBHEIsoNoiseFilter);
+      fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
+
     if(runOnData){
       fChain->SetBranchAddress("globalTightHalo2016Filter", &globalTightHalo2016Filter, &b_globalTightHalo2016Filter);
       fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
