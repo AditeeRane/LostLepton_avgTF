@@ -237,8 +237,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
 
   
   if(hTTbarHadtau->GetMaximum()>hTTbarLL->GetMaximum())
-    hTTbarLL->SetMaximum(2*hTTbarHadtau->GetMaximum());
- 
+    hTTbarLL->SetMaximum(3*hTTbarHadtau->GetMaximum());
  
   if(hTTbarHadtau->GetMinimum()<hTTbarLL->GetMinimum())
     hTTbarLL->SetMinimum(0.5*hTTbarHadtau->GetMinimum());
@@ -500,7 +499,7 @@ void GetOneDPlotsMCVsMC(){
   GetOneDPlotsMCVsMC(1300,"NBtag","Data1LLowDphi","Prediction_0_Data_MET_Sep28LowDphiCorrectedBtagPtEta_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,120000);
 */
 
-  
+  //*AR:181106: 2017BE vs 2016 in 0L
   /*
     
   GetOneDPlotsMCVsMC(1000,"MHT","Data0LHighDphi_BEVs16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","Data17/Data16",1,0,16,200,1000,0.5,1.5,30000);

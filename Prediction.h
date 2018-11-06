@@ -32,18 +32,19 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnData = false;   //<-check:true only for data-----------------------
+const bool ApplyMETv2Recipe = false;  //<-check:only for 2017 data V15 ntuples
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool runOnSignalMC = false;  //<-check------------------------
+const bool runOnSignalMC = true;  //<-check------------------------
 bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
-bool RunSelectiveEvents= true;
+bool RunSelectiveEvents= false;
 
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
-const double csvForBtag=0.8838;
+const bool applySFs = false; //check:true only for data
+const double csvForBtag=0.8838; //check: for V12 it's 0.8484, for V15 it's 0.8838
 // Use TFs with/without SFs
-const double scaleFactorWeight = 35862.351;
+const double scaleFactorWeight = 35862.351; // Applicable for only SM MC
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -714,7 +715,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
-  if(!runOnData) doBTagCorr = true;
+  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------
 
