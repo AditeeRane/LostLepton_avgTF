@@ -99,19 +99,38 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepPhiclean_Exp=new TH1D("h_LepPhiclean_Exp","h_LepPhiclean_Exp",7,-3.5,3.5);
 
   h_HTv2Recipe_Exp =new TH1D("h_HTv2Recipe_Exp","h_HTv2Recipe_Exp",12,100,2500);
+  h_HTforLowNJetv2Recipe_Exp =new TH1D("h_HTforLowNJetv2Recipe_Exp","h_HTforLowNJetv2Recipe_Exp",12,100,2500);
+  h_HTforHighNJetv2Recipe_Exp =new TH1D("h_HTforHighNJetv2Recipe_Exp","h_HTforHighNJetv2Recipe_Exp",12,100,2500);
+
   h_HTvsMHTforLowNJetv2Recipe_Exp =new TH2D("h_HTvsMHTforLowNJetv2Recipe_Exp","h_HTvsMHTforLowNJetv2Recipe_Exp",12,100,2500,16,200,1000);
   h_HTvsMHTforHighNJetv2Recipe_Exp =new TH2D("h_HTvsMHTforHighNJetv2Recipe_Exp","h_HTvsMHTforHighNJetv2Recipe_Exp",12,100,2500,16,200,1000);
 
   h_HT5v2Recipe_Exp =new TH1D("h_HT5v2Recipe_Exp","h_HT5v2Recipe_Exp",12,100,2500);
   h_HTRatiov2Recipe_Exp =new TH1D("h_HTRatiov2Recipe_Exp","h_HTRatiov2Recipe_Exp",20,0,5);
+  h_HTRatioforLowNJetv2Recipe_Exp =new TH1D("h_HTRatioforLowNJetv2Recipe_Exp","h_HTRatioforLowNJetv2Recipe_Exp",20,0,5);
+  h_HTRatioforHighNJetv2Recipe_Exp =new TH1D("h_HTRatioforHighNJetv2Recipe_Exp","h_HTRatioforHighNJetv2Recipe_Exp",20,0,5);
+
   h_MHTv2Recipe_Exp =new TH1D("h_MHTv2Recipe_Exp","h_MHTv2Recipe_Exp",16,200,1000);
+  h_MHTforLowNJetv2Recipe_Exp =new TH1D("h_MHTforLowNJetv2Recipe_Exp","h_MHTforLowNJetv2Recipe_Exp",16,200,1000);
+  h_MHTforHighNJetv2Recipe_Exp =new TH1D("h_MHTforHighNJetv2Recipe_Exp","h_MHTforHighNJetv2Recipe_Exp",16,200,1000);
+
   h_MHTPhiv2Recipe_Exp=new TH1D("h_MHTPhiv2Recipe_Exp","h_MHTPhiv2Recipe_Exp",7,-3.5,3.5);
+  h_MHTPhiforLowNJetv2Recipe_Exp=new TH1D("h_MHTPhiforLowNJetv2Recipe_Exp","h_MHTPhiforLowNJetv2Recipe_Exp",7,-3.5,3.5);
+  h_MHTPhiforHighNJetv2Recipe_Exp=new TH1D("h_MHTPhiforHighNJetv2Recipe_Exp","h_MHTPhiforHighNJetv2Recipe_Exp",7,-3.5,3.5);
+
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=new TH2D("h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp","h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp",70,-3.5,3.5,20,0,5);
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=new TH2D("h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp","h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp",70,-3.5,3.5,20,0,5);
 
   h_NJetv2Recipe_Exp =new TH1D("h_NJetv2Recipe_Exp","h_NJetv2Recipe_Exp",10,2,12);
+  h_NJetvsHTv2Recipe_Exp=new TH2D("h_NJetvsHTv2Recipe_Exp","h_NJetvsHTv2Recipe_Exp",10,2,12,12,100,2500);
+  h_NJetvsMHTv2Recipe_Exp=new TH2D("h_NJetvsMHTv2Recipe_Exp","h_NJetvsMHTv2Recipe_Exp",10,2,12,16,200,1000);
+  h_NJetvsMHTPhiv2Recipe_Exp=new TH2D("h_NJetvsMHTPhiv2Recipe_Exp","h_NJetvsMHTPhiv2Recipe_Exp",10,2,12,7,-3.5,3.5);
+
   h_NJetforMHTminusHTv2Recipe_Exp =new TH1D("h_NJetforMHTminusHTv2Recipe_Exp","h_NJetforMHTminusHTv2Recipe_Exp",12,0,12);
   h_NBtagv2Recipe_Exp =new TH1D("h_NBtagv2Recipe_Exp","h_NBtagv2Recipe_Exp",5,0,5);
+  h_NBtagforLowNJetv2Recipe_Exp =new TH1D("h_NBtagforLowNJetv2Recipe_Exp","h_NBtagforLowNJetv2Recipe_Exp",5,0,5);
+  h_NBtagforHighNJetv2Recipe_Exp =new TH1D("h_NBtagforHighNJetv2Recipe_Exp","h_NBtagforHighNJetv2Recipe_Exp",5,0,5);
+
   h_rawJetPtforHTv2Recipe_Exp=new TH1D("h_rawJetPtforHTv2Recipe_Exp","h_rawJetPtforHTv2Recipe_Exp",20,0.0,1000.0);
   h_JetPtforHTv2RecipeLead_Exp=new TH1D("h_JetPtforHTv2RecipeLead_Exp","h_JetPtforHTv2RecipeLead_Exp",20,0.0,1000.0);
   h_JetEtaforHTv2RecipeLead_Exp=new TH1D("h_JetEtaforHTv2RecipeLead_Exp","h_JetEtaforHTv2RecipeLead_Exp",50,-2.5,2.5);
@@ -124,6 +143,17 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_JetPtforHTv2Recipe_Exp=new TH1D("h_JetPtforHTv2Recipe_Exp","h_JetPtforHTv2Recipe_Exp",20,0.0,1000.0);
   h_JetEtaforHTv2Recipe_Exp=new TH1D("h_JetEtaforHTv2Recipe_Exp","h_JetEtaforHTv2Recipe_Exp",50,-2.5,2.5);
   h_JetPhiforHTv2Recipe_Exp=new TH1D("h_JetPhiforHTv2Recipe_Exp","h_JetPhiforHTv2Recipe_Exp",70,-3.5,3.5);
+  h_JetPtforLowNJetforHTv2Recipe_Exp=new TH1D("h_JetPtforLowNJetforHTv2Recipe_Exp","h_JetPtforLowNJetforHTv2Recipe_Exp",20,0.0,1000.0);
+  h_JetEtaforLowNJetforHTv2Recipe_Exp=new TH1D("h_JetEtaforLowNJetforHTv2Recipe_Exp","h_JetEtaforLowNJetforHTv2Recipe_Exp",50,-2.5,2.5);
+  h_JetPhiforLowNJetforHTv2Recipe_Exp=new TH1D("h_JetPhiforLowNJetforHTv2Recipe_Exp","h_JetPhiforLowNJetforHTv2Recipe_Exp",70,-3.5,3.5);
+  h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp=new TH2D("h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp","h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp",4,0.0,1000.0,10,-2.5,2.5);
+  h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp=new TH2D("h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp","h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp",4,0.0,1000.0,7,-3.5,3.5);
+
+  h_JetPtforHighNJetforHTv2Recipe_Exp=new TH1D("h_JetPtforHighNJetforHTv2Recipe_Exp","h_JetPtforHighNJetforHTv2Recipe_Exp",20,0.0,1000.0);
+  h_JetEtaforHighNJetforHTv2Recipe_Exp=new TH1D("h_JetEtaforHighNJetforHTv2Recipe_Exp","h_JetEtaforHighNJetforHTv2Recipe_Exp",50,-2.5,2.5);
+  h_JetPhiforHighNJetforHTv2Recipe_Exp=new TH1D("h_JetPhiforHighNJetforHTv2Recipe_Exp","h_JetPhiforHighNJetforHTv2Recipe_Exp",70,-3.5,3.5);
+  h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp=new TH2D("h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp","h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp",4,0.0,1000.0,10,-2.5,2.5);
+  h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp=new TH2D("h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp","h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp",4,0.0,1000.0,7,-3.5,3.5);
 
   h_DphiOneforHTv2Recipe_Exp =new TH1D("h_DphiOneforHTv2Recipe_Exp","h_DphiOneforHTv2Recipe_Exp",32,0,3.2);
   h_DphiTwoforHTv2Recipe_Exp =new TH1D("h_DphiTwoforHTv2Recipe_Exp","h_DphiTwoforHTv2Recipe_Exp",32,0,3.2);
@@ -132,6 +162,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_rawJetPtvsEtaforHTv2Recipe_Exp=new TH2D("h_rawJetPtvsEtaforHTv2Recipe_Exp","h_rawJetPtvsEtaforHTv2Recipe_Exp",20,0.0,1000.0,50,-2.5,2.5);
   h_JetPtvsEtaforHTv2Recipe_Exp=new TH2D("h_JetPtvsEtaforHTv2Recipe_Exp","h_JetPtvsEtaforHTv2Recipe_Exp",20,0.0,1000.0,50,-2.5,2.5);
+  h_JetEtavsPhiforHTv2Recipe_Exp=new TH2D("h_JetEtavsPhiforHTv2Recipe_Exp","h_JetEtavsPhiforHTv2Recipe_Exp",50,-2.5,2.5,70,-3.5,3.5);
+
   h_JetIdxvsEtaforHTv2Recipe_Exp=new TH2D("h_JetIdxvsEtaforHTv2Recipe_Exp","h_JetIdxvsEtaforHTv2Recipe_Exp",12,0,12,50,-2.5,2.5);
   h_JetMultvsEtaforHTv2Recipe_Exp=new TH2D("h_JetMultvsEtaforHTv2Recipe_Exp","h_JetMultvsEtaforHTv2Recipe_Exp",12,0,12,50,-2.5,2.5);
 
@@ -336,18 +368,31 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_LepPhiclean_Exp); 
 
   GetOutputList()->Add(h_HTv2Recipe_Exp);
+  GetOutputList()->Add(h_HTforLowNJetv2Recipe_Exp);
+  GetOutputList()->Add(h_HTforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTvsMHTforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTvsMHTforHighNJetv2Recipe_Exp);
 
   GetOutputList()->Add(h_HT5v2Recipe_Exp);
   GetOutputList()->Add(h_HTRatiov2Recipe_Exp);
-
+  GetOutputList()->Add(h_HTRatioforLowNJetv2Recipe_Exp);
+  GetOutputList()->Add(h_HTRatioforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTforLowNJetv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTPhiv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTPhiforLowNJetv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTPhiforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_NJetv2Recipe_Exp);
+  GetOutputList()->Add(h_NJetvsHTv2Recipe_Exp);
+  GetOutputList()->Add(h_NJetvsMHTv2Recipe_Exp);
+  GetOutputList()->Add(h_NJetvsMHTPhiv2Recipe_Exp);
+
   GetOutputList()->Add(h_NBtagv2Recipe_Exp);
+  GetOutputList()->Add(h_NBtagforLowNJetv2Recipe_Exp);
+  GetOutputList()->Add(h_NBtagforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_NJetforMHTminusHTv2Recipe_Exp);
 
   GetOutputList()->Add(h_JetPtforHTv2RecipeLead_Exp);
@@ -359,6 +404,16 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_JetPtforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetEtaforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPhiforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtforLowNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEtaforLowNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPhiforLowNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtforHighNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEtaforHighNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPhiforHighNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp);
   GetOutputList()->Add(h_DphiOneforHTv2Recipe_Exp);
   GetOutputList()->Add(h_DphiTwoforHTv2Recipe_Exp);
   GetOutputList()->Add(h_DphiThreeforHTv2Recipe_Exp);
@@ -384,6 +439,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_photonMultiplicityforHTv2Recipe_Exp);
   //  GetOutputList()->Add(h_qgLikelihoodforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsEtaforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEtavsPhiforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetIdxvsEtaforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetMultvsEtaforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsHTRatioforHTv2Recipe_Exp);
@@ -507,11 +563,11 @@ Bool_t Prediction::Process(Long64_t entry)
   fChain->GetTree()->GetEntry(entry);
   //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
-  MuonsNum_ = Muons->size();
-  ElectronsNum_ = Electrons->size();
-  //*AR: 180917: NMuons and NElectrons are number of isolated electrons and muons only for 2017 onwards
-  //MuonsNum_ = NMuons;
-  //ElectronsNum_ = NElectrons;
+  //  MuonsNum_ = Muons->size();
+  //  ElectronsNum_ = Electrons->size();
+  //*AR: 180917: NMuons and NElectrons are number of isolated electrons and muons
+  MuonsNum_ = NMuons;
+  ElectronsNum_ = NElectrons;
   double newGenHT=0;double newGenMHT=0;
   TVector3 temp3Vec;
   vector<TVector3>GenHT3JetVec,GenMHT3JetVec;
@@ -591,31 +647,22 @@ Bool_t Prediction::Process(Long64_t entry)
       BTagsfrmCSV++;
   }
 
-  //*AR-181016: Recalculation of search variables after applying MET v2-recipe on data, not to be applied on MC
+  //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
-    if(ApplyMETv2Recipe){
-      if(jetPtv2Recipe >50 || (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
+    if(jetPtv2Recipe >50 || (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
       if(PhiLeadJet==-99.) 
 	PhiLeadJet=Jets->at(j).Phi();
+      //  std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
+    
+    //      std::cout<<" j "<<j<<" passed v2 "<<" PhiLeadJet "<<PhiLeadJet<<endl;
       if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
 	HTJetsIdxv2Recipe.push_back(j);
       if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
 	MHTJetsIdxv2Recipe.push_back(j);
       if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
 	MHTminusHTJetsIdxv2Recipe.push_back(j); 
-      } //end of METv2 recipe
-    } //end of ApplyMETv2Recipe
-    else{
-      if(PhiLeadJet==-99.) 
-	PhiLeadJet=Jets->at(j).Phi();
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
-	HTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTminusHTJetsIdxv2Recipe.push_back(j); 
-    }
+    } //end of METv2 recipe
   } //end of loop over jets
   NJetsforMHTminusHTv2Recipe=MHTminusHTJetsIdxv2Recipe.size();  
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
@@ -632,6 +679,21 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
+
+  /*
+  for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
+    if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<2.4){
+      HTv2Recipe+=Jetsv2Recipe[i].Pt();
+      NJetsv2Recipe++;
+      if(JetsCSVv2Recipe[i]>csvForBtag)
+	BTagsv2Recipe++;
+    }
+    if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<5.0){
+      MHT3Vecv2Recipe-=Jetsv2Recipe[i];
+      HT5v2Recipe+=Jetsv2Recipe[i].Pt();
+    }
+  }
+  */
   MHTv2Recipe=MHT3Vecv2Recipe.Pt(); 
   MHTPhiv2Recipe=MHT3Vecv2Recipe.Phi();
   
@@ -667,7 +729,14 @@ Bool_t Prediction::Process(Long64_t entry)
     MHTminusHTDeltaPhi3v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[2]).Phi() - MHTPhiv2Recipe ));
   if(MHTminusHTJetsIdxv2Recipe.size()>3)
     MHTminusHTDeltaPhi4v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[3]).Phi() - MHTPhiv2Recipe ));
-  //END OF Recalculation of search variables after applying v2 recipe
+  /*
+  if(HTDeltaPhi1v2Recipe!=DeltaPhi1v2Recipe){
+    if(MHTminusHTDeltaPhi1v2Recipe!=DeltaPhi1v2Recipe){
+  std::cout<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<" MHTminusHTDeltaPhi1v2Recipe "<< MHTminusHTDeltaPhi1v2Recipe<<" DeltaPhi1v2Recipe "<<DeltaPhi1v2Recipe<<endl;
+    }
+  }
+*/
+  //END OF Recalculation of search variables
 
 
 	   
@@ -694,7 +763,7 @@ Bool_t Prediction::Process(Long64_t entry)
       newGenMHT3Vec-=GenMHT3JetVec[i]; 
     }  
     newGenMHT=newGenMHT3Vec.Pt();
-  } //end of runOnSignalMC GenHTMHT version
+  } //end of runOnSignalMC
 
   double LepPt=-99.0;
   double LepEta=-99.0;
@@ -706,21 +775,21 @@ Bool_t Prediction::Process(Long64_t entry)
 
     if(MuonsNum_==1){
       for(unsigned int i=0;i<Muons->size();i++){
-	//	if(Muons_passIso->at(i)){
+	if(Muons_passIso->at(i)){
 	  LepPt=Muons->at(i).Pt();
 	  LepEta=Muons->at(i).Eta();
 	  LepPhi=Muons->at(i).Phi();
-	  //	}
+	}
       }
     }
 
     if(ElectronsNum_==1){
       for(unsigned int i=0;i<Electrons->size();i++){
-	//	if(Electrons_passIso->at(i)){
+	if(Electrons_passIso->at(i)){
 	  LepPt=Electrons->at(i).Pt();
 	  LepEta=Electrons->at(i).Eta();
 	  LepPhi=Electrons->at(i).Phi();
-	  //	}
+	}
       }
     }
 
@@ -760,22 +829,11 @@ Bool_t Prediction::Process(Long64_t entry)
   
   //  if(useDeltaPhiCut == 1)  if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
   //  if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-
-  //*AR: Checks whether relevent filters are passed depending on SM, data or signal
+  
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
-
-  //*AR: initialize skim path
-  if(runOnSignalMC)
-    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
-  if(runOnStandardModelMC)
-    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
-
-
-  //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts). Note that "SkimFilePath" won't be defined here in case of GetSignalRegHists=true
-  //
+  //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
   
   if(!GetSignalRegHists){
-    //*AR:181101: skimfile path for 1mu event
     if(MuonsNum_==1 && ElectronsNum_==0){
       mtw =  Muons_MTW->at(0);
       
@@ -786,7 +844,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
-    }else if(MuonsNum_==0 && ElectronsNum_==1){   //*AR:181101: skimfile path for 1e event
+    }else if(MuonsNum_==0 && ElectronsNum_==1){
       mtw =  Electrons_MTW->at(0);
       //std::cout<<" entry "<<entry<<" 1e event "<<endl;
       if(runOnSignalMC)
@@ -822,7 +880,7 @@ Bool_t Prediction::Process(Long64_t entry)
   else{
     //  Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
     //    BinQCD_ = SearchBinsQCD_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
-    //*AR-181101: HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe will be same as HT, MHT, NJet, BTags when ApplyMETv2Recipe=false
+
     Bin_ = SearchBins_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
     BinQCD_ = SearchBinsQCD_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
   }
@@ -830,8 +888,8 @@ Bool_t Prediction::Process(Long64_t entry)
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
 
   h_YieldCutFlow->Fill(0);
-  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
-    return kTRUE;
+  //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+  //return kTRUE;
   h_YieldCutFlow->Fill(1);
   
   //  std::cout<<" evt falling in search bin "<<endl;
@@ -891,7 +949,7 @@ Bool_t Prediction::Process(Long64_t entry)
     //    string GetFastSimSkim=Skmname.c_str();
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //    std::cout<<" currentTree "<<currentTree<<endl;
-    //*AR- Only runs for every new tree, decides "skimName". Note skim path depends on whether it is 1e event/ 1mu event
+    //*AR- Only runs for every new tree
     if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
       treeName = currentTree;
@@ -940,7 +998,6 @@ Bool_t Prediction::Process(Long64_t entry)
 
       //std::cout<<" subSampleKey "<<subSampleKey<<endl;
       if(runOnSignalMC){
-	//*AR: example skim file-tree_T1tttt_800_1_fast.root
 	vector<string> skimInput = skmInput(string(currFileName));
 	//	std::cout<<" 0 "<<skimInput[0]<<" 1 "<<skimInput[1]<<" 2 "<<skimInput[2]<<" 3 "<<skimInput[3]<<" 4 "<<skimInput[4]<<endl;
 	sprintf(SkimFile,"%s/tree_%s_%s_%s_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
@@ -975,7 +1032,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
       }
       
-      if(doBTagCorr){ //true only for signal and standard model mc while getting prediction and not signal region yield
+      if(doBTagCorr){ //true only for signal and standard model mc
         if(btagcorr!=0){
           delete btagcorr;
           btagcorr = 0;
@@ -1043,7 +1100,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }// end of if(currentTree != treeName)
     if(runOnSignalMC){
       Weight = xsec / nEvtsTotal;
-      //      std::cout<<" weight_xsec "<<Weight<<endl;
+      std::cout<<" weight_xsec "<<Weight<<endl;
       if(Weight < 0) Weight *= -1;
     }
 
@@ -1059,14 +1116,14 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
 
-    //    std::cout<<" seg vio 1 "<<endl;
+   
     if(doISRcorr){ //true for signal mc
       w_isr = isrcorr->GetCorrection(NJetsISR);
       Weight *= w_isr;
       //std::cout<<" weight_afterISRcorr "<<Weight<<endl;
     }
 
-    if(doBTagCorr){ //true for signal and standard model mc while getting prediction and not signal region yield
+    if(doBTagCorr){ //true for signal and standard model mc
       bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
       if(runOnSignalMC && useGenHTMHT){
 	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};  
@@ -1076,7 +1133,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};  
 	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,3)};  }
       
-    } //end of if(doBTagCorr)
+    }
   } //end of if(!runOnData)
   
   if(runOnData && RunSelectiveEvents){
@@ -1174,13 +1231,12 @@ Bool_t Prediction::Process(Long64_t entry)
   if(useTriggerEffWeight){ // false for SM MC
     //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
     if(runOnSignalMC){
-      Weight *= GetSignalTriggerEffWeight(HTv2Recipe,MHTv2Recipe);
+      Weight *= GetSignalTriggerEffWeight(HT,MHT);
       //std::cout<<" weight_afterTrigEff "<<Weight<<endl;
     }else{
-      Weight *= GetTriggerEffWeight(MHTv2Recipe);
+      Weight *= GetTriggerEffWeight(MHT);
     }
   }
-  //    std::cout<<" seg vio 2 "<<endl;
 
   if(doPUreweighting){ //true only for signal mc
     w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
@@ -1248,8 +1304,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   }  //end of jet pT, eta distribution in default case
     
-  //      std::cout<<" seg vio 3 "<<endl;
-
+  
   //*AR:181016-jet pT, eta distribution of those contributing to HT and excess ones contributing to  MHT after applying MET-v2 recipe
   double LeadHTJetv2RecipePt=-99;
   double LeadMHTminusHTJetv2RecipePt=-99;
@@ -1270,78 +1325,96 @@ Bool_t Prediction::Process(Long64_t entry)
       LeadHTJetv2RecipePhi=Jets->at(jetIdx).Phi();
       foundLeadHTJetv2Recipe=true;
     }
-    h_rawJetPtforHTv2Recipe_Exp->Fill(rawPt,Weight);
-    h_rawJetPtvsEtaforHTv2Recipe_Exp->Fill(rawPt,Jets->at(jetIdx).Eta(),Weight);
+    h_rawJetPtforHTv2Recipe_Exp->Fill(rawPt);
+    h_rawJetPtvsEtaforHTv2Recipe_Exp->Fill(rawPt,Jets->at(jetIdx).Eta());
       
-    h_chargedEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx),Weight);
-    h_chargedHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_chargedHadronEnergyFraction->at(jetIdx),Weight);
-    h_chargedHadronMultiplicityforHTv2Recipe_Exp->Fill(Jets_chargedHadronMultiplicity->at(jetIdx),Weight);  
-    h_chargedMultiplicityforHTv2Recipe_Exp->Fill(Jets_chargedMultiplicity->at(jetIdx),Weight);
-    //    h_electronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_electronEnergyFraction->at(jetIdx));
-    h_electronMultiplicityforHTv2Recipe_Exp->Fill(Jets_electronMultiplicity->at(jetIdx),Weight);
+    h_chargedEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx));
+    h_chargedHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_chargedHadronEnergyFraction->at(jetIdx));
+    h_chargedHadronMultiplicityforHTv2Recipe_Exp->Fill(Jets_chargedHadronMultiplicity->at(jetIdx));  
+    h_chargedMultiplicityforHTv2Recipe_Exp->Fill(Jets_chargedMultiplicity->at(jetIdx));
+    h_electronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_electronEnergyFraction->at(jetIdx));
+    h_electronMultiplicityforHTv2Recipe_Exp->Fill(Jets_electronMultiplicity->at(jetIdx));
     //      h_hadronFlavorforHTv2Recipe_Exp->Fill(Jets_hadronFlavor->at(jetIdx)); 
-    //    h_hfEMEnergyFractionforHTv2Recipe_Exp->Fill(Jets_hfEMEnergyFraction->at(jetIdx));
-    //    h_hfHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_hfHadronEnergyFraction->at(jetIdx));
-    //    h_multiplicityforHTv2Recipe_Exp->Fill(Jets_multiplicity->at(jetIdx)); 
-    h_muonEnergyFractionforHTv2Recipe_Exp->Fill(Jets_muonEnergyFraction->at(jetIdx),Weight); 
-    h_muonMultiplicityforHTv2Recipe_Exp->Fill(Jets_muonMultiplicity->at(jetIdx),Weight); 
-    h_neutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_neutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_neutralHadronMultiplicityforHTv2Recipe_Exp->Fill(Jets_neutralHadronMultiplicity->at(jetIdx),Weight); 
-    h_neutralMultiplicityforHTv2Recipe_Exp->Fill(Jets_neutralMultiplicity->at(jetIdx),Weight);
-    h_photonEnergyFractionforHTv2Recipe_Exp->Fill(Jets_photonEnergyFraction->at(jetIdx),Weight);
-    h_photonMultiplicityforHTv2Recipe_Exp->Fill(Jets_photonMultiplicity->at(jetIdx),Weight);
+    h_hfEMEnergyFractionforHTv2Recipe_Exp->Fill(Jets_hfEMEnergyFraction->at(jetIdx));
+    h_hfHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_hfHadronEnergyFraction->at(jetIdx));
+    h_multiplicityforHTv2Recipe_Exp->Fill(Jets_multiplicity->at(jetIdx)); 
+    h_muonEnergyFractionforHTv2Recipe_Exp->Fill(Jets_muonEnergyFraction->at(jetIdx)); 
+    h_muonMultiplicityforHTv2Recipe_Exp->Fill(Jets_muonMultiplicity->at(jetIdx)); 
+    h_neutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_neutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_neutralHadronMultiplicityforHTv2Recipe_Exp->Fill(Jets_neutralHadronMultiplicity->at(jetIdx)); 
+    h_neutralMultiplicityforHTv2Recipe_Exp->Fill(Jets_neutralMultiplicity->at(jetIdx));
+    h_photonEnergyFractionforHTv2Recipe_Exp->Fill(Jets_photonEnergyFraction->at(jetIdx));
+    h_photonMultiplicityforHTv2Recipe_Exp->Fill(Jets_photonMultiplicity->at(jetIdx));
      //  h_qgLikelihoodforHTv2Recipe_Exp->Fill(Jetsv2Recipe[i]);
     
     if(i<=3){
-      h_JetPtforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-      h_JetEtaforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-      h_JetPhiforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
+      h_JetPtforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Pt());
+      h_JetEtaforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Eta());
+      h_JetPhiforHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Phi());
       if(i==0)
-	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi1v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi1v2Recipe);
       if(i==1)
-	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi2v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi2v2Recipe);
       if(i==2)
-	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi3v2Recipe,Weight);
-      if(i==4)
-	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi4v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi3v2Recipe);
+      if(i==3)
+	h_JetPhivsDPhiLeadforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),HTDeltaPhi4v2Recipe);
     
     }
     else{
-      h_JetPtforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-      h_JetEtaforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-      h_JetPhiforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
+	h_JetPtforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Pt());
+	h_JetEtaforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta());
+	h_JetPhiforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi());
     }
-    h_JetPtforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-    h_JetEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-    h_JetPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
-    h_JetIdxvsEtaforHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta(),Weight);
-    h_JetMultvsEtaforHTv2Recipe_Exp->Fill(HTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta(),Weight);
-    h_JetPtvsEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta(),Weight);
-    h_JetPtvsPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Phi(),Weight);
+    h_JetPtforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
+    h_JetEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
+    h_JetPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+    if(NJetsv2Recipe<6){
+      h_JetPtforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
+      h_JetEtaforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
+      h_JetPhiforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+      h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta());
+      if(i==0)
+	h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),MHTPhiv2Recipe);
+
+    }
+    if(NJetsv2Recipe>=6){
+      h_JetPtforHighNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
+      h_JetEtaforHighNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
+      h_JetPhiforHighNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+      h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta());
+      if(i==0)
+	h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),MHTPhiv2Recipe);
+    }
+    h_JetIdxvsEtaforHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta());
+    h_JetMultvsEtaforHTv2Recipe_Exp->Fill(HTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta());
+    h_JetPtvsEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta());
+    h_JetEtavsPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi());
+
+    h_JetPtvsPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Phi());
     
     double DphiJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi() - MHTPhiv2Recipe ));
     double neutralEMbyphoton=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_photonEnergyFraction->at(jetIdx);
     double neutralEMbyneutralHadron=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_neutralHadronEnergyFraction->at(jetIdx);
     double neutralEMbychargedEM=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_chargedEmEnergyFraction->at(jetIdx);
 
-    h_JetPtvsDPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT,Weight);
-    h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyphoton,Weight);
-    h_JetPtvsneutralEMbyneutralHadronFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyneutralHadron,Weight);
-    h_JetPtvsneutralEMbychargedEMFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbychargedEM,Weight);
-    h_JetEtavsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPhivsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
+    h_JetPtvsDPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT);
+    h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedEmEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyphoton);
+    h_JetPtvsneutralEMbyneutralHadronFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyneutralHadron);
+    h_JetPtvsneutralEMbychargedEMFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbychargedEM);
+    h_JetEtavsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_JetPhivsneutralEmEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralEmEnergyFraction->at(jetIdx));
 
-    h_JetPtvschargedHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetEtavsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetPhivsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
+    h_JetPtvschargedHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_JetEtavsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_JetPhivsneutralHadronEnergyFractionforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralHadronEnergyFraction->at(jetIdx));
 
   }
 
-  //  std::cout<<" seg vio 4 "<<endl;
 
 
 
@@ -1356,82 +1429,81 @@ Bool_t Prediction::Process(Long64_t entry)
       foundLeadMHTminusHTJetv2Recipe=true;
     }
 
-    h_rawJetPtforMHTminusHTv2Recipe_Exp->Fill(rawPt,Weight);
-    h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp->Fill(rawPt,Jets->at(jetIdx).Eta(),Weight);
+    h_rawJetPtforMHTminusHTv2Recipe_Exp->Fill(rawPt);
+    h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp->Fill(rawPt,Jets->at(jetIdx).Eta());
       
-    h_chargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx),Weight);
-    h_chargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedHadronEnergyFraction->at(jetIdx),Weight);
-    h_chargedHadronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedHadronMultiplicity->at(jetIdx),Weight);  
-    h_chargedMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedMultiplicity->at(jetIdx),Weight);
-    //h_electronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_electronEnergyFraction->at(jetIdx));
-    h_electronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_electronMultiplicity->at(jetIdx),Weight);
+    h_chargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx));
+    h_chargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedHadronEnergyFraction->at(jetIdx));
+    h_chargedHadronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedHadronMultiplicity->at(jetIdx));  
+    h_chargedMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_chargedMultiplicity->at(jetIdx));
+    h_electronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_electronEnergyFraction->at(jetIdx));
+    h_electronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_electronMultiplicity->at(jetIdx));
     //      h_hadronFlavorforMHTminusHTv2Recipe_Exp->Fill(Jets_hadronFlavor->at(jetIdx)); 
-    //    h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_hfEMEnergyFraction->at(jetIdx));
-    //    h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_hfHadronEnergyFraction->at(jetIdx));
-    //    h_multiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_multiplicity->at(jetIdx)); 
-    h_muonEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_muonEnergyFraction->at(jetIdx),Weight); 
-    h_muonMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_muonMultiplicity->at(jetIdx),Weight); 
-    h_neutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_neutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_neutralHadronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralHadronMultiplicity->at(jetIdx),Weight); 
-    h_neutralMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralMultiplicity->at(jetIdx),Weight);
-    h_photonEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_photonEnergyFraction->at(jetIdx),Weight);
-    h_photonMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_photonMultiplicity->at(jetIdx),Weight);
+    h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_hfEMEnergyFraction->at(jetIdx));
+    h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_hfHadronEnergyFraction->at(jetIdx));
+    h_multiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_multiplicity->at(jetIdx)); 
+    h_muonEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_muonEnergyFraction->at(jetIdx)); 
+    h_muonMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_muonMultiplicity->at(jetIdx)); 
+    h_neutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_neutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_neutralHadronMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralHadronMultiplicity->at(jetIdx)); 
+    h_neutralMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_neutralMultiplicity->at(jetIdx));
+    h_photonEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets_photonEnergyFraction->at(jetIdx));
+    h_photonMultiplicityforMHTminusHTv2Recipe_Exp->Fill(Jets_photonMultiplicity->at(jetIdx));
      //  h_qgLikelihoodforMHTminusHTv2Recipe_Exp->Fill(Jetsv2Recipe[i]);
     
     if(i<=3){
-      h_JetPtforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-      h_JetEtaforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-      h_JetPhiforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
+      h_JetPtforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Pt());
+      h_JetEtaforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Eta());
+      h_JetPhiforMHTminusHTv2RecipeLead_Exp->Fill(Jets->at(jetIdx).Phi());
       if(i==0)
-	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi1v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi1v2Recipe);
       if(i==1)
-	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi2v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi2v2Recipe);
       if(i==2)
-	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi3v2Recipe,Weight);
-      if(i==4)
-	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi4v2Recipe,Weight);
+	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi3v2Recipe);
+      if(i==3)
+	h_JetPhivsDPhiLeadforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),MHTminusHTDeltaPhi4v2Recipe);
     }
     else{
-      h_JetPtforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-      h_JetEtaforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-      h_JetPhiforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
+	h_JetPtforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Pt());
+	h_JetEtaforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta());
+	h_JetPhiforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi());
     }
-    h_JetPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
-    h_JetEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
-    h_JetPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
-    h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta(),Weight);
-    h_JetMultvsEtaforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta(),Weight);
-    h_JetPtvsEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta(),Weight);
-    h_JetEtavsPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),Weight);
+    h_JetPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
+    h_JetEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
+    h_JetPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+    h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta());
+    h_JetMultvsEtaforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta());
+    h_JetPtvsEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta());
+    h_JetEtavsPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi());
     if(Jets->at(jetIdx).Pt()>400)
-      h_JetEtavsPhiforHighPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),Weight);
+      h_JetEtavsPhiforHighPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi());
 
-    h_JetPtvsPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Phi(),Weight);
+    h_JetPtvsPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Phi());
     
     double DphiJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi() - MHTPhiv2Recipe ));
     double neutralEMbyphoton=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_photonEnergyFraction->at(jetIdx);
     double neutralEMbyneutralHadron=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_neutralHadronEnergyFraction->at(jetIdx);
     double neutralEMbychargedEM=Jets_neutralEmEnergyFraction->at(jetIdx)/Jets_chargedEmEnergyFraction->at(jetIdx);
 
-    h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT,Weight);
-    h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyphoton,Weight);
-    h_JetPtvsneutralEMbyneutralHadronFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyneutralHadron,Weight);
-    h_JetPtvsneutralEMbychargedEMFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbychargedEM,Weight);
+    h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT);
+    h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedEmEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyphoton);
+    h_JetPtvsneutralEMbyneutralHadronFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbyneutralHadron);
+    h_JetPtvsneutralEMbychargedEMFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),neutralEMbychargedEM);
 
-    h_JetEtavsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
-    h_JetPhivsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralEmEnergyFraction->at(jetIdx),Weight);
+    h_JetEtavsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralEmEnergyFraction->at(jetIdx));
+    h_JetPhivsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralEmEnergyFraction->at(jetIdx));
 
-    h_JetPtvschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetPtvsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
-    h_JetPhivsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralHadronEnergyFraction->at(jetIdx),Weight);
+    h_JetPtvschargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_chargedHadronEnergyFraction->at(jetIdx));
+    h_JetPtvsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Jets_neutralHadronEnergyFraction->at(jetIdx));
+    h_JetPhivsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralHadronEnergyFraction->at(jetIdx));
 
   }
-  //  std::cout<<" seg vio 5 "<<endl;
-
+  
   /*
 
 
@@ -1548,7 +1620,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
 
   int nLoops = 1;
-  if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4); //true only for SM and signal MC while getting prediction and not signal region yield
+  if(doBTagCorr) nLoops = (NJets == 2 ? 3 : 4);
   //*AR-180530: if(!runOnData),then bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);bTagBins=bTagBinsQCD = {(HT,MHT,NJet,0),(HT,MHT,NJet,1),(HT,MHT,NJet,2),(HT,MHT,NJet,3)}; else bTagProb = {1, 0, 0, 0} and bTagBins=bTagBinsQCD ={(HT,MHT,NJets,BTagsfrmCSV),0,0,0}.
   // This is because we do not know jet flavours in case of data hence can not calculate btag probability. There is jets_flavour branch saved also for data, but it has zero content.  
   /*
@@ -1568,15 +1640,15 @@ Bool_t Prediction::Process(Long64_t entry)
     }else{ //true for SM and signal MC
       TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
     }
-    //    HTRatio=HT5/HT;
+    HTRatio=HT5/HT;
     HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
     RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
 //std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
-    //    h_HT5_Exp->Fill(HT5,WeightBtagProb);
-    //    h_HTRatio_Exp->Fill(HTRatio,WeightBtagProb);
+    h_HT5_Exp->Fill(HT5,WeightBtagProb);
+    h_HTRatio_Exp->Fill(HTRatio,WeightBtagProb);
     h_MHT_Exp->Fill(MHT,WeightBtagProb);
     h_MET_Exp->Fill(MET,WeightBtagProb);
     h_MHTPhi_Exp->Fill(MHTPhi,WeightBtagProb);
@@ -1594,7 +1666,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
 
     h_HTclean_Exp->Fill(HTclean,WeightBtagProb);
-    //    h_HT5clean_Exp->Fill(HT5clean,WeightBtagProb);   
+    h_HT5clean_Exp->Fill(HT5clean,WeightBtagProb);   
     h_MHTclean_Exp->Fill(MHTclean,WeightBtagProb);
     h_METclean_Exp->Fill(METclean,WeightBtagProb);
     h_MHTPhiclean_Exp->Fill(MHTPhiclean,WeightBtagProb);
@@ -1611,20 +1683,38 @@ Bool_t Prediction::Process(Long64_t entry)
     h_LepPhiclean_Exp->Fill(LepPhi,WeightBtagProb);
 
     h_HTv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
-    if(NJetsv2Recipe<6)
-      h_HTvsMHTforLowNJetv2Recipe_Exp->Fill(HTv2Recipe,MHTv2Recipe,WeightBtagProb);
-    if(NJetsv2Recipe>=6)
-      h_HTvsMHTforHighNJetv2Recipe_Exp->Fill(HTv2Recipe,MHTv2Recipe,WeightBtagProb);
+    if(NJetsv2Recipe<6){
+      h_HTvsMHTforLowNJetv2Recipe_Exp->Fill(HTv2Recipe,MHTv2Recipe);
+      h_HTforLowNJetv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
+      h_MHTforLowNJetv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+      h_HTRatioforLowNJetv2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
+      h_NBtagforLowNJetv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    }
+    if(NJetsv2Recipe>=6){
+      h_HTvsMHTforHighNJetv2Recipe_Exp->Fill(HTv2Recipe,MHTv2Recipe);
+      h_HTforHighNJetv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
+      h_MHTforHighNJetv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+      h_HTRatioforHighNJetv2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
+      h_NBtagforHighNJetv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    }
+
     h_HT5v2Recipe_Exp->Fill(HT5v2Recipe,WeightBtagProb);
     h_HTRatiov2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
     h_MHTv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
     h_MHTPhiv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
 
-    if(NJetsv2Recipe<6)
-      h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,HTRatiov2Recipe,WeightBtagProb);
-    if(NJetsv2Recipe>=6)
-      h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,HTRatiov2Recipe,WeightBtagProb);
+    if(NJetsv2Recipe<6){
+      h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,HTRatiov2Recipe);
+      h_MHTPhiforLowNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
+    }
+    if(NJetsv2Recipe>=6){
+      h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,HTRatiov2Recipe);
+      h_MHTPhiforHighNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
+    }
     h_NJetv2Recipe_Exp->Fill(NJetsv2Recipe,WeightBtagProb);
+    h_NJetvsHTv2Recipe_Exp->Fill(NJetsv2Recipe,HTv2Recipe);
+    h_NJetvsMHTv2Recipe_Exp->Fill(NJetsv2Recipe,MHTv2Recipe);
+    h_NJetvsMHTPhiv2Recipe_Exp->Fill(NJetsv2Recipe,MHTPhiv2Recipe);
     h_NJetforMHTminusHTv2Recipe_Exp->Fill(NJetsforMHTminusHTv2Recipe,WeightBtagProb);
 
     h_NBtagv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
@@ -1632,28 +1722,27 @@ Bool_t Prediction::Process(Long64_t entry)
     h_DphiTwoforHTv2Recipe_Exp->Fill(HTDeltaPhi2v2Recipe,WeightBtagProb);
     h_DphiThreeforHTv2Recipe_Exp->Fill(HTDeltaPhi3v2Recipe,WeightBtagProb);
     h_DphiFourforHTv2Recipe_Exp->Fill(HTDeltaPhi4v2Recipe,WeightBtagProb);
-    h_JetPtvsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipePt,HTRatiov2Recipe,WeightBtagProb);
-    h_JetEtavsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipeEta,HTRatiov2Recipe,WeightBtagProb);
-    h_JetPhivsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipePhi,HTRatiov2Recipe,WeightBtagProb);
-    h_MHTPhivsJetPhiforHTv2Recipe_Exp->Fill(MHTPhiv2Recipe,LeadHTJetv2RecipePhi,WeightBtagProb);
+    h_JetPtvsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipePt,HTRatiov2Recipe);
+    h_JetEtavsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipeEta,HTRatiov2Recipe);
+    h_JetPhivsHTRatioforHTv2Recipe_Exp->Fill(LeadHTJetv2RecipePhi,HTRatiov2Recipe);
+    h_MHTPhivsJetPhiforHTv2Recipe_Exp->Fill(MHTPhiv2Recipe,LeadHTJetv2RecipePhi);
     // if(RecHTRatiov2Recipe>1.0 || HTDeltaPhi1v2Recipe>3.2 || HTDeltaPhi1v2Recipe<0)
-    h_RecHTRatiovsDPhiforHTv2Recipe_Exp->Fill(RecHTRatiov2Recipe,HTDeltaPhi1v2Recipe,WeightBtagProb);
-    h_RecHTRatiovsDPhiforAllv2Recipe_Exp->Fill(RecHTRatiov2Recipe,DeltaPhi1v2Recipe,WeightBtagProb);
-    //      std::cout<<" seg vio 6 "<<endl;
+    h_RecHTRatiovsDPhiforHTv2Recipe_Exp->Fill(RecHTRatiov2Recipe,HTDeltaPhi1v2Recipe);
+    h_RecHTRatiovsDPhiforAllv2Recipe_Exp->Fill(RecHTRatiov2Recipe,DeltaPhi1v2Recipe);
 
-    h_JetPtvsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipePt,HTRatiov2Recipe,WeightBtagProb);
-    h_JetEtavsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipeEta,HTRatiov2Recipe,WeightBtagProb);
-    h_JetPhivsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipePhi,HTRatiov2Recipe,WeightBtagProb);
-    h_MHTPhivsJetPhiforMHTminusHTv2Recipe_Exp->Fill(MHTPhiv2Recipe,LeadMHTminusHTJetv2RecipePhi,WeightBtagProb);
+    h_JetPtvsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipePt,HTRatiov2Recipe);
+    h_JetEtavsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipeEta,HTRatiov2Recipe);
+    h_JetPhivsHTRatioforMHTminusHTv2Recipe_Exp->Fill(LeadMHTminusHTJetv2RecipePhi,HTRatiov2Recipe);
+    h_MHTPhivsJetPhiforMHTminusHTv2Recipe_Exp->Fill(MHTPhiv2Recipe,LeadMHTminusHTJetv2RecipePhi);
 
-    h_RecHTRatiovsDPhiforMHTminusHTv2Recipe_Exp->Fill(RecHTRatiov2Recipe,MHTminusHTDeltaPhi1v2Recipe,WeightBtagProb);
+    h_RecHTRatiovsDPhiforMHTminusHTv2Recipe_Exp->Fill(RecHTRatiov2Recipe,MHTminusHTDeltaPhi1v2Recipe);
 
     h_DphiOneforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTDeltaPhi1v2Recipe,WeightBtagProb);
     h_DphiTwoforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTDeltaPhi2v2Recipe,WeightBtagProb);
     h_DphiThreeforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTDeltaPhi3v2Recipe,WeightBtagProb);
     h_DphiFourforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTDeltaPhi4v2Recipe,WeightBtagProb);
 
-    /*
+
     h_MHTOrig_Exp->Fill(MHTOrig,WeightBtagProb);
     h_METOrig_Exp->Fill(METOrig,WeightBtagProb);
     h_MHTPhiOrig_Exp->Fill(MHTPhiOrig,WeightBtagProb);
@@ -1662,12 +1751,12 @@ Bool_t Prediction::Process(Long64_t entry)
     h_DphiTwoOrig_Exp->Fill(DeltaPhi2Orig,WeightBtagProb);
     h_DphiThreeOrig_Exp->Fill(DeltaPhi3Orig,WeightBtagProb);
     h_DphiFourOrig_Exp->Fill(DeltaPhi4Orig,WeightBtagProb);
-    */
+    
     //*AR: 180917- These histograms represent yield in SR as TF is applied
     h_HT_Pre->Fill(HT,WeightBtagProb*TF);
     h_MHT_Pre->Fill(MHT,WeightBtagProb*TF);
     h_NJet_Pre->Fill(NJets,WeightBtagProb*TF);
-    if(doBTagCorr) //true for signal and SM MC while getting prediction
+    if(doBTagCorr) //true for signal and SM MC
       h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
     else //true for data
       h_NBtag_Pre->Fill(BTagsfrmCSV,WeightBtagProb*TF);
@@ -1791,17 +1880,36 @@ void Prediction::Terminate()
 
 
   h_HTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_Exp"));
+  h_HTforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforLowNJetv2Recipe_Exp"));
+  h_HTforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforHighNJetv2Recipe_Exp"));
+
   h_HTvsMHTforLowNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HTvsMHTforLowNJetv2Recipe_Exp"));
   h_HTvsMHTforHighNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HTvsMHTforHighNJetv2Recipe_Exp"));
   h_HT5v2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT5v2Recipe_Exp"));
   h_HTRatiov2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatiov2Recipe_Exp"));
+  h_HTRatioforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforLowNJetv2Recipe_Exp"));
+  h_HTRatioforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforHighNJetv2Recipe_Exp"));
+
   h_MHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_Exp"));
+  h_MHTforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforLowNJetv2Recipe_Exp"));
+  h_MHTforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforHighNJetv2Recipe_Exp"));
+
   h_MHTPhiv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiv2Recipe_Exp"));
+  h_MHTPhiforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiforLowNJetv2Recipe_Exp"));
+  h_MHTPhiforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTPhiforHighNJetv2Recipe_Exp"));
+
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp"));
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp"));
   h_NJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetv2Recipe_Exp"));
+  h_NJetvsHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_NJetvsHTv2Recipe_Exp"));
+  h_NJetvsMHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_NJetvsMHTv2Recipe_Exp"));
+  h_NJetvsMHTPhiv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_NJetvsMHTPhiv2Recipe_Exp"));
+
   h_NJetforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetforMHTminusHTv2Recipe_Exp"));
   h_NBtagv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagv2Recipe_Exp"));
+  h_NBtagforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagforLowNJetv2Recipe_Exp"));
+  h_NBtagforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagforHighNJetv2Recipe_Exp"));
+
   h_DphiOneforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOneforHTv2Recipe_Exp"));
   h_DphiTwoforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwoforHTv2Recipe_Exp"));
   h_DphiThreeforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThreeforHTv2Recipe_Exp"));
@@ -1823,11 +1931,23 @@ void Prediction::Terminate()
   h_JetPtforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforHTv2Recipe_Exp"));
   h_JetEtaforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforHTv2Recipe_Exp"));
   h_JetPhiforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforHTv2Recipe_Exp"));
+  h_JetPtforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforLowNJetforHTv2Recipe_Exp"));
+  h_JetEtaforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforLowNJetforHTv2Recipe_Exp"));
+  h_JetPhiforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforLowNJetforHTv2Recipe_Exp"));
+  h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp"));
+  h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp"));
+
+  h_JetPtforHighNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforHighNJetforHTv2Recipe_Exp"));
+  h_JetEtaforHighNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforHighNJetforHTv2Recipe_Exp"));
+  h_JetPhiforHighNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforHighNJetforHTv2Recipe_Exp"));
+  h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp"));
+  h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp"));
 
   h_rawJetPtvsEtaforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_rawJetPtvsEtaforHTv2Recipe_Exp"));
   h_JetIdxvsEtaforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetIdxvsEtaforHTv2Recipe_Exp")); 
   h_JetMultvsEtaforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetMultvsEtaforHTv2Recipe_Exp"));
   h_JetPtvsEtaforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsEtaforHTv2Recipe_Exp"));
+  h_JetEtavsPhiforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetEtavsPhiforHTv2Recipe_Exp"));
   h_JetPtvsHTRatioforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsHTRatioforHTv2Recipe_Exp"));
   h_JetEtavsHTRatioforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetEtavsHTRatioforHTv2Recipe_Exp"));
   h_JetPhivsHTRatioforHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPhivsHTRatioforHTv2Recipe_Exp"));
@@ -1843,7 +1963,7 @@ void Prediction::Terminate()
   h_chargedMultiplicityforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_chargedMultiplicityforHTv2Recipe_Exp"));
   h_electronEnergyFractionforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_electronEnergyFractionforHTv2Recipe_Exp"));
   h_electronMultiplicityforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_electronMultiplicityforHTv2Recipe_Exp"));
-  //  std::cout<<" seg vio1 "<<endl;
+  std::cout<<" seg vio1 "<<endl;
 
   //  h_hadronFlavorforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_hadronFlavorforHTv2Recipe_Exp")); 
   h_hfEMEnergyFractionforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_hfEMEnergyFractionforHTv2Recipe_Exp"));
@@ -1860,7 +1980,7 @@ void Prediction::Terminate()
   //  h_qgLikelihoodforHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject(""));
 
 
-  //  std::cout<<" seg vio2 "<<endl;
+  std::cout<<" seg vio2 "<<endl;
 
 
 
@@ -1874,7 +1994,7 @@ void Prediction::Terminate()
   h_JetPtforMHTminusHTv2RecipeNotLead_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforMHTminusHTv2RecipeNotLead_Exp"));
   h_JetEtaforMHTminusHTv2RecipeNotLead_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforMHTminusHTv2RecipeNotLead_Exp"));
   h_JetPhiforMHTminusHTv2RecipeNotLead_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforMHTminusHTv2RecipeNotLead_Exp"));
-  //  std::cout<<" seg vio3 "<<endl;
+  std::cout<<" seg vio3 "<<endl;
 
   h_JetPtforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforMHTminusHTv2Recipe_Exp"));
   h_JetEtaforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforMHTminusHTv2Recipe_Exp"));
@@ -1918,7 +2038,7 @@ void Prediction::Terminate()
   h_electronEnergyFractionforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_electronEnergyFractionforMHTminusHTv2Recipe_Exp"));
   h_electronMultiplicityforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_electronMultiplicityforMHTminusHTv2Recipe_Exp"));
   //  h_hadronFlavorforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_hadronFlavorforMHTminusHTv2Recipe_Exp")); 
-  //  std::cout<<" seg vio4 "<<endl;
+  std::cout<<" seg vio4 "<<endl;
 
   h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp"));
   h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp"));
@@ -1932,7 +2052,7 @@ void Prediction::Terminate()
   h_photonEnergyFractionforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_photonEnergyFractionforMHTminusHTv2Recipe_Exp"));
   h_photonMultiplicityforMHTminusHTv2Recipe_Exp=dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_photonMultiplicityforMHTminusHTv2Recipe_Exp"));
 
-  //  std::cout<<" seg vio5 "<<endl;
+  std::cout<<" seg vio5 "<<endl;
 
 
   h_MHTOrig_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTOrig_Exp"));
@@ -2022,17 +2142,33 @@ void Prediction::Terminate()
 
 
   h_HTv2Recipe_Exp->Write();
+  h_HTforLowNJetv2Recipe_Exp->Write();
+  h_HTforHighNJetv2Recipe_Exp->Write();
   h_HTvsMHTforLowNJetv2Recipe_Exp->Write();
   h_HTvsMHTforHighNJetv2Recipe_Exp->Write();
   h_HT5v2Recipe_Exp->Write();
   h_HTRatiov2Recipe_Exp->Write();
+  h_HTRatioforLowNJetv2Recipe_Exp->Write();
+  h_HTRatioforHighNJetv2Recipe_Exp->Write();
+
   h_MHTv2Recipe_Exp->Write();
+  h_MHTforLowNJetv2Recipe_Exp->Write();
+  h_MHTforHighNJetv2Recipe_Exp->Write();
+
   h_MHTPhiv2Recipe_Exp->Write();
+  h_MHTPhiforLowNJetv2Recipe_Exp->Write();
+  h_MHTPhiforHighNJetv2Recipe_Exp->Write();
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp->Write();
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp->Write();
   h_NJetv2Recipe_Exp->Write();
+  h_NJetvsHTv2Recipe_Exp->Write();
+  h_NJetvsMHTv2Recipe_Exp->Write();
+  h_NJetvsMHTPhiv2Recipe_Exp->Write();
   h_NJetforMHTminusHTv2Recipe_Exp->Write();
   h_NBtagv2Recipe_Exp->Write();
+  h_NBtagforLowNJetv2Recipe_Exp->Write();
+  h_NBtagforHighNJetv2Recipe_Exp->Write();
+
   h_DphiOneforHTv2Recipe_Exp->Write();
   h_DphiTwoforHTv2Recipe_Exp->Write();
   h_DphiThreeforHTv2Recipe_Exp->Write();
@@ -2053,10 +2189,21 @@ void Prediction::Terminate()
   h_JetPtforHTv2Recipe_Exp->Write();
   h_JetEtaforHTv2Recipe_Exp->Write();
   h_JetPhiforHTv2Recipe_Exp->Write();
+  h_JetPtforLowNJetforHTv2Recipe_Exp->Write();
+  h_JetEtaforLowNJetforHTv2Recipe_Exp->Write();
+  h_JetPhiforLowNJetforHTv2Recipe_Exp->Write();
+  h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp->Write();
+  h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp->Write();
+  h_JetPtforHighNJetforHTv2Recipe_Exp->Write();
+  h_JetEtaforHighNJetforHTv2Recipe_Exp->Write();
+  h_JetPhiforHighNJetforHTv2Recipe_Exp->Write();
+  h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp->Write();
+  h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp->Write();
   h_rawJetPtvsEtaforHTv2Recipe_Exp->Write();
   h_JetIdxvsEtaforHTv2Recipe_Exp->Write();
   h_JetMultvsEtaforHTv2Recipe_Exp->Write();
   h_JetPtvsEtaforHTv2Recipe_Exp->Write();
+  h_JetEtavsPhiforHTv2Recipe_Exp->Write();
   h_JetPtvsHTRatioforHTv2Recipe_Exp->Write();
   h_JetEtavsHTRatioforHTv2Recipe_Exp->Write();
   h_JetPhivsHTRatioforHTv2Recipe_Exp->Write();
@@ -2087,32 +2234,32 @@ void Prediction::Terminate()
   h_electronEnergyFractionforHTv2Recipe_Exp->Write();
   h_electronMultiplicityforHTv2Recipe_Exp->Write();
 
-  //  std::cout<<" seg vio51 "<<endl;
+  std::cout<<" seg vio51 "<<endl;
 
   //  h_hadronFlavorforHTv2Recipe_Exp->Write(); 
   h_hfEMEnergyFractionforHTv2Recipe_Exp->Write();
   h_hfHadronEnergyFractionforHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio52 "<<endl;
+  std::cout<<" seg vio52 "<<endl;
 
   h_multiplicityforHTv2Recipe_Exp->Write(); 
   h_muonEnergyFractionforHTv2Recipe_Exp->Write(); 
   h_muonMultiplicityforHTv2Recipe_Exp->Write(); 
-  //  std::cout<<" seg vio53 "<<endl;
+  std::cout<<" seg vio53 "<<endl;
 
   h_neutralEmEnergyFractionforHTv2Recipe_Exp->Write();
   h_neutralHadronEnergyFractionforHTv2Recipe_Exp->Write();
   h_neutralHadronMultiplicityforHTv2Recipe_Exp->Write(); 
-  //  std::cout<<" seg vio54 "<<endl;
+  std::cout<<" seg vio54 "<<endl;
 
   h_neutralMultiplicityforHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio55 "<<endl;
+  std::cout<<" seg vio55 "<<endl;
 
   h_photonEnergyFractionforHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio56 "<<endl;
+  std::cout<<" seg vio56 "<<endl;
 
   h_photonMultiplicityforHTv2Recipe_Exp->Write();
 
-  //  std::cout<<" seg vio6 "<<endl;
+  std::cout<<" seg vio6 "<<endl;
 
 
 
@@ -2159,22 +2306,22 @@ void Prediction::Terminate()
   h_JetEtavsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_JetPhivsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
 
-  //  std::cout<<" seg vio61 "<<endl;
+  std::cout<<" seg vio61 "<<endl;
 
   
   h_chargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio611 "<<endl;
+  std::cout<<" seg vio611 "<<endl;
   h_chargedHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio62 "<<endl;
+  std::cout<<" seg vio62 "<<endl;
 
   h_chargedHadronMultiplicityforMHTminusHTv2Recipe_Exp->Write();  
   h_chargedMultiplicityforMHTminusHTv2Recipe_Exp->Write();
-  //  std::cout<<" seg vio63 "<<endl;
+  std::cout<<" seg vio63 "<<endl;
 
   h_electronEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_electronMultiplicityforMHTminusHTv2Recipe_Exp->Write();
   //  h_hadronFlavorforMHTminusHTv2Recipe_Exp->Write(); 
-  //  std::cout<<" seg vio64 "<<endl;
+  std::cout<<" seg vio64 "<<endl;
 
   h_hfEMEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_hfHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
@@ -2188,7 +2335,7 @@ void Prediction::Terminate()
   h_photonEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_photonMultiplicityforMHTminusHTv2Recipe_Exp->Write();
 
-  //  std::cout<<" seg vio7 "<<endl;
+  std::cout<<" seg vio7 "<<endl;
 
 
 
@@ -2238,7 +2385,7 @@ vector<string> Prediction::skmInput(string mom){
 }
 
 bool Prediction::FiltersPass()
-{ //*AR-181101: According to 2016 run, only filters applied on signal samples are PFCaloMETRatio, noMuonJet, noFakeJet, NVtx.
+{
   bool result=true;
   if(useFilterData){
     if(HBHENoiseFilter!=1) result=false;
@@ -2271,7 +2418,7 @@ bool Prediction::FiltersPass()
       }
     }
 
-  //*AR-181101-No FakeJet filter from 2016 run
+
   //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
   if(result && runOnSignalMC)
     for(unsigned j = 0; j < Jets->size(); ++j){

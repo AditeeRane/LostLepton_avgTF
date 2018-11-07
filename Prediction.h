@@ -32,19 +32,18 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data-----------------------
-const bool ApplyMETv2Recipe = false;  //<-check:only for 2017 data V15 ntuples
+const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool runOnSignalMC = true;  //<-check------------------------
+const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
-bool RunSelectiveEvents= false;
+bool RunSelectiveEvents= true;
 
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
-const double csvForBtag=0.8838; //check: for V12 it's 0.8484, for V15 it's 0.8838
+const bool applySFs = true; //check:true only for data
+const double csvForBtag=0.8838;
 // Use TFs with/without SFs
-const double scaleFactorWeight = 35862.351; // Applicable for only SM MC
+const double scaleFactorWeight = 35862.351;
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -182,21 +181,35 @@ class Prediction : public TSelector {
   TH1D* h_LepPhiclean_Exp=0;
 
   TH1D* h_HTv2Recipe_Exp=0;
+  TH1D* h_HTforLowNJetv2Recipe_Exp=0;
+  TH1D* h_HTforHighNJetv2Recipe_Exp=0;
   TH1D* h_HT5v2Recipe_Exp=0;
   TH1D* h_HTRatiov2Recipe_Exp=0;
+  TH1D* h_HTRatioforLowNJetv2Recipe_Exp=0;
+  TH1D* h_HTRatioforHighNJetv2Recipe_Exp=0;
+
   TH1D* h_MHTv2Recipe_Exp=0;
+  TH1D* h_MHTforLowNJetv2Recipe_Exp=0;
+  TH1D* h_MHTforHighNJetv2Recipe_Exp=0;
+
   TH2D* h_HTvsMHTforLowNJetv2Recipe_Exp=0;
   TH2D* h_HTvsMHTforHighNJetv2Recipe_Exp=0;
 
 
   TH1D* h_MHTPhiv2Recipe_Exp=0;
+  TH1D* h_MHTPhiforLowNJetv2Recipe_Exp=0;
+  TH1D* h_MHTPhiforHighNJetv2Recipe_Exp=0;
+
   TH2D* h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=0;
   TH2D* h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=0;
   TH1D* h_NJetv2Recipe_Exp=0;
+  TH2D* h_NJetvsHTv2Recipe_Exp=0;
+  TH2D* h_NJetvsMHTv2Recipe_Exp=0;
+  TH2D* h_NJetvsMHTPhiv2Recipe_Exp=0; 
   TH1D* h_NJetforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_NBtagv2Recipe_Exp=0;
-
-
+  TH1D* h_NBtagforLowNJetv2Recipe_Exp=0;
+  TH1D* h_NBtagforHighNJetv2Recipe_Exp=0;
 
 
   TH1D* h_rawJetPtforHTv2Recipe_Exp=0;
@@ -212,6 +225,17 @@ class Prediction : public TSelector {
   TH1D* h_JetPtforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHTv2Recipe_Exp=0;
   TH1D* h_JetPhiforHTv2Recipe_Exp=0;
+  TH1D* h_JetPtforLowNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforLowNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforLowNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsEtaforLowNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsMHTPhiforLowNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetPtforHighNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforHighNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsEtaforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsMHTPhiforHighNJetforHTv2Recipe_Exp=0;
+
   TH1D* h_DphiOneforHTv2Recipe_Exp=0;
   TH1D* h_DphiTwoforHTv2Recipe_Exp=0;
   TH1D* h_DphiThreeforHTv2Recipe_Exp=0;
@@ -715,7 +739,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
-  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
+  if(!runOnData) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------
 
