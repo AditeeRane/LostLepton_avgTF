@@ -8,7 +8,7 @@
 
 
 
-void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char const * STLL,char const * TTbarHadtau,char const * WJetHadtau,char const* STHadtau,char const* DataPred,char const *xRatioLabel,char const *yRatioLabel,int RatioNbins,double RatioXmin,double RatioXmax,double topMax){
+void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
   
   //*AR:180831: Borrow cosmetics specific to RA2b style
 
@@ -114,7 +114,7 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   double dw_height_offset = 0.040; // KH, added to put the bottom one closer to the top panel
  
   // set pad size
-  canvas_up->SetPad(0., 1 - up_height +0.01, 0.97, 1.);
+  canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
   canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
@@ -124,7 +124,7 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   canvas_dw->SetFrameFillColor(0);
   canvas_dw->SetBottomMargin(0.30);
   canvas_dw->SetRightMargin(0.03);
-  
+  canvas_up->SetBottomMargin(0);  
   // set top margin 0 for bottom figure
   canvas_dw->SetTopMargin(0);
 
@@ -157,34 +157,38 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   char LabelY[500];
   char RatioLabelX[500];
   char RatioLabelY[500];
-  
+  char cname[500];
+  char header[500];
+
+  sprintf(header,"%s",LegHeader);
   sprintf(hname,"h_%s_Exp",Var);
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
+  sprintf(cname,"h_%s_Exp_%s",Var,Sample);
 
 
   TFile *_fileTTbarLL = TFile::Open(TTbarLL); 
 
   TFile *_fileWJetLL = TFile::Open(WJetLL);
   TFile *_fileSTLL = TFile::Open(STLL);
-
+  /*
   TFile *_fileTTbarHadtau = TFile::Open(TTbarHadtau); 
   TFile *_fileWJetHadtau = TFile::Open(WJetHadtau);
   TFile *_fileSTHadtau = TFile::Open(STHadtau);
-
+*/
   TFile *_fileData = TFile::Open(DataPred);
 
   _fileTTbarLL->cd();
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
-  hTTbarLL->Scale(35900);
+  //  hTTbarLL->Scale(35900);
 
   _fileWJetLL->cd();
   TH1D *hWJetLL = (TH1D*)_fileWJetLL->FindObjectAny(hname);
-  hWJetLL->Scale(35900);
+  //  hWJetLL->Scale(35900);
 
   _fileSTLL->cd();
   TH1D *hSTLL = (TH1D*)_fileSTLL->FindObjectAny(hname);
-  hSTLL->Scale(35900);
+  //  hSTLL->Scale(35900);
 
   _fileData->cd();
   TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
@@ -192,7 +196,15 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   hDataLLHadtau->SetLineWidth(2);
   hDataLLHadtau->SetMarkerStyle(21);
   hDataLLHadtau->SetMarkerColor(kBlack);
-  hDataLLHadtau->GetYaxis()->SetRangeUser(0.001,ymax); 
+
+  double xmin=hDataLLHadtau->GetXaxis()->GetXmin();
+  double xmax=hDataLLHadtau->GetXaxis()->GetXmax();
+  double diff=xmax-xmin;  
+  double ymaximum=hDataLLHadtau->GetYaxis()->GetXmax();
+  std::cout<<" xmin "<<xmin<<" xmax "<<xmax<<" diff "<<diff<<" ymaximum "<<ymaximum<<endl;
+
+  /*
+  //  hDataLLHadtau->GetYaxis()->SetRangeUser(0.001,ymax); 
   _fileTTbarHadtau->cd();
   TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
   hTTbarHadtau->Scale(35900);
@@ -204,19 +216,19 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   _fileSTHadtau->cd();
   TH1D *hSTHadtau = (TH1D*)_fileSTHadtau->FindObjectAny(hname);
   hSTHadtau->Scale(35900);
-
+*/
   TH1D *hTTbarLLHadtau=(TH1D *) hTTbarLL->Clone("hTTbarLLHadtau");
-  hTTbarLLHadtau->Add(hTTbarHadtau);
+  //  hTTbarLLHadtau->Add(hTTbarHadtau);
   hTTbarLLHadtau->SetLineColor(kBlue);
   hTTbarLLHadtau->SetFillColor(kBlue);
   //  hTTbarLLHadtau->SetMarkerStyle(21);
   TH1D *hWJetLLHadtau=(TH1D *) hWJetLL->Clone("hWJetLLHadtau");
-  hWJetLLHadtau->Add(hWJetHadtau);
+  //  hWJetLLHadtau->Add(hWJetHadtau);
   hWJetLLHadtau->SetLineColor(kGreen);
   hWJetLLHadtau->SetFillColor(kGreen);
 
   TH1D *hSTLLHadtau=(TH1D *) hSTLL->Clone("hSTLLHadtau");
-  hSTLLHadtau->Add(hSTHadtau);
+  //  hSTLLHadtau->Add(hSTHadtau);
   hSTLLHadtau->SetLineColor(kRed);
   hSTLLHadtau->SetFillColor(kRed);
 
@@ -230,25 +242,37 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
    
   TH1D * hExpFinal=(TH1D*) hExp->GetStack()->Last();
   //  TCanvas *c = new TCanvas("c","c", 500, 500);
-  canvas_up->SetLogy();
-  hExp->Draw("hist");
-  hDataLLHadtau->Draw("same");
+  //  canvas_up->SetLogy();
 
-  TLegend *tl=new TLegend(0.57,0.7,0.87,0.87);
+  if(logy)
+    canvas_up->SetLogy();
+  
+  if(logx)
+    canvas_up->SetLogx();
+
+  if(hDataLLHadtau->GetMaximum()>hExp->GetMaximum())
+    hExp->SetMaximum(hDataLLHadtau->GetMaximum());
+
+
+  hExp->Draw("hist e");
+  hDataLLHadtau->Draw("esame");
+
+  TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
+  tl->SetHeader(header);
   tl->AddEntry(hSTLLHadtau, "MC: single top");
   tl->AddEntry(hWJetLLHadtau, "MC: W+jets");
   tl->AddEntry(hTTbarLLHadtau, "MC: TTbar");
-  tl->AddEntry(hDataLLHadtau, "Data: LL+Hadtau"); 
+  tl->AddEntry(hDataLLHadtau, "Data"); 
   tl->SetLineColor(kWhite);
   tl->Draw("same");
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
-  ttext->DrawLatex(GetRatioXmin , ymax , "#bf{CMS} #it{Preliminary}");
+  ttext->DrawLatex(xmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
 
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatex(GetRatioXmax-2*binSize, ymax , "35.9fb^{-1} (13TeV)");
+  ttexlumi->DrawLatex(xmin+0.65*diff , 1.1*ymax , "35.9fb^{-1} (13TeV)");
 
   
   gPad->Modified();
@@ -261,34 +285,44 @@ void GetOneDPlots(char const * Var,char const * TTbarLL,char const * WJetLL,char
   cOne->GetXaxis()->SetTitle(RatioLabelX);
   cOne->GetYaxis()->SetTitle(RatioLabelY);
   canvas_dw->cd();
-  cOne->Draw();
+  cOne->Draw("e");
   
-  cOne->GetXaxis()->SetTitleOffset(0.8);
-  cOne->GetXaxis()->SetTitleSize(0.12);
+  cOne->GetXaxis()->SetTitleOffset(0.9);
+  cOne->GetXaxis()->SetTitleSize(0.13);
   cOne->GetXaxis()->SetTitleFont(42);
-  cOne->GetXaxis()->SetLabelOffset(0.007);
+  cOne->GetXaxis()->SetLabelOffset(0.008);
 
-  cOne->GetYaxis()->SetRangeUser(0,2.499);
+  cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
   cOne->GetYaxis()->SetTitleOffset(0.35);
-  cOne->GetYaxis()->SetTitleSize(0.12);
+  cOne->GetYaxis()->SetTitleSize(0.13);
   cOne->GetYaxis()->SetTitleFont(42);
+  cOne->GetYaxis()->SetLabelOffset(0.008);
+
   gStyle->SetPadTickY(1);
   cOne->GetYaxis()->SetNdivisions(8);
-  cOne->SetLabelSize(0.10,"XY");
+  cOne->SetLabelSize(0.115,"XY");
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
   gPad->Update();
   gPad->Modified();
   char PrintName[500];
-  sprintf(PrintName,"%s.png",hname);
+  sprintf(PrintName,"%i_%s.png",hNum,cname);
   canvas->Print(PrintName);
-  sprintf(PrintName,"%s.pdf",hname);
+  sprintf(PrintName,"%i_%s.pdf",hNum,cname);
   canvas->Print(PrintName);
-
 
 
 
 }
 
+void GetOneDPlots(){
+  GetOneDPlots(1300,"NBtag","DataVsMC_LLPlusHadtau_HighDphi","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0.5,1.5,200000);
+  
+  GetOneDPlots(1000,"MHT","DataVsMC_LLPlusHadtau_HighDphi","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","LL+Had#tau",0.57,0.7,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0.5,1.5,70000);
 
+  GetOneDPlots(1100,"HT","DataVsMC_LLPlusHadtau_HighDphi","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","LL+Had#tau",0.57,0.7,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0.5,1.5,90000);
+
+  GetOneDPlots(1200,"NJet","DataVsMC_LLPlusHadtau_HighDphi","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0.5,1.5,50000);
+
+}
