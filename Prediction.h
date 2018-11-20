@@ -32,8 +32,8 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
@@ -519,8 +519,8 @@ class Prediction : public TSelector {
   Double_t        METOrig;
 
   Double_t        PFCaloMETRatio;
-  Double_t        MHT;
-  Double_t        MHTPhi;
+  Double_t        MHT=0.0;
+  Double_t        MHTPhi=0.0;
   Double_t        MHTclean;
   Double_t        MHTPhiclean;
   Double_t        MHTv2Recipe;
@@ -529,7 +529,7 @@ class Prediction : public TSelector {
   Double_t        MHTOrig;
   Double_t        MHTPhiOrig;
 
-  Int_t           NJets;
+  Int_t           NJets=0;
   Int_t           NJetsclean;
   Int_t           NJetsv2Recipe;
   Int_t           NJetsforMHTminusHTv2Recipe;
@@ -893,6 +893,11 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("MHTclean", 1);
   fChain->SetBranchStatus("MHTPhiclean", 1);
   fChain->SetBranchStatus("NJetsclean", 1);
+  fChain->SetBranchStatus("NJets", 1);
+  fChain->SetBranchStatus("MHT", 1);
+  fChain->SetBranchStatus("MHTPhi", 1);
+  fChain->SetBranchStatus("MET", 1);
+  fChain->SetBranchStatus("METPhi", 1);
 
   fChain->SetBranchStatus("METPhiOrig", 1);
   fChain->SetBranchStatus("METOrig", 1);

@@ -562,10 +562,11 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
-  //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
 
   resetValues();
   fChain->GetTree()->GetEntry(entry);
+  //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<" Evtnum "<<EvtNum<<" run "<<RunNum<<" njets "<<NJets<<" ht "<<HT<<" mht "<<MHT<<std::endl;
+
   //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
   MuonsNum_ = Muons->size();
@@ -644,7 +645,7 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsv2=0;
   double PhiLeadJet=-99;
   //  if(BTags>0)
-  //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
+  //  std::cout<<" entry "<<entry<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<" ht "<<HT<<" mht "<<MHT<<endl;
   //*AR:181016: btags based on csv value instead of using value saved in ntuple
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetCSV=Jets_bDiscriminatorCSV->at(j);
@@ -654,19 +655,17 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
-    if(jetPtv2Recipe >50 || (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
-      if(PhiLeadJet==-99.) 
-	PhiLeadJet=Jets->at(j).Phi();
-      //  std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
+    if(PhiLeadJet==-99.) 
+      PhiLeadJet=Jets->at(j).Phi();
+    //    std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
     
     //      std::cout<<" j "<<j<<" passed v2 "<<" PhiLeadJet "<<PhiLeadJet<<endl;
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
-	HTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTminusHTJetsIdxv2Recipe.push_back(j); 
-    } //end of METv2 recipe
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
+      HTJetsIdxv2Recipe.push_back(j);
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
+      MHTJetsIdxv2Recipe.push_back(j);
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
+      MHTminusHTJetsIdxv2Recipe.push_back(j); 
   } //end of loop over jets
   NJetsforMHTminusHTv2Recipe=MHTminusHTJetsIdxv2Recipe.size();  
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
@@ -676,7 +675,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(Jets_bDiscriminatorCSV->at(jetIdx)>csvForBtag)
       BTagsv2Recipe++;
   }
-
+  //  std::cout<<" htsize "<<HTJetsIdxv2Recipe.size()<<" njetsv2 "<<NJetsv2Recipe<<endl;
   for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
     int jetIdx=MHTJetsIdxv2Recipe[i];
     temp3Vec.SetPtEtaPhi(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi());
@@ -742,7 +741,7 @@ Bool_t Prediction::Process(Long64_t entry)
 */
   //END OF Recalculation of search variables
 
-
+  
 	   
 
 
@@ -804,13 +803,12 @@ Bool_t Prediction::Process(Long64_t entry)
   else
     if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
 
-  //   std::cout<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<DeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<DeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<DeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<DeltaPhi4v2Recipe<<endl;
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
   }
   else{
-    //    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    //if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
     if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
 
   }
@@ -831,13 +829,24 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   else
     return kTRUE;
+
+
   
   //  if(useDeltaPhiCut == 1)  if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
   //  if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
   
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
   //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
-  
+
+  //*AR: initialize skim path
+  if(runOnSignalMC)
+    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
+  if(runOnStandardModelMC)
+    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
+
+
+
+
   if(!GetSignalRegHists){
     if(MuonsNum_==1 && ElectronsNum_==0){
       mtw =  Muons_MTW->at(0);
@@ -894,7 +903,35 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR-181016: Use only events falling into search bins
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
 
+  bool HTMatch=true;
+  bool NJetMatch=true;
+  bool MHTMatch=true;
+  if(HT == HTv2Recipe) HTMatch=false;
+  if(MHT == MHTv2Recipe) MHTMatch=false;
+  if(NJets == NJetsv2Recipe) NJetMatch=false;
+
+  //  if(HTMatch || NJetMatch || MHTMatch)
+  //std::cout<<" entry "<<entry<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
+  
   h_YieldCutFlow->Fill(0);
+
+
+  bool LOnePrefireCase=false;
+  //  std::cout<<" mht size "<<MHTJetsIdxv2Recipe.size()<<endl;
+  if(MHTJetsIdxv2Recipe.size()>0){
+    for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
+      int jetIdx=MHTJetsIdxv2Recipe[i];
+      //      std::cout<<"entry "<<entry<<" i "<<" pt "<<Jets->at(jetIdx).Pt()<<" eta "<<Jets->at(jetIdx).Eta()<<endl;
+      if(Jets->at(jetIdx).Pt()>100 && fabs(Jets->at(jetIdx).Eta())>2.25 && fabs(Jets->at(jetIdx).Eta())<3.0){
+	LOnePrefireCase=true;
+	//std::cout<<" now skip evt "<<endl;
+	break;
+      }
+    }
+  }
+  if(LOnePrefireCase)
+    return kTRUE;
+
   //*AR: 181107: check following condition if Dphi cut to be applied
 
   //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
