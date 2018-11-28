@@ -33,7 +33,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   unsigned nSB = SearchBins_->GetNbins();
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
-  h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2);
+  h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2.0);
 
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
   h_HT5_Exp =new TH1D("h_HT5_Exp","h_HT5_Exp",12,100,2500);
@@ -913,10 +913,11 @@ Bool_t Prediction::Process(Long64_t entry)
   //  if(HTMatch || NJetMatch || MHTMatch)
   //std::cout<<" entry "<<entry<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
   
-  h_YieldCutFlow->Fill(0);
-
-
+  h_YieldCutFlow->Fill(0.0);
+  
+  
   bool LOnePrefireCase=false;
+  /*
   //  std::cout<<" mht size "<<MHTJetsIdxv2Recipe.size()<<endl;
   if(MHTJetsIdxv2Recipe.size()>0){
     for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
@@ -924,19 +925,20 @@ Bool_t Prediction::Process(Long64_t entry)
       //      std::cout<<"entry "<<entry<<" i "<<" pt "<<Jets->at(jetIdx).Pt()<<" eta "<<Jets->at(jetIdx).Eta()<<endl;
       if(Jets->at(jetIdx).Pt()>100 && fabs(Jets->at(jetIdx).Eta())>2.25 && fabs(Jets->at(jetIdx).Eta())<3.0){
 	LOnePrefireCase=true;
-	//std::cout<<" now skip evt "<<endl;
+    //std::cout<<" now skip evt "<<endl;
 	break;
       }
     }
   }
   if(LOnePrefireCase)
     return kTRUE;
-
+  */
+  
   //*AR: 181107: check following condition if Dphi cut to be applied
-
-  //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+  
+  //if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
   //return kTRUE;
-  h_YieldCutFlow->Fill(1);
+  h_YieldCutFlow->Fill(1.0);
   //  std::cout<<" seg vio "<<endl;
   //  std::cout<<" evt falling in search bin "<<endl;
   //*AR: 180917- Initialization of vectors
@@ -1277,10 +1279,10 @@ Bool_t Prediction::Process(Long64_t entry)
   if(useTriggerEffWeight){ // false for SM MC
     //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
     if(runOnSignalMC){
-      Weight *= GetSignalTriggerEffWeight(HT,MHT);
+      Weight *= GetSignalTriggerEffWeight(HTv2Recipe,MHTv2Recipe);
       //std::cout<<" weight_afterTrigEff "<<Weight<<endl;
     }else{
-      Weight *= GetTriggerEffWeight(MHT);
+      Weight *= GetTriggerEffWeight(MHTv2Recipe);
     }
   }
 
