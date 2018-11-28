@@ -128,6 +128,13 @@ class Prediction : public TSelector {
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
   //  TH2D* h_MHTPhivsHTRatio_Exp=0;
+  TH2D * h_JetEtavsPhiforHTv2RecipePassPhotonCut_Exp;
+  TH2D * h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp;
+  TH2D * h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp;
+  TH2D * h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp;
+
+  TH2D * h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp;
+  TH2D * h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp;
 
   TH1D* h_MET_Exp=0;
   TH1D* h_METPhi_Exp=0;
