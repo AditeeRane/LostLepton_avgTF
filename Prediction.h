@@ -249,6 +249,8 @@ class Prediction : public TSelector {
   TH1D* h_JetPtforLowNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforLowNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetPhiforLowNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforLowPtforLowNJetforHTv2Recipe_Exp=0;
+
   TH1D* h_JetPtforLowNJetfor0bforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforLowNJetfor0bforHTv2Recipe_Exp=0;
   TH1D* h_JetPhiforLowNJetfor0bforHTv2Recipe_Exp=0;
@@ -268,6 +270,19 @@ class Prediction : public TSelector {
   TH1D* h_JetPtforHighNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHighNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetPhiforHighNJetforHTv2Recipe_Exp=0;
+  TH1D* h_JetCSVforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsCSVforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsCSVforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsCSVforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforLowPtforHighNJetforHTv2Recipe_Exp=0;
+
+  TH1D* h_JetPtforHighNJetLeadforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforHighNJetLeadforHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforHighNJetLeadforHTv2Recipe_Exp=0;
+  TH1D* h_JetPtforHighNJetNotLeadforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaforHighNJetNotLeadforHTv2Recipe_Exp=0;
+  TH1D* h_JetPhiforHighNJetNotLeadforHTv2Recipe_Exp=0;
+
   TH1D* h_JetPtforHighNJetfor0bforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHighNJetfor0bforHTv2Recipe_Exp=0;
   TH1D* h_JetPhiforHighNJetfor0bforHTv2Recipe_Exp=0;
@@ -302,11 +317,22 @@ class Prediction : public TSelector {
   TH1D* h_muonEnergyFractionforHTv2Recipe_Exp=0; 
   TH1D* h_muonMultiplicityforHTv2Recipe_Exp=0; 
   TH1D* h_neutralEmEnergyFractionforHTv2Recipe_Exp=0;
+  TH1D* h_neutralEmEnergyFractionforLowNJetforHTv2Recipe_Exp=0;
+  TH1D* h_neutralEmEnergyFractionforHighNJetforHTv2Recipe_Exp=0;
+  TH1D* h_neutralEmEnergyFractionforLowPtforHighNJetforHTv2Recipe_Exp=0;
+
   TH1D* h_neutralHadronEnergyFractionforHTv2Recipe_Exp=0;
   TH1D* h_neutralHadronMultiplicityforHTv2Recipe_Exp=0; 
   TH1D* h_neutralMultiplicityforHTv2Recipe_Exp=0;
   TH1D* h_photonEnergyFractionforHTv2Recipe_Exp=0;
   TH1D* h_photonMultiplicityforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsphotonMultiplicityforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsphotonMultiplicityforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsphotonMultiplicityforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsphotonMultiplicityforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsphotonMultiplicityforHighNJetforHTv2Recipe_Exp=0;
+  TH2D* h_JetPhivsphotonMultiplicityforHighNJetforHTv2Recipe_Exp=0;
+
   TH1D* h_qgLikelihoodforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsEtaforHTv2Recipe_Exp=0;
   TH2D* h_JetIdxvsEtaforHTv2Recipe_Exp=0;
@@ -433,6 +459,7 @@ class Prediction : public TSelector {
   TH1D* h_NJet_Pre=0;
   TH1D* h_NBtag_Pre=0;
 
+  TH2D* h_RatioBEvsF =0;
 
   // TFs
   TH1D* h_0L1L_SB = 0;
@@ -796,7 +823,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
-  if(!runOnData) doBTagCorr = true;
+  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------
 
