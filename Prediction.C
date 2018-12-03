@@ -240,6 +240,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp=new TH2D("h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp","h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp",50,-2.5,2.5,70,-3.5,3.5);
   h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp=new TH2D("h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp","h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp",50,-2.5,2.5,32,0,3.2);
   h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp=new TH2D("h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp","h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp",50,-2.5,2.5,32,0,3.2);
+  h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp=new TH1D("h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp","h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp",20,0,1);
+  h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp=new TH1D("h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp","h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp",20,0,1);
+  h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp=new TH1D("h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp","h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp",20,0,1);
+  h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp=new TH1D("h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp","h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp",20,0,1);
 
   h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp=new TH2D("h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp","h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp",50,-2.5,2.5,210,-0.5,20.5);
   h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp=new TH2D("h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp","h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp",50,-2.5,2.5,210,-0.5,20.5);
@@ -618,6 +622,11 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp);
   GetOutputList()->Add(h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp);
   GetOutputList()->Add(h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp);
+  GetOutputList()->Add(h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp);
+  GetOutputList()->Add(h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp);
+  GetOutputList()->Add(h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp);
+  GetOutputList()->Add(h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp);
+
   GetOutputList()->Add(h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp);
   GetOutputList()->Add(h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp);
 
@@ -1731,11 +1740,15 @@ Bool_t Prediction::Process(Long64_t entry)
       h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp->Fill(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi());
       h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp->Fill(Jets->at(jetIdx).Eta(),DphiJetMHT);
       h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp->Fill(Jets->at(jetIdx).Eta(),ChHadronToPhoton);
+      h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx));
+      h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx));
     }
     else{
       h_JetEtavsPhiforHTv2RecipePassPhotonCut_Exp->Fill(Jets->at(HTJetsIdxv2Recipe[i]).Eta(),Jets->at(HTJetsIdxv2Recipe[i]).Phi());  
       h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp->Fill(Jets->at(HTJetsIdxv2Recipe[i]).Eta(),DphiJetMHT);  
       h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp->Fill(Jets->at(jetIdx).Eta(),ChHadronToPhoton);
+      h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp->Fill(Jets_chargedEmEnergyFraction->at(jetIdx));
+      h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp->Fill(Jets_neutralEmEnergyFraction->at(jetIdx));
  
     }  
     h_JetPtvsPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Phi());
@@ -2401,6 +2414,10 @@ void Prediction::Terminate()
   h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp"));
   h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp"));
   h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp"));
+  h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp"));
+  h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp"));
+  h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp"));
+  h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp"));
 
   h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp"));
   h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp"));
@@ -2755,6 +2772,10 @@ void Prediction::Terminate()
   h_JetEtavsPhiforHTv2RecipeFailPhotonCut_Exp->Write();
   h_JetEtavsDPhiforHTv2RecipePassPhotonCut_Exp->Write();
   h_JetEtavsDPhiforHTv2RecipeFailPhotonCut_Exp->Write();
+  h_chargedEmEnergyFractionforHTv2RecipePassPhotonCut_Exp->Write();
+  h_chargedEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp->Write();
+  h_neutralEmEnergyFractionforHTv2RecipePassPhotonCut_Exp->Write();
+  h_neutralEmEnergyFractionforHTv2RecipeFailPhotonCut_Exp->Write();
 
   h_EtavsRatioMultiplicityforHTv2RecipePassPhotonCut_Exp->Write();
   h_EtavsRatioMultiplicityforHTv2RecipeFailPhotonCut_Exp->Write();
