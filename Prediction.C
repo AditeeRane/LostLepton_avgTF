@@ -33,7 +33,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   unsigned nSB = SearchBins_->GetNbins();
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
-  h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2.0);
+  h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2);
 
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
   h_HT5_Exp =new TH1D("h_HT5_Exp","h_HT5_Exp",12,100,2500);
@@ -584,6 +584,7 @@ Bool_t Prediction::Process(Long64_t entry)
   vector<int> HTJetsIdxv2Recipe;
   vector<int> MHTJetsIdxv2Recipe;
   vector<int> MHTminusHTJetsIdxv2Recipe;
+  vector<int> PhotonMatchJetIdxv2Recipe;
   vector<double> JetsCSVv2Recipe;
   vector<double> JetsJECv2Recipe;
   vector<double> JetschargedEmEnergyFractionv2Recipe;
@@ -913,32 +914,31 @@ Bool_t Prediction::Process(Long64_t entry)
   //  if(HTMatch || NJetMatch || MHTMatch)
   //std::cout<<" entry "<<entry<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
   
-  h_YieldCutFlow->Fill(0.0);
-  
-  
+  h_YieldCutFlow->Fill(0);
+
+
   bool LOnePrefireCase=false;
-  /*
   //  std::cout<<" mht size "<<MHTJetsIdxv2Recipe.size()<<endl;
+  /*
   if(MHTJetsIdxv2Recipe.size()>0){
     for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
       int jetIdx=MHTJetsIdxv2Recipe[i];
       //      std::cout<<"entry "<<entry<<" i "<<" pt "<<Jets->at(jetIdx).Pt()<<" eta "<<Jets->at(jetIdx).Eta()<<endl;
       if(Jets->at(jetIdx).Pt()>100 && fabs(Jets->at(jetIdx).Eta())>2.25 && fabs(Jets->at(jetIdx).Eta())<3.0){
 	LOnePrefireCase=true;
-    //std::cout<<" now skip evt "<<endl;
+	//std::cout<<" now skip evt "<<endl;
 	break;
       }
     }
   }
   if(LOnePrefireCase)
     return kTRUE;
-  */
-  
+*/
   //*AR: 181107: check following condition if Dphi cut to be applied
-  
-  //if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+
+  //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
   //return kTRUE;
-  h_YieldCutFlow->Fill(1.0);
+  h_YieldCutFlow->Fill(1);
   //  std::cout<<" seg vio "<<endl;
   //  std::cout<<" evt falling in search bin "<<endl;
   //*AR: 180917- Initialization of vectors
@@ -1299,7 +1299,77 @@ Bool_t Prediction::Process(Long64_t entry)
     if(!runOnSignalMC)
       Weight *= scaleFactorWeight;
   }
-  //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
+  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
+  
+  if(GetNonPrefireProb){
+    
+    for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
+      double NonPrefireWt=1.0;
+      double NonPrefireJetWt=1.0;
+      double NonPrefireMatchPhotonWt=1.0;
+      int jetIdx=MHTJetsIdxv2Recipe[i];
+      double jPt=Jets->at(jetIdx).Pt();
+      double jEta=Jets->at(jetIdx).Eta();
+      double jPhi=Jets->at(jetIdx).Phi();
+      int binX=jMap->GetXaxis()->FindBin(jEta);
+      int binY=jMap->GetYaxis()->FindBin(jPt);
+      NonPrefireJetWt=1-jMap->GetBinContent(binX,binY);
+      std::cout<<" jetidx "<<i<<" jPt "<<jPt<<" jEta "<<jEta<<" binX "<<binX<<" binY "<<binY<<" preWt "<<jMap->GetBinContent(binX,binY)<<" NonPrefireJetWt "<<NonPrefireJetWt<<endl;
+      if(Photons->size() !=0 )
+	std::cout<<" photons_size "<<Photons->size()<<endl;
+      for(unsigned j = 0; j < Photons->size(); ++j){
+	double pPt=Photons->at(j).Pt();
+	double pEta=Photons->at(j).Eta();
+	int binpX=pMap->GetXaxis()->FindBin(pEta);
+	int binpY=pMap->GetYaxis()->FindBin(pPt);
+	double PrePhotonWt=pMap->GetBinContent(binpX,binpY);
+	std::cout<<" photonidx "<<j<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
+	
+	double dEtaJetPhoton=Photons->at(j).Eta()-jEta;
+	double dPhiJetPhoton=TVector2::Phi_mpi_pi(Photons->at(j).Phi()-jPhi);
+	double dRJetPhoton=sqrt(dEtaJetPhoton * dEtaJetPhoton + dPhiJetPhoton * dPhiJetPhoton);
+	if(dRJetPhoton<0.4){
+	  std::cout<<" dRJetPhoton "<<dRJetPhoton<<endl;
+	  NonPrefireMatchPhotonWt *= (1-pMap->GetBinContent(binpX,binpY));
+	  PhotonMatchJetIdxv2Recipe.push_back(j);
+	}
+	std::cout<<" photon "<<j<<" NonPrefireMatchPhotonWt "<<NonPrefireMatchPhotonWt<<endl;
+      }
+      if(NonPrefireJetWt<NonPrefireMatchPhotonWt)
+	Weight *= NonPrefireJetWt;
+      else
+	Weight *= NonPrefireMatchPhotonWt;
+      std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
+    }
+    std::cout<<" weight_afterAllJets "<<Weight<<endl;
+
+    for(unsigned j = 0; j < Photons->size(); ++j){
+      bool MatchedtoJet=false;
+      double pPt=Photons->at(j).Pt();
+      double pEta=Photons->at(j).Eta();
+      int binpX=pMap->GetXaxis()->FindBin(pEta);
+      int binpY=pMap->GetYaxis()->FindBin(pPt);
+      double PrePhotonWt=pMap->GetBinContent(binpX,binpY);
+      std::cout<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
+      
+      for(unsigned k = 0; k <PhotonMatchJetIdxv2Recipe.size();k++){
+	int photonIdx=PhotonMatchJetIdxv2Recipe[k];
+	if(j != photonIdx)
+	  continue;
+	else{
+	  MatchedtoJet=true;
+	  break;
+	}
+      }
+      if(!MatchedtoJet){
+	Weight *= (1-pMap->GetBinContent(binpX,binpY));
+	std::cout<<" weight after nonmatchedphoton "<<j<<" is "<<Weight<<endl;
+      }
+    }
+    std::cout<<" weight_afterAllPhotons "<<Weight<<endl;
+  }
+
+  std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
 
 
   //*AR:181016-jet pT, eta distribution of those contributing to HT and excess ones contributing to  MHT in default case
@@ -1415,9 +1485,9 @@ Bool_t Prediction::Process(Long64_t entry)
 	h_JetEtaforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta());
 	h_JetPhiforHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi());
     }
-    h_JetPtforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
-    h_JetEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
-    h_JetPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+    h_JetPtforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
+    h_JetEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    h_JetPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
     if(NJetsv2Recipe<6){
       h_JetPtforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
       h_JetEtaforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
@@ -1520,9 +1590,9 @@ Bool_t Prediction::Process(Long64_t entry)
 	h_JetEtaforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Eta());
 	h_JetPhiforMHTminusHTv2RecipeNotLead_Exp->Fill(Jets->at(jetIdx).Phi());
     }
-    h_JetPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
-    h_JetEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta());
-    h_JetPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi());
+    h_JetPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
+    h_JetEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    h_JetPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
     h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta());
     h_JetMultvsEtaforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta());
     h_JetPtvsEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Jets->at(jetIdx).Eta());

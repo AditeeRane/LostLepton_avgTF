@@ -300,7 +300,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatexNDC(0.7, 0.91 , "5.0 fb^{-1} (13 TeV)");
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 pb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 fb^{-1} (13 TeV)");
   gPad->Modified();
   
   TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
@@ -674,23 +674,23 @@ void GetOneDPlotsMCVsMC(){
 
   //After vs Before prefire
     
-  GetOneDPlotsMCVsMC(1050,"MHTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"MHT","After/Before",1,0,16,200,1000,0.5,1.5,15000);
+  GetOneDPlotsMCVsMC(1050,"MHTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"MHT","After/Before",1,0,16,200,1000,0.5,1.5,15000);
   
-  GetOneDPlotsMCVsMC(1150,"HTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.4,0.87,0.57,"HT","After/Before",1,0,12,100,2500,0.5,1.5,25000);
+  GetOneDPlotsMCVsMC(1150,"HTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"HT","After/Before",1,0,12,100,2500,0.5,1.5,25000);
   
-   GetOneDPlotsMCVsMC(1250,"NJetv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NJet","After/Before",1,0,10,2,12,0.5,1.5,22000);
+   GetOneDPlotsMCVsMC(1250,"NJetv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NJet","After/Before",1,0,10,2,12,0.5,1.5,22000);
 
-    GetOneDPlotsMCVsMC(1350,"MHTPhiv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"#phi(MHT)","After/Before",0,0,7,-3.5,3.5,0.5,1.5,5400);
+    GetOneDPlotsMCVsMC(1350,"MHTPhiv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"#phi(MHT)","After/Before",0,0,7,-3.5,3.5,0.5,1.5,5400);
 
-  GetOneDPlotsMCVsMC(1650,"NBtagv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NBtag","After/Before",1,0,5,0,5,0.5,1.5,30000);
+  GetOneDPlotsMCVsMC(1650,"NBtagv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NBtag","After/Before",1,0,5,0,5,0.5,1.5,30000);
 
-  GetOneDPlotsMCVsMC(1750,"DphiOneforHTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,9000);
+  GetOneDPlotsMCVsMC(1750,"DphiOneforHTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{1},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,9000);
 
-  GetOneDPlotsMCVsMC(1850,"DphiTwoforHTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,2100);
+  GetOneDPlotsMCVsMC(1850,"DphiTwoforHTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{2},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,2100);
 
-  GetOneDPlotsMCVsMC(1950,"DphiThreeforHTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{3},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,1300);
+  GetOneDPlotsMCVsMC(1950,"DphiThreeforHTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.37,0.7,0.67,0.87,"#delta#phi(j_{3},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,1300);
 
-  GetOneDPlotsMCVsMC(2050,"DphiFourforHTv2Recipe","MC1LHighDphi_NoBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.27,0.7,0.57,0.87,"#delta#phi(j_{4},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,520);
+  GetOneDPlotsMCVsMC(2050,"DphiFourforHTv2Recipe","MC1LHighDphi_NoBtagProb_WithPrefireMap","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.27,0.7,0.57,0.87,"#delta#phi(j_{4},MHT)","After/Before",0,0,32,0,3.2,0.5,1.5,520);
 
   //B:E vs F- MET-v2  
   

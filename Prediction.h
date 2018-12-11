@@ -38,7 +38,7 @@ const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-
+bool GetNonPrefireProb=true;
 // Use TFs with/without SFs
 const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.8484;
@@ -82,7 +82,7 @@ const bool applyFilters=true;
 
 const double minHT_=300;
 //const double minHT_=250;
-const double minMHT_=250;
+const double minMHT_=250; 
 const double minNJets_=1.5;
 const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
@@ -128,6 +128,8 @@ class Prediction : public TSelector {
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
   //  TH2D* h_MHTPhivsHTRatio_Exp=0;
+  TH2F* jMap=0;
+  TH2F* pMap=0;
 
   TH1D* h_MET_Exp=0;
   TH1D* h_METPhi_Exp=0;
@@ -466,6 +468,7 @@ class Prediction : public TSelector {
   //Bool_t           eeBadSc4Filter;
   std::vector<TLorentzVector> *GenElectrons=0;
   std::vector<TLorentzVector> *GenMuons=0;
+  std::vector<TLorentzVector> *Photons=0;
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
@@ -593,6 +596,7 @@ class Prediction : public TSelector {
   //TBranch        *b_eeBadSc4Filter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
   TBranch        *b_GenMuons=0;   //!
+  TBranch        *b_Photons=0;
   TBranch        *b_HBHENoiseFilter=0;   //!
   TBranch        *b_HBHEIsoNoiseFilter=0;   //!
   TBranch        *b_HT=0;   //!
@@ -754,6 +758,13 @@ void Prediction::Init(TTree *tree)
   ////////////////////////
   //////// End Options
   ///////////////////////
+
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2016BtoH.root", "READ");
+  jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2016BtoH")->Clone();
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2016BtoH.root", "READ");
+  pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2016BtoH")->Clone();
+
+
 
   // Open histograms with TFs
   TFile *TF_histFile = TFile::Open("TF.root", "READ");
@@ -940,7 +951,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("GenMuons", 1);
   }  
   
-
+  fChain->SetBranchStatus("Photons", 1); 
   if(!runOnData){
     fChain->SetBranchStatus("Weight", 1);
     fChain->SetBranchStatus("Jets_hadronFlavor", 1);
@@ -1070,6 +1081,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
     fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
   }  
+  fChain->SetBranchAddress("Photons", &Photons, &b_Photons);
   if(!runOnData){
     fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
     fChain->SetBranchAddress("Jets_hadronFlavor", &Jets_hadronFlavor, &b_Jets_hadronFlavor);
