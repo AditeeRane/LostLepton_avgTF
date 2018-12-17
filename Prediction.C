@@ -52,6 +52,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_DphiFour_Exp =new TH1D("h_DphiFour_Exp","h_DphiFour_Exp",32,0,3.2);
   h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
   h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
+  h_LepEta50_Exp=new TH1D("h_LepEta50_Exp","h_LepEta50_Exp",10,-2.5,2.5);
+  h_LepEta100_Exp=new TH1D("h_LepEta100_Exp","h_LepEta100_Exp",10,-2.5,2.5);
+  h_LepEta200_Exp=new TH1D("h_LepEta200_Exp","h_LepEta200_Exp",10,-2.5,2.5);
+
   h_LepPhi_Exp=new TH1D("h_LepPhi_Exp","h_LepPhi_Exp",7,-3.5,3.5);
   h_rawJetPtforHT_Exp=new TH1D("h_rawJetPtforHT_Exp","h_rawJetPtforHT_Exp",20,0.0,1000.0);
   h_JetPtforHTLead_Exp=new TH1D("h_JetPtforHTLead_Exp","h_JetPtforHTLead_Exp",20,0.0,1000.0);
@@ -142,6 +146,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_JetPtforHTv2Recipe_Exp=new TH1D("h_JetPtforHTv2Recipe_Exp","h_JetPtforHTv2Recipe_Exp",20,0.0,1000.0);
   h_JetEtaforHTv2Recipe_Exp=new TH1D("h_JetEtaforHTv2Recipe_Exp","h_JetEtaforHTv2Recipe_Exp",50,-2.5,2.5);
+  h_JetEta50forHTv2Recipe_Exp=new TH1D("h_JetEta50forHTv2Recipe_Exp","h_JetEta50forHTv2Recipe_Exp",50,-2.5,2.5);
+  h_JetEta100forHTv2Recipe_Exp=new TH1D("h_JetEta100forHTv2Recipe_Exp","h_JetEta100forHTv2Recipe_Exp",50,-2.5,2.5);
+  h_JetEta200forHTv2Recipe_Exp=new TH1D("h_JetEta200forHTv2Recipe_Exp","h_JetEta200forHTv2Recipe_Exp",50,-2.5,2.5);
+
   h_JetPhiforHTv2Recipe_Exp=new TH1D("h_JetPhiforHTv2Recipe_Exp","h_JetPhiforHTv2Recipe_Exp",70,-3.5,3.5);
   h_JetPtforLowNJetforHTv2Recipe_Exp=new TH1D("h_JetPtforLowNJetforHTv2Recipe_Exp","h_JetPtforLowNJetforHTv2Recipe_Exp",20,0.0,1000.0);
   h_JetEtaforLowNJetforHTv2Recipe_Exp=new TH1D("h_JetEtaforLowNJetforHTv2Recipe_Exp","h_JetEtaforLowNJetforHTv2Recipe_Exp",50,-2.5,2.5);
@@ -228,6 +236,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_JetPtforMHTminusHTv2Recipe_Exp=new TH1D("h_JetPtforMHTminusHTv2Recipe_Exp","h_JetPtforMHTminusHTv2Recipe_Exp",20,0.0,1000.0);
   h_JetEtaforMHTminusHTv2Recipe_Exp=new TH1D("h_JetEtaforMHTminusHTv2Recipe_Exp","h_JetEtaforMHTminusHTv2Recipe_Exp",100,-5.,5.);
+  h_JetEta50forMHTminusHTv2Recipe_Exp=new TH1D("h_JetEta50forMHTminusHTv2Recipe_Exp","h_JetEta50forMHTminusHTv2Recipe_Exp",100,-5.,5.);
+  h_JetEta100forMHTminusHTv2Recipe_Exp=new TH1D("h_JetEta100forMHTminusHTv2Recipe_Exp","h_JetEta100forMHTminusHTv2Recipe_Exp",100,-5.,5.);
+  h_JetEta200forMHTminusHTv2Recipe_Exp=new TH1D("h_JetEta200forMHTminusHTv2Recipe_Exp","h_JetEta200forMHTminusHTv2Recipe_Exp",100,-5.,5.);
+
   h_JetPhiforMHTminusHTv2Recipe_Exp=new TH1D("h_JetPhiforMHTminusHTv2Recipe_Exp","h_JetPhiforMHTminusHTv2Recipe_Exp",70,-3.5,3.5);
 
   h_DphiOneforMHTminusHTv2Recipe_Exp =new TH1D("h_DphiOneforMHTminusHTv2Recipe_Exp","h_DphiOneforMHTminusHTv2Recipe_Exp",32,0,3.2);
@@ -324,6 +336,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_LepPt_Exp);
   GetOutputList()->Add(h_LepEta_Exp);
+  GetOutputList()->Add(h_LepEta50_Exp);
+  GetOutputList()->Add(h_LepEta100_Exp);
+  GetOutputList()->Add(h_LepEta200_Exp);
+
   GetOutputList()->Add(h_LepPhi_Exp); 
   GetOutputList()->Add(h_JetPtforHTLead_Exp);
   GetOutputList()->Add(h_JetEtaforHTLead_Exp);
@@ -406,6 +422,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_JetPhiforHTv2RecipeNotLead_Exp);
   GetOutputList()->Add(h_JetPtforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetEtaforHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta50forHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta100forHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta200forHTv2Recipe_Exp);
+
   GetOutputList()->Add(h_JetPhiforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtforLowNJetforHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetEtaforLowNJetforHTv2Recipe_Exp);
@@ -477,6 +497,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_JetPhiforMHTminusHTv2RecipeNotLead_Exp);
   GetOutputList()->Add(h_JetPtforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetEtaforMHTminusHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta50forMHTminusHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta100forMHTminusHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetEta200forMHTminusHTv2Recipe_Exp);
+
   GetOutputList()->Add(h_JetPhiforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_DphiOneforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_DphiTwoforMHTminusHTv2Recipe_Exp);
@@ -584,7 +608,7 @@ Bool_t Prediction::Process(Long64_t entry)
   vector<int> HTJetsIdxv2Recipe;
   vector<int> MHTJetsIdxv2Recipe;
   vector<int> MHTminusHTJetsIdxv2Recipe;
-  vector<int> PhotonMatchJetIdxv2Recipe;
+  vector<int> ElectronMatchJetIdxv2Recipe;
   vector<double> JetsCSVv2Recipe;
   vector<double> JetsJECv2Recipe;
   vector<double> JetschargedEmEnergyFractionv2Recipe;
@@ -798,8 +822,8 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
 
-    if(LepPt<20 || fabs(LepEta)>2.1) 
-      return kTRUE;
+    //    if(LepPt<20 || fabs(LepEta)>2.1) 
+    //return kTRUE;
   } //end of if(!GetSignalRegHists)
   else
     if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
@@ -1306,7 +1330,7 @@ Bool_t Prediction::Process(Long64_t entry)
     for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
       double NonPrefireWt=1.0;
       double NonPrefireJetWt=1.0;
-      double NonPrefireMatchPhotonWt=1.0;
+      double NonPrefireMatchElectronWt=1.0;
       int jetIdx=MHTJetsIdxv2Recipe[i];
       double jPt=Jets->at(jetIdx).Pt();
       double jEta=Jets->at(jetIdx).Eta();
@@ -1315,46 +1339,46 @@ Bool_t Prediction::Process(Long64_t entry)
       int binY=jMap->GetYaxis()->FindBin(jPt);
       NonPrefireJetWt=1-jMap->GetBinContent(binX,binY);
       std::cout<<" jetidx "<<i<<" jPt "<<jPt<<" jEta "<<jEta<<" binX "<<binX<<" binY "<<binY<<" preWt "<<jMap->GetBinContent(binX,binY)<<" NonPrefireJetWt "<<NonPrefireJetWt<<endl;
-      if(Photons->size() !=0 )
-	std::cout<<" photons_size "<<Photons->size()<<endl;
-      for(unsigned j = 0; j < Photons->size(); ++j){
-	double pPt=Photons->at(j).Pt();
-	double pEta=Photons->at(j).Eta();
+      if(Electrons->size() !=0 )
+	std::cout<<" electrons_size "<<Electrons->size()<<endl;
+      for(unsigned j = 0; j < Electrons->size(); ++j){
+	double pPt=Electrons->at(j).Pt();
+	double pEta=Electrons->at(j).Eta();
 	int binpX=pMap->GetXaxis()->FindBin(pEta);
 	int binpY=pMap->GetYaxis()->FindBin(pPt);
-	double PrePhotonWt=pMap->GetBinContent(binpX,binpY);
+	double PreElectronWt=pMap->GetBinContent(binpX,binpY);
 	std::cout<<" photonidx "<<j<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
 	
-	double dEtaJetPhoton=Photons->at(j).Eta()-jEta;
-	double dPhiJetPhoton=TVector2::Phi_mpi_pi(Photons->at(j).Phi()-jPhi);
-	double dRJetPhoton=sqrt(dEtaJetPhoton * dEtaJetPhoton + dPhiJetPhoton * dPhiJetPhoton);
-	if(dRJetPhoton<0.4){
-	  std::cout<<" dRJetPhoton "<<dRJetPhoton<<endl;
-	  NonPrefireMatchPhotonWt *= (1-pMap->GetBinContent(binpX,binpY));
-	  PhotonMatchJetIdxv2Recipe.push_back(j);
+	double dEtaJetElectron=Electrons->at(j).Eta()-jEta;
+	double dPhiJetElectron=TVector2::Phi_mpi_pi(Electrons->at(j).Phi()-jPhi);
+	double dRJetElectron=sqrt(dEtaJetElectron * dEtaJetElectron + dPhiJetElectron * dPhiJetElectron);
+	if(dRJetElectron<0.4){
+	  std::cout<<" dRJetElectron "<<dRJetElectron<<endl;
+	  NonPrefireMatchElectronWt *= (1-pMap->GetBinContent(binpX,binpY));
+	  ElectronMatchJetIdxv2Recipe.push_back(j);
 	}
-	std::cout<<" photon "<<j<<" NonPrefireMatchPhotonWt "<<NonPrefireMatchPhotonWt<<endl;
+	std::cout<<" electron "<<j<<" NonPrefireMatchElectronWt "<<NonPrefireMatchElectronWt<<endl;
       }
-      if(NonPrefireJetWt<NonPrefireMatchPhotonWt)
+      if(NonPrefireJetWt<NonPrefireMatchElectronWt)
 	Weight *= NonPrefireJetWt;
       else
-	Weight *= NonPrefireMatchPhotonWt;
+	Weight *= NonPrefireMatchElectronWt;
       std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
     }
     std::cout<<" weight_afterAllJets "<<Weight<<endl;
 
-    for(unsigned j = 0; j < Photons->size(); ++j){
+    for(unsigned j = 0; j < Electrons->size(); ++j){
       bool MatchedtoJet=false;
-      double pPt=Photons->at(j).Pt();
-      double pEta=Photons->at(j).Eta();
+      double pPt=Electrons->at(j).Pt();
+      double pEta=Electrons->at(j).Eta();
       int binpX=pMap->GetXaxis()->FindBin(pEta);
       int binpY=pMap->GetYaxis()->FindBin(pPt);
-      double PrePhotonWt=pMap->GetBinContent(binpX,binpY);
+      double PreElectronWt=pMap->GetBinContent(binpX,binpY);
       std::cout<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
       
-      for(unsigned k = 0; k <PhotonMatchJetIdxv2Recipe.size();k++){
-	int photonIdx=PhotonMatchJetIdxv2Recipe[k];
-	if(j != photonIdx)
+      for(unsigned k = 0; k <ElectronMatchJetIdxv2Recipe.size();k++){
+	int electronIdx=ElectronMatchJetIdxv2Recipe[k];
+	if(j != electronIdx)
 	  continue;
 	else{
 	  MatchedtoJet=true;
@@ -1363,10 +1387,10 @@ Bool_t Prediction::Process(Long64_t entry)
       }
       if(!MatchedtoJet){
 	Weight *= (1-pMap->GetBinContent(binpX,binpY));
-	std::cout<<" weight after nonmatchedphoton "<<j<<" is "<<Weight<<endl;
+	std::cout<<" weight after nonmatchedelectron "<<j<<" is "<<Weight<<endl;
       }
     }
-    std::cout<<" weight_afterAllPhotons "<<Weight<<endl;
+    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
   }
 
   std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
@@ -1487,6 +1511,13 @@ Bool_t Prediction::Process(Long64_t entry)
     }
     h_JetPtforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
     h_JetEtaforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>50)
+      h_JetEta50forHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>100)
+      h_JetEta100forHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>200)
+      h_JetEta200forHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+
     h_JetPhiforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
     if(NJetsv2Recipe<6){
       h_JetPtforLowNJetforHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt());
@@ -1592,6 +1623,13 @@ Bool_t Prediction::Process(Long64_t entry)
     }
     h_JetPtforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),Weight);
     h_JetEtaforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>50)
+      h_JetEta50forMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>100)
+      h_JetEta100forMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+    if(Jets->at(jetIdx).Pt()>200)
+      h_JetEta200forMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Eta(),Weight);
+
     h_JetPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Weight);
     h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp->Fill(i,Jets->at(jetIdx).Eta());
     h_JetMultvsEtaforMHTminusHTv2Recipe_Exp->Fill(MHTminusHTJetsIdxv2Recipe.size(),Jets->at(jetIdx).Eta());
@@ -1782,6 +1820,13 @@ Bool_t Prediction::Process(Long64_t entry)
     h_DphiFour_Exp->Fill(DeltaPhi4,WeightBtagProb);
     h_LepPt_Exp->Fill(LepPt,WeightBtagProb);
     h_LepEta_Exp->Fill(LepEta,WeightBtagProb);
+    if(LepPt>50)
+      h_LepEta50_Exp->Fill(LepEta,WeightBtagProb);
+    if(LepPt>100)
+      h_LepEta100_Exp->Fill(LepEta,WeightBtagProb);
+    if(LepPt>200)
+      h_LepEta200_Exp->Fill(LepEta,WeightBtagProb);
+
     h_LepPhi_Exp->Fill(LepPhi,WeightBtagProb);
 
 
@@ -1932,6 +1977,10 @@ void Prediction::Terminate()
   h_DphiFour_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFour_Exp"));
   h_LepPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPt_Exp"));
   h_LepEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta_Exp"));
+  h_LepEta50_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta50_Exp"));
+  h_LepEta100_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta100_Exp"));
+  h_LepEta200_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta200_Exp"));
+
   h_LepPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhi_Exp"));
 
   h_rawJetPtforHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_rawJetPtforHT_Exp"));
@@ -2050,6 +2099,10 @@ void Prediction::Terminate()
 
   h_JetPtforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforHTv2Recipe_Exp"));
   h_JetEtaforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforHTv2Recipe_Exp"));
+  h_JetEta50forHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta50forHTv2Recipe_Exp"));
+  h_JetEta100forHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta100forHTv2Recipe_Exp"));
+  h_JetEta200forHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta200forHTv2Recipe_Exp"));
+
   h_JetPhiforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforHTv2Recipe_Exp"));
   h_JetPtforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforLowNJetforHTv2Recipe_Exp"));
   h_JetEtaforLowNJetforHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforLowNJetforHTv2Recipe_Exp"));
@@ -2121,6 +2174,10 @@ void Prediction::Terminate()
 
   h_JetPtforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforMHTminusHTv2Recipe_Exp"));
   h_JetEtaforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEtaforMHTminusHTv2Recipe_Exp"));
+  h_JetEta50forMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta50forMHTminusHTv2Recipe_Exp"));
+  h_JetEta100forMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta100forMHTminusHTv2Recipe_Exp"));
+  h_JetEta200forMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetEta200forMHTminusHTv2Recipe_Exp"));
+
   h_JetPhiforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPhiforMHTminusHTv2Recipe_Exp"));
 
   h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_rawJetPtvsEtaforMHTminusHTv2Recipe_Exp"));
@@ -2221,6 +2278,10 @@ void Prediction::Terminate()
   h_DphiFour_Exp->Write(); 
   h_LepPt_Exp->Write(); 
   h_LepEta_Exp->Write(); 
+  h_LepEta50_Exp->Write();
+  h_LepEta100_Exp->Write();
+  h_LepEta200_Exp->Write();
+
   h_LepPhi_Exp->Write(); 
 
   h_rawJetPtforHT_Exp->Write();
@@ -2311,6 +2372,10 @@ void Prediction::Terminate()
   h_JetPhiforHTv2RecipeNotLead_Exp->Write();
   h_JetPtforHTv2Recipe_Exp->Write();
   h_JetEtaforHTv2Recipe_Exp->Write();
+  h_JetEta50forHTv2Recipe_Exp->Write();
+  h_JetEta100forHTv2Recipe_Exp->Write();
+  h_JetEta200forHTv2Recipe_Exp->Write();
+
   h_JetPhiforHTv2Recipe_Exp->Write();
   h_JetPtforLowNJetforHTv2Recipe_Exp->Write();
   h_JetEtaforLowNJetforHTv2Recipe_Exp->Write();
@@ -2397,6 +2462,10 @@ void Prediction::Terminate()
   h_JetPhiforMHTminusHTv2RecipeNotLead_Exp->Write();
   h_JetPtforMHTminusHTv2Recipe_Exp->Write();
   h_JetEtaforMHTminusHTv2Recipe_Exp->Write();
+  h_JetEta50forMHTminusHTv2Recipe_Exp->Write();
+  h_JetEta100forMHTminusHTv2Recipe_Exp->Write();
+  h_JetEta200forMHTminusHTv2Recipe_Exp->Write();
+
   h_JetPhiforMHTminusHTv2Recipe_Exp->Write();
   h_rawJetPtforMHTminusHTv2Recipe_Exp->Write();
 

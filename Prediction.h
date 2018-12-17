@@ -142,6 +142,10 @@ class Prediction : public TSelector {
   TH1D* h_DphiFour_Exp=0;
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
+  TH1D* h_LepEta50_Exp=0;
+  TH1D* h_LepEta100_Exp=0;
+  TH1D* h_LepEta200_Exp=0;
+
   TH1D* h_LepPhi_Exp=0;
   TH1D* h_rawJetPtforHT_Exp=0;
   TH1D* h_rawJetPtforMHTminusHT_Exp=0; 
@@ -226,6 +230,10 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200forHTv2Recipe_Exp=0;
+
   TH1D* h_JetPhiforHTv2Recipe_Exp=0;
   TH1D* h_JetPtforLowNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforLowNJetforHTv2Recipe_Exp=0;
@@ -305,6 +313,10 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforMHTminusHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50forMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200forMHTminusHTv2Recipe_Exp=0;
+
   TH1D* h_JetPhiforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiOneforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiTwoforMHTminusHTv2Recipe_Exp=0;

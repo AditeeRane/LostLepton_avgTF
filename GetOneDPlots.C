@@ -194,6 +194,12 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
 
   _fileData->cd();
   TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
+
+  hTTbarLL->Rebin(5);
+  hWJetLL->Rebin(5);
+  hSTLL->Rebin(5);
+  hDataLLHadtau->Rebin(5);
+
   hDataLLHadtau->SetLineColor(kBlack);
   hDataLLHadtau->SetLineWidth(2);
   hDataLLHadtau->SetMarkerStyle(21);
@@ -271,7 +277,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
     std::cout<<" seg vio 3"<<endl;  
   }
   else{
-    hExp->SetMinimum(0.5);
+    hExp->SetMinimum(0.5*hSTLLHadtau->GetMinimum());
     std::cout<<" seg vio 4"<<endl;  
   }
 
@@ -300,8 +306,8 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   gPad->Modified();
   std::cout<<" seg vio 6"<<endl;  
   
-  TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
-  cOne=(TH1D *) hDataLLHadtau->Clone("Ratio");
+  //  TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
+  TH1D *  cOne=(TH1D *) hDataLLHadtau->Clone("Ratio");
   cOne->Divide(hExpFinal);
   gStyle->SetPadBottomMargin(0.3);
   cOne->SetTitle(0);
@@ -341,24 +347,61 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
 }
 
 void GetOneDPlots(){
-  
+  /*
   //*AR-181211-Here files "Prediction_0_haddTTbar_AppliedPrefireMap_NewCodeconsistentwithOldCode_1L.root" is copied to "Prediction_0_haddTTbar_0L_.root" and so on.
   
-  GetOneDPlots(1300,"NBtagv2Recipe","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
+  GetOneDPlots(1300,"NBtagv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
   
-  GetOneDPlots(1000,"MHTv2Recipe","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
+  GetOneDPlots(1000,"MHTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
-  GetOneDPlots(1100,"HTv2Recipe","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
+  GetOneDPlots(1100,"HTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
 
-  GetOneDPlots(1200,"NJetv2Recipe","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
+  GetOneDPlots(1200,"NJetv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetPtforHTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  */
+
+  GetOneDPlots(1200,"JetEtaforHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#eta","Data/MC",0,0,50,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta50forHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#eta","Data/MC",0,0,50,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta100forHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#eta","Data/MC",0,0,50,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta200forHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#eta","Data/MC",0,0,50,-2.5,2.5,0,2.49,50000);
+  /*
+
+  GetOneDPlots(1200,"JetPhiforHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#phi","Data/MC",0,0,70,-3.5,3.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetPtforMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+*/
   
-  //GetOneDPlots(1200,"LepPt","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  GetOneDPlots(1200,"JetEtaforMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.37,0.5,0.67,0.67,"#eta","Data/MC",0,0,100,-5,5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta50forMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.37,0.5,0.67,0.67,"#eta","Data/MC",0,0,100,-5,5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta100forMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.37,0.5,0.67,0.67,"#eta","Data/MC",0,0,100,-5,5,0,2.49,50000);
+
+  GetOneDPlots(1200,"JetEta200forMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_NotAppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.37,0.5,0.67,0.67,"#eta","Data/MC",0,0,100,-5,5,0,2.49,50000);
+
+  /*
+
+
+  GetOneDPlots(1200,"JetPhiforMHTminusHTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"#phi","Data/MC",0,0,70,-3.5,3.5,0,2.49,50000);
+  
+  //GetOneDPlots(1200,"LepPt","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
     
-  GetOneDPlots(1200,"LepEta","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #eta","Data/MC",1,0,10,-2.5,2.5,0,2.49,50000);
-  
-  GetOneDPlots(1200,"LepPhi","DataVsMC_1L_HighDphi_NoPrefireMapOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #phi","Data/MC",1,0,7,-3.5,3.5,0,2.49,50000);
-  
+  GetOneDPlots(1200,"LepEta","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
 
+  GetOneDPlots(1200,"LepEta50","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"LepEta100","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"LepEta200","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  
+    GetOneDPlots(1200,"LepPhi","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"Lep #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+  
+*/
 
 
   /*
