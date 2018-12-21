@@ -99,13 +99,14 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
  
   // define the size
   double up_height     = 0.8;  // please tune so that the upper figures size will meet your requirement
-  double dw_correction = 1.30; // please tune so that the smaller canvas size will work in your environment
+  //  double dw_correction = 1.30; // please tune so that the smaller canvas size will work in your environment
+  double dw_correction = 1.275;
   double font_size_dw  = 0.1;  // please tune the font size parameter for bottom figure
   double dw_height    = (1. - up_height) * dw_correction;
   double dw_height_offset = 0.040; // KH, added to put the bottom one closer to the top panel
  
   // set pad size
-  canvas_up->SetPad(0., 1 - up_height +0.01, 0.97, 1.);
+  canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
   canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
@@ -165,10 +166,10 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
 
   _fileTTbarLL->cd();
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
-  hTTbarLL->Scale(35900.0/41486.0);
+  //  hTTbarLL->Scale(35900.0/41486.0);
   hTTbarLL->SetLineColor(kRed);
   hTTbarLL->SetLineWidth(2);
-  hTTbarLL->SetMarkerStyle(22);
+  hTTbarLL->SetMarkerStyle(21);
   hTTbarLL->SetMarkerColor(kRed);
   double xmin=hTTbarLL->GetXaxis()->GetXmin();
   double xmax=hTTbarLL->GetXaxis()->GetXmax();
@@ -183,7 +184,7 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   _fileTTbarHadtau->cd();
   TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
   //  hTTbarHadtau->Scale(35900);
-
+  hTTbarHadtau->Scale(35900.0/41486.0);
   //  hTTbarHadtau->SetFillStyle(3144);
   hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetLineWidth(2);
@@ -203,47 +204,80 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   
   if(logx)
     canvas_up->SetLogx();
-  hTTbarLL->SetMaximum(ymax);
-  hTTbarLL->SetMinimum(ymin);
+
+
+
+  if(hTTbarHadtau->GetMaximum()>hTTbarLL->GetMaximum()){
+    if(logy){
+      hTTbarLL->SetMaximum(3000*hTTbarHadtau->GetMaximum());
+      ymax=hTTbarHadtau->GetMaximum();
+    }
+    else{
+      hTTbarLL->SetMaximum(1500*hTTbarHadtau->GetMaximum());
+      ymax=hTTbarHadtau->GetMaximum();
+    }
+  }
+  else{
+    if(logy){
+      hTTbarLL->SetMaximum(3000*hTTbarLL->GetMaximum());
+      ymax=hTTbarLL->GetMaximum();
+    }
+    else {
+      hTTbarLL->SetMaximum(1500*hTTbarLL->GetMaximum());
+      ymax=hTTbarLL->GetMaximum();
+    }
+  }
+
+  if(hTTbarHadtau->GetMinimum()<hTTbarLL->GetMinimum()){
+    hTTbarLL->SetMinimum(0.05*hTTbarHadtau->GetMinimum());
+    ymin_top=hTTbarLL->GetMinimum();
+  }
+  else
+    ymin_top=hTTbarLL->GetMinimum();
+
+  if(!logy)
+    hTTbarLL->SetMinimum(0);
+
+
   hTTbarLL->Draw("e");
-  hTTbarHadtau->Draw("e same");
+  hTTbarHadtau->Draw("esame");
   //  hTTbarHadtau->GetYaxis()->SetRangeUser(0,ymax);
   
   //  TLegend *tl=new TLegend(0.57,0.7,0.87,0.87);
   //  TLegend *tl=new TLegend(0.77,0.78,0.89,0.89); 
+  /*
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
-
-  tl->SetTextSize(0.032);
-  tl->SetTextFont(42);
-
   tl->SetTextSize(0.035);
   tl->SetTextFont(42);
-  tl->SetFillColor(0);
-  tl->SetLineColor(0);
-  tl->SetBorderSize(0);
+  tl->SetBorderSize(1);
 
   tl->SetHeader(header);
-  tl->AddEntry(hTTbarHadtau, "Data_16");
-  tl->AddEntry(hTTbarLL, "Data_17"); 
-  tl->SetLineColor(kWhite);
+  tl->AddEntry(hTTbarHadtau, "Data17-METv2");
+  tl->AddEntry(hTTbarLL, "Data16"); 
+  tl->SetLineColor(kBlack);
   tl->Draw("same");
+*/
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
+  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Preliminary}");
+
   //ttext->DrawLatex(GetRatioXmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
-  ttext->DrawLatex(xmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
+  //  ttext->DrawLatex(xmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
   
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
   //  ttexlumi->DrawLatex(GetRatioXmax-10*binSize, ymaximum , "35.9fb^{-1} (13TeV)");
-  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "35.9fb^{-1} (13TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 fb^{-1} (13 TeV)");
+
+  //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "35.9fb^{-1} (13TeV)");
   
   //-----------------------------------------------------------
   // Putting lines and labels explaining search region definitions
   //-----------------------------------------------------------
   
   // Njet separation lines
-  
+  std::cout<<" ymin_top "<<ymin_top<<" ymax "<<ymax<<endl;
   TLine *tl_njet = new TLine();
   tl_njet->SetLineStyle(2);
   tl_njet->DrawLine(31.-0.5,ymin_top,31.-0.5,ymax); 
@@ -313,11 +347,51 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   ttext_nb->DrawLatex(163.-0.5 , ymax/20. , "2");
   ttext_nb->DrawLatex(171.-0.5 , ymax/20. , "#geq 3");
 
-  
+  TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
+  tl->SetTextSize(0.035);
+  tl->SetTextFont(42);
+  tl->SetBorderSize(1);
+
+  tl->SetHeader(header);
+  tl->AddEntry(hTTbarHadtau, "Data17-METv2");
+  tl->AddEntry(hTTbarLL, "Data16"); 
+  tl->SetLineColor(kBlack);
+  tl->Draw("same");
+
+  gStyle->SetPadTickX(1);
+  gStyle->SetPadTickY(1);
+  gPad->SetTicks(); 
   gPad->Modified();
   
   TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
   TH1D * cTwo = new TH1D("RatioTwo","ratioTwo plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
+
+  cOne=(TH1D *) hTTbarHadtau->Clone("Ratio");
+  cOne->Divide(hTTbarLL);
+  gStyle->SetPadBottomMargin(0.3);
+  cOne->SetTitle(0);
+  cOne->GetXaxis()->SetTitle(RatioLabelX);
+  cOne->GetYaxis()->SetTitle(RatioLabelY);
+  canvas_dw->cd();
+  cOne->Draw("e");
+  
+  cOne->GetXaxis()->SetTitleOffset(0.9);
+  cOne->GetXaxis()->SetTitleSize(0.13);
+  cOne->GetXaxis()->SetTitleFont(42);
+  cOne->GetXaxis()->SetLabelOffset(0.008);
+
+  cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
+  cOne->GetYaxis()->SetTitleOffset(0.35);
+  cOne->GetYaxis()->SetTitleSize(0.13);
+  cOne->GetYaxis()->SetTitleFont(42);
+  cOne->GetYaxis()->SetLabelOffset(0.008);
+  gStyle->SetPadTickX(1);
+  gStyle->SetPadTickY(1);
+  cOne->GetYaxis()->SetNdivisions(8);
+  cOne->SetLabelSize(0.115,"XY");
+
+
+  /*
 
 
   cOne=(TH1D *) hTTbarHadtau->Clone("Ratio");
@@ -338,7 +412,7 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   canvas_dw->cd();
   cOne->Draw("e");
   cTwo->Draw("e same");
-  
+*/  
   // Njet separation lines
   TLine *tlBottom_njet = new TLine();
   tlBottom_njet->SetLineStyle(2);
@@ -369,24 +443,12 @@ void GetSearchBinPlotMCVsMC(int hNum,char const * Var,char const * Sample,char c
   tlBottom_nb->DrawLine(167.-0.5,RatioYmin,167.-0.5,RatioYmax); 
 
 
-
-  cOne->GetXaxis()->SetTitleOffset(0.9);
-  cOne->GetXaxis()->SetTitleSize(0.13);
-  cOne->GetXaxis()->SetTitleFont(42);
-  cOne->GetXaxis()->SetLabelOffset(0.008);
-
-  cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
-  cOne->GetYaxis()->SetTitleOffset(0.35);
-  cOne->GetYaxis()->SetTitleSize(0.13);
-  cOne->GetYaxis()->SetTitleFont(42);
-  cOne->GetYaxis()->SetLabelOffset(0.008);
-
-  gStyle->SetPadTickY(1);
-  cOne->GetYaxis()->SetNdivisions(8);
-  cOne->SetLabelSize(0.115,"XY");
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
+  gPad->SetTicks();  
+  cOne->GetYaxis()->SetTickLength(0.01);
+  cOne->GetXaxis()->SetTickLength(0.05);
   gPad->Update();
   gPad->Modified();
   char PrintName[500];
@@ -405,7 +467,8 @@ void GetSearchBinPlotMCVsMC(){
 
   //GetSearchBinPlotMCVsMC(5000,"CSStat","DataCSStat","Prediction_0_Data_MET_Sep18_V15_.root","Prediction_0_Data_MET_Sep18_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
 
-  GetSearchBinPlotMCVsMC(5100,"CSStat","DataCSStat_LowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
+  //  GetSearchBinPlotMCVsMC(5100,"CSStat","DataCSStat_LowDphi","Prediction_0_Data_MET_Sep19LowDphi_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","1L CR Stat",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
+  GetSearchBinPlotMCVsMC(5100,"Prediction","DataPredSearchBinsHighDphi_17Vs16","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","Prediction_0_Data_MET_Nov20bcdef_2017PredwithV12TF.root","LL+Had#tau Prediction",0.65,0.55,0.85,0.70,"Search Bins","Data17/Data16",1,0,174,0,174,0.5,1.5,0.01,10000000);
 
   //  GetSearchBinPlotMCVsMC(5100,"Prediction","Prediction_HighDphi","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist_Sep21_V15_00.root","Prediction_0_Data_MET_LLPlusHadTau_binSFCorrected_withCSHist.root","LLPlusHadtau",0.58,0.55,0.90,0.65,"Search Bins","Data16/Data17",1,0,174,0,174,0,1.9,0.01,10000000);
 

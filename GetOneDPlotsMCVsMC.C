@@ -9,12 +9,12 @@
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have different names
 
-//void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
 
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have same name and comment unnecessry lines in code accordingly
 
-void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+//void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
   
   //*AR:180831: Borrow cosmetics specific to RA2b style
 
@@ -179,10 +179,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   sprintf(hname,"h_%s_Exp",Var);
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
-  sprintf(cname,"h_%s_Exp_%s",Var,Sample);
+  sprintf(cname,"h_%s_Pre_%s",Var,Sample);
   //sprintf(hnameRev,"h_%s_Exp",VarTwo);
   //  if(var.find("MHTOrig")!=string::npos)
-  //sprintf(hnameRev,"h_MHT_Exp");
+  sprintf(hnameRev,"h_%s_Pre",Var);
   TFile *_fileTTbarLL = TFile::Open(TTbarLL); 
 
   TFile *_fileTTbarHadtau = TFile::Open(TTbarHadtau); 
@@ -215,10 +215,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   _fileTTbarHadtau->cd();
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
-  //    TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
-  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
+  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  //TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
 
-  //  hTTbarHadtau->Scale(5000.0/35900.0);
+  hTTbarHadtau->Scale(35900.0/41486.0);
   hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetMarkerColor(kBlue);
   hTTbarHadtau->SetLineWidth(2);
@@ -272,8 +272,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  tl->AddEntry(hTTbarHadtau, "Data17F:v1");
   //  tl->AddEntry(hTTbarLL, "Data17F:v2"); 
 
-  tl->AddEntry(hTTbarHadtau, "Data17(F)-METv2");
-  tl->AddEntry(hTTbarLL, "Data17(B:E)-METv2"); 
+  tl->AddEntry(hTTbarHadtau, "Data17-METv2");
+  tl->AddEntry(hTTbarLL, "Data16"); 
 
   //  tl->AddEntry(hTTbarHadtau, "Data17(F)");
   //  tl->AddEntry(hTTbarLL, "Data17(B:E)");
@@ -295,7 +295,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //*AR:B:E vs F   
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "5.0 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 fb^{-1} (13 TeV)");
   
   gPad->Modified();
   
@@ -509,8 +509,20 @@ void GetOneDPlotsMCVsMC(){
   GetOneDPlotsMCVsMC(1300,"NBtag","Data1LLowDphi","Prediction_0_Data_MET_Sep28LowDphiCorrectedBtagPtEta_V15_.root","Prediction_0_Data_MET_Sep19LowDphi_V12_.root","e+#mu CS",0.57,0.7,0.87,0.87,"NBtag","Data16/Data17",1,0,5,0,5,0.5,1.5,120000);
 */
 
+  GetOneDPlotsMCVsMC(1000,"MHT","MHT","DataPredHighDphi_17Vs16","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","Prediction_0_Data_MET_Nov20bcdef_2017PredwithV12TF.root","LL+Had#tau",0.57,0.7,0.87,0.87,"MHT","Data17/Data16",1,0,16,200,1000,0.5,1.5,30000);
+  
+  GetOneDPlotsMCVsMC(1100,"HT","HT","DataPredHighDphi_17Vs16","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","Prediction_0_Data_MET_Nov20bcdef_2017PredwithV12TF.root","LL+Had#tau",0.57,0.7,0.87,0.87,"HT","Data17/Data16",1,0,12,100,2500,0.5,1.5,41000);
+
+  GetOneDPlotsMCVsMC(1200,"NJet","NJet","DataPredHighDphi_17Vs16","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","Prediction_0_Data_MET_Nov20bcdef_2017PredwithV12TF.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NJet","Data17/Data16",1,0,10,2,12,0.5,1.5,25000);
+
+  GetOneDPlotsMCVsMC(1300,"NBtag","NBtag","DataPredHighDphi_17Vs16","Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root","Prediction_0_Data_MET_Nov20bcdef_2017PredwithV12TF.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Data17/Data16",1,0,5,0,5,0.5,1.5,50000);
+
+
+
+
+
   //*AR:181106: 2017BE vs 2016 in 0L
-  /*
+ /*
     
   GetOneDPlotsMCVsMC(1000,"MHT","Data0LHighDphi_BEVs16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_0L_Oct03_V12_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","Data17/Data16",1,0,16,200,1000,0.5,1.5,30000);
   
@@ -670,7 +682,8 @@ void GetOneDPlotsMCVsMC(){
   
   
   //B:E vs F- MET-v2  
-    
+
+  /*    
   GetOneDPlotsMCVsMC(1050,"MHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","F/B:E",1,0,16,200,1000,0.5,1.5,15000);
 
   GetOneDPlotsMCVsMC(1058,"MHTforLowNJetv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","F/B:E",1,0,16,200,1000,0.5,1.5,15000);
@@ -914,7 +927,7 @@ void GetOneDPlotsMCVsMC(){
 
   GetOneDPlotsMCVsMC(3050,"neutralHadronMultiplicityforMHTminusHTv2Recipe","Data0LHighDphi_BEVsF","Prediction_0_Data_MET_Oct02_bcdehadd_.root ","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NeuHadMultiplicity_{jet}","F/B:E",1,0,20,0.0,20.0,0.5,1.5,520);
 
-
+*/
 
 
 
