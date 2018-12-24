@@ -848,19 +848,19 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
-    if(jetPtv2Recipe >50 || (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
-      if(PhiLeadJet==-99.) 
-	PhiLeadJet=Jets->at(j).Phi();
-      //  std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
+    //    if(jetPtv2Recipe >50 || (fabs(Jets->at(j).Eta()) < 2.65 || fabs(Jets->at(j).Eta()) > 3.139)){
+    if(PhiLeadJet==-99.) 
+      PhiLeadJet=Jets->at(j).Phi();
+    //  std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
     
     //      std::cout<<" j "<<j<<" passed v2 "<<" PhiLeadJet "<<PhiLeadJet<<endl;
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
-	HTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTJetsIdxv2Recipe.push_back(j);
-      if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
-	MHTminusHTJetsIdxv2Recipe.push_back(j); 
-    } //end of METv2 recipe
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 2.4)
+      HTJetsIdxv2Recipe.push_back(j);
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
+      MHTJetsIdxv2Recipe.push_back(j);
+    if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) > 2.4 && fabs(Jets->at(j).Eta()) < 5.0)
+      MHTminusHTJetsIdxv2Recipe.push_back(j); 
+    //    } //end of METv2 recipe
   } //end of loop over jets
   NJetsforMHTminusHTv2Recipe=MHTminusHTJetsIdxv2Recipe.size();  
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
@@ -2995,7 +2995,7 @@ bool Prediction::FiltersPass()
     if(runOnData){
       if(!BadChargedCandidateFilter) result=false;
       if(!BadPFMuonFilter) result=false;
-      if(globalTightHalo2016Filter!=1) result=false;
+      if(globalSuperTightHalo2016Filter!=1) result=false;
     }    
   }
   if(NVtx<=0) result=false;

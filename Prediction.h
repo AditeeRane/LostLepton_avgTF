@@ -553,7 +553,7 @@ class Prediction : public TSelector {
   Double_t        DeltaPhi4Orig;
 
 
-  Int_t           globalTightHalo2016Filter;
+  Int_t           globalSuperTightHalo2016Filter;
   Int_t           EcalDeadCellTriggerPrimitiveFilter;
   Int_t           eeBadScFilter;
   //Bool_t           eeBadSc4Filter;
@@ -680,7 +680,7 @@ class Prediction : public TSelector {
   TBranch        *b_DeltaPhi3Orig=0;   //!
   TBranch        *b_DeltaPhi4Orig=0;   //!
 
-  TBranch        *b_globalTightHalo2016Filter=0;   //!
+  TBranch        *b_globalSuperTightHalo2016Filter=0;   //!
   TBranch        *b_EcalDeadCellTriggerPrimitiveFilter=0;   //!
   TBranch        *b_eeBadScFilter=0;   //!
   //TBranch        *b_eeBadSc4Filter=0;   //!
@@ -962,7 +962,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("HBHEIsoNoiseFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibFilter", 1); 
     if(runOnData){
-      fChain->SetBranchStatus("globalTightHalo2016Filter", 1);
+      fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
       fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
       fChain->SetBranchStatus("BadPFMuonFilter", 1);
     }
@@ -1115,7 +1115,7 @@ void Prediction::Init(TTree *tree)
       fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
 
     if(runOnData){
-      fChain->SetBranchAddress("globalTightHalo2016Filter", &globalTightHalo2016Filter, &b_globalTightHalo2016Filter);
+      fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
       fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
       fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
     }
