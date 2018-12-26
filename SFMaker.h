@@ -37,8 +37,8 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
-const bool doPUreweighting = false;
-const bool doISRcorr = false; 
+const bool doPUreweighting = false; //true for fastsim signal in prediction code 
+const bool doISRcorr = false;  //true for fastsim signal in prediction code
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
@@ -60,31 +60,35 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
-const string path_bTagCalib("btag/CSVv2_Moriond17_B_H_mod.csv");
+const string path_bTagCalib("btag/CSVv2_94XSF_V2_B_F.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
 const TString path_ISRcorr("isr/ISRWeights.root");
 
 // Scalefactors
-const TString path_elecID("SFs_Moriond17/egamma_all.root");
-const TString hist_elecID("GsfElectronToCutBasedSpring15V");
-const TString path_elecIso("SFs_Moriond17/egamma_all.root");
-const TString hist_elecIso("MVAVLooseElectronToMini");
+const TString path_elecID("SFs_Moriond17/ElectronScaleFactors_Run2017.root");
+const TString hist_elecID("Run2017_CutBasedVetoNoIso94XV2");
+const TString path_elecIso("SFs_Moriond17/ElectronScaleFactors_Run2017.root");
+const TString hist_elecIso("Run2017_MVAVLooseTightIP2DMini");
 
 // Electron tracking inefficiency
-const TString path_elecTrk("SFs_Moriond17/egamma_tracking.root");
-const TString hist_elecTrk("EGamma_SF2D");
+const TString path_elecTrkHighPt("SFs_Moriond17/egammaEffi_EGM2D_runBCDEF_passingRECO.root");
+const TString hist_elecTrkHighPt("EGamma_SF2D");
 
-const TString path_muID("SFs_Moriond17/TnP_NUM_MediumID_DENOM_generalTracks_VAR_map_pt_eta.root");
-const TString hist_muID("SF");
-const TString path_muIso("SFs_Moriond17/TnP_NUM_MiniIsoTight_DENOM_MediumID_VAR_map_pt_eta.root");
-const TString hist_muIso("SF");
+
+const TString path_elecTrkLowPt("SFs_Moriond17/egammaEffi_EGM2D_runBCDEF_passingRECO_lowEt.root");
+const TString hist_elecTrkLowPt("EGamma_SF2D");
+
+const TString path_muID("SFs_Moriond17/RunBCDEF_Muon2017_SF_ID.root");
+const TString hist_muID("NUM_MediumID_DEN_genTracks_pt_abseta");
+const TString path_muIso("SFs_Moriond17/SF_Muon2017_NUM_MiniIso02Cut_DEN_MediumID_PAR_pt_eta.root");
+const TString hist_muIso("TnP_MC_NUM_MiniIso02Cut_DEN_MediumID_PAR_pt_eta");
 
 // Muon tracking inefficiency
-const TString path_muonTrk("SFs_ICHEP16/general_tracks_and_early_general_tracks_corr_ratio.root");
-const TString hist_muonTrkHighPt("mutrksfptg10");
-const TString hist_muonTrkLowPt("mutrksfptl10");
+const TString path_muonTrk("SFs_Moriond17/EfficienciesAndSF_Muon2017_MediumID.root");
+const TString hist_muonTrk("MediumID/eta_ratio");
+//const TString hist_muonTrkLowPt("mutrksfptl10");
 
 // Isotrack uncertainty
 const TString path_isoTrackunc("SFs_ICHEP16/NJets_uncertainty.root");
@@ -201,9 +205,12 @@ class SFMaker : public TSelector {
   TFile* pufile = 0;
   TH1* puhist = 0;
 
-  TH1D * h_muTrkLowPtSF = 0;
-  TH1D * h_muTrkHighPtSF = 0;
-  TH2F * h_elecTrkSF = 0;
+  TH1D * h_muTrkSF = 0;
+  //  TH1D * h_muTrkHighPtSF = 0;
+
+  //  TH2F * h_elecTrkSF = 0;
+  TH2F * h_elecTrkHighPtSF = 0; 
+  TH2F * h_elecTrkLowPtSF = 0; 
 
   //open skim file as skimfile
   TH1* h_njetsisr = 0;
@@ -227,6 +234,8 @@ class SFMaker : public TSelector {
   Double_t      WeightCorr;
   Double_t		  topPtSF;
   std::vector<double> topPt;
+  string SkimFilePath=" ";
+  string OldSkimFilePath=" ";
 
   TH2F* h_muIDSF = 0;
   TH2F* h_muIsoSF = 0;
@@ -561,11 +570,14 @@ void SFMaker::Init(TTree *tree)
 
 
   TFile *muTrkSF_histFile = TFile::Open(path_muonTrk, "READ");
-  h_muTrkLowPtSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrkLowPt)->Clone();
-  h_muTrkHighPtSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrkHighPt)->Clone();
+  h_muTrkSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrk)->Clone();
+  //  h_muTrkHighPtSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrkHighPt)->Clone();
 
-  TFile *elecTrkSF_histFile = TFile::Open(path_elecTrk, "READ");
-  h_elecTrkSF = (TH2F*) elecTrkSF_histFile->Get(hist_elecTrk)->Clone();  
+  TFile *elecTrkHighPtSF_histFile = TFile::Open(path_elecTrkHighPt, "READ");
+  h_elecTrkHighPtSF = (TH2F*) elecTrkHighPtSF_histFile->Get(hist_elecTrkHighPt)->Clone();  
+
+  TFile *elecTrkLowPtSF_histFile = TFile::Open(path_elecTrkLowPt, "READ");
+  h_elecTrkLowPtSF = (TH2F*) elecTrkLowPtSF_histFile->Get(hist_elecTrkLowPt)->Clone();  
 
   if(doISRcorr){
     // ISR setup
