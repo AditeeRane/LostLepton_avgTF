@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -54,6 +54,7 @@ const bool TrackRecoEleSys=false;
 const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
 const bool BtagSys=false;
+bool GetNonPrefireProb=true;
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -127,7 +128,7 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
-const double csvForBtag=0.8484;
+const double csvForBtag=0.8838;
 int Scalesize=9;
 int PDFsize=101;
 class SFMaker : public TSelector {
@@ -219,6 +220,9 @@ class SFMaker : public TSelector {
   ISRCorrector *isrcorr = 0;
   TFile* isrfile = 0;
   TH1* h_isr = 0;
+  //  TH2F* jMap=0;
+  //  TH2F* pMap=0;
+
   Double_t w_isr;
   Double_t w_pu;
   BTagCorrector *btagcorr = 0;
@@ -246,6 +250,11 @@ class SFMaker : public TSelector {
   TH1D* h_elecIsoTrack_NJetsunc = 0;
   TH1D* h_pionIsoTrack_NJetsunc = 0;
 
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+
 
   TString treeName = " ";
 
@@ -257,6 +266,8 @@ class SFMaker : public TSelector {
   UShort_t JetsNum_;
   Float_t mtw;
   UShort_t Bin_;
+  Int_t NMuons=-1;
+  Int_t NElectrons=-1;
 
   UShort_t MuonsNoIsoNum_, MuonsNum_;
   UShort_t ElectronsNoIsoNum_, ElectronsNum_;
@@ -298,13 +309,14 @@ class SFMaker : public TSelector {
   ULong64_t       EvtNum;
   Bool_t           BadChargedCandidateFilter;
   Bool_t           BadPFMuonFilter;
+  Bool_t           ecalBadCalibFilter;
   Int_t           BTags;
   Int_t          CSCTightHaloFilter;
   Double_t        DeltaPhi1;
   Double_t        DeltaPhi2;
   Double_t        DeltaPhi3;
   Double_t        DeltaPhi4;
-  Int_t           globalTightHalo2016Filter;
+  Int_t           globalSuperTightHalo2016Filter;
   Int_t           EcalDeadCellTriggerPrimitiveFilter;
   Int_t           eeBadScFilter;
   std::vector<TLorentzVector> *GenElectrons=0;
@@ -319,6 +331,11 @@ class SFMaker : public TSelector {
   Int_t           isoMuonTracksNum;
   Int_t           isoPionTracksNum;
   Bool_t          JetID;
+  std::vector<double> *Muons_MiniIso=0;
+  std::vector<bool> *Muons_mediumID=0;
+  std::vector<bool> *Muons_passIso=0;
+  std::vector<bool> *Electrons_passIso=0;
+
   std::vector<TLorentzVector> *Jets=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
@@ -385,12 +402,13 @@ class SFMaker : public TSelector {
   TBranch        *b_BTags=0;   //!
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
+  TBranch        *b_ecalBadCalibFilter=0;
   TBranch        *b_CSCTightHaloFilter=0;   //!
   TBranch        *b_DeltaPhi1=0;   //!
   TBranch        *b_DeltaPhi2=0;   //!
   TBranch        *b_DeltaPhi3=0;   //!
   TBranch        *b_DeltaPhi4=0;   //!
-  TBranch        *b_globalTightHalo2016Filter=0;   //!
+  TBranch        *b_globalSuperTightHalo2016Filter=0;   //!
   TBranch        *b_EcalDeadCellTriggerPrimitiveFilter=0;   //!
   TBranch        *b_eeBadScFilter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
@@ -404,6 +422,12 @@ class SFMaker : public TSelector {
   TBranch        *b_isoElectronTracksNum=0;   //!
   TBranch        *b_isoMuonTracksNum=0;   //!
   TBranch        *b_isoPionTracksNum=0;   //!
+  TBranch        *b_Muons_passIso=0;
+  TBranch        *b_Muons_mediumID=0;
+  TBranch        *b_Muons_MiniIso=0;
+  TBranch        *b_Electrons_passIso=0;
+
+
   TBranch        *b_JetID=0;   //!
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_jecUnc=0;
@@ -431,6 +455,8 @@ class SFMaker : public TSelector {
   TBranch        *b_ScaleWeights=0;
   TBranch        *b_PDFWeights=0;
   TBranch        *b_madHT=0;
+  TBranch        *b_NMuons=0;
+  TBranch        *b_NElectrons=0;
   TBranch        *b_SusyLSPMass=0;
   TBranch        *b_SusyMotherMass=0;
   TBranch        *b_TrueNumInteractions=0;
@@ -600,17 +626,21 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("DeltaPhi2", 1);
   fChain->SetBranchStatus("DeltaPhi3", 1);
   fChain->SetBranchStatus("DeltaPhi4", 1);
-  //if(!runOnSignalMC){
+  
+  //  if(!runOnSignalMC){
+  fChain->SetBranchStatus("CSCTightHaloFilter", 1);
     fChain->SetBranchStatus("EcalDeadCellTriggerPrimitiveFilter", 1);
     fChain->SetBranchStatus("eeBadScFilter", 1);
     fChain->SetBranchStatus("HBHENoiseFilter", 1);
     fChain->SetBranchStatus("HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("ecalBadCalibFilter", 1);
     //if(runOnData){
-    //  fChain->SetBranchStatus("globalTightHalo2016Filter", 1);
-    //  fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
-    //  fChain->SetBranchStatus("BadPFMuonFilter", 1);
-    //}
-  //}
+      fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
+      fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
+      fChain->SetBranchStatus("BadPFMuonFilter", 1);
+      //    }
+      //  }
+
   fChain->SetBranchStatus("Electrons", 1);
   fChain->SetBranchStatus("HT", 1);
   fChain->SetBranchStatus("isoElectronTracks", 1);
@@ -639,6 +669,12 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_jecUnc" , 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
+  fChain->SetBranchStatus("Muons_passIso",1);
+  fChain->SetBranchStatus("Muons_mediumID",1);
+  fChain->SetBranchStatus("Muons_MiniIso",1);
+
+  fChain->SetBranchStatus("Electrons_passIso",1);
+
   if(doTopPtReweighting){
     fChain->SetBranchStatus("GenParticles", 1);
     fChain->SetBranchStatus("GenParticles_PdgId", 1);
@@ -675,6 +711,10 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Muons_tightID", 1);
   fChain->SetBranchStatus("Electrons_mediumID", 1);
   fChain->SetBranchStatus("Electrons_tightID", 1);
+  fChain->SetBranchStatus("NMuons",1);
+  fChain->SetBranchStatus("NElectrons",1); 
+  fChain->SetBranchAddress("NMuons", &NMuons, &b_NMuons);
+  fChain->SetBranchAddress("NElectrons", &NElectrons, &b_NElectrons);
   fChain->SetBranchStatus("TAPElectronTracks", 1);
   fChain->SetBranchStatus("TAPElectronTracks_activity", 1);
   fChain->SetBranchStatus("TAPElectronTracks_charge", 1);
@@ -700,14 +740,17 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("DeltaPhi3", &DeltaPhi3, &b_DeltaPhi3);
   fChain->SetBranchAddress("DeltaPhi4", &DeltaPhi4, &b_DeltaPhi4);
   //if(!runOnSignalMC){
+    fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
     fChain->SetBranchAddress("EcalDeadCellTriggerPrimitiveFilter", &EcalDeadCellTriggerPrimitiveFilter, &b_EcalDeadCellTriggerPrimitiveFilter);
     fChain->SetBranchAddress("eeBadScFilter", &eeBadScFilter, &b_eeBadScFilter);
     fChain->SetBranchAddress("HBHENoiseFilter", &HBHENoiseFilter, &b_HBHENoiseFilter);
     fChain->SetBranchAddress("HBHEIsoNoiseFilter", &HBHEIsoNoiseFilter, &b_HBHEIsoNoiseFilter);
+    fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
+
     //if(runOnData){
-    //  fChain->SetBranchAddress("globalTightHalo2016Filter", &globalTightHalo2016Filter, &b_globalTightHalo2016Filter);
-    //  fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
-    //  fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
+      fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
+      fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
+      fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
     //}
   //}
   fChain->SetBranchAddress("HT", &HT, &b_HT);
@@ -733,6 +776,13 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("TriggerNames", &TriggerNames, &b_TriggerNames);
   fChain->SetBranchAddress("TriggerPass", &TriggerPass, &b_TriggerPass);
   fChain->SetBranchAddress("TriggerPrescales", &TriggerPrescales, &b_TriggerPrescales);
+  fChain->SetBranchAddress("Muons_mediumID", &Muons_mediumID, &b_Muons_mediumID);
+  fChain->SetBranchAddress("Muons_MiniIso", &Muons_MiniIso, &b_Muons_MiniIso);
+
+  fChain->SetBranchAddress("Muons_passIso", &Muons_passIso, &b_Muons_passIso);
+  fChain->SetBranchAddress("Electrons_passIso", &Electrons_passIso, &b_Electrons_passIso);
+
+
   fChain->SetBranchAddress("Jets_jecUnc", &Jets_jecUnc, &b_Jets_jecUnc);
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);

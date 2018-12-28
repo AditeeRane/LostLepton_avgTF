@@ -6,6 +6,8 @@ outStr=$2
 export SUBMIT_DIR=`pwd -P`
 
 for TStr in t_top t_antitop tW_top tW_antitop s_channel; do
+#for TStr in t_top; do
+
 #for TTbarStr in HT_1200_2500 HT_600_800 HT_800_1200 HT_2500_Inf; do
 #for TTbarStr in HT_2500_Inf; do
 #for TTbarStr in T_SingleLep Tbar_SingleLep; do
@@ -33,11 +35,16 @@ for TStr in t_top t_antitop tW_top tW_antitop s_channel; do
 	export Suffix=${TStr}_${outStr}_$filenum
 	if [ $filenum -lt 10 ]
 	then
+	    export ArgTwo=filelist_Spring15_ST_${TStr}_00$filenum
+	    export ArgTwoB=InputFiles_T/${ArgTwo}
+	elif [ $filenum -lt 100 ]
+	then
 	    export ArgTwo=filelist_Spring15_ST_${TStr}_0$filenum
 	    export ArgTwoB=InputFiles_T/${ArgTwo}
 	else
 	    export ArgTwo=filelist_Spring15_ST_${TStr}_$filenum
 	    export ArgTwoB=InputFiles_T/${ArgTwo}
+
 	fi
 	export ArgThree=ST_${Suffix}
 	export ArgFive=00

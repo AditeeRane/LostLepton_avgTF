@@ -198,7 +198,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
 
-    
+    vector<int> MHTJetsIdxv2Recipe;    
+    vector<int> ElectronMatchJetIdxv2Recipe;
     vector<TVector3> NewJets;
     vector<TVector3> HT3JetVec;
     vector<TVector3> MHT3JetVec;
@@ -221,6 +222,11 @@ Bool_t SFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTags = 0;
+
+
+    //    std::cout<<" evtweight "<<Weight<<endl;
+
+
   //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
     if(JECSys){ 
       for(unsigned int i=0;i < Jets->size();i++){
@@ -331,7 +337,13 @@ Bool_t SFMaker::Process(Long64_t entry)
 	if(HT3JetCSVvec[i]>csvForBtag)
 	  newBTags++;
       }
-    }    
+    }
+    else{
+      for(unsigned j = 0; j < Jets->size(); ++j){
+	if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) < 5.0)
+	  MHTJetsIdxv2Recipe.push_back(j);
+      }
+    }
 
     //    if(Jets->size() !=MHT3JetVec.size())
     //std::cout<<" jets "<<Jets->size()<<" MHT3 "<<MHT3JetVec.size()<<" btags "<<BTags<<" newBTags "<<newBTags<<endl;
@@ -356,7 +368,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     }
 
 
-    std::cout<<" **pass baseline** "<<" old jet "<<NJets<<" old HT "<< HT<<" old MHT "<<MHT<<" dphi1 "<<DeltaPhi1<<" dphi2 "<<DeltaPhi2<<" dphi3 "<<DeltaPhi3<<" dphi4 "<<DeltaPhi4<<endl;
+    //    std::cout<<" **pass baseline** "<<" old jet "<<NJets<<" old HT "<< HT<<" old MHT "<<MHT<<" dphi1 "<<DeltaPhi1<<" dphi2 "<<DeltaPhi2<<" dphi3 "<<DeltaPhi3<<" dphi4 "<<DeltaPhi4<<endl;
       
     //if(newNJets==2)
     //std::cout<<" there are 2 jets "<<endl;
@@ -367,7 +379,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR, 180101- Only consider events which have passed filters and atleast one gen electron or one gen muon.
     if(GenMuonsNum_ + GenElectronsNum_ == 0) return kTRUE;
     
-    std::cout<<" muons "<<GenMuonsNum_<<" electrons "<<GenElectronsNum_<<endl;
+    //    std::cout<<" muons "<<GenMuonsNum_<<" electrons "<<GenElectronsNum_<<endl;
     if(JECSys){
       if(useCombinedBins){ //useCombinedBins=false
         Bin_ = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
@@ -386,7 +398,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       }    
       if(Bin_ > 900) return kTRUE;
     }
-    std::cout<<" falling into search bin "<<endl;
+    //    std::cout<<" falling into search bin "<<endl;
     // TH1 cannot properly deal with negative bin contents
     // At most 1% difference in SFs expected (rare BGs only)
     //if(Weight < 0) return kTRUE;
@@ -442,7 +454,7 @@ Bool_t SFMaker::Process(Long64_t entry)
         TObjArray *optionArray = currentTree.Tokenize("/");
         currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-	std::cout<<" currFileName "<<currentFile<<endl;
+	//	std::cout<<" currFileName "<<currentFile<<endl;
 	//
 	//*AR- 180315-for every new tree find corresponding skimtree
 	string skimName="tree_TTJets_SingleLeptFromT.root";
@@ -483,7 +495,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2017.root";
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 	//	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm/%s",skimName.c_str());
-	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
+	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
 
 	//* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
         if(doISRcorr){ //doISRcorr=false
@@ -521,7 +533,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  //}
 	  //else
 	  btagcorr->SetFastSim(false); //*AR-180324:Turns FastSim false
-	  std::cout<<" accounted for btag SF "<<endl;
+	  //	  std::cout<<" accounted for btag SF "<<endl;
         } //end of doBTagCorr
 	
         /*if(runOnSignalMC){
@@ -562,14 +574,88 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-Nov27,2017-following if loop was introduced to ignore negative weight events. After ignoring those, SFSR for exotic and single top samples are found to be better in agreement with Simon's results
 
     //*AR- 180315-Here onward execution happens for every new event.
+    //    std::cout<<" weight before prefire map "<<Weight<<endl;
+    if(GetNonPrefireProb){
+    
+      for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
+	double NonPrefireWt=1.0;
+	double NonPrefireJetWt=1.0;
+	double NonPrefireMatchElectronWt=1.0;
+	int jetIdx=MHTJetsIdxv2Recipe[i];
+	double jPt=Jets->at(jetIdx).Pt();
+	double jEta=Jets->at(jetIdx).Eta();
+	double jPhi=Jets->at(jetIdx).Phi();
+	int binX=jMap->GetXaxis()->FindBin(jEta);
+	int binY=jMap->GetYaxis()->FindBin(jPt);
+	NonPrefireJetWt=1-jMap->GetBinContent(binX,binY);
+	//std::cout<<" jetidx "<<i<<" jPt "<<jPt<<" jEta "<<jEta<<" binX "<<binX<<" binY "<<binY<<" preWt "<<jMap->GetBinContent(binX,binY)<<" NonPrefireJetWt "<<NonPrefireJetWt<<endl;
+	for(unsigned j = 0; j < Electrons->size(); ++j){
+	  if(Electrons_passIso->at(j)){
+	    double pPt=Electrons->at(j).Pt();
+	    double pEta=Electrons->at(j).Eta();
+	    int binpX=pMap->GetXaxis()->FindBin(pEta);
+	    int binpY=pMap->GetYaxis()->FindBin(pPt);
+	    double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	    //std::cout<<" photonidx "<<j<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
+	    
+	    double dEtaJetElectron=Electrons->at(j).Eta()-jEta;
+	    double dPhiJetElectron=TVector2::Phi_mpi_pi(Electrons->at(j).Phi()-jPhi);
+	    double dRJetElectron=sqrt(dEtaJetElectron * dEtaJetElectron + dPhiJetElectron * dPhiJetElectron);
+	    if(dRJetElectron<0.4){
+	      //std::cout<<" dRJetElectron "<<dRJetElectron<<endl;
+	      NonPrefireMatchElectronWt *= (1-pMap->GetBinContent(binpX,binpY));
+	      ElectronMatchJetIdxv2Recipe.push_back(j);
+	    } //end of dRJetElectron
+	    //	std::cout<<" electron "<<j<<" NonPrefireMatchElectronWt "<<NonPrefireMatchElectronWt<<endl;
+	  }//end of Electrons_passIso
+	} //end of loop over electrons
+	if(NonPrefireJetWt<NonPrefireMatchElectronWt)
+	  Weight *= NonPrefireJetWt;
+	else
+	  Weight *= NonPrefireMatchElectronWt;
+      } //end of loop over MHT jets
+      //      std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
+      
+      //    std::cout<<" weight_afterAllJets "<<Weight<<endl;
+      
+      for(unsigned j = 0; j < Electrons->size(); ++j){
+	if(Electrons_passIso->at(j)){
+	  bool MatchedtoJet=false;
+	  double pPt=Electrons->at(j).Pt();
+	  double pEta=Electrons->at(j).Eta();
+	  int binpX=pMap->GetXaxis()->FindBin(pEta);
+	  int binpY=pMap->GetYaxis()->FindBin(pPt);
+	  double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	  //      std::cout<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
+	  
+	  for(unsigned k = 0; k <ElectronMatchJetIdxv2Recipe.size();k++){
+	    unsigned int electronIdx=ElectronMatchJetIdxv2Recipe[k];
+	    if(j != electronIdx)
+	      continue;
+	    else{
+	      MatchedtoJet=true;
+	      break;
+	    }
+	  } //end of loop over ElectronMatchJetIdxv2Recipe
+	  if(!MatchedtoJet){
+	    Weight *= (1-pMap->GetBinContent(binpX,binpY));
+	    //std::cout<<" weight after nonmatchedelectron "<<j<<" is "<<Weight<<endl;
+	  }
+	} //end of Electrons_passIso
+      } //end of loop over electrons
+      //    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
+    } // end of GetNonPrefireProb
+    
+    //  std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
+    
     if(Weight < 0)
       return kTRUE;
     //      std::cout<<" entry "<<entry<<" negative event weight "<<endl;
-
+    
     if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
       madHTcut=600;
       if(madHT > madHTcut){
-	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
+	//	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
 	return kTRUE;
       }
     }
@@ -648,7 +734,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     GenElectronsAccNum_ = GenElectronsAcc.size();
     //*AR-180101---Skip the event if there is no electron and no muon with pT>5 and abs(eta)<2.5=> Survived events: events which passed filters and have atleast one gen lepton(ele or muon) with pT>5 and abs(eta)<2.5
     if(GenMuonsAccNum_ + GenElectronsAccNum_ == 0) return kTRUE;
-
+    //    std::cout<<" GenElectronsAccNum_ "<<GenElectronsAccNum_<<" GenMuonsAccNum_ "<<GenMuonsAccNum_<<endl;
     //*AR-180101---Call first two leading muons or electrons by special names
     //Define some helpful variables
     if(GenMuonsAccNum_ > 0){
@@ -670,7 +756,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-180606: Get number of reco electrons and muons in the event
     ElectronsNum_ = Electrons->size();
     MuonsNum_ = Muons->size();
-
+    //    std::cout<<" ElectronsBeforeIso "<<ElectronsNum_<<" MuonsBeforeIsoLooseID "<<MuonsNum_<<endl;
     // Check isoTrack collection saved in tree using full TAP collection
     //isoElectronTracks: #electron tracks with track isolation<0.2 and mT<100
     //isoMuonTracks: #muon tracks with track isolation<0.2 and mT<100
@@ -717,21 +803,23 @@ Bool_t SFMaker::Process(Long64_t entry)
     for(unsigned i=0; i< GenElectronsAccNum_; i++){
       bool matched = false;
         for(unsigned j=0; j< ElectronsNum_; j++){
-            if(std::abs(GenElectronsAcc.at(i).Pt() - Electrons->at(j).Pt()) / GenElectronsAcc.at(i).Pt() < 0.1
-                && deltaR(GenElectronsAcc.at(i).Eta(), GenElectronsAcc.at(i).Phi(), Electrons->at(j).Eta(), Electrons->at(j).Phi()) < 0.03){
-                if(ElectronsPromptNum_==0){
-                    ElectronsPromptPt_ = GenElectronsAcc.at(i).Pt();
-                    ElectronsPromptEta_ = GenElectronsAcc.at(i).Eta();
-                    ElectronsPromptMatch_ = i;
-                }else if(ElectronsPromptNum_==1){
-                    ElectronsPromptPt2_ = GenElectronsAcc.at(i).Pt();
-                    ElectronsPromptEta2_ = GenElectronsAcc.at(i).Eta();
-                    ElectronsPromptMatch2_ = i;
-                }
-                matched = true;
-                ElectronsPromptNum_++;
-                break; //*AR if for a given gen object, a matching reco object is found, skip looping over remaining reco objects for match
+	  if(Electrons_passIso->at(j)){
+	    if(std::abs(GenElectronsAcc.at(i).Pt() - Electrons->at(j).Pt()) / GenElectronsAcc.at(i).Pt() < 0.1
+	       && deltaR(GenElectronsAcc.at(i).Eta(), GenElectronsAcc.at(i).Phi(), Electrons->at(j).Eta(), Electrons->at(j).Phi()) < 0.03){
+	      if(ElectronsPromptNum_==0){
+		ElectronsPromptPt_ = GenElectronsAcc.at(i).Pt();
+		ElectronsPromptEta_ = GenElectronsAcc.at(i).Eta();
+		ElectronsPromptMatch_ = i;
+	      }else if(ElectronsPromptNum_==1){
+		ElectronsPromptPt2_ = GenElectronsAcc.at(i).Pt();
+		ElectronsPromptEta2_ = GenElectronsAcc.at(i).Eta();
+		ElectronsPromptMatch2_ = i;
+	      }
+	      matched = true;
+	      ElectronsPromptNum_++;
+	      break; //*AR if for a given gen object, a matching reco object is found, skip looping over remaining reco objects for match
             }// end of if(std::abs(GenElect...)
+	  }
         } //end of loop over ElectronsNum_
         if(matched) continue; //* AR,180101---if a matching reco electron is found don't need to check for isoElectronTracks, hence skip rest of this loop and move to next gen electron 
 
@@ -756,21 +844,24 @@ Bool_t SFMaker::Process(Long64_t entry)
     for(unsigned i=0; i< GenMuonsAccNum_; i++){
         bool matched = false;
         for(unsigned j=0; j< MuonsNum_; j++){
+	  if(Muons_passIso->at(j) && Muons_mediumID->at(j)){
+	    //	    std::cout<<" miniIso "<< Muons_MiniIso->at(j)<<endl;
             if(std::abs(GenMuonsAcc.at(i).Pt() - Muons->at(j).Pt()) / GenMuonsAcc.at(i).Pt() < 0.1
-                && deltaR(GenMuonsAcc.at(i).Eta(), GenMuonsAcc.at(i).Phi(), Muons->at(j).Eta(), Muons->at(j).Phi()) < 0.03){
-                if(MuonsPromptNum_==0){
-                    MuonsPromptPt_ = GenMuonsAcc.at(i).Pt();
-                    MuonsPromptEta_ = GenMuonsAcc.at(i).Eta();
-                    MuonsPromptMatch_ = i;
-                }else if(MuonsPromptNum_==1){
-                    MuonsPromptPt2_ = GenMuonsAcc.at(i).Pt();
-                    MuonsPromptEta2_ = GenMuonsAcc.at(i).Eta();
-                    MuonsPromptMatch2_ = i;
-                }
-                matched = true;
-                MuonsPromptNum_++;
-                break;
+	       && deltaR(GenMuonsAcc.at(i).Eta(), GenMuonsAcc.at(i).Phi(), Muons->at(j).Eta(), Muons->at(j).Phi()) < 0.03){
+	      if(MuonsPromptNum_==0){
+		MuonsPromptPt_ = GenMuonsAcc.at(i).Pt();
+		MuonsPromptEta_ = GenMuonsAcc.at(i).Eta();
+		MuonsPromptMatch_ = i;
+	      }else if(MuonsPromptNum_==1){
+		MuonsPromptPt2_ = GenMuonsAcc.at(i).Pt();
+		MuonsPromptEta2_ = GenMuonsAcc.at(i).Eta();
+		MuonsPromptMatch2_ = i;
+	      }
+	      matched = true;
+	      MuonsPromptNum_++;
+	      break;
             }//end of if condition with deltaR matching
+	  }
         } //end of loop over j
         if(matched) continue;
 
@@ -794,7 +885,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-180606:Skip event if cases of (matched lepton+matched tracks) exceed number of gen leptons(ele/muons withpT>5 and eta<2.5), that is avoids double counting.
     //*AR-181224:No double counting is assured by the process that if a matching reco lepton is found to a gen lepton, then we do not check for a isolated lepton track to match with gen lepton.
 
-
+    //    std::cout<<" ElectronsPassIso_matchGen "<<ElectronsPromptNum_<<" MuonsPassIsoMediumID_matchGen "<<MuonsPromptNum_<<endl;
  
     if(GenMuonsAccNum_ < MuonsPromptNum_ + MuonTracksPromptNum_ || GenElectronsAccNum_ < ElectronsPromptNum_ + ElectronTracksPromptNum_){
       std::cout<<"Mu:"<<GenMuonsAccNum_<<"->"<<MuonsPromptNum_<<"+"<<MuonTracksPromptNum_<<std::endl;
@@ -812,13 +903,13 @@ Bool_t SFMaker::Process(Long64_t entry)
     }
     for(int i = 0; i < nLoops; i++){
     	double WeightBtagProb = Weight*bTagProb.at(i);
-	std::cout<<" i "<<i<<" btagProb "<<bTagProb.at(i)<<endl;    
+	//	std::cout<<" i "<<i<<" btagProb "<<bTagProb.at(i)<<endl;    
 	unsigned bTagBin = bTagBins.at(i);
 	
 	//*AR, Nov20,2017- Checks if a gen muon is found and gen electron is not found
 	//*AR, Nov20,2017- input histograms for deriving SF are only filled when there is electron /muon within acceptance pt>5 and |eta|<2.5
 	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
-	  std::cout<<" mu_Pt "<<GenMuonsAccPt_<<" mu_Eta "<<GenMuonsAccEta_<<endl;
+	  //	  std::cout<<" mu_Pt "<<GenMuonsAccPt_<<" mu_Eta "<<GenMuonsAccEta_<<endl;
 
 	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -845,7 +936,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	  std::cout<<" isoSF "<<isoSF<<endl;
+	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 	  if(IDMuSys){
 	    //	    std::pair<double, double> MyPair;
 	    //MyPair=EvalSF(h_muIDSF,GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
@@ -857,7 +948,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	  else
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	  std::cout<<" idSF "<<recoSF<<endl;
+	  //	  std::cout<<" idSF "<<recoSF<<endl;
 	  
 	  if(TrackRecoMuSys){
 	      if(SysUp)
@@ -867,7 +958,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	  else
 	    trackingSF = GetSF(h_muTrkSF,GenMuonsAccEta_);
-	  std::cout<<" trackSF "<<trackingSF<<endl;
+	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
 
 	  
 	  
@@ -958,7 +1049,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     	} //end of if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0)
 	
     	if(GenMuonsAccNum_ == 0 && GenElectronsAccNum_ == 1){
-	  std::cout<<" ele_Pt "<<GenElectronsAccPt_<<" ele_Eta "<<GenElectronsAccEta_<<endl;
+	  //	  std::cout<<" ele_Pt "<<GenElectronsAccPt_<<" ele_Eta "<<GenElectronsAccEta_<<endl;
 
 	  h_el_nOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	  h_el_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -982,7 +1073,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	  else
 	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_);
-	  std::cout<<" isoSF "<<isoSF<<endl;
+	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 
 	  if(IDEleSys){
 	    //	    std::pair<double, double> MyPair;
@@ -996,7 +1087,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	  else
 	    recoSF = GetSF(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_);
-	  std::cout<<" idSF "<<recoSF<<endl;
+	  //	  std::cout<<" idSF "<<recoSF<<endl;
 
 
 	  //*AR-180306---According to lepton SF twiki, 1% systematics should be added on top for electrons with pt<20 or >80 GeV, as Scale factors are found to be flat with pT. Nevertheless the pT dependence is hard to verify below 20GeV and above 80 GeV.
@@ -1018,7 +1109,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    else
 	      trackingSF = GetSF(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_);
 	  }
-	  std::cout<<" trackSF "<<trackingSF<<endl;
+	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
 
 	  
 	  if(ElectronsPromptNum_ == 1){
@@ -2115,11 +2206,11 @@ bool SFMaker::FiltersPass()
         if(HBHEIsoNoiseFilter!=1) result=false;
         if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
         if(eeBadScFilter!=1) result=false;
-
+	if(ecalBadCalibFilter!=1) result=false;
         //if(runOnData){
         //    if(!BadChargedCandidateFilter) result=false;
         //    if(!BadPFMuonFilter) result=false;
-        //    if(globalTightHalo2016Filter!=1) result=false;
+        //    if(globalSuperTightHalo2016Filter!=1) result=false;
         //}    
     }
     if(NVtx<=0) result=false;
