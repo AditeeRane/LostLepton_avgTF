@@ -35,15 +35,15 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool runOnData = false;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true;
+bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-
+bool GetNonPrefireProb=true;  //true for 2017 MC
 // Use TFs with/without SFs
 const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.8838;
 // Use TFs with/without SFs
-const double scaleFactorWeight = 35862.351;
+const double scaleFactorWeight = 41486.328;
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -60,7 +60,7 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/CSVv2_Moriond17_B_H_mod.csv");
+const string path_bTagCalib("btag/CSVv2_94XSF_V2_B_F.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
@@ -496,6 +496,12 @@ class Prediction : public TSelector {
   string SkimFilePath=" ";
   string OldSkimFilePath=" ";
 
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+
+
   SearchBins *SearchBins_ =0;
   SearchBins *SearchBinsQCD_ =0;
   SearchBins *SearchBins_BTags_ =0;
@@ -578,6 +584,7 @@ class Prediction : public TSelector {
   Int_t           isoMuonTracksNum;
   Int_t           isoPionTracksNum;
   Bool_t          JetID;
+  std::vector<bool> *Muons_mediumID=0;
   std::vector<bool> *Muons_passIso=0;
   std::vector<bool> *Electrons_passIso=0;
 
@@ -699,6 +706,7 @@ class Prediction : public TSelector {
   TBranch        *b_isoElectronTracksNum=0;   //!
   TBranch        *b_isoMuonTracksNum=0;   //!
   TBranch        *b_isoPionTracksNum=0;   //!
+  TBranch        *b_Muons_mediumID=0;
   TBranch        *b_Muons_passIso=0;
   TBranch        *b_Electrons_passIso=0;
 
@@ -834,7 +842,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
-  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
+  //  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------
 
@@ -1024,6 +1032,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_neutralMultiplicity", 1);
   fChain->SetBranchStatus("Jets_photonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_photonMultiplicity",1);
+  fChain->SetBranchStatus("Muons_mediumID",1);
   fChain->SetBranchStatus("Muons_passIso",1);
   fChain->SetBranchStatus("Electrons_passIso",1);
   if(topPTreweight){
@@ -1135,6 +1144,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("TriggerNames", &TriggerNames, &b_TriggerNames);
   fChain->SetBranchAddress("TriggerPass", &TriggerPass, &b_TriggerPass);
   fChain->SetBranchAddress("TriggerPrescales", &TriggerPrescales, &b_TriggerPrescales);
+  fChain->SetBranchAddress("Muons_mediumID", &Muons_mediumID, &b_Muons_mediumID);
   fChain->SetBranchAddress("Muons_passIso", &Muons_passIso, &b_Muons_passIso);
   fChain->SetBranchAddress("Electrons_passIso", &Electrons_passIso, &b_Electrons_passIso);
 
