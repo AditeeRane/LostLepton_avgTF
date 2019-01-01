@@ -97,6 +97,12 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepPtclean_Exp=new TH1D("h_LepPtclean_Exp","h_LepPtclean_Exp",20,0.0,1000.0);
   h_LepEtaclean_Exp=new TH1D("h_LepEtaclean_Exp","h_LepEtaclean_Exp",10,-2.5,2.5);
   h_LepPhiclean_Exp=new TH1D("h_LepPhiclean_Exp","h_LepPhiclean_Exp",7,-3.5,3.5);
+  h_Weight_Exp =new TH1D("h_Weight_Exp","h_Weight_Exp",200,-5.,5.);
+  h_GenHT_Exp =new TH1D("h_GenHT_Exp","h_GenHT_Exp",100,0.,1000.);
+
+  h_WeightBeforeScalePrefire_Exp =new TH1D("h_WeightBeforeScalePrefire_Exp","h_WeightBeforeScalePrefire_Exp",200,-5.,5.);
+  h_WeightBeforeScalePrefirevsGenHT_Exp =new TH2D("h_WeightBeforeScalePrefirevsGenHT_Exp","h_WeightBeforeScalePrefirevsGenHT_Exp",100,0,1000.0,200,-5.,5.);
+  h_WeightBeforeScalePrefirevsRecoHT_Exp =new TH2D("h_WeightBeforeScalePrefirevsRecoHT_Exp","h_WeightBeforeScalePrefirevsRecoHT_Exp",100,0,1000.0,200,-5.,5.);
 
   h_HTv2Recipe_Exp =new TH1D("h_HTv2Recipe_Exp","h_HTv2Recipe_Exp",12,100,2500);
   h_HTforLowNJetv2Recipe_Exp =new TH1D("h_HTforLowNJetv2Recipe_Exp","h_HTforLowNJetv2Recipe_Exp",12,100,2500);
@@ -469,6 +475,12 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_LepPtclean_Exp);
   GetOutputList()->Add(h_LepEtaclean_Exp);
   GetOutputList()->Add(h_LepPhiclean_Exp); 
+
+  GetOutputList()->Add(h_Weight_Exp);
+  GetOutputList()->Add(h_GenHT_Exp);
+  GetOutputList()->Add(h_WeightBeforeScalePrefire_Exp);
+  GetOutputList()->Add(h_WeightBeforeScalePrefirevsGenHT_Exp);
+  GetOutputList()->Add(h_WeightBeforeScalePrefirevsRecoHT_Exp);
 
   GetOutputList()->Add(h_HTv2Recipe_Exp);
   GetOutputList()->Add(h_HTforLowNJetv2Recipe_Exp);
@@ -1067,14 +1079,16 @@ Bool_t Prediction::Process(Long64_t entry)
       return kTRUE;
     }
   }
-/*
+  /*
   for(unsigned i=0;i<TriggerNames->size();i++){
     std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
   }
-*/  
+  */
 //  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
   // Signal region MET triggers applied only for data
-  if(useTrigger) if(!TriggerPass->at(108) && !TriggerPass->at(110) &&!TriggerPass->at(114) && !TriggerPass->at(124) && !TriggerPass->at(126) && !TriggerPass->at(129)) return kTRUE;
+
+
+  if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) &&!TriggerPass->at(112) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135)) return kTRUE;
 
   if(runOnSignalMC && useGenHTMHT){
     Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
@@ -1475,13 +1489,26 @@ Bool_t Prediction::Process(Long64_t entry)
     
   }
   
-  if(runOnData) Weight = 1.;
+  if(runOnData){
+    Weight = 1.;
+    h_WeightBeforeScalePrefire_Exp->Fill(Weight,Weight);
+    h_WeightBeforeScalePrefirevsGenHT_Exp->Fill(GenHT,Weight,Weight);
+    h_WeightBeforeScalePrefirevsRecoHT_Exp->Fill(HTv2Recipe,Weight,Weight);
+
+  }
   else{
     //*AR:180619: As /uscms_data/d3/arane/work/RA2bInterpretation/CMSSW_7_4_7/src/SCRA2BLE/DatacardBuilder/GenMHTCorrection.py scales signal contamination by lumi in /pb, here signal histograms are saved at 1/pb scale.
-    if(!runOnSignalMC)
+    if(!runOnSignalMC){
+      if(HTv2Recipe<600.0)
+	std::cout<<" weight_beforelumiscale "<<Weight<<" genHT "<<GenHT<<" HT "<<HT<<" HTv2Recipe "<<HTv2Recipe<<endl;
+      h_WeightBeforeScalePrefire_Exp->Fill(Weight,Weight);
+      h_WeightBeforeScalePrefirevsGenHT_Exp->Fill(GenHT,Weight,Weight);
+      h_WeightBeforeScalePrefirevsRecoHT_Exp->Fill(HTv2Recipe,Weight,Weight);
+
       Weight *= scaleFactorWeight;
+    }
   }
-  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
+  //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
 
   if(GetNonPrefireProb){
     
@@ -2009,6 +2036,9 @@ Bool_t Prediction::Process(Long64_t entry)
     h_LepEtaclean_Exp->Fill(LepEta,WeightBtagProb);
     h_LepPhiclean_Exp->Fill(LepPhi,WeightBtagProb);
 
+    h_Weight_Exp->Fill(WeightBtagProb,WeightBtagProb);
+    h_GenHT_Exp->Fill(GenHT,WeightBtagProb);
+
     h_HTv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
     if(BTagsv2Recipe==2){
       h_HTforTwoNbv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
@@ -2228,6 +2258,13 @@ void Prediction::Terminate()
   h_LepEtaclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtaclean_Exp"));
   h_LepPhiclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhiclean_Exp"));
 
+
+  h_Weight_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Weight_Exp"));
+  h_GenHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenHT_Exp"));
+
+  h_WeightBeforeScalePrefire_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_WeightBeforeScalePrefire_Exp"));
+  h_WeightBeforeScalePrefirevsGenHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_WeightBeforeScalePrefirevsGenHT_Exp"));
+  h_WeightBeforeScalePrefirevsRecoHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_WeightBeforeScalePrefirevsRecoHT_Exp"));
 
   h_HTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_Exp"));
   h_HTforTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforTwoNbv2Recipe_Exp"));
@@ -2595,6 +2632,12 @@ void Prediction::Terminate()
   h_LepEtaclean_Exp->Write(); 
   h_LepPhiclean_Exp->Write(); 
 
+  h_Weight_Exp->Write();
+  h_GenHT_Exp->Write();
+
+  h_WeightBeforeScalePrefire_Exp->Write();
+  h_WeightBeforeScalePrefirevsGenHT_Exp->Write();
+  h_WeightBeforeScalePrefirevsRecoHT_Exp->Write();
 
   h_HTv2Recipe_Exp->Write();
   h_HTforLowNJetv2Recipe_Exp->Write();

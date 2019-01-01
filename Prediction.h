@@ -190,6 +190,11 @@ class Prediction : public TSelector {
   TH1D* h_LepPtclean_Exp=0;
   TH1D* h_LepEtaclean_Exp=0;
   TH1D* h_LepPhiclean_Exp=0;
+  TH1D * h_Weight_Exp=0;
+  TH1D * h_GenHT_Exp=0;
+  TH1D * h_WeightBeforeScalePrefire_Exp=0;
+  TH2D * h_WeightBeforeScalePrefirevsGenHT_Exp=0;  
+  TH2D * h_WeightBeforeScalePrefirevsRecoHT_Exp=0;  
 
   TH1D* h_HTv2Recipe_Exp=0;
   TH1D* h_HTforLowNJetv2Recipe_Exp=0;
@@ -1062,6 +1067,7 @@ void Prediction::Init(TTree *tree)
   //  fChain->SetBranchStatus("GenMHT", 1);
   //}
 
+  fChain->SetBranchStatus("GenHT", 1);
   fChain->SetBranchStatus("ElectronsNoIso_MT2Activity",1);
   fChain->SetBranchStatus("Electrons_MT2Activity", 1);
   fChain->SetBranchStatus("Muons_MT2Activity",1);
@@ -1187,7 +1193,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("Jets_chargedHadronEnergyFraction", &Jets_chargedHadronEnergyFraction, &b_Jets_chargedHadronEnergyFraction);
   }
   fChain->SetBranchAddress("Jets_chargedHadronEnergyFraction", &Jets_chargedHadronEnergyFraction, &b_Jets_chargedHadronEnergyFraction);
-
+  fChain->SetBranchAddress("GenHT", &GenHT, &b_GenHT);
   //if(useGenHTMHT){
   //  fChain->SetBranchAddress("GenHT", &GenHT, &b_GenHT);
   //  fChain->SetBranchAddress("GenMHT", &GenMHT, &b_GenMHT);

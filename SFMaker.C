@@ -574,7 +574,13 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-Nov27,2017-following if loop was introduced to ignore negative weight events. After ignoring those, SFSR for exotic and single top samples are found to be better in agreement with Simon's results
 
     //*AR- 180315-Here onward execution happens for every new event.
-    //    std::cout<<" weight before prefire map "<<Weight<<endl;
+    std::cout<<" weight before prefire map "<<Weight<<endl;
+    /*
+    if(Weight >= 1){
+      std::cout<<" skip event "<<endl;
+      return kTRUE;
+    }
+*/    
     if(GetNonPrefireProb){
     
       for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
@@ -650,6 +656,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     
     if(Weight < 0)
       return kTRUE;
+    
     //      std::cout<<" entry "<<entry<<" negative event weight "<<endl;
     
     if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
