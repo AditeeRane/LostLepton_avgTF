@@ -767,7 +767,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
-  //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
+  //std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
 
   resetValues();
   fChain->GetTree()->GetEntry(entry);
@@ -1051,7 +1051,12 @@ Bool_t Prediction::Process(Long64_t entry)
 
   if(!GetSignalRegHists){
     if(MuonsNum_==1 && ElectronsNum_==0){
-      mtw =  Muons_MTW->at(0);
+      for(unsigned int i=0;i<Muons->size();i++){
+	if(Muons_passIso->at(i) && Muons_mediumID->at(i)){
+	  mtw =  Muons_MTW->at(i);
+	  //	  std::cout<<" muon_i "<<i<<" iso "<<Muons_passIso->at(i)<<" ID "<<Muons_mediumID->at(i)<<" mtw "<<Muons_MTW->at(i)<<endl;
+	}
+      }
       //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
       
       //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
@@ -1060,7 +1065,10 @@ Bool_t Prediction::Process(Long64_t entry)
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
     }else if(MuonsNum_==0 && ElectronsNum_==1){
-      mtw =  Electrons_MTW->at(0);
+      for(unsigned int i=0;i<Electrons->size();i++){
+	if(Electrons_passIso->at(i))
+	  mtw =  Electrons_MTW->at(i);
+      }
       //std::cout<<" entry "<<entry<<" 1e event "<<endl;
       if(runOnSignalMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLe";
@@ -1471,7 +1479,7 @@ Bool_t Prediction::Process(Long64_t entry)
     Weight *= 0.99;
     //std::cout<<" weight_afterJetID "<<Weight<<endl;
   }
-  //*AR: true only for signal MC and useGenHTMHT=false
+  //*AR: true only for signal MC and useGenHTMHT=false, as signal MC should account for trigger efficiency in data 
   if(useTriggerEffWeight){ // false for SM MC
     //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
     if(runOnSignalMC){
@@ -1499,12 +1507,15 @@ Bool_t Prediction::Process(Long64_t entry)
   else{
     //*AR:180619: As /uscms_data/d3/arane/work/RA2bInterpretation/CMSSW_7_4_7/src/SCRA2BLE/DatacardBuilder/GenMHTCorrection.py scales signal contamination by lumi in /pb, here signal histograms are saved at 1/pb scale.
     if(!runOnSignalMC){
-      if(HTv2Recipe<600.0)
-	std::cout<<" weight_beforelumiscale "<<Weight<<" genHT "<<GenHT<<" HT "<<HT<<" HTv2Recipe "<<HTv2Recipe<<endl;
       h_WeightBeforeScalePrefire_Exp->Fill(Weight,Weight);
       h_WeightBeforeScalePrefirevsGenHT_Exp->Fill(GenHT,Weight,Weight);
       h_WeightBeforeScalePrefirevsRecoHT_Exp->Fill(HTv2Recipe,Weight,Weight);
-
+      
+      if(Weight >= 1){
+	std::cout<< " weight incorrect "<<endl;
+	return kTRUE;
+      }
+      
       Weight *= scaleFactorWeight;
     }
   }
