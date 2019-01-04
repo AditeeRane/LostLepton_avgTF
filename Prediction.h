@@ -34,6 +34,7 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
@@ -41,7 +42,7 @@ bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2017 MC
 // Use TFs with/without SFs
 const bool applySFs = true; //check:true only for data
-const double csvForBtag=0.8838;
+const double csvForBtag=0.4941;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 41486.328;
 
@@ -60,7 +61,7 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/CSVv2_94XSF_V2_B_F.csv");
+const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
@@ -152,6 +153,15 @@ class Prediction : public TSelector {
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
   TH1D* h_LepPhi_Exp=0;
+
+  TH1D* h_ElePt_Exp=0;
+  TH1D* h_EleEta_Exp=0;
+  TH1D* h_ElePhi_Exp=0;
+
+  TH1D* h_MuPt_Exp=0;
+  TH1D* h_MuEta_Exp=0;
+  TH1D* h_MuPhi_Exp=0;
+
   TH1D* h_rawJetPtforHT_Exp=0;
   TH1D* h_rawJetPtforMHTminusHT_Exp=0; 
   TH2D* h_rawJetPtvsEtaforHT_Exp=0;
@@ -532,6 +542,8 @@ class Prediction : public TSelector {
   Bool_t           BadPFMuonFilter;
   Bool_t           ecalBadCalibFilter;
   Int_t           BTags;
+  Int_t           BTagsDeepCSV;
+
   Int_t           BTagsclean;
   Int_t           BTagsv2Recipe;
   Int_t          CSCTightHaloFilter;
@@ -611,6 +623,10 @@ class Prediction : public TSelector {
   std::vector<int>     *Jets_photonMultiplicity=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
+  std::vector<double>     *Jets_bJetTagDeepCSVprobb=0;
+  std::vector<double>     *Jets_bJetTagDeepCSVprobbb=0;
+
+
   std::vector<double>     *Jets_jecFactor=0;
   
   std::vector<int>     *Jets_hadronFlavor=0;
@@ -672,6 +688,7 @@ class Prediction : public TSelector {
   TBranch        *b_LumiBlockNum=0;   //!
   TBranch        *b_EvtNum=0;   //!
   TBranch        *b_BTags=0;   //!
+  TBranch        *b_BTagsDeepCSV=0;   //!
   TBranch        *b_BTagsclean=0; 
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
@@ -719,6 +736,9 @@ class Prediction : public TSelector {
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
+  TBranch        *b_Jets_bJetTagDeepCSVprobb=0;   //!
+  TBranch        *b_Jets_bJetTagDeepCSVprobbb=0;   //!
+
   TBranch        *b_Jets_jecFactor=0;   //!
   TBranch        *b_Jets_chargedEmEnergyFraction=0;
   TBranch        *b_Jets_chargedHadronMultiplicity=0;
@@ -951,6 +971,8 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("LumiBlockNum", 1);
   fChain->SetBranchStatus("EvtNum", 1);
   fChain->SetBranchStatus("BTags", 1);
+  fChain->SetBranchStatus("BTagsDeepCSV", 1);
+
   fChain->SetBranchStatus("BTagsclean", 1);
 
   fChain->SetBranchStatus("DeltaPhi1", 1);
@@ -1021,6 +1043,9 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("TriggerPrescales", 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
+  fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobb", 1);
+  fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobbb", 1);
+
   fChain->SetBranchStatus("Jets_jecFactor", 1);
   fChain->SetBranchStatus("Jets_chargedEmEnergyFraction", 1); 
   fChain->SetBranchStatus("Jets_chargedHadronMultiplicity", 1);
@@ -1085,6 +1110,8 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
   fChain->SetBranchAddress("EvtNum", &EvtNum, &b_EvtNum);
   fChain->SetBranchAddress("BTags", &BTags, &b_BTags);
+  fChain->SetBranchAddress("BTagsDeepCSV", &BTagsDeepCSV, &b_BTagsDeepCSV);
+
   fChain->SetBranchAddress("DeltaPhi1", &DeltaPhi1, &b_DeltaPhi1);
   fChain->SetBranchAddress("DeltaPhi2", &DeltaPhi2, &b_DeltaPhi2);
   fChain->SetBranchAddress("DeltaPhi3", &DeltaPhi3, &b_DeltaPhi3);
@@ -1156,6 +1183,10 @@ void Prediction::Init(TTree *tree)
 
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
+
+  fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobb", &Jets_bJetTagDeepCSVprobb, &b_Jets_bJetTagDeepCSVprobb);
+  fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobbb", &Jets_bJetTagDeepCSVprobbb, &b_Jets_bJetTagDeepCSVprobbb);
+
   fChain->SetBranchAddress("Jets_jecFactor", &Jets_jecFactor, &b_Jets_jecFactor);
   fChain->SetBranchAddress("Jets_chargedEmEnergyFraction", &Jets_chargedEmEnergyFraction, &b_Jets_chargedEmEnergyFraction);
   fChain->SetBranchAddress("Jets_chargedHadronMultiplicity", &Jets_chargedHadronMultiplicity, &b_Jets_chargedHadronMultiplicity);

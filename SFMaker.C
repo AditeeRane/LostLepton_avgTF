@@ -17,7 +17,7 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     // When running with PROOF SlaveBegin() is called on each slave server.
     // The tree argument is deprecated (on PROOF 0 is passed).
   std::cout<<"***SFMaker::SlaveBegin***"<<std::endl;
-  
+  //*AR:190103---Uses QCD binning with 223 search bins  
   SearchBins_ = new SearchBins(true);
   SearchBins_BTags_ = new SearchBins(true);
     
@@ -575,6 +575,10 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     //*AR- 180315-Here onward execution happens for every new event.
     std::cout<<" weight before prefire map "<<Weight<<endl;
+    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
+
+
+
     /*
     if(Weight >= 1){
       std::cout<<" skip event "<<endl;

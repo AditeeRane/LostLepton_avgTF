@@ -258,7 +258,8 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   
   if(logx)
     canvas_up->SetLogx();
-  std::cout<<" seg vio 1"<<endl;  
+  std::cout<<" seg vio 1"<<endl;
+  
   if(hDataLLHadtau->GetMaximum()>hExp->GetMaximum()){
     if(logy)
       hExp->SetMaximum(3*hDataLLHadtau->GetMaximum());
@@ -272,7 +273,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hExp->SetMaximum(1.5*hExp->GetMaximum());
   }
   std::cout<<" seg vio 2"<<endl;  
-
+  //*AR:190104-If you get segmentation violation for arbitary plot due to SetMinimum() command then switch off if loops used to set minimum of histogram. Instead fix minimum to some fixed value. 
   hExp->SetMinimum(9);
   /*
   if(hDataLLHadtau->GetMinimum()<hExp->GetMinimum()){
@@ -355,19 +356,34 @@ void GetOneDPlots(){
   
   //*AR-181211-Here files "Prediction_0_haddTTbar_AppliedPrefireMap_NewCodeconsistentwithOldCode_1L.root" is copied to "Prediction_0_haddTTbar_0L_.root" and so on.
   /*
-  GetOneDPlots(1300,"NBtagv2Recipe","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
+  GetOneDPlots(1300,"NBtagv2Recipe","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
   
-  GetOneDPlots(1000,"MHTv2Recipe","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
+  GetOneDPlots(1000,"MHTv2Recipe","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
-  GetOneDPlots(1100,"HTv2Recipe","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
+  GetOneDPlots(1100,"HTv2Recipe","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
 
-    GetOneDPlots(1200,"NJetv2Recipe","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
+    GetOneDPlots(1200,"NJetv2Recipe","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
 */
-  GetOneDPlots(1200,"LepPt","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
   
-  GetOneDPlots(1200,"LepEta","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+  GetOneDPlots(1200,"LepPt","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  //  GetOneDPlots(1200,"LepEta","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
 
-  GetOneDPlots(1200,"LepPhi","DataVsMCRemovedExcess_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+  //GetOneDPlots(1200,"LepPhi","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"ElePt","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Eletron pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  //GetOneDPlots(1200,"EleEta","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  //GetOneDPlots(1200,"ElePhi","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"MuPt","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  //  GetOneDPlots(1200,"MuEta","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  //  GetOneDPlots(1200,"MuPhi","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+
   
   //  GetOneDPlots(1200,"JetPtforHTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
   

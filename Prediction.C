@@ -53,6 +53,15 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
   h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
   h_LepPhi_Exp=new TH1D("h_LepPhi_Exp","h_LepPhi_Exp",7,-3.5,3.5);
+
+  h_ElePt_Exp=new TH1D("h_ElePt_Exp","h_ElePt_Exp",20,0.0,1000.0);
+  h_EleEta_Exp=new TH1D("h_EleEta_Exp","h_EleEta_Exp",10,-2.5,2.5);
+  h_ElePhi_Exp=new TH1D("h_ElePhi_Exp","h_ElePhi_Exp",7,-3.5,3.5);
+
+  h_MuPt_Exp=new TH1D("h_MuPt_Exp","h_MuPt_Exp",20,0.0,1000.0);
+  h_MuEta_Exp=new TH1D("h_MuEta_Exp","h_MuEta_Exp",10,-2.5,2.5);
+  h_MuPhi_Exp=new TH1D("h_MuPhi_Exp","h_MuPhi_Exp",7,-3.5,3.5);
+
   h_rawJetPtforHT_Exp=new TH1D("h_rawJetPtforHT_Exp","h_rawJetPtforHT_Exp",20,0.0,1000.0);
   h_JetPtforHTLead_Exp=new TH1D("h_JetPtforHTLead_Exp","h_JetPtforHTLead_Exp",20,0.0,1000.0);
   h_JetEtaforHTLead_Exp=new TH1D("h_JetEtaforHTLead_Exp","h_JetEtaforHTLead_Exp",50,-2.5,2.5);
@@ -431,6 +440,16 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_LepPt_Exp);
   GetOutputList()->Add(h_LepEta_Exp);
   GetOutputList()->Add(h_LepPhi_Exp); 
+
+  GetOutputList()->Add(h_ElePt_Exp);
+  GetOutputList()->Add(h_EleEta_Exp);
+  GetOutputList()->Add(h_ElePhi_Exp); 
+
+  GetOutputList()->Add(h_MuPt_Exp);
+  GetOutputList()->Add(h_MuEta_Exp);
+  GetOutputList()->Add(h_MuPhi_Exp); 
+
+
   GetOutputList()->Add(h_JetPtforHTLead_Exp);
   GetOutputList()->Add(h_JetEtaforHTLead_Exp);
   //  GetOutputList()->Add(h_JetPhiforHTLead_Exp);
@@ -853,7 +872,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
   //*AR:181016: btags based on csv value instead of using value saved in ntuple
   for(unsigned j = 0; j < Jets->size(); ++j){
-    double jetCSV=Jets_bDiscriminatorCSV->at(j);
+    double jetCSV=Jets_bJetTagDeepCSVprobb->at(j) + Jets_bJetTagDeepCSVprobbb->at(j);
     if(jetCSV>csvForBtag && Jets->at(j).Pt() > 30 && fabs(Jets->at(j).Eta())<2.4)
       BTagsfrmCSV++;
   }
@@ -880,7 +899,8 @@ Bool_t Prediction::Process(Long64_t entry)
     int jetIdx=HTJetsIdxv2Recipe[i];
     HTv2Recipe+=Jets->at(jetIdx).Pt();
     NJetsv2Recipe++;
-    if(Jets_bDiscriminatorCSV->at(jetIdx)>csvForBtag)
+    double deepCSV=Jets_bJetTagDeepCSVprobb->at(jetIdx) + Jets_bJetTagDeepCSVprobbb->at(jetIdx);
+    if(deepCSV>csvForBtag)
       BTagsv2Recipe++;
   }
 
@@ -890,6 +910,8 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
+  //  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+  //std::cout<<" Btags calculated not equal to Btags from tree "<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
@@ -979,7 +1001,16 @@ Bool_t Prediction::Process(Long64_t entry)
   double LepPt=-99.0;
   double LepEta=-99.0;
   double LepPhi=-99.0;
+
+  double ElePt=-99.0;
+  double EleEta=-99.0;
+  double ElePhi=-99.0;
   
+  double MuPt=-99.0;
+  double MuEta=-99.0;
+  double MuPhi=-99.0;
+  
+
   //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
   //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
   if(!GetSignalRegHists){
@@ -991,6 +1022,11 @@ Bool_t Prediction::Process(Long64_t entry)
 	  LepPt=Muons->at(i).Pt();
 	  LepEta=Muons->at(i).Eta();
 	  LepPhi=Muons->at(i).Phi();
+
+	  MuPt=Muons->at(i).Pt();
+	  MuEta=Muons->at(i).Eta();
+	  MuPhi=Muons->at(i).Phi();
+
 	}
       }
     }
@@ -1001,6 +1037,10 @@ Bool_t Prediction::Process(Long64_t entry)
 	  LepPt=Electrons->at(i).Pt();
 	  LepEta=Electrons->at(i).Eta();
 	  LepPhi=Electrons->at(i).Phi();
+
+	  ElePt=Electrons->at(i).Pt();
+	  EleEta=Electrons->at(i).Eta();
+	  ElePhi=Electrons->at(i).Phi();
 	}
       }
     }
@@ -1115,9 +1155,10 @@ Bool_t Prediction::Process(Long64_t entry)
   h_YieldCutFlow->Fill(0);
   //*AR: 181107: check following condition if Dphi cut to be applied
 
-
-  //  if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
-  //return kTRUE;
+  if(EENoiseCutbyAditee){
+    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+      return kTRUE;
+  }
   /*
   TFile *RatioBEvsFPhotonMultExcessfile = TFile::Open("btag/hFprime_Above2BelowPt5.root", "READ");
   h_RatioBEvsF = (TH2D*)RatioBEvsFPhotonMultExcessfile->Get("hFprime");
@@ -2029,6 +2070,17 @@ Bool_t Prediction::Process(Long64_t entry)
     h_LepEta_Exp->Fill(LepEta,WeightBtagProb);
     h_LepPhi_Exp->Fill(LepPhi,WeightBtagProb);
 
+    if(ElePt>0.0){
+      h_ElePt_Exp->Fill(ElePt,WeightBtagProb);
+      h_EleEta_Exp->Fill(EleEta,WeightBtagProb);
+      h_ElePhi_Exp->Fill(ElePhi,WeightBtagProb);
+    }
+
+    if(MuPt>0.0){
+      h_MuPt_Exp->Fill(MuPt,WeightBtagProb);
+      h_MuEta_Exp->Fill(MuEta,WeightBtagProb);
+      h_MuPhi_Exp->Fill(MuPhi,WeightBtagProb);
+    }
 
     h_HTclean_Exp->Fill(HTclean,WeightBtagProb);
     h_HT5clean_Exp->Fill(HT5clean,WeightBtagProb);   
@@ -2200,6 +2252,14 @@ void Prediction::Terminate()
   h_LepPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPt_Exp"));
   h_LepEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta_Exp"));
   h_LepPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhi_Exp"));
+
+  h_ElePt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_ElePt_Exp"));
+  h_EleEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_EleEta_Exp"));
+  h_ElePhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_ElePhi_Exp"));
+
+  h_MuPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MuPt_Exp"));
+  h_MuEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MuEta_Exp"));
+  h_MuPhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MuPhi_Exp"));
 
   h_rawJetPtforHT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_rawJetPtforHT_Exp"));
   h_JetPtforHTLead_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_JetPtforHTLead_Exp"));
@@ -2602,6 +2662,14 @@ void Prediction::Terminate()
   h_LepPt_Exp->Write(); 
   h_LepEta_Exp->Write(); 
   h_LepPhi_Exp->Write(); 
+
+  h_ElePt_Exp->Write(); 
+  h_EleEta_Exp->Write(); 
+  h_ElePhi_Exp->Write(); 
+
+  h_MuPt_Exp->Write(); 
+  h_MuEta_Exp->Write(); 
+  h_MuPhi_Exp->Write(); 
 
   h_rawJetPtforHT_Exp->Write();
   h_JetPtforHTLead_Exp->Write();
