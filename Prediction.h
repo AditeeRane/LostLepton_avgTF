@@ -32,16 +32,16 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.4941;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 41486.328;
@@ -152,6 +152,10 @@ class Prediction : public TSelector {
   TH1D* h_DphiFour_Exp=0;
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
+  TH1D* h_LepEtafor50_Exp=0;
+  TH1D* h_LepEtafor100_Exp=0;
+  TH1D* h_LepEtafor200_Exp=0;
+
   TH1D* h_LepPhi_Exp=0;
 
   TH1D* h_ElePt_Exp=0;
@@ -264,6 +268,10 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor50forHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor100forHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor200forHTv2Recipe_Exp=0;
+
   TH1D* h_JetPhiforHTv2Recipe_Exp=0;
   TH1D* h_JetPtforTwoNbforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforTwoNbforHTv2Recipe_Exp=0;
@@ -405,6 +413,10 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforMHTminusHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor50forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor100forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEtafor200forMHTminusHTv2Recipe_Exp=0;
+
   TH1D* h_JetPhiforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiOneforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiTwoforMHTminusHTv2Recipe_Exp=0;
