@@ -233,7 +233,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	//std::cout<<" i "<<i<<" jet_pt(i) "<<Jets->at(i).Pt()<<" jec "<< Jets_jecUnc->at(i)<<" new pt "<< Jets->at(i).Pt()*(1+Jets_jecUnc->at(i))<<" csv "<< Jets_bDiscriminatorCSV->at(i)<<" HTMask "<< Jets_HTMask->at(i)<<" hadronFlavor "<<Jets_hadronFlavor->at(i)<<" eta "<< Jets->at(i).Eta()<<endl;
 	if(SysUp) newPt=Jets->at(i).Pt()*(1+Jets_jecUnc->at(i));
 	if(SysDn) newPt=Jets->at(i).Pt()*(1-Jets_jecUnc->at(i));
-	jetCSV=Jets_bDiscriminatorCSV->at(i);
+	jetCSV=Jets_bJetTagDeepCSVprobb->at(j) + Jets_bJetTagDeepCSVprobbb->at(j);
 	jet_HTMask=Jets_HTMask->at(i);
 	jet_hadronFlavor=Jets_hadronFlavor->at(i);
 	temp3Vec.SetPtEtaPhi(newPt,Jets->at(i).Eta(),Jets->at(i).Phi());
@@ -457,7 +457,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	//	std::cout<<" currFileName "<<currentFile<<endl;
 	//
 	//*AR- 180315-for every new tree find corresponding skimtree
-	string skimName="tree_TTJets_SingleLeptFromT.root";
+	string skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
 	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
 	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
@@ -579,12 +579,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 
 
-    /*
-    if(Weight >= 1){
-      std::cout<<" skip event "<<endl;
-      return kTRUE;
-    }
-*/    
+    
+  
     if(GetNonPrefireProb){
     
       for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
@@ -830,7 +826,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      ElectronsPromptNum_++;
 	      break; //*AR if for a given gen object, a matching reco object is found, skip looping over remaining reco objects for match
             }// end of if(std::abs(GenElect...)
-	  }
+	  } //end of passIso condition
         } //end of loop over ElectronsNum_
         if(matched) continue; //* AR,180101---if a matching reco electron is found don't need to check for isoElectronTracks, hence skip rest of this loop and move to next gen electron 
 
@@ -872,7 +868,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      MuonsPromptNum_++;
 	      break;
             }//end of if condition with deltaR matching
-	  }
+	  } //end of passIso condition
         } //end of loop over j
         if(matched) continue;
 

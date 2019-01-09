@@ -54,14 +54,14 @@ const bool TrackRecoEleSys=false;
 const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
 const bool BtagSys=false;
-bool GetNonPrefireProb=true;
+bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
-const string path_bTagCalib("btag/CSVv2_94XSF_V2_B_F.csv");
+const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
@@ -128,7 +128,7 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
-const double csvForBtag=0.8838;
+const double csvForBtag=0.4941;
 int Scalesize=9;
 int PDFsize=101;
 class SFMaker : public TSelector {
@@ -241,6 +241,11 @@ class SFMaker : public TSelector {
   string SkimFilePath=" ";
   string OldSkimFilePath=" ";
 
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+
   TH2F* h_muIDSF = 0;
   TH2F* h_muIsoSF = 0;
   TH2F* h_elecIsoSF = 0;
@@ -249,12 +254,12 @@ class SFMaker : public TSelector {
   TH1D* h_muIsoTrack_NJetsunc = 0;
   TH1D* h_elecIsoTrack_NJetsunc = 0;
   TH1D* h_pionIsoTrack_NJetsunc = 0;
-
+  /*
   TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
   TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
   TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
   TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
-
+  */
 
   TString treeName = " ";
 
@@ -311,6 +316,7 @@ class SFMaker : public TSelector {
   Bool_t           BadPFMuonFilter;
   Bool_t           ecalBadCalibFilter;
   Int_t           BTags;
+  Int_t           BTagsDeepCSV;
   Int_t          CSCTightHaloFilter;
   Double_t        DeltaPhi1;
   Double_t        DeltaPhi2;
@@ -339,6 +345,9 @@ class SFMaker : public TSelector {
   std::vector<TLorentzVector> *Jets=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
+  std::vector<double>     *Jets_bJetTagDeepCSVprobb=0;
+  std::vector<double>     *Jets_bJetTagDeepCSVprobbb=0;
+
   std::vector<int>     *Jets_hadronFlavor=0;
   std::vector<int>     *Jets_chargedHadronEnergyFraction=0;
   std::vector<bool>    *Jets_HTMask=0;
@@ -400,6 +409,8 @@ class SFMaker : public TSelector {
   TBranch        *b_LumiBlockNum=0;   //!
   TBranch        *b_EvtNum=0;   //!
   TBranch        *b_BTags=0;   //!
+  TBranch        *b_BTagsDeepCSV=0;   //!
+
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
   TBranch        *b_ecalBadCalibFilter=0;
@@ -433,6 +444,9 @@ class SFMaker : public TSelector {
   TBranch        *b_Jets_jecUnc=0;
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
+  TBranch        *b_Jets_bJetTagDeepCSVprobb=0;   //!
+  TBranch        *b_Jets_bJetTagDeepCSVprobbb=0;   //!
+
   TBranch        *b_Jets_hadronFlavor=0;   //!
   TBranch        *b_Jets_chargedHadronEnergyFraction=0;   //!
   TBranch        *b_Jets_HTMask=0;   //!
@@ -622,6 +636,8 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("LumiBlockNum", 1);
   fChain->SetBranchStatus("EvtNum", 1);
   fChain->SetBranchStatus("BTags", 1);
+  fChain->SetBranchStatus("BTagsDeepCSV", 1);
+
   fChain->SetBranchStatus("DeltaPhi1", 1);
   fChain->SetBranchStatus("DeltaPhi2", 1);
   fChain->SetBranchStatus("DeltaPhi3", 1);
@@ -669,6 +685,9 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_jecUnc" , 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
+  fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobb", 1);
+  fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobbb", 1);
+
   fChain->SetBranchStatus("Muons_passIso",1);
   fChain->SetBranchStatus("Muons_mediumID",1);
   fChain->SetBranchStatus("Muons_MiniIso",1);
@@ -735,6 +754,8 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
   fChain->SetBranchAddress("EvtNum", &EvtNum, &b_EvtNum);
   fChain->SetBranchAddress("BTags", &BTags, &b_BTags);
+  fChain->SetBranchAddress("BTagsDeepCSV", &BTagsDeepCSV, &b_BTagsDeepCSV);
+
   fChain->SetBranchAddress("DeltaPhi1", &DeltaPhi1, &b_DeltaPhi1);
   fChain->SetBranchAddress("DeltaPhi2", &DeltaPhi2, &b_DeltaPhi2);
   fChain->SetBranchAddress("DeltaPhi3", &DeltaPhi3, &b_DeltaPhi3);
@@ -786,6 +807,10 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("Jets_jecUnc", &Jets_jecUnc, &b_Jets_jecUnc);
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
+
+  fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobb", &Jets_bJetTagDeepCSVprobb, &b_Jets_bJetTagDeepCSVprobb);
+  fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobbb", &Jets_bJetTagDeepCSVprobbb, &b_Jets_bJetTagDeepCSVprobbb);
+
   if(doTopPtReweighting){
     fChain->SetBranchAddress("GenParticles", &GenParticles, &b_GenParticles);
     fChain->SetBranchAddress("GenParticles_PdgId", &GenParticles_PdgId, &b_GenParticles_PdgId);
