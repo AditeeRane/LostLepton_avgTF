@@ -21,8 +21,8 @@ ArgSeven=$6 #
 cd ${_CONDOR_SCRATCH_DIR} 
 source /cvmfs/cms.cern.ch/cmsset_default.sh
 export SCRAM_ARCH=slc6_amd64_gcc530
-eval `scramv1 project CMSSW CMSSW_8_0_25`
-cd CMSSW_8_0_25/src/
+eval `scramv1 project CMSSW CMSSW_9_4_11`
+cd CMSSW_9_4_11/src/
 eval `scramv1 runtime -sh` # cmsenv is an alias not on the workers
 echo "CMSSW: "$CMSSW_BASE
 cd -  #goes back one directory; equivalent to cd ${_CONDOR_SCRATCH_DIR}

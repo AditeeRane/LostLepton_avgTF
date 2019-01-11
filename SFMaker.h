@@ -330,6 +330,7 @@ class SFMaker : public TSelector {
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
+  Double_t        HT5;
   Double_t        GenHT;
   Double_t        GenMHT;
   std::vector<TLorentzVector> *GenJets=0;
@@ -455,6 +456,7 @@ class SFMaker : public TSelector {
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
+  TBranch        *b_HT5=0;   //!
   TBranch        *b_NJets=0;   //!
   TBranch        *b_NVtx=0;   //!
   TBranch        *b_ElectronsNoIso=0;   //!
@@ -670,6 +672,8 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
+  fChain->SetBranchStatus("HT5", 1);
+
   fChain->SetBranchStatus("Muons", 1);
   fChain->SetBranchStatus("NJets", 1);
   fChain->SetBranchStatus("NVtx", 1);
@@ -786,6 +790,7 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);
+  fChain->SetBranchAddress("HT5", &HT5, &b_HT5);
   fChain->SetBranchAddress("NJets", &NJets, &b_NJets);
   fChain->SetBranchAddress("NVtx", &NVtx, &b_NVtx);
   fChain->SetBranchAddress("ElectronsNoIso", &ElectronsNoIso, &b_ElectronsNoIso);

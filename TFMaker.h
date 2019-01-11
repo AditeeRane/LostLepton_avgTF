@@ -47,7 +47,7 @@ const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as
 const bool SysUp=false;
 const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs
-const double scaleFactorWeight = 35862.351;
+const double scaleFactorWeight = 41486;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 
 // Path to Skims for btag reweighting
@@ -122,17 +122,31 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
 
   TH1D* h_CR_SB = 0;
   TH1D* h_SR_SB = 0;
+  TH1D* h_SR_LL_SB = 0;
+  TH1D* h_SR_Hadtau_SB = 0;
+
   TH1D* h_0L1L_SB = 0;
+  TH1D* h_0L1L_LL_SB = 0;
+  TH1D* h_0L1L_Hadtau_SB = 0;
 
   TH1D* h_CR_SF_SB = 0;
   TH1D* h_SR_SF_SB = 0;
+  TH1D* h_SR_SF_LL_SB = 0;
+  TH1D* h_SR_SF_Hadtau_SB = 0;
+
   TH1D* h_0L1L_SF_SB = 0;
+  TH1D* h_0L1L_SF_LL_SB = 0;
+  TH1D* h_0L1L_SF_Hadtau_SB = 0;
 
   TH1D* h_CR_SB_copy = 0;
   TH1D* h_SR_SB_copy = 0;
+  TH1D* h_SR_LL_SB_copy = 0;
+  TH1D* h_SR_Hadtau_SB_copy = 0;
 
   TH1D* h_CR_SF_SB_copy = 0;
   TH1D* h_SR_SF_SB_copy = 0;
+  TH1D* h_SR_SF_LL_SB_copy = 0;
+  TH1D* h_SR_SF_Hadtau_SB_copy = 0;
 
   //Stuff
   std::string fname; // for fetching file name
@@ -187,11 +201,11 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   UShort_t BinCombined_;
   Int_t NMuons=-1;
   Int_t NElectrons=-1;
-
-  UShort_t MuonsNoIsoNum_, MuonsNum_, MuonsNumPassIdIso_;
-  UShort_t ElectronsNoIsoNum_, ElectronsNum_, ElectronsNumPassIdIso_;
+  UShort_t MuonsNoIsoNum_, MuonsNum_;
+  UShort_t ElectronsNoIsoNum_, ElectronsNum_;
   UShort_t GenElectronsNum_, GenMuonsNum_;
-
+  UShort_t GenTausNum_;
+  UShort_t GenTausHadNum_;
   UShort_t ElectronsPromptNum_, MuonsPromptNum_;
   UShort_t MuonsPromptMatch_, ElectronsPromptMatch_;
   UShort_t MuonsPromptMatch2_, ElectronsPromptMatch2_;
@@ -242,6 +256,9 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   Int_t           eeBadScFilter;
   std::vector<TLorentzVector> *GenElectrons=0;
   std::vector<TLorentzVector> *GenMuons=0;
+  std::vector<TLorentzVector> *GenTaus=0;
+  std::vector<bool> *GenTaus_had=0;
+
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
@@ -279,6 +296,8 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   Double_t        PFCaloMETRatio;
   Double_t        MHT;
   Double_t        MHTPhi;
+  Double_t        HT5;
+
   Int_t           NJets;
   Int_t           NVtx;
   std::vector<TLorentzVector> *ElectronsNoIso=0;
@@ -346,6 +365,9 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch        *b_eeBadScFilter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
   TBranch        *b_GenMuons=0;   //!
+  TBranch        *b_GenTaus=0;   //!
+  TBranch        *b_GenTaus_had=0;   //!
+
   TBranch        *b_HBHENoiseFilter=0;   //!
   TBranch        *b_HBHEIsoNoiseFilter=0;   //!
   TBranch        *b_HT=0;   //!
@@ -381,6 +403,7 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
+  TBranch        *b_HT5=0;   //!
   TBranch        *b_NJets=0;   //!
   TBranch        *b_NVtx=0;   //!
   TBranch        *b_ElectronsNoIso=0;   //!
@@ -569,6 +592,7 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
+  fChain->SetBranchStatus("HT5", 1);
   fChain->SetBranchStatus("Muons", 1);
   fChain->SetBranchStatus("NJets", 1);
   fChain->SetBranchStatus("NVtx", 1);
@@ -578,6 +602,9 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("MuonsNoIso", 1);
   fChain->SetBranchStatus("GenElectrons", 1);
   fChain->SetBranchStatus("GenMuons", 1);
+  fChain->SetBranchStatus("GenTaus", 1);
+  fChain->SetBranchStatus("GenTaus_had", 1);
+
   fChain->SetBranchStatus("TriggerNames", 1);
   fChain->SetBranchStatus("TriggerPass", 1);
   fChain->SetBranchStatus("TriggerPrescales", 1);
@@ -695,6 +722,7 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);
+  fChain->SetBranchAddress("HT5", &HT5, &b_HT5);
   fChain->SetBranchAddress("NJets", &NJets, &b_NJets);
   fChain->SetBranchAddress("NVtx", &NVtx, &b_NVtx);
   fChain->SetBranchAddress("ElectronsNoIso", &ElectronsNoIso, &b_ElectronsNoIso);
@@ -703,6 +731,9 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("MuonsNoIso", &MuonsNoIso, &b_MuonsNoIso);
   fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
   fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
+  fChain->SetBranchAddress("GenTaus", &GenTaus, &b_GenTaus);
+  fChain->SetBranchAddress("GenTaus_had", &GenTaus_had, &b_GenTaus_had);
+
   fChain->SetBranchAddress("TriggerNames", &TriggerNames, &b_TriggerNames);
   fChain->SetBranchAddress("TriggerPass", &TriggerPass, &b_TriggerPass);
   fChain->SetBranchAddress("TriggerPrescales", &TriggerPrescales, &b_TriggerPrescales);

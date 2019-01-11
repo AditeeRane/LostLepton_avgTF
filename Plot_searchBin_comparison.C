@@ -101,8 +101,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //
   // Luminosity information for scaling
-  double lumi     = 35.9; // normaliza to this lumi (fb-1)
-  double lumi_ref = 35.9; // normaliza to 3 (fb-1)
+  double lumi     = 41.5; // normaliza to this lumi (fb-1)
+  double lumi_ref = 41.5; // normaliza to 3 (fb-1)
   
    ///////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -515,11 +515,11 @@ else{
     ttext_njet->SetTextFont(42);
     ttext_njet->SetTextSize(0.04);
     ttext_njet->SetTextAlign(22);
-    ttext_njet->DrawLatex(15.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} = 2");
-    ttext_njet->DrawLatex(50.-0.5 , ymax_top/4. , "3 #leq N_{#scale[0.2]{ }jet} #leq 4");
-    ttext_njet->DrawLatex(90.-0.5 , ymax_top/4. , "5 #leq N_{#scale[0.2]{ }jet} #leq 6");
-    ttext_njet->DrawLatex(127.-0.5 , ymax_top/4. , "7 #leq N_{#scale[0.2]{ }jet} #leq 8");
-    ttext_njet->DrawLatex(158.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} #geq 9");
+    ttext_njet->DrawLatex(15.-0.5 , ymax_top/4. , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
+    ttext_njet->DrawLatex(50.-0.5 , ymax_top/4. , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
+    ttext_njet->DrawLatex(90.-0.5 , ymax_top/4. , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
+    ttext_njet->DrawLatex(127.-0.5 , ymax_top/4. , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
+    ttext_njet->DrawLatex(158.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} #geq 10");
 
     // Nb separation lines
     TLine *tl_nb = new TLine();
@@ -553,7 +553,7 @@ else{
     ttext_nb->DrawLatex(9.-0.5 , ymax_top/12. , "N_{#scale[0.2]{ }b-jet}");
     ttext_nb->DrawLatex(6.-0.5 , ymax_top/40. , "0");
     ttext_nb->DrawLatex(16.-0.5 , ymax_top/40. , "1");
-    ttext_nb->DrawLatex(26.-0.5 , ymax_top/40. , "2");
+    ttext_nb->DrawLatex(26.-0.5 , ymax_top/40. , "#geq 2");
     ttext_nb->DrawLatex(36.-0.5 , ymax_top/40. , "0");
     ttext_nb->DrawLatex(46.-0.5 , ymax_top/40. , "1");
     ttext_nb->DrawLatex(56.-0.5 , ymax_top/40. , "2");
@@ -579,11 +579,11 @@ else{
     ttext_njet->SetTextFont(42);
     ttext_njet->SetTextSize(0.04);
     ttext_njet->SetTextAlign(22);
-    ttext_njet->DrawLatex(20.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} = 2");
-    ttext_njet->DrawLatex(66.-0.5 , ymax_top/4. , "3 #leq N_{#scale[0.2]{ }jet} #leq 4");
-    ttext_njet->DrawLatex(118.-0.5 , ymax_top/4. , "5 #leq N_{#scale[0.2]{ }jet} #leq 6");
-    ttext_njet->DrawLatex(165.-0.5 , ymax_top/4. , "7 #leq N_{#scale[0.2]{ }jet} #leq 8");
-    ttext_njet->DrawLatex(202.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} #geq 9");
+    ttext_njet->DrawLatex(20.-0.5 , ymax_top/4. , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
+    ttext_njet->DrawLatex(66.-0.5 , ymax_top/4. , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
+    ttext_njet->DrawLatex(118.-0.5 , ymax_top/4. , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
+    ttext_njet->DrawLatex(165.-0.5 , ymax_top/4. , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
+    ttext_njet->DrawLatex(202.-0.5 , ymax_top/4. , "N_{#scale[0.2]{ }jet} #geq 10");
 
     // Nb separation lines
     TLine *tl_nb = new TLine();
@@ -616,7 +616,7 @@ else{
     ttext_nb->DrawLatex(9.-0.5 , ymax_top/12. , "N_{#scale[0.2]{ }b-jet}");
     ttext_nb->DrawLatex(8.-0.5 , ymax_top/40. , "0");
     ttext_nb->DrawLatex(20.-0.5 , ymax_top/40. , "1");
-    ttext_nb->DrawLatex(33.-0.5 , ymax_top/40. , "2");
+    ttext_nb->DrawLatex(33.-0.5 , ymax_top/40. , "#geq 2");
     ttext_nb->DrawLatex(46.-0.5 , ymax_top/40. , "0");
     ttext_nb->DrawLatex(59.-0.5 , ymax_top/40. , "1");
     ttext_nb->DrawLatex(72.-0.5 , ymax_top/40. , "2");

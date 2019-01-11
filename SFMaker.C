@@ -221,7 +221,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     TVector3 newMHT3Vec;
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
-    int newBTags = 0;
+    int newBTagsDeepCSV = 0;
 
 
     //    std::cout<<" evtweight "<<Weight<<endl;
@@ -233,7 +233,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	//std::cout<<" i "<<i<<" jet_pt(i) "<<Jets->at(i).Pt()<<" jec "<< Jets_jecUnc->at(i)<<" new pt "<< Jets->at(i).Pt()*(1+Jets_jecUnc->at(i))<<" csv "<< Jets_bDiscriminatorCSV->at(i)<<" HTMask "<< Jets_HTMask->at(i)<<" hadronFlavor "<<Jets_hadronFlavor->at(i)<<" eta "<< Jets->at(i).Eta()<<endl;
 	if(SysUp) newPt=Jets->at(i).Pt()*(1+Jets_jecUnc->at(i));
 	if(SysDn) newPt=Jets->at(i).Pt()*(1-Jets_jecUnc->at(i));
-	jetCSV=Jets_bJetTagDeepCSVprobb->at(j) + Jets_bJetTagDeepCSVprobbb->at(j);
+	jetCSV=Jets_bJetTagDeepCSVprobb->at(i) + Jets_bJetTagDeepCSVprobbb->at(i);
 	jet_HTMask=Jets_HTMask->at(i);
 	jet_hadronFlavor=Jets_hadronFlavor->at(i);
 	temp3Vec.SetPtEtaPhi(newPt,Jets->at(i).Eta(),Jets->at(i).Phi());
@@ -335,7 +335,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       //      std::cout<<" jet_size "<<Jets->size()<<" HT3 "<< HT3JetVec.size()<<" Dphi1 "<<newDphi1<<" Dphi2 "<<newDphi2<<" Dphi3 "<<newDphi3<<"  Dphi4 "<<newDphi4<<endl;
       for(unsigned int i=0;i<HT3JetVec.size();i++){
 	if(HT3JetCSVvec[i]>csvForBtag)
-	  newBTags++;
+	  newBTagsDeepCSV++;
       }
     }
     else{
@@ -365,6 +365,12 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
+      double getHT5Cut;
+      getHT5Cut = 1.025*(HT5/HT)-0.5875;
+      if(DeltaPhi1 < getHT5Cut){
+	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	return kTRUE;
+      }
     }
 
 
@@ -384,7 +390,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(useCombinedBins){ //useCombinedBins=false
         Bin_ = SearchBins_->GetCombinedBinNumber(newHT,newMHT,newNJets);
       }else{ 
-        Bin_ = SearchBins_->GetBinNumber(newHT,newMHT,newNJets,newBTags);
+        Bin_ = SearchBins_->GetBinNumber(newHT,newMHT,newNJets,newBTagsDeepCSV);
 	//	if(newNJets==2)
 	//std::cout<<" Bin_ "<<Bin_<<endl;
       }    
@@ -394,10 +400,13 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(useCombinedBins){ //useCombinedBins=false
         Bin_ = SearchBins_->GetCombinedBinNumber(HT,MHT,NJets);
       }else{ 
-        Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTags);
+        Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsDeepCSV);
+	//	std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTagsDeepCSV<<" Bin_ "<<Bin_<<endl;
       }    
       if(Bin_ > 900) return kTRUE;
     }
+
+
     //    std::cout<<" falling into search bin "<<endl;
     // TH1 cannot properly deal with negative bin contents
     // At most 1% difference in SFs expected (rare BGs only)
@@ -574,8 +583,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     //*AR-Nov27,2017-following if loop was introduced to ignore negative weight events. After ignoring those, SFSR for exotic and single top samples are found to be better in agreement with Simon's results
 
     //*AR- 180315-Here onward execution happens for every new event.
-    std::cout<<" weight before prefire map "<<Weight<<endl;
-    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
+    //    std::cout<<" weight before prefire map "<<Weight<<endl;
+    //    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
 
 
 
@@ -956,7 +965,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	  //	  std::cout<<" idSF "<<recoSF<<endl;
-	  
+	  /*	  
 	  if(TrackRecoMuSys){
 	      if(SysUp)
 		trackingSF = GetSF(h_muTrkSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkSF, GenMuonsAccEta_,0.01);  
@@ -966,7 +975,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  else
 	    trackingSF = GetSF(h_muTrkSF,GenMuonsAccEta_);
 	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
-
+*/
 	  
 	  
 	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
@@ -975,7 +984,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  
 	  //*AR, 20180102---Thus when isotrack veto is applied, lost e event is one which has reco electron=0 and isolated electron track=0. When isotrack veto is not applied,lost e event is one with reco electron=0 
 	  if(MuonsPromptNum_ == 1){
-	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
+	    double WeightCorr = WeightBtagProb * isoSF * recoSF;
 	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -1006,7 +1015,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 
 	  }else if(includeIsotrkVeto && MuonsPromptNum_ == 0 && MuonTracksPromptNum_ == 1){
-	    double WeightCorr = WeightBtagProb * trackingSF;
+	    double WeightCorr = WeightBtagProb;
 	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -1182,7 +1191,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    h_HT_Exp->Fill(HT,WeightBtagProb);
 	    h_MHT_Exp->Fill(MHT,WeightBtagProb);
 	    h_NJet_Exp->Fill(NJets,WeightBtagProb);
-	    h_NBtag_Exp->Fill(BTags,WeightBtagProb);
+	    h_NBtag_Exp->Fill(BTagsDeepCSV,WeightBtagProb);
 	    
 	    h_el_nLostOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nLostOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -2253,7 +2262,8 @@ bool SFMaker::FiltersPass()
     }
     */
     // Do not apply on fastSim samples!
-    //if(!runOnSignalMC) if(!JetID) result=false;
+    //if(!runOnSignalMC) 
+    if(!JetID) result=false;
     return result;
 }
 /*
