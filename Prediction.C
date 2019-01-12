@@ -1092,14 +1092,32 @@ Bool_t Prediction::Process(Long64_t entry)
   if(NJetsv2Recipe>=4){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
+    double getHT5Cut;
+    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
+    if(HTDeltaPhi1v2Recipe < getHT5Cut){
+      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
+      return kTRUE;
+    }
   }
   else if(NJetsv2Recipe==3){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_)) return kTRUE;
+    double getHT5Cut;
+    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
+    if(HTDeltaPhi1v2Recipe < getHT5Cut){
+      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
+      return kTRUE;
+    }
   }
   else if(NJetsv2Recipe==2){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
+    double getHT5Cut;
+    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
+    if(HTDeltaPhi1v2Recipe < getHT5Cut){
+      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
+      return kTRUE;
+    }
   }
   else
     return kTRUE;
@@ -1275,7 +1293,7 @@ Bool_t Prediction::Process(Long64_t entry)
       TObjArray *optionArray = currentTree.Tokenize("/");
       TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
       currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-      string skimName="tree_TTJets_SingleLeptFromT.root";
+      string skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
       char SkimFile[500];
       if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
       else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
@@ -1448,8 +1466,8 @@ Bool_t Prediction::Process(Long64_t entry)
 	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};
       }   
       else{
-	bTagBins = {SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HT,MHT,NJets,3)};  
-	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(HT,MHT,NJets,3)};  }
+	bTagBins = {SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,0), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,1), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,3)};  
+	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,0), SearchBinsQCD_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,1), SearchBinsQCD_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,2), NJetsv2Recipe < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(HT,MHTv2Recipe,NJetsv2Recipe,3)};  }
       
     }
   } //end of if(!runOnData)
@@ -1576,11 +1594,6 @@ Bool_t Prediction::Process(Long64_t entry)
       h_WeightBeforeScalePrefire_Exp->Fill(Weight,Weight);
       h_WeightBeforeScalePrefirevsGenHT_Exp->Fill(GenHT,Weight,Weight);
       h_WeightBeforeScalePrefirevsRecoHT_Exp->Fill(HTv2Recipe,Weight,Weight);
-      
-      if(Weight >= 1){
-	std::cout<< " weight incorrect "<<endl;
-	return kTRUE;
-      }
       
       Weight *= scaleFactorWeight;
     }

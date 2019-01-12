@@ -32,16 +32,16 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false;
+bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.4941;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 41486.328;
@@ -879,6 +879,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
+  if(!runOnData) doBTagCorr = true;
   //  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------

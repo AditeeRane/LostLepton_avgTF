@@ -9,12 +9,12 @@
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have different names
 
-//void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
 
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have same name and comment unnecessry lines in code accordingly
 
-void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+//void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
   
   //*AR:180831: Borrow cosmetics specific to RA2b style
 
@@ -180,7 +180,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
   sprintf(cname,"h_%s_Pre_%s",Var,Sample);
-  //sprintf(hnameRev,"h_%s_Exp",VarTwo);
+  sprintf(hnameRev,"h_%s_Pre",VarTwo);
   //  if(var.find("MHTOrig")!=string::npos)
   //  sprintf(hnameRev,"h_%s_Pre",Var);
   TFile *_fileTTbarLL = TFile::Open(TTbarLL); 
@@ -215,10 +215,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   _fileTTbarHadtau->cd();
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
-  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
-  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
+  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
 
-  hTTbarHadtau->Scale(35900.0/41486.0);
+  //  hTTbarHadtau->Scale(35900.0/41486.0);
   hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetMarkerColor(kBlue);
   hTTbarHadtau->SetLineWidth(2);
@@ -248,10 +248,11 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
     else 
       hTTbarLL->SetMaximum(1.5*hTTbarLL->GetMaximum());
   }
-
+  /*
   if(hTTbarHadtau->GetMinimum()<hTTbarLL->GetMinimum())
     hTTbarLL->SetMinimum(0.5*hTTbarHadtau->GetMinimum());
-
+*/
+  hTTbarLL->SetMinimum(9);
   if(!logy)
     hTTbarLL->SetMinimum(0);
 
@@ -272,8 +273,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  tl->AddEntry(hTTbarHadtau, "Data17F:v1");
   //  tl->AddEntry(hTTbarLL, "Data17F:v2"); 
 
-  tl->AddEntry(hTTbarHadtau, "MC-2017-V16");
-  tl->AddEntry(hTTbarLL, "MC-2016-V12"); 
+  tl->AddEntry(hTTbarHadtau, "MC Pred");
+  tl->AddEntry(hTTbarLL, "MC Exp"); 
 
   //  tl->AddEntry(hTTbarHadtau, "Data17(F)");
   //  tl->AddEntry(hTTbarLL, "Data17(B:E)");
@@ -295,7 +296,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //*AR:B:E vs F   
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "41.5 fb^{-1} (13 TeV)");
   
   gPad->Modified();
   
@@ -1056,7 +1057,7 @@ void GetOneDPlotsMCVsMC(){
 
 
   //*AR: 1L reg MC2017(V16) vs MC2016(V12)
-  
+  /*  
   GetOneDPlotsMCVsMC(1020,"MHTv2Recipe","MC_RemovedExcess_1LHighDphi_v16for2017Vsv12for2016","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"MHT","v16/v12",0,0,16,200,1000,0.5,1.5,30000);
   
   GetOneDPlotsMCVsMC(1120,"HTv2Recipe","MC_RemovedExcess_1LHighDphi_v16for2017Vsv12for2016","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"HT","v16/v12",1,0,12,100,2500,0.5,1.5,45000);
@@ -1072,7 +1073,18 @@ void GetOneDPlotsMCVsMC(){
 
   GetOneDPlotsMCVsMC(1320,"LepPt","MC_RemovedExcess_1LHighDphi_v16for2017Vsv12for2016","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"pT","v16/v12",1,0,20,0,1000,0.5,1.5,50500);
 
-  
+  */
+
+
+
+
+  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"MHT","Pred/Exp",1,0,16,200,1000,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"HT","Pred/Exp",1,0,12,100,2500,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NJet","Pred/Exp",1,0,10,2,12,0.5,1.5,20000);
+
+  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Pred/Exp",1,0,5,0,5,0.5,1.5,20000);
 
 
 
