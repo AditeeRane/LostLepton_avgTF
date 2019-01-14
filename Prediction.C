@@ -1192,9 +1192,14 @@ Bool_t Prediction::Process(Long64_t entry)
     Bin_ = SearchBins_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
     BinQCD_ = SearchBinsQCD_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
   }
+  //std::cout<<" entry "<<entry<<" Bin_ "<<Bin_<<" BinQCD_ "<<BinQCD_<<endl;
   //*AR-181016: Use only events falling into search bins
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
-
+  /*
+  if(Bin_ > 900 && BinQCD_ < 900 && MHTv2Recipe>300)
+    std::cout<<" entry of passed event "<<entry<<" Bin_ "<<Bin_<<" BinQCD_ "<<BinQCD_<<" HT "<<HTv2Recipe<<" MHT "<<MHTv2Recipe<<" NJet "<<NJetsv2Recipe<<" Btag "<<BTagsv2Recipe<<endl;
+*/
+  
   h_YieldCutFlow->Fill(0);
   //*AR: 181107: check following condition if Dphi cut to be applied
 
@@ -2108,7 +2113,7 @@ Bool_t Prediction::Process(Long64_t entry)
     HTRatio=HT5/HT;
     HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
     RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
-//std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
+    //    std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" bTagBinQCD "<<bTagBinQCD<<" *** Seg Vio3 *** "<<endl;
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);

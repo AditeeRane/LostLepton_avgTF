@@ -36,7 +36,7 @@ const bool runOnData = true;   //<-check:true only for data---------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true;
+bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2017 MC
