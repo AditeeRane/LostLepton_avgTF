@@ -217,7 +217,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     bool jet_HTMask=false;
     int jet_hadronFlavor=-99;
     bool Print=false;
-    double newHT=0,newMHT=0,newMHTPhi=0;
+    double newHT=0,newHT5=0,newMHT=0,newMHTPhi=0;
     TVector3 newMHT3Vec;
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
@@ -319,6 +319,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       }
       for(unsigned int i=0;i<MHT3JetVec.size();i++){
 	newMHT3Vec-=MHT3JetVec[i];
+	newHT5+=MHT3JetVec[i].Pt();
       }
       newMHT=newMHT3Vec.Pt();
       newMHTPhi=newMHT3Vec.Phi();
@@ -360,6 +361,12 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_)) return kTRUE;
+      double getHT5Cut;
+      getHT5Cut = 1.025*(newHT5/newHT)-0.5875;
+      if(newDphi1 < getHT5Cut){
+	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	return kTRUE;
+      }
     }
     else{
       if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -946,9 +953,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  if(IsoMuSys){
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
 	    if(SysDn)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.014);
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
 	  }
 	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
@@ -958,9 +965,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    //MyPair=EvalSF(h_muIDSF,GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    //	    std::cout<<" pt "<<GenMuonsAccPt_<<" eta "<<GenMuonsAccEta_<<" MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<endl;
 	    if(SysUp)
-	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
 	    if(SysDn)
-	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01);
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
 	  }
 	  else
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));

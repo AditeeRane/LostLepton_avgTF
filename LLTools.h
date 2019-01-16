@@ -125,6 +125,7 @@ static double GetSFUnc(TH2 *hist, Double_t xVal, Double_t yVal, double addSys = 
   std::pair<double, double> SFandUnc = EvalSF(hist, xVal, yVal);
 
   double SF = 0.;
+  //  std::cout<<" xVal "<<xVal<<" yVal "<<yVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
 
   if(addSys > 0) SF = std::sqrt(SFandUnc.second*SFandUnc.second + addSys*addSys);
   else SF = SFandUnc.second;
@@ -164,7 +165,7 @@ static double GetSFUnc(TH1 *hist, Double_t xVal, double addSys = 0.) {
   std::pair<double, double> SFandUnc = EvalSF(hist, xVal);
 
   double SF = 0.;
-
+  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
   if(addSys > 0) SF = std::sqrt(SFandUnc.second*SFandUnc.second + addSys*addSys);
   else SF = SFandUnc.second;
 

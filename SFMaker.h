@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -52,7 +52,7 @@ const bool IDEleSys=false;
 const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
 const bool ScaleAccSys=false;
-const bool PDFAccSys=false;
+const bool PDFAccSys=true;
 const bool BtagSys=false;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 // Path to Skims for btag reweighting
@@ -81,7 +81,7 @@ const TString hist_elecTrkHighPt("EGamma_SF2D");
 const TString path_elecTrkLowPt("SFs_Moriond17/egammaEffi_EGM2D_runBCDEF_passingRECO_lowEt.root");
 const TString hist_elecTrkLowPt("EGamma_SF2D");
 
-const TString path_muID("SFs_Moriond17/RunBCDEF_Muon2017_SF_ID.root");
+const TString path_muID("SFs_Moriond17/RunBCDEF_Muon2017_SF_ID_syst.root");
 const TString hist_muID("NUM_MediumID_DEN_genTracks_pt_abseta");
 const TString path_muIso("SFs_Moriond17/SF_Muon2017_NUM_MiniIso02Cut_DEN_MediumID_PAR_pt_eta.root");
 const TString hist_muIso("TnP_MC_NUM_MiniIso02Cut_DEN_MediumID_PAR_pt_eta");

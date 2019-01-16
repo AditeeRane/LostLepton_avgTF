@@ -11,7 +11,7 @@
 
 void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
 
-
+  //  TH1::SetDefaultSumw2();
 //*AR: 181016: use this definition of function if histograms to be compared from two files have same name and comment unnecessry lines in code accordingly
 
 //void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const * TTbarLL, char const * TTbarHadtau,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
@@ -192,7 +192,24 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   _fileTTbarLL->cd();
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_NJetv2Recipe_Exp");
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_MHTv2Recipe_Exp");
-  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  TH1D *hTTbarLLOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  TH1D *hTTbarLL = new TH1D("hTTbarLL","hTTbarLL",4,0,4);
+  //  hTTbarLL->Sumw2();
+  int nbins=hTTbarLL->GetXaxis()->GetNbins();
+  for(int i=1;i<=nbins;i++){
+    if(i<=3){
+      double val=hTTbarLLOrg->GetBinContent(i);
+      hTTbarLL->SetBinContent(i,val);
+      double err=hTTbarLLOrg->GetBinError(i);
+      hTTbarLL->SetBinError(i,err);
+    }
+    else{
+      double val=hTTbarLLOrg->GetBinContent(i)+hTTbarLLOrg->GetBinContent(i+1);
+      hTTbarLL->SetBinContent(i,val);
+      double err=sqrt(hTTbarLLOrg->GetBinError(i)*hTTbarLLOrg->GetBinError(i) + hTTbarLLOrg->GetBinError(i+1)*hTTbarLLOrg->GetBinError(i+1));
+      hTTbarLL->SetBinError(i,err);
+    }
+  }
 
   //*AR:B:E vs F
   //  hTTbarLL->Scale(13498.0/27987.0);
@@ -215,8 +232,26 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   _fileTTbarHadtau->cd();
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
-  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
-  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
+  TH1D *hTTbarHadtauOrg = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  
+  TH1D *hTTbarHadtau = new TH1D("hTTbarHadtau","hTTbarHadtau",4,0,4);
+  //  hTTbarHadtau->Sumw2();
+  nbins=hTTbarHadtau->GetXaxis()->GetNbins();
+  for(int i=1;i<=nbins;i++){
+    if(i<=3){
+      double val=hTTbarHadtauOrg->GetBinContent(i);
+      double err=hTTbarHadtauOrg->GetBinError(i);
+      hTTbarHadtau->SetBinContent(i,val);
+      hTTbarHadtau->SetBinError(i,err);
+    }
+    else{
+      double val=hTTbarHadtauOrg->GetBinContent(i)+hTTbarHadtauOrg->GetBinContent(i+1);
+      double err=sqrt(hTTbarHadtauOrg->GetBinError(i)*hTTbarHadtauOrg->GetBinError(i) + hTTbarHadtauOrg->GetBinError(i+1)*hTTbarHadtauOrg->GetBinError(i+1));
+      hTTbarHadtau->SetBinContent(i,val);
+      hTTbarHadtau->SetBinError(i,err);
+    }
+  }
+
 
   //  hTTbarHadtau->Scale(35900.0/41486.0);
   hTTbarHadtau->SetLineColor(kBlue);
@@ -1077,14 +1112,14 @@ void GetOneDPlotsMCVsMC(){
 
 
 
-
+  /*
   GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"MHT","Pred/Exp",1,0,16,200,1000,0.5,1.5,20000);
 
   GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"HT","Pred/Exp",1,0,12,100,2500,0.5,1.5,20000);
 
   GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NJet","Pred/Exp",1,0,10,2,12,0.5,1.5,20000);
-
-  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Pred/Exp",1,0,5,0,5,0.5,1.5,20000);
+*/
+  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","LLPlusHadtau_ExpWithBtagProb","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Pred/Exp",1,0,4,0,4,0.5,1.5,20000);
 
 
 
