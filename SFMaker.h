@@ -52,8 +52,8 @@ const bool IDEleSys=false;
 const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
 const bool ScaleAccSys=false;
-const bool PDFAccSys=true;
-const bool BtagSys=false;
+const bool PDFAccSys=false;
+const bool BtagSys=true;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");

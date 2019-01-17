@@ -5,7 +5,7 @@
 
 //*AR-180529--LL TF in scale/PDF sys case 
 
-void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* histOne,char *histTwo, int ArraySize){
+void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* histOne,const char *histTwo, int ArraySize){
 
   int size=ArraySize;
   std::cout<< " size "<<size<<endl;
@@ -31,7 +31,7 @@ void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* hi
 	if(hOut->GetBinContent(nX) < 0)
 	  std::cout<<" nX "<<nX<< " negative value "<<std::endl;   
       }
-      TFile* xf = new TFile("TFLL.root","UPDATE"); 
+      TFile* xf = new TFile("TFCombinedLLHadtau.root","UPDATE"); 
       hOut->Write();
       xf->Close(); 
     }
@@ -42,7 +42,7 @@ void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* hi
       sprintf(SFhname,"%s_%i",SFHist,j);
       sprintf(Firsthname,"%s_%i",SFHist,0);
       std::cout<<" SFhname "<<SFhname<<" Firsthname "<<Firsthname<<endl;
-      TFile *_file1 = TFile::Open("TFLL.root"); 
+      TFile *_file1 = TFile::Open("TFCombinedLLHadtau.root"); 
       TH1D *h1 = (TH1D*)_file1->FindObjectAny(Firsthname);
       TH1D *hOut = (TH1D*)h1->Clone(SFhname);
       hOut->Reset();
@@ -81,7 +81,7 @@ void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* hi
 	hOut->SetBinContent(binIndx,valSys);
 	hOut->SetBinError(binIndx,h1->GetBinError(binIndx));
       }
-      TFile* yf = new TFile("TFLL.root","UPDATE");
+      TFile* yf = new TFile("TFCombinedLLHadtau.root","UPDATE");
       hOut->Write();
       yf->Close();
     }
@@ -119,7 +119,7 @@ void GetTFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* hi
 }
 
 //*AR-180529--LL+Hadtau TF in scale/PDF sys case 
-
+//Now as LL+Hadtau contribution is derived together, we don't need functions below anymore.
 void GetTFHistograms(char* WJetTTbarMC,char* Wgun,char* SFHist, char* histOne,char *histTwo,char* histThree,int ArraySize){
   std::cout<<"***"<<" histOne "<<histOne<<endl;
   int size=ArraySize; 
@@ -414,7 +414,8 @@ void GetTFHistograms(char* WJetTTbarMC,char* Wgun,char* SFHist, char* histOne,ch
 
 
 void CombinedTF() {
-  //  GetSFHistograms("SFCR_0_TTbar_.root","h_di_SFSR_SB","h_di_nTwoFoundTwoPrompt_SF_SB","h_di_nTwoPrompt_SB","h_di_nOneFoundTwoPrompt_SF_SB","h_di_nLostTwoPrompt_SB");
+
+  //*AR: 190116- TF in nominal case  
   
   GetTFHistograms("TF_0.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
@@ -425,11 +426,16 @@ void CombinedTF() {
   GetTFHistograms("TF_0.root","h_0L1L_Hadtau_SB","h_SR_Hadtau_SB","h_CR_SB");
   GetTFHistograms("TF_0.root","h_0L1L_SF_Hadtau_SB","h_SR_SF_Hadtau_SB","h_CR_SF_SB");
 
-  //GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
-  //GetTFHistograms("TF_0.root","h_scale_0L1L_SF_SB","h_scale_SR_SF_SB","h_scale_CR_SF_SB",9);
 
-  //GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",101);
-  //GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",101);
+  //*AR: 190116- TF in scale sys case
+
+  //  GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
+  //  GetTFHistograms("TF_0.root","h_scale_0L1L_SF_SB","h_scale_SR_SF_SB","h_scale_CR_SF_SB",9);
+
+  //*AR: 190116- TF in PDF sys case
+
+  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",101);
+  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",101);
 
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");

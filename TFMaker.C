@@ -952,6 +952,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	}
 	//*AR: 180606: Three caes are considered here
 	//1] there is a reco electron and gen electron with pT>5 and eta<2.5: Use SF(binSF) 2] there is a reco electron but no gen electron with pT>5 and eta<2.5 (gen lepton out of acceptance): SF=1 3] there is a reco electron and gen electron with pT>5 and eta<2.5 but no matched reco electron to gen electron: failed matching: SF=1 
+	//*AR: 190117- MTWCalculator is defined in LLTools.h.
+	//MTWCalculator(double metPt,double  metPhi,double  lepPt,double  lepPhi, int scaleMet = 0). So here metPt and metPhi are directly after scaling MET with JEC uncertaintyand is not further scaled by 1.3 or 0.7 which would have been case if scaleMet != 0
 	
 	if(ElectronsNumPassIdIso_ == 1){
 	  for(unsigned j=0; j< ElectronsNum_; j++){

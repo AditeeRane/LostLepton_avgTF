@@ -401,7 +401,7 @@ void CombinedSFs() {
 
   //*AR-190116: Determines SFCR and SFSR in nominal case
 
-  /*
+  
   
     GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
     GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
@@ -441,7 +441,7 @@ void CombinedSFs() {
   GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
   GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
 
-*/
+
 
 
   //**AR-SFCR, SFSR in Scale cases
@@ -457,7 +457,7 @@ void CombinedSFs() {
     
     GetSFHistograms("SFCR_0_ST_.root","h_scale_el_SFCR_SB","h_scale_el_nFoundOnePrompt_SF_SB","h_scale_el_nFoundOnePrompt_SB",9);
     GetSFHistograms("SFCR_0_ST_.root","h_scale_mu_SFCR_SB","h_scale_mu_nFoundOnePrompt_SF_SB","h_scale_mu_nFoundOnePrompt_SB",9);
-    */
+    
   
     
   
@@ -471,7 +471,39 @@ void CombinedSFs() {
   
   GetSFHistograms("SFSR_0_ST_.root","h_scale_el_SFSR_SB","h_scale_el_nOnePrompt_SB","h_scale_el_nFoundOnePrompt_SF_SB","h_scale_el_nLostOnePrompt_SB",9);
   GetSFHistograms("SFSR_0_ST_.root","h_scale_mu_SFSR_SB","h_scale_mu_nOnePrompt_SB","h_scale_mu_nFoundOnePrompt_SF_SB","h_scale_mu_nLostOnePrompt_SB",9);
+  */
+  
 
+  //**AR-SFCR, SFSR in PDF cases
+  /*
+    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
+    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
+  
+  
+    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
+    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
+
+
+    
+    GetSFHistograms("SFCR_0_ST_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
+    GetSFHistograms("SFCR_0_ST_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
+    
+    
+    
+  
+  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
+  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
+
+    
+  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
+  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
+  
+  
+  GetSFHistograms("SFSR_0_ST_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
+  GetSFHistograms("SFSR_0_ST_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
+
+  
+    */
 
 
 }
