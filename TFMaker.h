@@ -32,7 +32,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
@@ -43,7 +43,7 @@ const bool JECSys=false; //false by default
 const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
 const bool BtagSys=false;
-const bool MTSys=true; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
+const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;
 const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs

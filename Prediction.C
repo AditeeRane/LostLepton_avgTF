@@ -119,6 +119,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_WeightBeforeScalePrefirevsRecoHT_Exp =new TH2D("h_WeightBeforeScalePrefirevsRecoHT_Exp","h_WeightBeforeScalePrefirevsRecoHT_Exp",100,0,1000.0,200,-5.,5.);
 
   h_HTv2Recipe_Exp =new TH1D("h_HTv2Recipe_Exp","h_HTv2Recipe_Exp",12,100,2500);
+  h_HTv2Recipe_forQCD_Exp =new TH1D("h_HTv2Recipe_forQCD_Exp","h_HTv2Recipe_forQCD_Exp",50,0,2500);
+
   h_HTforLowNJetv2Recipe_Exp =new TH1D("h_HTforLowNJetv2Recipe_Exp","h_HTforLowNJetv2Recipe_Exp",12,100,2500);
   h_HTforHighNJetv2Recipe_Exp =new TH1D("h_HTforHighNJetv2Recipe_Exp","h_HTforHighNJetv2Recipe_Exp",12,100,2500);
   h_HTforTwoNbv2Recipe_Exp =new TH1D("h_HTforTwoNbv2Recipe_Exp","h_HTforTwoNbv2Recipe_Exp",12,100,2500);
@@ -135,6 +137,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_HTRatioforNotTwoNbv2Recipe_Exp =new TH1D("h_HTRatioforNotTwoNbv2Recipe_Exp","h_HTRatioforNotTwoNbv2Recipe_Exp",20,0,5);
 
   h_MHTv2Recipe_Exp =new TH1D("h_MHTv2Recipe_Exp","h_MHTv2Recipe_Exp",16,200,1000);
+  h_MHTv2Recipe_forQCD_Exp =new TH1D("h_MHTv2Recipe_forQCD_Exp","h_MHTv2Recipe_forQCD_Exp",40,0,2000);
+
   h_MHTforTwoNbv2Recipe_Exp =new TH1D("h_MHTforTwoNbv2Recipe_Exp","h_MHTforTwoNbv2Recipe_Exp",16,200,1000);
   h_MHTforNotTwoNbv2Recipe_Exp =new TH1D("h_MHTforNotTwoNbv2Recipe_Exp","h_MHTforNotTwoNbv2Recipe_Exp",16,200,1000);
 
@@ -150,6 +154,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=new TH2D("h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp","h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp",70,-3.5,3.5,20,0,5);
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=new TH2D("h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp","h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp",70,-3.5,3.5,20,0,5);
   h_NJetv2Recipe_Exp =new TH1D("h_NJetv2Recipe_Exp","h_NJetv2Recipe_Exp",10,2,12);
+  h_NJetv2Recipe_forQCD_Exp =new TH1D("h_NJetv2Recipe_forQCD_Exp","h_NJetv2Recipe_forQCD_Exp",14,0,14);
+
   h_NJetforTwoNbv2Recipe_Exp =new TH1D("h_NJetforTwoNbv2Recipe_Exp","h_NJetforTwoNbv2Recipe_Exp",10,2,12);
   h_NJetforNotTwoNbv2Recipe_Exp =new TH1D("h_NJetforNotTwoNbv2Recipe_Exp","h_NJetforNotTwoNbv2Recipe_Exp",10,2,12);
 
@@ -161,6 +167,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_NJetforMHTminusHTv2Recipe_Exp =new TH1D("h_NJetforMHTminusHTv2Recipe_Exp","h_NJetforMHTminusHTv2Recipe_Exp",12,0,12);
   h_NBtagv2Recipe_Exp =new TH1D("h_NBtagv2Recipe_Exp","h_NBtagv2Recipe_Exp",5,0,5);
+  h_NBtagv2Recipe_forQCD_Exp =new TH1D("h_NBtagv2Recipe_forQCD_Exp","h_NBtagv2Recipe_forQCD_Exp",7,0,7);
+
   h_NBtagforLowNJetv2Recipe_Exp =new TH1D("h_NBtagforLowNJetv2Recipe_Exp","h_NBtagforLowNJetv2Recipe_Exp",5,0,5);
   h_NBtagforHighNJetv2Recipe_Exp =new TH1D("h_NBtagforHighNJetv2Recipe_Exp","h_NBtagforHighNJetv2Recipe_Exp",5,0,5);
 
@@ -427,9 +435,16 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 
   h_HT_Pre =new TH1D("h_HT_Pre","h_HT_Pre",12,100,2500);
+  h_HT_forQCD_Pre =new TH1D("h_HT_forQCD_Pre","h_HT_forQCD_Pre",50,0,2500);
+
   h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
+  h_MHT_forQCD_Pre =new TH1D("h_MHT_forQCD_Pre","h_MHT_forQCD_Pre",40,0,2000);
+
   h_NJet_Pre =new TH1D("h_NJet_Pre","h_NJet_Pre",10,2,12);
+  h_NJet_forQCD_Pre =new TH1D("h_NJet_forQCD_Pre","h_NJet_forQCD_Pre",14,0,14);
+
   h_NBtag_Pre =new TH1D("h_NBtag_Pre","h_NBtag_Pre",5,0,5);
+  h_NBtag_forQCD_Pre =new TH1D("h_NBtag_forQCD_Pre","h_NBtag_forQCD_Pre",7,0,7);
 
 
   GetOutputList()->Add(h_Prediction);
@@ -519,6 +534,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_WeightBeforeScalePrefirevsRecoHT_Exp);
 
   GetOutputList()->Add(h_HTv2Recipe_Exp);
+  GetOutputList()->Add(h_HTv2Recipe_forQCD_Exp);
+
   GetOutputList()->Add(h_HTforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTforTwoNbv2Recipe_Exp);
@@ -533,6 +550,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_HTRatioforTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_HTRatioforNotTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_MHTv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTv2Recipe_forQCD_Exp);
+
   GetOutputList()->Add(h_MHTforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTforTwoNbv2Recipe_Exp);
@@ -545,6 +564,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_NJetv2Recipe_Exp);
+  GetOutputList()->Add(h_NJetv2Recipe_forQCD_Exp);
+
   GetOutputList()->Add(h_NJetforTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_NJetforNotTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_NJetvsHTv2Recipe_Exp);
@@ -553,6 +574,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_NJetvsNBtagv2Recipe_Exp);
   GetOutputList()->Add(h_NJetvsNBFracv2Recipe_Exp);
   GetOutputList()->Add(h_NBtagv2Recipe_Exp);
+  GetOutputList()->Add(h_NBtagv2Recipe_forQCD_Exp);
+
   GetOutputList()->Add(h_NBtagforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_NBtagforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_NJetforMHTminusHTv2Recipe_Exp);
@@ -800,6 +823,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_MHT_Pre);
   GetOutputList()->Add(h_NJet_Pre);
   GetOutputList()->Add(h_NBtag_Pre);
+  GetOutputList()->Add(h_HT_forQCD_Pre);
+  GetOutputList()->Add(h_MHT_forQCD_Pre);
+  GetOutputList()->Add(h_NJet_forQCD_Pre);
+  GetOutputList()->Add(h_NBtag_forQCD_Pre);
 
   std::cout<<"Run on Data: "<<runOnData<<std::endl;
   std::cout<<"Run on SM MC: "<<runOnStandardModelMC<<std::endl;
@@ -1193,7 +1220,8 @@ Bool_t Prediction::Process(Long64_t entry)
     BinQCD_ = SearchBinsQCD_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
   }
   //std::cout<<" entry "<<entry<<" Bin_ "<<Bin_<<" BinQCD_ "<<BinQCD_<<endl;
-  //*AR-181016: Use only events falling into search bins
+  //*AR-181016: Use only events falling into either of QCD search bins. Note that this includes events which fall inone of 223 bins but not any of 174 search bins. So integral of 1D plots in search variables might not be same as (slightly higher) than 174 search bin histogram integral.
+
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
   /*
   if(Bin_ > 900 && BinQCD_ < 900 && MHTv2Recipe>300)
@@ -2174,6 +2202,9 @@ Bool_t Prediction::Process(Long64_t entry)
     h_GenHT_Exp->Fill(GenHT,WeightBtagProb);
 
     h_HTv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
+    if(MHTv2Recipe>250 && MHTv2Recipe<300)
+      h_HTv2Recipe_forQCD_Exp->Fill(HTv2Recipe,WeightBtagProb);
+
     if(BTagsv2Recipe==2){
       h_HTforTwoNbv2Recipe_Exp->Fill(HTv2Recipe,WeightBtagProb);
       h_HTRatioforTwoNbv2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
@@ -2207,6 +2238,8 @@ Bool_t Prediction::Process(Long64_t entry)
     h_HT5v2Recipe_Exp->Fill(HT5v2Recipe,WeightBtagProb);
     h_HTRatiov2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
     h_MHTv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+    h_MHTv2Recipe_forQCD_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+
     h_MHTPhiv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
 
     if(NJetsv2Recipe<6){
@@ -2218,6 +2251,9 @@ Bool_t Prediction::Process(Long64_t entry)
       h_MHTPhiforHighNJetv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
     }
     h_NJetv2Recipe_Exp->Fill(NJetsv2Recipe,WeightBtagProb);
+    if(MHTv2Recipe>250 && MHTv2Recipe<300)
+      h_NJetv2Recipe_forQCD_Exp->Fill(NJetsv2Recipe,WeightBtagProb);
+
     h_NJetvsHTv2Recipe_Exp->Fill(NJetsv2Recipe,HTv2Recipe);
     h_NJetvsMHTv2Recipe_Exp->Fill(NJetsv2Recipe,MHTv2Recipe);
     h_NJetvsMHTPhiv2Recipe_Exp->Fill(NJetsv2Recipe,MHTPhiv2Recipe);
@@ -2228,6 +2264,9 @@ Bool_t Prediction::Process(Long64_t entry)
     h_NJetforMHTminusHTv2Recipe_Exp->Fill(NJetsforMHTminusHTv2Recipe,WeightBtagProb);
 
     h_NBtagv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    if(MHTv2Recipe>250 && MHTv2Recipe<300)
+      h_NBtagv2Recipe_forQCD_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+
     h_DphiOneforHTv2Recipe_Exp->Fill(HTDeltaPhi1v2Recipe,WeightBtagProb);
     h_DphiTwoforHTv2Recipe_Exp->Fill(HTDeltaPhi2v2Recipe,WeightBtagProb);
     h_DphiThreeforHTv2Recipe_Exp->Fill(HTDeltaPhi3v2Recipe,WeightBtagProb);
@@ -2270,7 +2309,20 @@ Bool_t Prediction::Process(Long64_t entry)
       h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
     else //true for data
       h_NBtag_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
-    
+
+    if(MHTv2Recipe>250 && MHTv2Recipe<300)
+      h_HT_forQCD_Pre->Fill(HTv2Recipe,WeightBtagProb*TF);
+    h_MHT_forQCD_Pre->Fill(MHTv2Recipe,WeightBtagProb*TF);
+    if(MHTv2Recipe>250 && MHTv2Recipe<300)
+      h_NJet_forQCD_Pre->Fill(NJetsv2Recipe,WeightBtagProb*TF);
+    if(doBTagCorr){ //true for signal and SM MC
+      if(MHTv2Recipe>250 && MHTv2Recipe<300)
+	h_NBtag_forQCD_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
+    }
+    else{ //true for data
+      if(MHTv2Recipe>250 && MHTv2Recipe<300)
+	h_NBtag_forQCD_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
+    }
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
     /*  
@@ -2413,6 +2465,8 @@ void Prediction::Terminate()
   h_WeightBeforeScalePrefirevsRecoHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_WeightBeforeScalePrefirevsRecoHT_Exp"));
 
   h_HTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_Exp"));
+  h_HTv2Recipe_forQCD_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_forQCD_Exp"));
+
   h_HTforTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforTwoNbv2Recipe_Exp"));
   h_HTforNotTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforNotTwoNbv2Recipe_Exp"));
 
@@ -2429,6 +2483,8 @@ void Prediction::Terminate()
   h_HTRatioforNotTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforNotTwoNbv2Recipe_Exp"));
 
   h_MHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_Exp"));
+  h_MHTv2Recipe_forQCD_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_forQCD_Exp"));
+
   h_MHTforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforLowNJetv2Recipe_Exp"));
   h_MHTforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforHighNJetv2Recipe_Exp"));
   h_MHTforTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforTwoNbv2Recipe_Exp"));
@@ -2443,6 +2499,8 @@ void Prediction::Terminate()
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp"));
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp"));
   h_NJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetv2Recipe_Exp"));
+  h_NJetv2Recipe_forQCD_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetv2Recipe_forQCD_Exp"));
+
   h_NJetforTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetforTwoNbv2Recipe_Exp"));
   h_NJetforNotTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetforNotTwoNbv2Recipe_Exp"));
 
@@ -2454,6 +2512,8 @@ void Prediction::Terminate()
 
   h_NJetforMHTminusHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetforMHTminusHTv2Recipe_Exp"));
   h_NBtagv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagv2Recipe_Exp"));
+  h_NBtagv2Recipe_forQCD_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagv2Recipe_forQCD_Exp"));
+
   h_NBtagforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagforLowNJetv2Recipe_Exp"));
   h_NBtagforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagforHighNJetv2Recipe_Exp"));
 
@@ -2717,6 +2777,10 @@ void Prediction::Terminate()
   h_MHT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Pre"));
   h_NJet_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Pre"));
   h_NBtag_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Pre"));
+  h_HT_forQCD_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_forQCD_Pre"));
+  h_MHT_forQCD_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_forQCD_Pre"));
+  h_NJet_forQCD_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_forQCD_Pre"));
+  h_NBtag_forQCD_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_forQCD_Pre"));
 
   TFile *outPutFile = new TFile(fileName,"RECREATE"); ;
   outPutFile->cd();
@@ -2806,6 +2870,8 @@ void Prediction::Terminate()
   h_WeightBeforeScalePrefirevsRecoHT_Exp->Write();
 
   h_HTv2Recipe_Exp->Write();
+  h_HTv2Recipe_forQCD_Exp->Write();
+
   h_HTforLowNJetv2Recipe_Exp->Write();
   h_HTforHighNJetv2Recipe_Exp->Write();
   h_HTforTwoNbv2Recipe_Exp->Write();
@@ -2819,6 +2885,7 @@ void Prediction::Terminate()
   h_HTRatioforTwoNbv2Recipe_Exp->Write();
   h_HTRatioforNotTwoNbv2Recipe_Exp->Write();
   h_MHTv2Recipe_Exp->Write();
+  h_MHTv2Recipe_forQCD_Exp->Write();
   h_MHTforLowNJetv2Recipe_Exp->Write();
   h_MHTforHighNJetv2Recipe_Exp->Write();
   h_MHTforTwoNbv2Recipe_Exp->Write();
@@ -2831,6 +2898,8 @@ void Prediction::Terminate()
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp->Write();
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp->Write();
   h_NJetv2Recipe_Exp->Write();
+  h_NJetv2Recipe_forQCD_Exp->Write();
+  
   h_NJetforTwoNbv2Recipe_Exp->Write();
   h_NJetforNotTwoNbv2Recipe_Exp->Write();
   h_NJetvsHTv2Recipe_Exp->Write();
@@ -2840,6 +2909,8 @@ void Prediction::Terminate()
   h_NJetvsNBFracv2Recipe_Exp->Write();
   h_NJetforMHTminusHTv2Recipe_Exp->Write();
   h_NBtagv2Recipe_Exp->Write();
+  h_NBtagv2Recipe_forQCD_Exp->Write();
+
   h_NBtagforLowNJetv2Recipe_Exp->Write();
   h_NBtagforHighNJetv2Recipe_Exp->Write();
 
@@ -3129,6 +3200,10 @@ void Prediction::Terminate()
   h_MHT_Pre->Write();
   h_NJet_Pre->Write();
   h_NBtag_Pre->Write();
+  h_HT_forQCD_Pre->Write();
+  h_MHT_forQCD_Pre->Write();
+  h_NJet_forQCD_Pre->Write();
+  h_NBtag_forQCD_Pre->Write();
 
 
   outPutFile->Close();
@@ -3169,7 +3244,7 @@ bool Prediction::FiltersPass()
     if(HBHEIsoNoiseFilter!=1) result=false;
     if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
     if(eeBadScFilter!=1) result=false;
-    if(ecalBadCalibFilter!=1) result=false;
+    //if(ecalBadCalibFilter!=1) result=false;
     if(runOnData){
       if(!BadChargedCandidateFilter) result=false;
       if(!BadPFMuonFilter) result=false;

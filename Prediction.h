@@ -211,6 +211,8 @@ class Prediction : public TSelector {
   TH2D * h_WeightBeforeScalePrefirevsRecoHT_Exp=0;  
 
   TH1D* h_HTv2Recipe_Exp=0;
+  TH1D* h_HTv2Recipe_forQCD_Exp=0;
+
   TH1D* h_HTforLowNJetv2Recipe_Exp=0;
   TH1D* h_HTforHighNJetv2Recipe_Exp=0;
   TH1D* h_HTforTwoNbv2Recipe_Exp=0;
@@ -222,6 +224,8 @@ class Prediction : public TSelector {
   TH1D* h_HTRatioforTwoNbv2Recipe_Exp=0;  
   TH1D* h_HTRatioforNotTwoNbv2Recipe_Exp=0;
   TH1D* h_MHTv2Recipe_Exp=0;
+  TH1D* h_MHTv2Recipe_forQCD_Exp=0;
+
   TH1D* h_MHTforLowNJetv2Recipe_Exp=0;
   TH1D* h_MHTforHighNJetv2Recipe_Exp=0;
   TH1D* h_MHTforTwoNbv2Recipe_Exp=0; 
@@ -243,6 +247,8 @@ class Prediction : public TSelector {
   TH2D* h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=0;
   TH2D* h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=0;
   TH1D* h_NJetv2Recipe_Exp=0;
+  TH1D* h_NJetv2Recipe_forQCD_Exp=0;
+
   TH1D* h_NJetforTwoNbv2Recipe_Exp=0;
   TH1D* h_NJetforNotTwoNbv2Recipe_Exp=0; 
   TH2D* h_NJetvsHTv2Recipe_Exp=0;
@@ -252,6 +258,8 @@ class Prediction : public TSelector {
   TH2D* h_NJetvsNBtagv2Recipe_Exp=0;
   TH2D* h_NJetvsNBFracv2Recipe_Exp=0;
   TH1D* h_NBtagv2Recipe_Exp=0;
+  TH1D* h_NBtagv2Recipe_forQCD_Exp=0;
+
   TH1D* h_NBtagforLowNJetv2Recipe_Exp=0;
   TH1D* h_NBtagforHighNJetv2Recipe_Exp=0;
 
@@ -493,9 +501,16 @@ class Prediction : public TSelector {
 
 
   TH1D* h_HT_Pre=0;
+  TH1D* h_HT_forQCD_Pre=0;
+
   TH1D* h_MHT_Pre=0;
+  TH1D* h_MHT_forQCD_Pre=0;
+
   TH1D* h_NJet_Pre=0;
+  TH1D* h_NJet_forQCD_Pre=0;
+
   TH1D* h_NBtag_Pre=0;
+  TH1D* h_NBtag_forQCD_Pre=0;
 
   TH2D* h_RatioBEvsF =0;
 

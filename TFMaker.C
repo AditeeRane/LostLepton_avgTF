@@ -1556,7 +1556,7 @@ bool TFMaker::FiltersPass()
         if(HBHEIsoNoiseFilter!=1) result=false;
         if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
         if(eeBadScFilter!=1) result=false;
-	if(ecalBadCalibFilter!=1) result=false;
+	//	if(ecalBadCalibFilter!=1) result=false;
         //if(runOnData){
         //    if(!BadChargedCandidateFilter) result=false;
         //    if(!BadPFMuonFilter) result=false;
