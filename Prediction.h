@@ -32,15 +32,15 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=true;
+bool GetNonPrefireProb=false;
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs =true; //check:true only for data
 const double csvForBtag=0.8484;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
@@ -145,6 +145,14 @@ class Prediction : public TSelector {
   TH1D* h_LepEta50_Exp=0;
   TH1D* h_LepEta100_Exp=0;
   TH1D* h_LepEta200_Exp=0;
+  TH1D* h_LepEtaInEle_Exp=0;
+  TH1D* h_LepEta50InEle_Exp=0;
+  TH1D* h_LepEta100InEle_Exp=0;
+  TH1D* h_LepEta200InEle_Exp=0;
+  TH1D* h_LepEtaInMu_Exp=0;
+  TH1D* h_LepEta50InMu_Exp=0;
+  TH1D* h_LepEta100InMu_Exp=0;
+  TH1D* h_LepEta200InMu_Exp=0;
 
   TH1D* h_LepPhi_Exp=0;
   TH1D* h_rawJetPtforHT_Exp=0;
@@ -234,6 +242,31 @@ class Prediction : public TSelector {
   TH1D* h_JetEta100forHTv2Recipe_Exp=0;
   TH1D* h_JetEta200forHTv2Recipe_Exp=0;
 
+  TH1D* h_JetEtaNjet2To3forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet2To3forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100Njet2To3forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet2To3forHTv2Recipe_Exp=0;
+
+  TH1D* h_JetEtaNjet4To6forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet4To6forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100Njet4To6forHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet4To6forHTv2Recipe_Exp=0;
+
+  TH1D* h_JetEtaNjet7ToAboveforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet7ToAboveforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100Njet7ToAboveforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet7ToAboveforHTv2Recipe_Exp=0;
+
+
+  TH1D* h_JetEtaInEleforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50InEleforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100InEleforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200InEleforHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaInMuforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50InMuforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta100InMuforHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200InMuforHTv2Recipe_Exp=0;
+
   TH1D* h_JetPhiforHTv2Recipe_Exp=0;
   TH1D* h_JetPtforLowNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforLowNJetforHTv2Recipe_Exp=0;
@@ -316,6 +349,34 @@ class Prediction : public TSelector {
   TH1D* h_JetEta50forMHTminusHTv2Recipe_Exp=0; 
   TH1D* h_JetEta100forMHTminusHTv2Recipe_Exp=0;
   TH1D* h_JetEta200forMHTminusHTv2Recipe_Exp=0;
+
+  TH1D* h_JetEtaNjet2To3forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet2To3forMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100Njet2To3forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet2To3forMHTminusHTv2Recipe_Exp=0;
+
+  TH1D* h_JetEtaNjet4To6forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet4To6forMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100Njet4To6forMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet4To6forMHTminusHTv2Recipe_Exp=0;
+
+  TH1D* h_JetEtaNjet7ToAboveforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50Njet7ToAboveforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100Njet7ToAboveforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200Njet7ToAboveforMHTminusHTv2Recipe_Exp=0;
+
+
+
+
+
+  TH1D* h_JetEtaInEleforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50InEleforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100InEleforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200InEleforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEtaInMuforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta50InMuforMHTminusHTv2Recipe_Exp=0; 
+  TH1D* h_JetEta100InMuforMHTminusHTv2Recipe_Exp=0;
+  TH1D* h_JetEta200InMuforMHTminusHTv2Recipe_Exp=0;
 
   TH1D* h_JetPhiforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiOneforMHTminusHTv2Recipe_Exp=0;
