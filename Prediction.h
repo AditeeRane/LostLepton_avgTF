@@ -32,16 +32,16 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false;
+bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2017 MC
+bool GetNonPrefireProb=true;  //true for 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.4941;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 41486.328;
@@ -122,6 +122,7 @@ class Prediction : public TSelector {
   // Output
   TH1D* h_Prediction = 0;
   TH1D* h_YieldCutFlow=0;
+  TH1D* h_CutFlow=0;
   TH1D* h_CSStat = 0;
   TH1D* h_HT_Exp=0;
   TH1D* h_HT5_Exp=0;
@@ -609,6 +610,8 @@ class Prediction : public TSelector {
   //Bool_t           eeBadSc4Filter;
   std::vector<TLorentzVector> *GenElectrons=0;
   std::vector<TLorentzVector> *GenMuons=0;
+  std::vector<TLorentzVector> *GenTaus=0;
+  std::vector<bool> *GenTaus_had=0;
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
@@ -742,6 +745,8 @@ class Prediction : public TSelector {
   //TBranch        *b_eeBadSc4Filter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
   TBranch        *b_GenMuons=0;   //!
+  TBranch        *b_GenTaus=0;   //!
+  TBranch        *b_GenTaus_had=0;   //!
   TBranch        *b_HBHENoiseFilter=0;   //!
   TBranch        *b_HBHEIsoNoiseFilter=0;   //!
   TBranch        *b_HT=0;   //!
@@ -1098,7 +1103,13 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("GenParticles_PdgId", 1);
     fChain->SetBranchStatus("GenElectrons", 1);
     fChain->SetBranchStatus("GenMuons", 1);
+    fChain->SetBranchStatus("GenTaus", 1);
+    fChain->SetBranchStatus("GenTaus_had", 1);
   }  
+  fChain->SetBranchStatus("GenElectrons", 1);
+  fChain->SetBranchStatus("GenMuons", 1);
+  fChain->SetBranchStatus("GenTaus", 1);
+  fChain->SetBranchStatus("GenTaus_had", 1);
   
 
   if(!runOnData){
@@ -1237,7 +1248,14 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("GenParticles_PdgId", &GenParticles_PdgId, &b_GenParticles_PdgId);
     fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
     fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
+    fChain->SetBranchAddress("GenTaus", &GenTaus, &b_GenTaus);
+    fChain->SetBranchAddress("GenTaus_had", &GenTaus_had, &b_GenTaus_had);
   }  
+  fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
+  fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
+  fChain->SetBranchAddress("GenTaus", &GenTaus, &b_GenTaus);
+  fChain->SetBranchAddress("GenTaus_had", &GenTaus_had, &b_GenTaus_had);
+  
   if(!runOnData){
     fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
     fChain->SetBranchAddress("Jets_hadronFlavor", &Jets_hadronFlavor, &b_Jets_hadronFlavor);
