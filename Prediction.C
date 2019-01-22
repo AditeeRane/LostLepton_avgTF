@@ -36,7 +36,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow = new TH1D("h_CutFlow", "h_CutFlow", 30, 0, 30);
   h_CutFlow->GetXaxis()->SetBinLabel(1,"all");
   h_CutFlow->GetXaxis()->SetBinLabel(2,"HTgen_cut");
-  h_CutFlow->GetXaxis()->SetBinLabel(3,"0L");
+  if(GetSignalRegHists)
+    h_CutFlow->GetXaxis()->SetBinLabel(3,"0L");
+  else
+    h_CutFlow->GetXaxis()->SetBinLabel(3,"1L");
   h_CutFlow->GetXaxis()->SetBinLabel(4,"Base-HT,MHT,NJet");
   h_CutFlow->GetXaxis()->SetBinLabel(5,"Base-dPhi");
   h_CutFlow->GetXaxis()->SetBinLabel(6,"HBHENoise");
@@ -48,7 +51,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow->GetXaxis()->SetBinLabel(12,"PFCaloMETRatio");
   h_CutFlow->GetXaxis()->SetBinLabel(13,"BadMuonJet");
   h_CutFlow->GetXaxis()->SetBinLabel(14,"BadJet");
-  h_CutFlow->GetXaxis()->SetBinLabel(15,"NoIsoTrack");
+  if(GetSignalRegHists)
+    h_CutFlow->GetXaxis()->SetBinLabel(15,"NoIsoTrack");
+  else
+    h_CutFlow->GetXaxis()->SetBinLabel(15,"MT-cut");
   h_CutFlow->GetXaxis()->SetBinLabel(16,"QCDBin");
   h_CutFlow->GetXaxis()->SetBinLabel(17,"NegWt");
   h_CutFlow->GetXaxis()->SetBinLabel(18,"madHT");
@@ -989,8 +995,9 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
-  //  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
-  //std::cout<<" Btags calculated not equal to Btags from tree "<<endl; 
+
+  //if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+  //std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
@@ -1088,7 +1095,7 @@ Bool_t Prediction::Process(Long64_t entry)
   double MuPt=-99.0;
   double MuEta=-99.0;
   double MuPhi=-99.0;
-  
+  /*
   if(GenElectrons->size() + GenMuons->size() >= 1)
     h_CutFlow->Fill(20);
 
@@ -1103,7 +1110,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(HadronicTaus >0)
       h_CutFlow->Fill(21);
   }
-
+*/
   //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
   //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
   if(!GetSignalRegHists){
@@ -1276,12 +1283,14 @@ Bool_t Prediction::Process(Long64_t entry)
 */
   
   h_YieldCutFlow->Fill(0);
-  //*AR: 181107: check following condition if Dphi cut to be applied
 
   if(EENoiseCutbyAditee){
-    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1))|| (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
       return kTRUE;
   }
+
+  //*AR: 181107: check following condition if Dphi cut to be applied
+
   /*
   TFile *RatioBEvsFPhotonMultExcessfile = TFile::Open("btag/hFprime_Above2BelowPt5.root", "READ");
   h_RatioBEvsF = (TH2D*)RatioBEvsFPhotonMultExcessfile->Get("hFprime");
@@ -1373,28 +1382,28 @@ Bool_t Prediction::Process(Long64_t entry)
       TObjArray *optionArray = currentTree.Tokenize("/");
       TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
       currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-      string skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
+      string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
       char SkimFile[500];
-      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
-      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
-      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2017.root";
-      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2017.root";
-      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2017.root";
-      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2017.root";
-      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2017.root";
-      else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2017.root";
-      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2017.root"; 
-      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2017.root";
-      else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2017.root";
-      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2017.root";
-      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2017.root"; 
-      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2017.root"; 
+      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
+      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
+      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2016.root";
+      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2016.root";
+      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2016.root";
+      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2016.root";
+      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2016.root";
+      else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2016.root";
+      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2016.root"; 
+      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2016.root";
+      else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2016.root";
+      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2016.root";
+      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2016.root"; 
+      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2016.root"; 
       else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
       else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
       else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
@@ -3290,6 +3299,7 @@ vector<string> Prediction::skmInput(string mom){
 
 bool Prediction::FiltersPass()
 {
+
   bool result=true;
   if(useFilterData){
     if(HBHENoiseFilter!=1){
@@ -3309,17 +3319,26 @@ bool Prediction::FiltersPass()
     }
 
     if(result) h_CutFlow->Fill(7);
+    /*
     if(eeBadScFilter!=1){
       result=false;
       //      std::cout<<" failed eeBadSc "<<endl;
     }
+*/
+    if(BadPFMuonFilter!=1) result=false;
+      
     if(result) h_CutFlow->Fill(8);
+    if(BadChargedCandidateFilter!=1) result=false;
+
+    if(!runOnSignalMC){
+      if(globalSuperTightHalo2016Filter!=1) result=false;
+    }
+    if(result) h_CutFlow->Fill(9);
 
     //if(ecalBadCalibFilter!=1) result=false;
     if(runOnData){
-      if(!BadChargedCandidateFilter) result=false;
-      if(!BadPFMuonFilter) result=false;
-      if(globalSuperTightHalo2016Filter!=1) result=false;
+      if(eeBadScFilter!=1) result=false;
+      // if(globalSuperTightHalo2016Filter!=1) result=false;
     }    
   }
   if(NVtx<=0){
@@ -3327,7 +3346,6 @@ bool Prediction::FiltersPass()
     //    std::cout<<" failed nvtx "<<endl;
   }
 
-  if(result) h_CutFlow->Fill(9);
 
   // Do not apply on fastSim samples!
   if(!runOnSignalMC) if(!JetID){
@@ -3372,4 +3390,116 @@ bool Prediction::FiltersPass()
 
 
   return result;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
+
+  bool result=true;
+  if(useFilterData){
+    if(HBHENoiseFilter!=1){
+      result=false;
+      //      std::cout<<" failed HBHE "<<endl;
+    }
+    if(result) h_CutFlow->Fill(5);
+    if(HBHEIsoNoiseFilter!=1){
+      result=false;
+      //      std::cout<<" failed HBHEIso "<<endl;
+    }
+
+    if(result) h_CutFlow->Fill(6);
+    if(EcalDeadCellTriggerPrimitiveFilter!=1){
+      result=false;    
+      //      std::cout<<" failed EcalDeadCell "<<endl;
+    }
+
+    if(result) h_CutFlow->Fill(7);
+    /*
+    if(eeBadScFilter!=1){
+      result=false;
+      //      std::cout<<" failed eeBadSc "<<endl;
+    }
+*/
+  /*
+    if(BadPFMuonFilter!=1) result=false;
+    if(result) h_CutFlow->Fill(8);
+    std::cout<<" passed Bad PF muon "<<endl;
+    if(!runOnSignalMC){
+      if(globalSuperTightHalo2016Filter!=1) result=false;
+    }
+
+    if(result) h_CutFlow->Fill(9);
+    //if(result) h_CutFlow->Fill(8);
+    if(BadChargedCandidateFilter!=1) result=false;
+    //if(ecalBadCalibFilter!=1) result=false;
+    if(runOnData){
+      if(eeBadScFilter!=1) result=false;
+      //if(!BadChargedCandidateFilter) result=false;
+      //  if(!BadPFMuonFilter) result=false;
+      //      if(globalSuperTightHalo2016Filter!=1) result=false;
+    }    
+  }
+  if(NVtx<=0){
+    result=false;
+    std::cout<<" failed nvtx "<<endl;
+  }
+  std::cout<<" passed nvtx "<<endl;
+
+  //  if(result) h_CutFlow->Fill(9);
+  //  if(result) h_CutFlow->Fill(9);
+  // Do not apply on fastSim samples!
+  if(!runOnSignalMC) if(!JetID){
+      result=false;
+      std::cout<<" failed jetID "<<endl;
+  }
+  std::cout<<" passed jetID "<<endl;
+  if(result) h_CutFlow->Fill(10);
+  // Preliminary filters
+  if(PFCaloMETRatio>5) result=false;
+  if(result) h_CutFlow->Fill(11);
+  // Check efficiency of filter
+  
+  if(result)
+    for(unsigned j = 0; j < Jets->size(); j++){
+      if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
+      if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
+	//std::cout<<"found bad muon jet"<<std::endl;
+	result=false;
+      }
+    }
+  if(result) h_CutFlow->Fill(12);
+  std::cout<<" passed bad muon jet "<<endl;
+
+  //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
+  if(result && runOnSignalMC)
+    for(unsigned j = 0; j < Jets->size(); ++j){
+      if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
+      bool genMatched = false;
+      for(unsigned g = 0; g < GenJets->size(); ++g){
+	if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
+	  genMatched = true;
+	  break;
+	}
+      }
+      if(!genMatched && Jets_chargedHadronEnergyFraction->at(j) < 0.1){
+	result = false;
+	break;
+      }
+    }
+  if(result) h_CutFlow->Fill(13);
+  std::cout<<" not a bad jet "<<endl;
+
+
+  return result;
+*/
 }

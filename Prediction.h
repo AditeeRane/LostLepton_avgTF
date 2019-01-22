@@ -32,19 +32,19 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true;
+bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=true;  //true for 2017 MC
+bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
-const double csvForBtag=0.4941;
+const bool applySFs = true; //check:true only for data
+const double csvForBtag=0.6321;
 // Use TFs with/without SFs
-const double scaleFactorWeight = 41486.328;
+const double scaleFactorWeight = 35815.165;
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -539,10 +539,10 @@ class Prediction : public TSelector {
   string SkimFilePath=" ";
   string OldSkimFilePath=" ";
 
-  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
-  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
-  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
-  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2016BtoH.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2016BtoH");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2016BtoH.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2016BtoH");
 
 
   SearchBins *SearchBins_ =0;
@@ -1035,6 +1035,10 @@ void Prediction::Init(TTree *tree)
       fChain->SetBranchStatus("BadPFMuonFilter", 1);
     }
   }
+  fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
+  fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
+  fChain->SetBranchStatus("BadPFMuonFilter", 1);
+  
   fChain->SetBranchStatus("Electrons", 1);
   fChain->SetBranchStatus("HT", 1);
   fChain->SetBranchStatus("HTclean", 1);
@@ -1201,6 +1205,10 @@ void Prediction::Init(TTree *tree)
       fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
     }
   }
+  fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
+  fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
+  fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
+
   fChain->SetBranchAddress("isoElectronTracks", &isoElectronTracksNum, &b_isoElectronTracksNum);
   fChain->SetBranchAddress("isoMuonTracks", &isoMuonTracksNum, &b_isoMuonTracksNum);
   fChain->SetBranchAddress("isoPionTracks", &isoPionTracksNum, &b_isoPionTracksNum);
