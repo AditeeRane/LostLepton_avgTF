@@ -361,42 +361,42 @@ Bool_t TFMaker::Process(Long64_t entry)
 	currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
 	//	std::cout<<" currentFile "<<currentFile<<endl;
 
-	string skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
+	string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
 	char SkimFile[500];
-	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
-	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
-	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2017.root";
-	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2017.root";
-	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2017.root";
-	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2017.root";
-	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2017.root";
-	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2017.root";
-	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2017.root"; 
-	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2017.root";
-	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2017.root";
-	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2017.root";
-	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2017.root"; 
-	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2017.root"; 
-	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2017.root"; 
-	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2017.root";
-	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2017.root";
-	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2017.root";
-	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2017.root";
-	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2017.root";
-	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2017.root";
-	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2017.root";
-	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2017.root";
-	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2017.root";
-	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2017.root";
-	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2017.root";
-	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2017.root";
-	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2017.root";
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2016.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2016.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2016.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2016.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2016.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2016.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2016.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2016.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2016.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2016.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2016.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2016.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2016.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2016.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2016.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2016.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2016.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2016.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2016.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2016.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2016.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2016.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2016.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2016.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2016.root";
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 
 	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
@@ -1550,54 +1550,100 @@ void TFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
 
 bool TFMaker::FiltersPass()
 {
-    bool result=true;
-    if(useFilterData){
-        if(HBHENoiseFilter!=1) result=false;
-        if(HBHEIsoNoiseFilter!=1) result=false;
-        if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
-        if(eeBadScFilter!=1) result=false;
-	//	if(ecalBadCalibFilter!=1) result=false;
-        //if(runOnData){
-        //    if(!BadChargedCandidateFilter) result=false;
-        //    if(!BadPFMuonFilter) result=false;
-        //    if(globalSuperTightHalo2016Filter!=1) result=false;
-        //}    
+
+ bool result=true;
+  if(useFilterData){
+    if(HBHENoiseFilter!=1){
+      result=false;
+      //      std::cout<<" failed HBHE "<<endl;
     }
-    if(NVtx<=0) result=false;
+    //    if(result) h_CutFlow->Fill(5);
+    if(HBHEIsoNoiseFilter!=1){
+      result=false;
+      //      std::cout<<" failed HBHEIso "<<endl;
+    }
 
-    // Preliminary filters
-    if(PFCaloMETRatio>5) result=false;
+    //    if(result) h_CutFlow->Fill(6);
+    if(EcalDeadCellTriggerPrimitiveFilter!=1){
+      result=false;    
+      //      std::cout<<" failed EcalDeadCell "<<endl;
+    }
 
+    //    if(result) h_CutFlow->Fill(7);
+    /*
+    if(eeBadScFilter!=1){
+      result=false;
+      //      std::cout<<" failed eeBadSc "<<endl;
+    }
+*/
+    if(BadPFMuonFilter!=1) result=false;
+      
+    //    if(result) h_CutFlow->Fill(8);
+    if(BadChargedCandidateFilter!=1) result=false;
+
+    //    if(!runOnSignalMC){
+    if(globalSuperTightHalo2016Filter!=1) result=false;
+    //    }
+    //    if(result) h_CutFlow->Fill(9);
+    
+    //if(ecalBadCalibFilter!=1) result=false;
+    //    if(runOnData){
+    if(eeBadScFilter!=1) result=false;
+    // if(globalSuperTightHalo2016Filter!=1) result=false;
+    //    }    
+  }
+  if(NVtx<=0){
+    result=false;
+    //    std::cout<<" failed nvtx "<<endl;
+  }
+  
+  
+  // Do not apply on fastSim samples!
+  //if(!runOnSignalMC)
+  if(!JetID){
+    result=false;
+    //    std::cout<<" failed jetID "<<endl;
+  }
+  
+  //  if(result) h_CutFlow->Fill(10);
+  // Preliminary filters
+  if(PFCaloMETRatio>5) result=false;
+  //  if(result) h_CutFlow->Fill(11);
+  // Check efficiency of filter
+  
+  if(result)
     for(unsigned j = 0; j < Jets->size(); j++){
-        if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
-        if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
-            //std::cout<<"found bad muon jet"<<std::endl;
-            result=false;
-            break;
-        }
+      if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
+      if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
+	//std::cout<<"found bad muon jet"<<std::endl;
+	result=false;
+      }
     }
+  //  if(result) h_CutFlow->Fill(12);
 
-    //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
-    /*if (runOnSignalMC)
+
+  //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
+  /*  if(result && runOnSignalMC)
     for(unsigned j = 0; j < Jets->size(); ++j){
-        if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
-        bool genMatched = false;
-        for(unsigned g = 0; g < GenJets->size(); ++g){
-            if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
-             genMatched = true;
-             break;
-            }
-        }
-        if(!genMatched && Jets_chargedHadronEnergyFraction->at(j) < 0.1){
-            result = false;
-            break;
-        }
+    if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
+      bool genMatched = false;
+      for(unsigned g = 0; g < GenJets->size(); ++g){
+	if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
+	  genMatched = true;
+	  break;
+	}
+      }
+      if(!genMatched && Jets_chargedHadronEnergyFraction->at(j) < 0.1){
+	result = false;
+	break;
+      }
     }
-    */
-    // Do not apply on fastSim samples!
-    //if(!runOnSignalMC)
-    if(!JetID) result=false;
-    return result;
+*/
+  //  if(result) h_CutFlow->Fill(13);
+  
+  
+  return result;
+ 
 }
 
 vector<TVector3>TFMaker::Order_the_Vec(vector<TVector3> vec)

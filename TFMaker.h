@@ -56,7 +56,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
+const string path_bTagCalib("btag/DeepCSV_Moriond17_B_H.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
@@ -78,7 +78,7 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
-const double csvForBtag=0.4941;
+const double csvForBtag=0.6324;
 int Scalesize=9;
 int PDFsize=101;
 //vector<double> *Vec_SF;
@@ -176,11 +176,11 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   string SkimFilePath=" ";
   string OldSkimFilePath=" ";
 
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2016BtoH.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2016BtoH");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2016BtoH.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2016BtoH");
 
-  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
-  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
-  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
-  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
 
   TH1D* h_muIsoTrack_NJetsunc = 0;
   TH1D* h_elecIsoTrack_NJetsunc = 0;

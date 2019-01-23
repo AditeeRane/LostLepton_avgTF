@@ -996,8 +996,8 @@ Bool_t Prediction::Process(Long64_t entry)
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
 
-  //if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
-  //std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
+  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+    std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){

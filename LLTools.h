@@ -1,6 +1,6 @@
 #ifndef LLTOOLS_H
 #define LLTOOLS_H
-
+#include "TGraphAsymmErrors.h"
 #include "TVector2.h"
 #include "TH2.h"
 #include <cmath>
@@ -86,6 +86,7 @@ static double GetSignalTriggerEffWeight(Double_t HT,Double_t MHT) {
   }
 }
 
+
 static std::pair<double,double> EvalSF(TH2 *hist, Double_t xVal, Double_t yVal) {
   // Dont use overflow bins!
   if(xVal < hist->GetXaxis()->GetXmin() )
@@ -139,6 +140,29 @@ static double GetSF(TH2 *hist, Double_t xVal, Double_t yVal) {
   return EvalSF(hist, xVal, yVal).first;
 }
 
+//*AR,Feb23,2017-Moriond tracking SFs were given in TGraphAsymmErrors instead of TH1F 
+static std::pair<double,double> EvalSF(TGraphAsymmErrors *hist, Double_t xVal) {
+  if(xVal < TMath::MinElement(hist->GetN(),hist->GetX()))
+    {
+      xVal = TMath::MinElement(hist->GetN(),hist->GetX())+0.01;
+    }
+  else if(xVal > TMath::MaxElement(hist->GetN(),hist->GetX()))
+    {
+      xVal = TMath::MaxElement(hist->GetN(),hist->GetX())-0.01;
+    }
+  Double_t xValueAsymm, resultAsymm, errUp_, errDown_;
+  int nxBin = 0;
+  for( ; nxBin < hist->GetN(); nxBin++){
+    hist->GetPoint(nxBin, xValueAsymm, resultAsymm);
+    if(xVal < xValueAsymm+hist->GetErrorXhigh(nxBin) && xVal > xValueAsymm-hist->GetErrorXlow(nxBin)) break;
+  }
+  
+  errUp_ = hist->GetErrorYhigh(nxBin);
+  errDown_ = hist->GetErrorYlow(nxBin);
+  
+  return std::make_pair(resultAsymm, std::max(errUp_, errDown_));
+}
+
 static std::pair<double,double> EvalSF(TH1 *hist, Double_t xVal) {
   // Dont use overflow bins!
   if(xVal < hist->GetXaxis()->GetXmin() )
@@ -172,7 +196,23 @@ static double GetSFUnc(TH1 *hist, Double_t xVal, double addSys = 0.) {
   return SF;
 }
 
+static double GetSFUnc(TGraphAsymmErrors *hist, Double_t xVal, double addSys = 0.) {
+
+  std::pair<double, double> SFandUnc = EvalSF(hist, xVal);
+
+  double SF = 0.;
+  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
+  if(addSys > 0) SF = std::sqrt(SFandUnc.second*SFandUnc.second + addSys*addSys);
+  else SF = SFandUnc.second;
+
+  return SF;
+}
+
 static double GetSF(TH1 *hist, Double_t xVal) {
+  return EvalSF(hist, xVal).first;
+}
+
+static double GetSF(TGraphAsymmErrors *hist, Double_t xVal) {
   return EvalSF(hist, xVal).first;
 }
 

@@ -42,7 +42,7 @@ bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 // Use TFs with/without SFs
 const bool applySFs = true; //check:true only for data
-const double csvForBtag=0.6321;
+const double csvForBtag=0.6324;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35815.165;
 
@@ -61,7 +61,7 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
+const string path_bTagCalib("btag/DeepCSV_Moriond17_B_H.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
