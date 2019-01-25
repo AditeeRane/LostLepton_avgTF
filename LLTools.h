@@ -189,7 +189,7 @@ static double GetSFUnc(TH1 *hist, Double_t xVal, double addSys = 0.) {
   std::pair<double, double> SFandUnc = EvalSF(hist, xVal);
 
   double SF = 0.;
-  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
+  //  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
   if(addSys > 0) SF = std::sqrt(SFandUnc.second*SFandUnc.second + addSys*addSys);
   else SF = SFandUnc.second;
 
@@ -201,7 +201,7 @@ static double GetSFUnc(TGraphAsymmErrors *hist, Double_t xVal, double addSys = 0
   std::pair<double, double> SFandUnc = EvalSF(hist, xVal);
 
   double SF = 0.;
-  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
+  //  std::cout<<" xVal "<<xVal<<" sat err "<<SFandUnc.second <<" sys err "<<addSys<<endl;
   if(addSys > 0) SF = std::sqrt(SFandUnc.second*SFandUnc.second + addSys*addSys);
   else SF = SFandUnc.second;
 

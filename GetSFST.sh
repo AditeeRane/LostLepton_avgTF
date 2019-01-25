@@ -6,7 +6,7 @@ outStr=$2
 export SUBMIT_DIR=`pwd -P`
 
 for TStr in t_top t_antitop tW_top tW_antitop s_channel; do
-#for TStr in t_top; do
+#for TStr in s_channel; do
 
 #for TTbarStr in HT_1200_2500 HT_600_800 HT_800_1200 HT_2500_Inf; do
 #for TTbarStr in HT_2500_Inf; do
@@ -53,7 +53,7 @@ for TStr in t_top t_antitop tW_top tW_antitop s_channel; do
 	export Output=qsub/condor_${Suffix}.out
 	export Error=qsub/condor_${Suffix}.err
 	export Log=qsub/condor_${Suffix}.log
-#	export Proxy=\$ENV\(X509_USER_PROXY\)
+	export Proxy=\$ENV\(X509_USER_PROXY\)
 	
 	
 	cd $SUBMIT_DIR
@@ -97,7 +97,7 @@ for TStr in t_top t_antitop tW_top tW_antitop s_channel; do
 		if [ $i -eq 0 ]; then
 		    echo executable = submitScriptForSF.sh>> ${SubmitFile}
 		    echo universe =vanilla>> ${SubmitFile}
-#		    echo x509userproxy = ${Proxy}>> ${SubmitFile}
+		    echo x509userproxy = ${Proxy}>> ${SubmitFile}
 		    echo notification = never>> ${SubmitFile}
 		    echo should_transfer_files = YES>> ${SubmitFile}
 		    echo WhenToTransferOutput = ON_EXIT>> ${SubmitFile}

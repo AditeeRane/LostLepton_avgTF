@@ -32,9 +32,9 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -44,7 +44,8 @@ const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
 const bool SysUp=false;
 const bool SysDn=true;
-const bool JECSys=false;//false by default
+const bool JECSys=true;//false by default
+//const bool LepSys=false;
 const bool IsoMuSys=false;//false by default
 const bool IsoEleSys=false;
 const bool IDMuSys=false;//false by default
@@ -155,13 +156,24 @@ class SFMaker : public TSelector {
   TH1D* h_el_nFoundOnePrompt_SB = 0;
   TH2D* h_el_nFoundOnePrompt_SF_etaPt = 0;
   TH1D* h_el_nFoundOnePrompt_SF_SB = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_Track = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_ID = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_Iso = 0;
+
   TH2D* h_el_nLostOnePrompt_etaPt = 0;
   TH1D* h_el_nLostOnePrompt_SB = 0;
 
   TH2D* h_el_SFCR_etaPt = 0;
   TH1D* h_el_SFCR_SB = 0;
+  TH1D* h_el_SFCR_SB_Track = 0;
+  TH1D* h_el_SFCR_SB_ID = 0;
+  TH1D* h_el_SFCR_SB_Iso = 0;
+
   TH2D* h_el_SFSR_etaPt = 0;
   TH1D* h_el_SFSR_SB = 0;
+  TH1D* h_el_SFSR_SB_Track = 0;
+  TH1D* h_el_SFSR_SB_ID = 0;
+  TH1D* h_el_SFSR_SB_Iso = 0;
 
   TH2D* h_mu_nOnePrompt_etaPt = 0;
   TH1D* h_mu_nOnePrompt_SB = 0;
@@ -169,13 +181,24 @@ class SFMaker : public TSelector {
   TH1D* h_mu_nFoundOnePrompt_SB = 0;
   TH2D* h_mu_nFoundOnePrompt_SF_etaPt = 0;
   TH1D* h_mu_nFoundOnePrompt_SF_SB = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_Track = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_ID = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_Iso = 0;
+
   TH2D* h_mu_nLostOnePrompt_etaPt = 0;
   TH1D* h_mu_nLostOnePrompt_SB = 0;
 
   TH2D* h_mu_SFCR_etaPt = 0;
   TH1D* h_mu_SFCR_SB = 0;
+  TH1D* h_mu_SFCR_SB_Track = 0;
+  TH1D* h_mu_SFCR_SB_ID = 0;
+  TH1D* h_mu_SFCR_SB_Iso = 0;
+
   TH2D* h_mu_SFSR_etaPt = 0;
   TH1D* h_mu_SFSR_SB = 0;
+  TH1D* h_mu_SFSR_SB_Track = 0;
+  TH1D* h_mu_SFSR_SB_ID = 0;
+  TH1D* h_mu_SFSR_SB_Iso = 0;
 
   TH1D* h_di_nTwoPrompt_SB = 0;
   TH1D* h_di_nOneFoundTwoPrompt_SB = 0;
@@ -226,6 +249,10 @@ class SFMaker : public TSelector {
   Double_t      recoSF;
   Double_t      isoSF;
   Double_t      trackingSF;
+  Double_t      recoSFDn;
+  Double_t      isoSFDn;
+  Double_t      trackingSFDn;
+
   Double_t      recoSF2;
   Double_t      isoSF2;
   Double_t      trackingSF2;

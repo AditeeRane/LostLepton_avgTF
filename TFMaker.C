@@ -416,14 +416,14 @@ Bool_t TFMaker::Process(Long64_t entry)
 	//*AR-180314-individual SF histograms and vector of SF histograms to be used need to be reset for every new tree( and not for event).
         // Open histograms for SFs
         if(SFCR_histFile!=0 || SFSR_histFile!=0){
-            h_el_SFCR_etaPt = 0;
+	  //            h_el_SFCR_etaPt = 0;
             h_el_SFCR_SB = 0;
-            h_el_SFSR_etaPt = 0;
+	    //            h_el_SFSR_etaPt = 0;
             h_el_SFSR_SB = 0;
 
-            h_mu_SFCR_etaPt = 0;
+	    //            h_mu_SFCR_etaPt = 0;
             h_mu_SFCR_SB = 0;
-            h_mu_SFSR_etaPt = 0;
+	    //            h_mu_SFSR_etaPt = 0;
             h_mu_SFSR_SB = 0;
 
             h_di_SFCR_SB = 0;
@@ -525,15 +525,15 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  
 	else{
 	  //	  std::cout<<" segvio1**** "<<endl;
-	  h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
+	  //	  h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
 	  h_el_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB")->Clone();
-	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
+	  //	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
 	  h_mu_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB")->Clone();
 	  //	  h_di_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_di_SFCR_SB")->Clone();
 	  
-	  h_el_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_el_SFSR_etaPt")->Clone();
+	  //	  h_el_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_el_SFSR_etaPt")->Clone();
 	  h_el_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB")->Clone();        
-	  h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
+	  //	  h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
 	  h_mu_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB")->Clone();
 	  //	  h_di_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_di_SFSR_SB")->Clone();
 	  /*	  
