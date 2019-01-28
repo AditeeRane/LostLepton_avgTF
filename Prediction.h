@@ -32,16 +32,16 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false; //true while getting MC expectation
+bool GetSignalRegHists= true; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.6324;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35815.165;

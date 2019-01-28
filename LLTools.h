@@ -3,6 +3,7 @@
 #include "TGraphAsymmErrors.h"
 #include "TVector2.h"
 #include "TH2.h"
+#include "TMath.h"
 #include <cmath>
 #include <iostream>
 #include <utility>

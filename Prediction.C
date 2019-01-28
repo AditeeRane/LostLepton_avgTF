@@ -2,6 +2,7 @@
 
 #include "Prediction.h"
 #include <TH2.h>
+#include "TGraphAsymmErrors.h"
 #include <TStyle.h>
 #include <iostream>
 

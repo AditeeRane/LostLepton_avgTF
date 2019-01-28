@@ -32,13 +32,14 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
+const bool LeptonSys=true;
 const bool IsoMuSys=false;//false by default
 const bool IsoEleSys=false;
 const bool IDMuSys=false;//false by default
@@ -53,7 +54,7 @@ const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as
 const bool SysUp=false;
 const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs
-const double scaleFactorWeight = 41486;
+const double scaleFactorWeight = 35815;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 
 // Path to Skims for btag reweighting
@@ -115,13 +116,26 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
 
   TH2D* h_el_SFCR_etaPt = 0;
   TH1D* h_el_SFCR_SB = 0;
+  TH1D* h_el_SFCR_SB_Track = 0;
+  TH1D* h_el_SFCR_SB_ID = 0;
+  TH1D* h_el_SFCR_SB_Iso = 0;
   TH2D* h_el_SFSR_etaPt = 0;
   TH1D* h_el_SFSR_SB = 0;
+  TH1D* h_el_SFSR_SB_Track = 0;
+  TH1D* h_el_SFSR_SB_ID = 0;
+  TH1D* h_el_SFSR_SB_Iso = 0;
 
   TH2D* h_mu_SFCR_etaPt = 0;
   TH1D* h_mu_SFCR_SB = 0;
+  TH1D* h_mu_SFCR_SB_Track = 0;
+  TH1D* h_mu_SFCR_SB_ID = 0;
+  TH1D* h_mu_SFCR_SB_Iso = 0;
+
   TH2D* h_mu_SFSR_etaPt = 0;
   TH1D* h_mu_SFSR_SB = 0;
+  TH1D* h_mu_SFSR_SB_Track = 0;
+  TH1D* h_mu_SFSR_SB_ID = 0;
+  TH1D* h_mu_SFSR_SB_Iso = 0;
 
   TH1D* h_di_SFCR_SB = 0;
   TH1D* h_di_SFSR_SB = 0;
@@ -135,12 +149,34 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TH1D* h_0L1L_LL_SB = 0;
   TH1D* h_0L1L_Hadtau_SB = 0;
 
+
   TH1D* h_CR_SF_SB = 0;
+  TH1D* h_CR_SF_SB_el_Track = 0;
+  TH1D* h_CR_SF_SB_el_ID = 0;
+  TH1D* h_CR_SF_SB_el_Iso = 0;
+  TH1D* h_CR_SF_SB_mu_Track = 0;
+  TH1D* h_CR_SF_SB_mu_ID = 0;
+  TH1D* h_CR_SF_SB_mu_Iso = 0;
+
   TH1D* h_SR_SF_SB = 0;
+  TH1D* h_SR_SF_SB_el_Track = 0;
+  TH1D* h_SR_SF_SB_el_ID = 0;
+  TH1D* h_SR_SF_SB_el_Iso = 0;
+  TH1D* h_SR_SF_SB_mu_Track = 0;
+  TH1D* h_SR_SF_SB_mu_ID = 0;
+  TH1D* h_SR_SF_SB_mu_Iso = 0;
+
   TH1D* h_SR_SF_LL_SB = 0;
   TH1D* h_SR_SF_Hadtau_SB = 0;
 
   TH1D* h_0L1L_SF_SB = 0;
+  TH1D* h_0L1L_SF_SB_el_Track = 0;
+  TH1D* h_0L1L_SF_SB_el_ID = 0;
+  TH1D* h_0L1L_SF_SB_el_Iso = 0;
+  TH1D* h_0L1L_SF_SB_mu_Track = 0;
+  TH1D* h_0L1L_SF_SB_mu_ID = 0;
+  TH1D* h_0L1L_SF_SB_mu_Iso = 0;
+
   TH1D* h_0L1L_SF_LL_SB = 0;
   TH1D* h_0L1L_SF_Hadtau_SB = 0;
 
@@ -150,7 +186,21 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TH1D* h_SR_Hadtau_SB_copy = 0;
 
   TH1D* h_CR_SF_SB_copy = 0;
+  TH1D* h_CR_SF_SB_el_Track_copy = 0;
+  TH1D* h_CR_SF_SB_el_ID_copy = 0;
+  TH1D* h_CR_SF_SB_el_Iso_copy = 0;
+  TH1D* h_CR_SF_SB_mu_Track_copy = 0;
+  TH1D* h_CR_SF_SB_mu_ID_copy = 0;
+  TH1D* h_CR_SF_SB_mu_Iso_copy = 0;
+
   TH1D* h_SR_SF_SB_copy = 0;
+  TH1D* h_SR_SF_SB_el_Track_copy = 0;
+  TH1D* h_SR_SF_SB_el_ID_copy = 0;
+  TH1D* h_SR_SF_SB_el_Iso_copy = 0;
+  TH1D* h_SR_SF_SB_mu_Track_copy = 0;
+  TH1D* h_SR_SF_SB_mu_ID_copy = 0;
+  TH1D* h_SR_SF_SB_mu_Iso_copy = 0;
+
   TH1D* h_SR_SF_LL_SB_copy = 0;
   TH1D* h_SR_SF_Hadtau_SB_copy = 0;
 
