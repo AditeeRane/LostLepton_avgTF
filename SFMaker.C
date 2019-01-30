@@ -267,6 +267,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
+    Scalesize=ScaleWeights->size();
+    PDFsize=PDFWeights->size();
 
 
     //    std::cout<<" evtweight "<<Weight<<endl;

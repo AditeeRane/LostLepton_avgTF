@@ -46,9 +46,9 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow->GetXaxis()->SetBinLabel(6,"HBHENoise");
   h_CutFlow->GetXaxis()->SetBinLabel(7,"HBHEIsoNoise");
   h_CutFlow->GetXaxis()->SetBinLabel(8,"EcalDeadCell");
-  h_CutFlow->GetXaxis()->SetBinLabel(9,"eeBadSc");
-  h_CutFlow->GetXaxis()->SetBinLabel(10,"NVtx");
-  h_CutFlow->GetXaxis()->SetBinLabel(11,"JetID");
+  h_CutFlow->GetXaxis()->SetBinLabel(9,"BadPFMuon");
+  h_CutFlow->GetXaxis()->SetBinLabel(10,"BadChargGlobal");
+  h_CutFlow->GetXaxis()->SetBinLabel(11,"NvtxJetID");
   h_CutFlow->GetXaxis()->SetBinLabel(12,"PFCaloMETRatio");
   h_CutFlow->GetXaxis()->SetBinLabel(13,"BadMuonJet");
   h_CutFlow->GetXaxis()->SetBinLabel(14,"BadJet");

@@ -491,8 +491,8 @@ void CombinedSFs() {
   
   //    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
   //    GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
-    GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
+  //    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
+  //GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
     /*
     GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_SB_Track","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nFoundOnePrompt_SB");
     GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_SB_Track","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nFoundOnePrompt_SB");
@@ -503,8 +503,8 @@ void CombinedSFs() {
   */
     //    GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
     //    GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
-    GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
+    //GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
+  //    GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
     /*
     GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_SB_Track","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nFoundOnePrompt_SB");
     GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_SB_Track","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nFoundOnePrompt_SB");
@@ -516,8 +516,8 @@ void CombinedSFs() {
     
     //    GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
     //    GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
-    GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
+    //GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
+  //    GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
     /*
     GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_SB_Track","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nFoundOnePrompt_SB");
     GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_SB_Track","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nFoundOnePrompt_SB");
@@ -528,8 +528,8 @@ void CombinedSFs() {
 */  
     //  GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
     //  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
   /*
   GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_SB_Track","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nLostOnePrompt_SB");
   GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_SB_Track","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nLostOnePrompt_SB");
@@ -541,8 +541,8 @@ void CombinedSFs() {
     
   //  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
   //  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
   /*
   GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_SB_Track","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nLostOnePrompt_SB");
   GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_SB_Track","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nLostOnePrompt_SB");
@@ -553,8 +553,8 @@ void CombinedSFs() {
 */  
   //  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
   //  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
   /*
   GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB_Track","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB_Track","h_el_nLostOnePrompt_SB");
   GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB_Track","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB_Track","h_mu_nLostOnePrompt_SB");
@@ -598,34 +598,34 @@ void CombinedSFs() {
 
   //**AR-SFCR, SFSR in PDF cases
   /*
-    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
-    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
+    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",100);
+    GetSFHistograms("SFCR_0_TTbar_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",100);
   
   
-    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
-    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
-
-
-    
-    GetSFHistograms("SFCR_0_ST_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",101);
-    GetSFHistograms("SFCR_0_ST_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",101);
-    
-    
-    
-  
-  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
-  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
+    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",100);
+    GetSFHistograms("SFCR_0_WJet_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",100);
 
     
-  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
-  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
-  
-  
-  GetSFHistograms("SFSR_0_ST_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",101);
-  GetSFHistograms("SFSR_0_ST_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",101);
+    
+    GetSFHistograms("SFCR_0_ST_.root","h_PDF_el_SFCR_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nFoundOnePrompt_SB",100);
+    GetSFHistograms("SFCR_0_ST_.root","h_PDF_mu_SFCR_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nFoundOnePrompt_SB",100);
+  */
+    
+    
+    /*
+  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",100);
+  GetSFHistograms("SFSR_0_TTbar_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",100);
 
-  
+    
+  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",100);
+  GetSFHistograms("SFSR_0_WJet_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",100);
     */
+  
+  GetSFHistograms("SFSR_0_ST_.root","h_PDF_el_SFSR_SB","h_PDF_el_nOnePrompt_SB","h_PDF_el_nFoundOnePrompt_SF_SB","h_PDF_el_nLostOnePrompt_SB",100);
+  GetSFHistograms("SFSR_0_ST_.root","h_PDF_mu_SFSR_SB","h_PDF_mu_nOnePrompt_SB","h_PDF_mu_nFoundOnePrompt_SF_SB","h_PDF_mu_nLostOnePrompt_SB",100);
+
+  
+    
 
 
 }

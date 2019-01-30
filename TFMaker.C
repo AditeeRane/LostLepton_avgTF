@@ -265,6 +265,10 @@ Bool_t TFMaker::Process(Long64_t entry)
     vector<double> Vec_SF;
     int MuonsNumPassIdIso_=0;
     int ElectronsNumPassIdIso_=0;
+    Scalesize=ScaleWeights->size();
+    PDFsize=PDFWeights->size();
+
+
   //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
     if(JECSys){ 
       for(unsigned int i=0;i < Jets->size();i++){
@@ -640,8 +644,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	    h_mu_SFSR_SB = (TH1D*)SFSR_histFile->FindObjectAny(tempname);
 	    Vec_PDF_mu_SFSR_SB.push_back(h_mu_SFSR_SB);
 	  }
-	  std::cout<<" second PDFAcc**** "<<endl; 
-	  std::cout<<" size "<<Vec_PDF_mu_SFSR_SB.size()<<endl;
+	  //	  std::cout<<" second PDFAcc**** "<<endl; 
+	  //	  std::cout<<" size "<<Vec_PDF_mu_SFSR_SB.size()<<endl;
 	}
 	  
 	else{

@@ -90,7 +90,7 @@ void MakeSFs(const char *InputTxtFile,const char * subSampleKey, const char * Ou
 */
   for(Int_t i=0; i<nChains; i++){ //i<nChains i>2
     std::cout<<"Processing Tree: "<<i<<std::endl;
-    Effchain[i]->Process("SFMaker", TString::Format("%s/SFSR_%d_%s_%s.root",Outdir,i,subSampleKey,inputnumber));
+    Effchain[i]->Process("SFMaker", TString::Format("%s/SFCR_%d_%s_%s.root",Outdir,i,subSampleKey,inputnumber));
     std::cout<<" Processed Tree "<<endl;
   }
 }

@@ -34,7 +34,7 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -52,8 +52,8 @@ const bool IDMuSys=false;//false by default
 const bool IDEleSys=false;
 const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
-const bool ScaleAccSys=true;
-const bool PDFAccSys=false;
+const bool ScaleAccSys=false;
+const bool PDFAccSys=true;
 const bool BtagSys=false;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 // Path to Skims for btag reweighting
@@ -127,8 +127,8 @@ const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
 const double csvForBtag=0.6324;
-int Scalesize=8;
-int PDFsize=100;
+int Scalesize=9;
+int PDFsize=101;
 class SFMaker : public TSelector {
  public :
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
