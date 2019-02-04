@@ -32,19 +32,19 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true; //true while getting MC expectation
+bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
-const double csvForBtag=0.6324;
+const bool applySFs = true; //check:true only for data
+const double csvForBtag=0.4184;
 // Use TFs with/without SFs
-const double scaleFactorWeight = 35815.165;
+const double scaleFactorWeight = 59777.551;
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -61,7 +61,7 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_Moriond17_B_H.csv");
+const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
@@ -539,10 +539,10 @@ class Prediction : public TSelector {
   string SkimFilePath=" ";
   string OldSkimFilePath=" ";
 
-  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2016BtoH.root", "READ");
-  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2016BtoH");
-  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2016BtoH.root", "READ");
-  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2016BtoH");
+  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
+  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
+  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
+  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
 
 
   SearchBins *SearchBins_ =0;

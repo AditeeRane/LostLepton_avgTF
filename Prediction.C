@@ -997,8 +997,8 @@ Bool_t Prediction::Process(Long64_t entry)
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
 
-  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
-    std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
+  //  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+  //std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
@@ -1147,9 +1147,13 @@ Bool_t Prediction::Process(Long64_t entry)
 	}
       }
     }
-
-    //    if(LepPt<20 || fabs(LepEta)>2.1) 
-    //return kTRUE;
+    if(ElectronsNum_==1){
+      bool CheckPhi=LepPhi < -0.9 && LepPhi > -1.5;
+      bool CheckEta=LepEta < -1.4 && LepEta > -3.0;
+      //    if(LepPt<20 || fabs(LepEta)>2.1)
+      if(CheckPhi && CheckEta)
+	return kTRUE;
+    }
   } //end of if(!GetSignalRegHists)
   else{
     if((MuonsNum_+ElectronsNum_) !=0)
@@ -1383,28 +1387,28 @@ Bool_t Prediction::Process(Long64_t entry)
       TObjArray *optionArray = currentTree.Tokenize("/");
       TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
       currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-      string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
+      string skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
       char SkimFile[500];
-      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
-      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
-      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2016.root";
-      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2016.root";
-      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2016.root";
-      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2016.root";
-      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2016.root";
-      else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2016.root";
-      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2016.root"; 
-      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2016.root";
-      else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2016.root";
-      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2016.root";
-      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2016.root"; 
-      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2016.root"; 
+      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
+      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
+      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2017.root";
+      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2017.root";
+      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2017.root";
+      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2017.root";
+      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2017.root";
+      else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2017.root";
+      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2017.root"; 
+      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2017.root";
+      else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2017.root";
+      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2017.root";
+      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2017.root"; 
+      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2017.root"; 
       else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
       else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
       else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
