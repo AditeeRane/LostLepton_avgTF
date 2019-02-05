@@ -1170,7 +1170,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(1);
 		    //		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
 		  }
-		  std::cout<<" forth ScaleAcc**** "<<endl; 
+		  .//		  std::cout<<" forth ScaleAcc**** "<<endl; 
 		}
 		else if(PDFAccSys){ 
 		  Vec_SF.clear();
@@ -1178,7 +1178,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(1);
 		    //std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
 		  }
-		  std::cout<<" forth PDFAcc**** "<<endl; 
+		  //		  std::cout<<" forth PDFAcc**** "<<endl; 
 		}
 		else{
 		  SF = 1; //as there was a reco electron passing id, iso but no gen electron passing pT>5 and eta<2.5, let SF=1

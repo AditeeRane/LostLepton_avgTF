@@ -638,7 +638,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     //*AR- 180315-Here onward execution happens for every new event.
     //    std::cout<<" weight before prefire map "<<Weight<<endl;
-    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
+    //    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
 
 
 
@@ -685,7 +685,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       } //end of loop over MHT jets
       //      std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
       
-      std::cout<<" weight_afterAllJets "<<Weight<<endl;
+      //      std::cout<<" weight_afterAllJets "<<Weight<<endl;
       
       for(unsigned j = 0; j < Electrons->size(); ++j){
 	if(Electrons_passIso->at(j)){
@@ -715,7 +715,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       //    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
     } // end of GetNonPrefireProb
     
-    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
+    //    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
     
     if(Weight < 0)
       return kTRUE;
@@ -990,7 +990,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      Vec_scale_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	    }
 	  }
-	  std::cout<<" pdfsize "<<PDFWeights->size()<<endl;
+	  //	  std::cout<<" pdfsize "<<PDFWeights->size()<<endl;
 	  if(PDFAccSys){
 	    for(int iacc=0; iacc < PDFsize; iacc++){
 	      std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" PDFweight "<<PDFWeights->at(iacc)<<endl;

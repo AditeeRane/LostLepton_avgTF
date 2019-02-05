@@ -1,0 +1,196 @@
+//void plot_Acceptance_forICHEP2016(std::string elogForPlot=""){
+#include <stdio.h>
+#include <string.h>
+#include "TMath.h"
+
+void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,const char* STMC,double LTTbar,double LWJet,double LSt,const char* histTF,const char* histOne,const char* histTwo,int type,bool yTTbar,bool yWJet,bool ySt){
+
+  std::cout<<" combining histograms from different years "<<endl;
+  std::cout<<"***"<<" histOne "<<histOne<<endl;
+  TH1D *h1;TH1D *h2;TH1D *h3;TH1D *h4;TH1D *h5;TH1D *h6;TH1D *hTF;TH1D *hOut;
+  TFile *_file0 = TFile::Open(TTbarMC);
+  if(yTTbar){
+    h1 = (TH1D*)_file0->FindObjectAny(histOne); 
+    h4 = (TH1D*)_file0->FindObjectAny(histTwo);
+    hTF =(TH1D*)_file0->FindObjectAny(histTF);
+
+  }
+  TFile *_file1 = TFile::Open(WJetMC);
+  if(yWJet){
+    h2 = (TH1D*)_file1->FindObjectAny(histOne); 
+    h5 = (TH1D*)_file1->FindObjectAny(histTwo);
+  }
+  TFile *_file2 = TFile::Open(STMC);
+  if(ySt){
+    h3 = (TH1D*)_file2->FindObjectAny(histOne);
+    h6 = (TH1D*)_file2->FindObjectAny(histTwo);
+  }
+  hOut =(TH1D *)hTF->Clone();
+  /*
+  if(yTTbar)
+    hOut =(TH1D *)h1->Clone();
+  else if(yWJet)
+    hOut =(TH1D *)h2->Clone();
+  else
+    hOut =(TH1D *)h3->Clone(); 
+*/
+  hOut->Reset();
+
+  double scaleTTbar=LTTbar/(LTTbar+LWJet+LSt);
+  double scaleWJet=LWJet/(LTTbar+LWJet+LSt);
+  double scaleSt=LSt/(LTTbar+LWJet+LSt);
+
+  double valTTbar=scaleTTbar;
+  double valWJet=scaleWJet;
+  double valSt=scaleSt;
+
+  //*AR:190130 TF--- simple add 
+  if(type==4){
+    std::cout<<" Get TF "<<endl;
+    for(int nX = 1; nX <= hOut->GetXaxis()->GetNbins(); ++nX){
+      double binVal=0;
+      valTTbar=h1->GetBinContent(nX) + h2->GetBinContent(nX) + h3->GetBinContent(nX);
+      valWJet=h4->GetBinContent(nX) + h5->GetBinContent(nX) + h6->GetBinContent(nX);
+      if(valWJet>0)
+	binVal=valTTbar/valWJet;
+      std::cout<<" nX "<<nX<<" h1 "<<h1->GetBinContent(nX)<<" h2 "<<h2->GetBinContent(nX)<<" h3 "<<h3->GetBinContent(nX)<<" totPred "<<valTTbar<<" h4 "<<h4->GetBinContent(nX)<<" h5 "<<h5->GetBinContent(nX)<<" h6 "<<h6->GetBinContent(nX)<<" tot1L"<<valWJet<<" binval "<<binVal<<endl;
+      hOut->SetBinContent(nX,binVal);
+    }
+  }
+  TFile* xf = new TFile("InputsForLimits_data_formatted_LLPlusHadTau_CombinedYears.root","UPDATE");
+  hOut->Write();
+  xf->Close();
+  
+}
+
+
+void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,const char* STMC,double LTTbar,double LWJet,double LSt,const char* histOne,int type,bool yTTbar,bool yWJet,bool ySt){
+
+  std::cout<<" combining histograms from different years "<<endl;
+  std::cout<<"***"<<" histOne "<<histOne<<endl;
+  TH1D *h1;TH1D *h2;TH1D *h3;TH1D *hOut;
+  TFile *_file0 = TFile::Open(TTbarMC);
+  if(yTTbar)
+    h1 = (TH1D*)_file0->FindObjectAny(histOne); 
+  TFile *_file1 = TFile::Open(WJetMC);
+  if(yWJet)
+    h2 = (TH1D*)_file1->FindObjectAny(histOne); 
+  TFile *_file2 = TFile::Open(STMC);
+  if(ySt)
+    h3 = (TH1D*)_file2->FindObjectAny(histOne);
+
+  //  TH1D *hOut = (TH1D*)_file0->FindObjectAny(histOne);
+  if(yTTbar)
+    hOut =(TH1D *)h1->Clone();
+  else if(yWJet)
+    hOut =(TH1D *)h2->Clone();
+  else
+    hOut =(TH1D *)h3->Clone(); 
+
+  hOut->Reset();
+
+  double scaleTTbar=LTTbar/(LTTbar+LWJet+LSt);
+  double scaleWJet=LWJet/(LTTbar+LWJet+LSt);
+  double scaleSt=LSt/(LTTbar+LWJet+LSt);
+
+  double valTTbar=scaleTTbar;
+  double valWJet=scaleWJet;
+  double valSt=scaleSt;
+  std::cout<<" scaleTTbar "<<scaleTTbar<<" scaleWJet "<<scaleWJet<<" scaleSt "<<scaleSt<<endl;
+  //*AR:190130 If systematics is correlated across three years
+  if(type==1){
+    std::cout<<" systematics is correlated "<<endl;
+    for(int nX = 1; nX <= hOut->GetXaxis()->GetNbins(); ++nX){
+      if(yTTbar) valTTbar=scaleTTbar*h1->GetBinContent(nX);
+      if(yWJet) valWJet=scaleWJet*h2->GetBinContent(nX);
+      if(ySt) valSt=scaleSt*h3->GetBinContent(nX);
+
+      double binVal=valTTbar+valWJet+valSt;
+      //      std::cout<<" nX "<<nX<<" h1 "<<h1->GetBinContent(nX)<<" h2 "<<h2->GetBinContent(nX)<<" h3 "<<h3->GetBinContent(nX)<<" binval "<<binVal<<endl;
+      //      std::cout<<" nX "<<nX<<" h1 "<<h1->GetBinContent(nX)<<" binval "<<binVal<<endl;
+
+      hOut->SetBinContent(nX,binVal);
+    }
+  }
+
+  //*AR:190130 If systematics is uncorrelated across three years 
+  if(type==2){
+    std::cout<<" systematics is uncorrelated "<<endl;
+    for(int nX = 1; nX <= hOut->GetXaxis()->GetNbins(); ++nX){
+      if(yTTbar) valTTbar=scaleTTbar*h1->GetBinContent(nX);
+      if(yWJet) valWJet=scaleWJet*h2->GetBinContent(nX);
+      if(ySt) valSt=scaleSt*h3->GetBinContent(nX);
+      
+      double binVal=sqrt( pow( valTTbar, 2 ) + pow( valWJet, 2 ) + pow( valSt, 2 ) );
+      //      std::cout<<" nX "<<nX<<" h1 "<<h1->GetBinContent(nX)<<" h2 "<<h2->GetBinContent(nX)<<" h3 "<<h3->GetBinContent(nX)<<" binval "<<binVal<<endl;
+      hOut->SetBinContent(nX,binVal);
+    }
+  }
+
+
+  //*AR:190130 Data CS stat / Prediction--- simple add 
+  if(type==3){
+    std::cout<<" Data CS stat / Prediction "<<endl;
+    for(int nX = 1; nX <= hOut->GetXaxis()->GetNbins(); ++nX){
+      if(yTTbar) valTTbar=h1->GetBinContent(nX);
+      if(yWJet) valWJet=h2->GetBinContent(nX);
+      if(ySt) valSt=h3->GetBinContent(nX);
+      
+      double binVal=valTTbar+valWJet+valSt;
+      //std::cout<<" nX "<<nX<<" h1 "<<h1->GetBinContent(nX)<<" h2 "<<h2->GetBinContent(nX)<<" h3 "<<h3->GetBinContent(nX)<<" binval "<<binVal<<endl;
+      hOut->SetBinContent(nX,binVal);
+    }
+  }
+
+
+  TFile* xf = new TFile("InputsForLimits_data_formatted_LLPlusHadTau_CombinedYears.root","UPDATE");
+  hOut->Write();
+  xf->Close();
+
+}
+
+
+
+
+
+void InputsForLimitsWithCombinedYears() {
+
+  //*AR: 190116- TF in nominal case  
+  /*
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredBMistagDown_LLPlusHadTau",1,1,1,1);
+  
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPred_JECSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredLepAccSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredLepAccQsquareSysDown_LLPlusHadTau",1,1,1,1);
+*/
+  //InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuRecoSysDown_LLPlusHadTau",1,1,0,0);
+  
+  //InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMTWSysDown_LLPlusHadTau",1,1,1,1);
+  /*
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuIDSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuIsoSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredEleRecoSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredEleIsoSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredEleIDSysDown_LLPlusHadTau",1,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"LLPlusHadTauTFErr",2,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"DataCSStatErr",2,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"DataCSStatistics",3,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPred_LLPlusHadTau",3,1,1,1);
+
+
+*/
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"LLPlusHadTauTF","totalPred_LLPlusHadTau","DataCSStatistics",4,1,1,1);
+  
+
+}
