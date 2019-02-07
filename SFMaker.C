@@ -610,6 +610,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	int binX=jMap->GetXaxis()->FindBin(jEta);
 	int binY=jMap->GetYaxis()->FindBin(jPt);
 	NonPrefireJetWt=1-jMap->GetBinContent(binX,binY);
+	if(PrefireSys)
+	  NonPrefireJetWt=1-(jMap->GetBinContent(binX,binY)-jMap->GetBinError(binX,binY));
 	//std::cout<<" jetidx "<<i<<" jPt "<<jPt<<" jEta "<<jEta<<" binX "<<binX<<" binY "<<binY<<" preWt "<<jMap->GetBinContent(binX,binY)<<" NonPrefireJetWt "<<NonPrefireJetWt<<endl;
 	for(unsigned j = 0; j < Electrons->size(); ++j){
 	  if(Electrons_passIso->at(j)){
@@ -618,6 +620,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    int binpX=pMap->GetXaxis()->FindBin(pEta);
 	    int binpY=pMap->GetYaxis()->FindBin(pPt);
 	    double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	    if(PrefireSys)
+	      double PreElectronWt=pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY);
 	    //std::cout<<" photonidx "<<j<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
 	    
 	    double dEtaJetElectron=Electrons->at(j).Eta()-jEta;
@@ -626,6 +630,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(dRJetElectron<0.4){
 	      //std::cout<<" dRJetElectron "<<dRJetElectron<<endl;
 	      NonPrefireMatchElectronWt *= (1-pMap->GetBinContent(binpX,binpY));
+	      if(PrefireSys)
+		NonPrefireMatchElectronWt *= (1-(pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY)));
 	      ElectronMatchJetIdxv2Recipe.push_back(j);
 	    } //end of dRJetElectron
 	    //	std::cout<<" electron "<<j<<" NonPrefireMatchElectronWt "<<NonPrefireMatchElectronWt<<endl;
@@ -648,6 +654,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  int binpX=pMap->GetXaxis()->FindBin(pEta);
 	  int binpY=pMap->GetYaxis()->FindBin(pPt);
 	  double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	  if(PrefireSys)
+	    double PreElectronWt=pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY);
 	  //      std::cout<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
 	  
 	  for(unsigned k = 0; k <ElectronMatchJetIdxv2Recipe.size();k++){
@@ -661,6 +669,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  } //end of loop over ElectronMatchJetIdxv2Recipe
 	  if(!MatchedtoJet){
 	    Weight *= (1-pMap->GetBinContent(binpX,binpY));
+	    if(PrefireSys)
+	      Weight *= (1-(pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY)));
 	    //std::cout<<" weight after nonmatchedelectron "<<j<<" is "<<Weight<<endl;
 	  }
 	} //end of Electrons_passIso

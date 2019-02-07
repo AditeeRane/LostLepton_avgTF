@@ -989,8 +989,8 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
-  //  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
-  //std::cout<<" Btags calculated not equal to Btags from tree "<<endl; 
+  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+    std::cout<<" Btags calculated not equal to Btags from tree "<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
@@ -1088,7 +1088,7 @@ Bool_t Prediction::Process(Long64_t entry)
   double MuPt=-99.0;
   double MuEta=-99.0;
   double MuPhi=-99.0;
-  
+  /*
   if(GenElectrons->size() + GenMuons->size() >= 1)
     h_CutFlow->Fill(20);
 
@@ -1103,7 +1103,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(HadronicTaus >0)
       h_CutFlow->Fill(21);
   }
-
+*/
   //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
   //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
   if(!GetSignalRegHists){
