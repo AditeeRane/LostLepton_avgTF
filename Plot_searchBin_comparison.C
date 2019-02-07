@@ -54,7 +54,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_WithTF2017_190129.root");
+  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_WithTF2017_RemoveHEM_190129.root");
 
  // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
@@ -797,7 +797,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   CMS_lumi(canvas, iPeriod, iPos, lumi_sqrtS);
 
   if(doData){
-    sprintf(tempname,"Comparison_Data_Full_Plot.pdf");
+    sprintf(tempname,"Comparison_Data_Full_Plot_RemoveHEMe.pdf");
     if (pull==1)    sprintf(tempname,"Comparison_DataPull_Full_Plot.pdf");
   }else{
     if(doClosurewoIsoTrackVeto){

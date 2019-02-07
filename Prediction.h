@@ -163,6 +163,28 @@ class Prediction : public TSelector {
   TH1D* h_EleEta_Exp=0;
   TH1D* h_ElePhi_Exp=0;
 
+  TH2D* h_EleEtavsPt_Exp=0;
+  TH2D* h_EleEtavsPhi_Exp=0;
+  TH2D* h_EleEtavsMT_Exp=0;
+  TH2D* h_EleEtavsHT_Exp=0;
+  TH2D* h_EleEtavsMHT_Exp=0;
+  TH2D* h_EleEtavsNJet_Exp=0;
+  TH2D* h_EleEtavsNBtag_Exp=0;
+  TH2D* h_EleMTvsPt_Exp=0;
+  TH2D* h_EleMTvsMET_Exp=0;
+  TH2D* h_EleMTvsDphi_Exp=0;
+
+  TH2D* h_HEMEleEtavsPt_Exp=0;
+  TH2D* h_HEMEleEtavsPhi_Exp=0;
+  TH2D* h_HEMEleEtavsMT_Exp=0;
+  TH2D* h_HEMEleEtavsHT_Exp=0;
+  TH2D* h_HEMEleEtavsMHT_Exp=0;
+  TH2D* h_HEMEleEtavsNJet_Exp=0;
+  TH2D* h_HEMEleEtavsNBtag_Exp=0;
+  TH2D* h_HEMEleMTvsPt_Exp=0;
+  TH2D* h_HEMEleMTvsMET_Exp=0;
+  TH2D* h_HEMEleMTvsDphi_Exp=0;
+
   TH1D* h_MuPt_Exp=0;
   TH1D* h_MuEta_Exp=0;
   TH1D* h_MuPhi_Exp=0;

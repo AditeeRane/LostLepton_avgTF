@@ -94,6 +94,28 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_EleEta_Exp=new TH1D("h_EleEta_Exp","h_EleEta_Exp",10,-2.5,2.5);
   h_ElePhi_Exp=new TH1D("h_ElePhi_Exp","h_ElePhi_Exp",7,-3.5,3.5);
 
+  h_EleEtavsPt_Exp=new TH2D("h_EleEtavsPt_Exp","h_EleEtavsPt_Exp",28,-3.5,3.5,20,0.0,1000.0);
+  h_EleEtavsPhi_Exp=new TH2D("h_EleEtavsPhi_Exp","h_EleEtavsPhi_Exp",28,-3.5,3.5,7,-3.5,3.5);
+  h_EleEtavsMT_Exp=new TH2D("h_EleEtavsMT_Exp","h_EleEtavsMT_Exp",28,-3.5,3.5,20,0,100);
+  h_EleEtavsHT_Exp=new TH2D("h_EleEtavsHT_Exp","h_EleEtavsHT_Exp",28,-3.5,3.5,12,100,2500);
+  h_EleEtavsMHT_Exp=new TH2D("h_EleEtavsMHT_Exp","h_EleEtavsMHT_Exp",28,-3.5,3.5,16,200,1000);
+  h_EleEtavsNJet_Exp=new TH2D("h_EleEtavsNJet_Exp","h_EleEtavsNJet_Exp",28,-3.5,3.5,10,2,12);
+  h_EleEtavsNBtag_Exp=new TH2D("h_EleEtavsNBtag_Exp","h_EleEtavsNBtag_Exp",28,-3.5,3.5,5,0,5);
+  h_EleMTvsPt_Exp=new TH2D("h_EleMTvsPt_Exp","h_EleMTvsPt_Exp",20,0,100,20,0.0,1000.0);
+  h_EleMTvsMET_Exp=new TH2D("h_EleMTvsMET_Exp","h_EleMTvsMET_Exp",20,0,100,16,200,1000);
+  h_EleMTvsDphi_Exp=new TH2D("h_EleMTvsDphi_Exp","h_EleMTvsDphi_Exp",20,0,100,14,0,3.5);
+
+  h_HEMEleEtavsPt_Exp=new TH2D("h_HEMEleEtavsPt_Exp","h_HEMEleEtavsPt_Exp",28,-3.5,3.5,20,0.0,1000.0);
+  h_HEMEleEtavsPhi_Exp=new TH2D("h_HEMEleEtavsPhi_Exp","h_HEMEleEtavsPhi_Exp",28,-3.5,3.5,7,-3.5,3.5);
+  h_HEMEleEtavsMT_Exp=new TH2D("h_HEMEleEtavsMT_Exp","h_HEMEleEtavsMT_Exp",28,-3.5,3.5,20,0,100);
+  h_HEMEleEtavsHT_Exp=new TH2D("h_HEMEleEtavsHT_Exp","h_HEMEleEtavsHT_Exp",28,-3.5,3.5,12,100,2500);
+  h_HEMEleEtavsMHT_Exp=new TH2D("h_HEMEleEtavsMHT_Exp","h_HEMEleEtavsMHT_Exp",28,-3.5,3.5,16,200,1000);
+  h_HEMEleEtavsNJet_Exp=new TH2D("h_HEMEleEtavsNJet_Exp","h_HEMEleEtavsNJet_Exp",28,-3.5,3.5,10,2,12);
+  h_HEMEleEtavsNBtag_Exp=new TH2D("h_HEMEleEtavsNBtag_Exp","h_HEMEleEtavsNBtag_Exp",28,-3.5,3.5,5,0,5);
+  h_HEMEleMTvsPt_Exp=new TH2D("h_HEMEleMTvsPt_Exp","h_HEMEleMTvsPt_Exp",20,0,100,20,0.0,1000.0);
+  h_HEMEleMTvsMET_Exp=new TH2D("h_HEMEleMTvsMET_Exp","h_HEMEleMTvsMET_Exp",20,0,100,16,200,1000);
+  h_HEMEleMTvsDphi_Exp=new TH2D("h_HEMEleMTvsDphi_Exp","h_HEMEleMTvsDphi_Exp",20,0,100,14,0,3.5);
+
   h_MuPt_Exp=new TH1D("h_MuPt_Exp","h_MuPt_Exp",20,0.0,1000.0);
   h_MuEta_Exp=new TH1D("h_MuEta_Exp","h_MuEta_Exp",10,-2.5,2.5);
   h_MuPhi_Exp=new TH1D("h_MuPhi_Exp","h_MuPhi_Exp",7,-3.5,3.5);
@@ -509,6 +531,27 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_ElePt_Exp);
   GetOutputList()->Add(h_EleEta_Exp);
   GetOutputList()->Add(h_ElePhi_Exp); 
+  GetOutputList()->Add(h_EleEtavsPt_Exp);
+  GetOutputList()->Add(h_EleEtavsPhi_Exp);
+  GetOutputList()->Add(h_EleEtavsMT_Exp);
+  GetOutputList()->Add(h_EleEtavsHT_Exp);
+  GetOutputList()->Add(h_EleEtavsMHT_Exp);
+  GetOutputList()->Add(h_EleEtavsNJet_Exp);
+  GetOutputList()->Add(h_EleEtavsNBtag_Exp);
+  GetOutputList()->Add(h_EleMTvsPt_Exp);
+  GetOutputList()->Add(h_EleMTvsMET_Exp);
+  GetOutputList()->Add(h_EleMTvsDphi_Exp);
+
+  GetOutputList()->Add(h_HEMEleEtavsPt_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsPhi_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsMT_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsHT_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsMHT_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsNJet_Exp);
+  GetOutputList()->Add(h_HEMEleEtavsNBtag_Exp);
+  GetOutputList()->Add(h_HEMEleMTvsPt_Exp);
+  GetOutputList()->Add(h_HEMEleMTvsMET_Exp);
+  GetOutputList()->Add(h_HEMEleMTvsDphi_Exp);
 
   GetOutputList()->Add(h_MuPt_Exp);
   GetOutputList()->Add(h_MuEta_Exp);
@@ -888,6 +931,11 @@ Bool_t Prediction::Process(Long64_t entry)
   vector<TVector3>GenHT3JetVec,GenMHT3JetVec;
   TVector3 newGenMHT3Vec;
   int BTagsfrmCSV=0;
+  bool CheckPhi=false;
+  bool CheckEta=false;
+
+  bool CheckJetPhi=false;
+  bool CheckJetEta=false;
 
   vector<TVector3>Jetsv2Recipe;
   vector<int> HTJetsIdxv2Recipe;
@@ -963,6 +1011,14 @@ Bool_t Prediction::Process(Long64_t entry)
       BTagsfrmCSV++;
   }
 
+  for(unsigned j = 0; j < Jets->size(); ++j){
+    CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
+    CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
+    if(CheckJetPhi && CheckJetEta){
+      //      std::cout<<" entry "<<entry<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+      break;
+    }
+  }
   //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
@@ -1148,11 +1204,11 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
     if(ElectronsNum_==1){
-      bool CheckPhi=LepPhi < -0.9 && LepPhi > -1.5;
-      bool CheckEta=LepEta < -1.4 && LepEta > -3.0;
+      CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+      CheckEta=LepEta < -1.4 && LepEta > -3.0;
       //    if(LepPt<20 || fabs(LepEta)>2.1)
-      if(CheckPhi && CheckEta)
-	return kTRUE;
+      //if(CheckPhi && CheckEta)
+      //return kTRUE;
     }
   } //end of if(!GetSignalRegHists)
   else{
@@ -2233,15 +2289,74 @@ Bool_t Prediction::Process(Long64_t entry)
     h_LepPhi_Exp->Fill(LepPhi,WeightBtagProb);
 
     if(ElePt>0.0){
+      double LepMETDphi=fabs(TVector2::Phi_mpi_pi(ElePhi- METPhi));
       h_ElePt_Exp->Fill(ElePt,WeightBtagProb);
       h_EleEta_Exp->Fill(EleEta,WeightBtagProb);
       h_ElePhi_Exp->Fill(ElePhi,WeightBtagProb);
+      h_EleEtavsPt_Exp->Fill(EleEta,ElePt,WeightBtagProb);
+      h_EleEtavsPhi_Exp->Fill(EleEta,ElePhi,WeightBtagProb);
+      h_EleEtavsMT_Exp->Fill(EleEta,mtw,WeightBtagProb);
+      h_EleEtavsHT_Exp->Fill(EleEta,HTv2Recipe,WeightBtagProb);
+      h_EleEtavsMHT_Exp->Fill(EleEta,MHTv2Recipe,WeightBtagProb);
+      h_EleEtavsNJet_Exp->Fill(EleEta,NJetsv2Recipe,WeightBtagProb);
+      h_EleEtavsNBtag_Exp->Fill(EleEta,BTagsfrmCSV,WeightBtagProb);
+      h_EleMTvsPt_Exp->Fill(mtw,ElePt,WeightBtagProb);
+      h_EleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
+      h_EleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
+      bool CheckJetEle=(CheckEta && CheckPhi) || (CheckJetPhi && CheckJetEta);
+      //      std::cout<<" entry "<<entry<<" electron evt "<<" CheckEta "<<CheckEta<<" CheckPhi "<<CheckPhi<<" CheckJetPhi "<<CheckJetPhi<<" CheckJetEta "<<CheckJetEta<<" CheckJetEle "<<CheckJetEle<<endl; 
+
+      if(CheckJetEle){
+	//	std::cout<<" entry "<<entry<< " HEM veto "<<endl;
+	h_HEMEleEtavsPt_Exp->Fill(EleEta,ElePt,WeightBtagProb);
+	h_HEMEleEtavsPhi_Exp->Fill(EleEta,ElePhi,WeightBtagProb);
+	h_HEMEleEtavsMT_Exp->Fill(EleEta,mtw,WeightBtagProb);
+	h_HEMEleEtavsHT_Exp->Fill(EleEta,HTv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsMHT_Exp->Fill(EleEta,MHTv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsNJet_Exp->Fill(EleEta,NJetsv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsNBtag_Exp->Fill(EleEta,BTagsfrmCSV,WeightBtagProb);
+	h_HEMEleMTvsPt_Exp->Fill(mtw,ElePt,WeightBtagProb);
+	h_HEMEleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
+	h_HEMEleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
+	
+      }
     }
 
     if(MuPt>0.0){
+      double LepMETDphi=fabs(TVector2::Phi_mpi_pi(MuPhi- METPhi));
       h_MuPt_Exp->Fill(MuPt,WeightBtagProb);
       h_MuEta_Exp->Fill(MuEta,WeightBtagProb);
       h_MuPhi_Exp->Fill(MuPhi,WeightBtagProb);
+
+      h_EleEtavsPt_Exp->Fill(MuEta,MuPt,WeightBtagProb);
+      h_EleEtavsPhi_Exp->Fill(MuEta,MuPhi,WeightBtagProb);
+      h_EleEtavsMT_Exp->Fill(MuEta,mtw,WeightBtagProb);
+      h_EleEtavsHT_Exp->Fill(MuEta,HTv2Recipe,WeightBtagProb);
+      h_EleEtavsMHT_Exp->Fill(MuEta,MHTv2Recipe,WeightBtagProb);
+      h_EleEtavsNJet_Exp->Fill(MuEta,NJetsv2Recipe,WeightBtagProb);
+      h_EleEtavsNBtag_Exp->Fill(MuEta,BTagsfrmCSV,WeightBtagProb);
+      h_EleMTvsPt_Exp->Fill(mtw,MuPt,WeightBtagProb);
+      h_EleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
+      h_EleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
+      bool CheckJetEle=(CheckEta && CheckPhi) || (CheckJetPhi && CheckJetEta);
+      //      std::cout<<" entry "<<entry<<" muon evt "<<" CheckEta "<<CheckEta<<" CheckPhi "<<CheckPhi<<" CheckJetPhi "<<CheckJetPhi<<" CheckJetEta "<<CheckJetEta<<" CheckJetEle "<<CheckJetEle<<endl; 
+
+      if(CheckJetEle){
+	//std::cout<<" entry "<<entry<< " HEM veto "<<endl;
+
+	h_HEMEleEtavsPt_Exp->Fill(MuEta,MuPt,WeightBtagProb);
+	h_HEMEleEtavsPhi_Exp->Fill(MuEta,MuPhi,WeightBtagProb);
+	h_HEMEleEtavsMT_Exp->Fill(MuEta,mtw,WeightBtagProb);
+	h_HEMEleEtavsHT_Exp->Fill(MuEta,HTv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsMHT_Exp->Fill(MuEta,MHTv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsNJet_Exp->Fill(MuEta,NJetsv2Recipe,WeightBtagProb);
+	h_HEMEleEtavsNBtag_Exp->Fill(MuEta,BTagsfrmCSV,WeightBtagProb);
+	h_HEMEleMTvsPt_Exp->Fill(mtw,MuPt,WeightBtagProb);
+	h_HEMEleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
+	h_HEMEleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
+	
+      }
+
     }
 
     h_HTclean_Exp->Fill(HTclean,WeightBtagProb);
@@ -2448,6 +2563,31 @@ void Prediction::Terminate()
   h_ElePt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_ElePt_Exp"));
   h_EleEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_EleEta_Exp"));
   h_ElePhi_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_ElePhi_Exp"));
+
+  h_EleEtavsPt_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsPt_Exp"));
+  h_EleEtavsPhi_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsPhi_Exp"));
+  h_EleEtavsMT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsMT_Exp"));
+  h_EleEtavsHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsHT_Exp"));
+  h_EleEtavsMHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsMHT_Exp"));
+  h_EleEtavsNJet_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsNJet_Exp"));
+  h_EleEtavsNBtag_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleEtavsNBtag_Exp"));
+  h_EleMTvsPt_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleMTvsPt_Exp"));
+  h_EleMTvsMET_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleMTvsMET_Exp"));
+  h_EleMTvsDphi_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_EleMTvsDphi_Exp"));
+
+
+  h_HEMEleEtavsPt_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsPt_Exp"));
+  h_HEMEleEtavsPhi_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsPhi_Exp"));
+  h_HEMEleEtavsMT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsMT_Exp"));
+  h_HEMEleEtavsHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsHT_Exp"));
+  h_HEMEleEtavsMHT_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsMHT_Exp"));
+  h_HEMEleEtavsNJet_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsNJet_Exp"));
+  h_HEMEleEtavsNBtag_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleEtavsNBtag_Exp"));
+ h_HEMEleMTvsPt_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleMTvsPt_Exp"));
+ h_HEMEleMTvsMET_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleMTvsMET_Exp"));
+ h_HEMEleMTvsDphi_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_HEMEleMTvsDphi_Exp"));
+
+
 
   h_MuPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MuPt_Exp"));
   h_MuEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MuEta_Exp"));
@@ -2883,6 +3023,28 @@ void Prediction::Terminate()
   h_ElePt_Exp->Write(); 
   h_EleEta_Exp->Write(); 
   h_ElePhi_Exp->Write(); 
+
+  h_EleEtavsPt_Exp->Write();
+  h_EleEtavsPhi_Exp->Write();
+  h_EleEtavsMT_Exp->Write();
+  h_EleEtavsHT_Exp->Write();
+  h_EleEtavsMHT_Exp->Write();
+  h_EleEtavsNJet_Exp->Write();
+  h_EleEtavsNBtag_Exp->Write();
+  h_EleMTvsPt_Exp->Write();
+  h_EleMTvsMET_Exp->Write();
+  h_EleMTvsDphi_Exp->Write();
+
+  h_HEMEleEtavsPt_Exp->Write();
+  h_HEMEleEtavsPhi_Exp->Write();
+  h_HEMEleEtavsMT_Exp->Write();
+  h_HEMEleEtavsHT_Exp->Write();
+  h_HEMEleEtavsMHT_Exp->Write();
+  h_HEMEleEtavsNJet_Exp->Write();
+  h_HEMEleEtavsNBtag_Exp->Write();
+  h_HEMEleMTvsPt_Exp->Write();
+  h_HEMEleMTvsMET_Exp->Write();
+  h_HEMEleMTvsDphi_Exp->Write();
 
   h_MuPt_Exp->Write(); 
   h_MuEta_Exp->Write(); 
