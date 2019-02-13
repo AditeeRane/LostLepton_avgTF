@@ -3,6 +3,7 @@
 #include <string.h>
 #include "TMath.h"
 
+//*AR:190211-TF=Pred/CSStat
 void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,const char* STMC,double LTTbar,double LWJet,double LSt,const char* histTF,const char* histOne,const char* histTwo,int type,bool yTTbar,bool yWJet,bool ySt){
 
   std::cout<<" combining histograms from different years "<<endl;
@@ -62,7 +63,6 @@ void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,con
   xf->Close();
   
 }
-
 
 void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,const char* STMC,double LTTbar,double LWJet,double LSt,const char* histOne,int type,bool yTTbar,bool yWJet,bool ySt){
 
@@ -128,7 +128,7 @@ void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,con
   }
 
 
-  //*AR:190130 Data CS stat / Prediction--- simple add 
+  //*AR:190130 simple addition for Data CS stat and also for total Prediction 
   if(type==3){
     std::cout<<" Data CS stat / Prediction "<<endl;
     for(int nX = 1; nX <= hOut->GetXaxis()->GetNbins(); ++nX){
@@ -156,7 +156,7 @@ void InputsForLimitsWithCombinedYears(const char* TTbarMC,const char* WJetMC,con
 void InputsForLimitsWithCombinedYears() {
 
   //*AR: 190116- TF in nominal case  
-  /*
+  
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredBMistagDown_LLPlusHadTau",1,1,1,1);
   
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPred_JECSysDown_LLPlusHadTau",1,1,1,1);
@@ -164,11 +164,11 @@ void InputsForLimitsWithCombinedYears() {
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredLepAccSysDown_LLPlusHadTau",1,1,1,1);
 
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredLepAccQsquareSysDown_LLPlusHadTau",1,1,1,1);
-*/
-  //InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuRecoSysDown_LLPlusHadTau",1,1,0,0);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuRecoSysDown_LLPlusHadTau",1,1,0,0);
   
-  //InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMTWSysDown_LLPlusHadTau",1,1,1,1);
-  /*
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMTWSysDown_LLPlusHadTau",1,1,1,1);
+  
 
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredMuIDSysDown_LLPlusHadTau",1,1,1,1);
 
@@ -180,17 +180,17 @@ void InputsForLimitsWithCombinedYears() {
 
   InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPredEleIDSysDown_LLPlusHadTau",1,1,1,1);
 
-  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"LLPlusHadTauTFErr",2,1,1,1);
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018_PredRmHEMEleJet.root",35.815,41.486,59.777,"LLPlusHadTauTFErr",2,1,1,1);
 
-  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"DataCSStatErr",2,1,1,1);
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018_PredRmHEMEleJet.root",35.815,41.486,59.777,"DataCSStatErr",2,1,1,1);
 
-  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"DataCSStatistics",3,1,1,1);
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018_PredRmHEMEleJet.root",35.815,41.486,59.777,"DataCSStatistics",3,1,1,1);
 
-  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"totalPred_LLPlusHadTau",3,1,1,1);
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018_PredRmHEMEleJet.root",35.815,41.486,59.777,"totalPred_LLPlusHadTau",3,1,1,1);
 
 
-*/
-  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018.root",35.815,41.486,59.777,"LLPlusHadTauTF","totalPred_LLPlusHadTau","DataCSStatistics",4,1,1,1);
+
+  InputsForLimitsWithCombinedYears("InputsForLimits_data_formatted_LLPlusHadTau_2016.root","InputsForLimits_data_formatted_LLPlusHadTau_2017.root","InputsForLimits_data_formatted_LLPlusHadTau_2018_PredRmHEMEleJet.root",35.815,41.486,59.777,"LLPlusHadTauTF","totalPred_LLPlusHadTau","DataCSStatistics",4,1,1,1);
   
 
 }

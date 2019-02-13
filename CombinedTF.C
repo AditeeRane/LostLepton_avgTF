@@ -419,6 +419,7 @@ void CombinedTF() {
   
   GetTFHistograms("TF_0.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
+  /*
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_Track","h_SR_SF_SB_el_Track","h_CR_SF_SB_el_Track");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_ID","h_SR_SF_SB_el_ID","h_CR_SF_SB_el_ID");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_Iso","h_SR_SF_SB_el_Iso","h_CR_SF_SB_el_Iso");
@@ -426,7 +427,7 @@ void CombinedTF() {
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_mu_Track","h_SR_SF_SB_mu_Track","h_CR_SF_SB_mu_Track");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_mu_ID","h_SR_SF_SB_mu_ID","h_CR_SF_SB_mu_ID");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_mu_Iso","h_SR_SF_SB_mu_Iso","h_CR_SF_SB_mu_Iso");
-
+*/
   /*
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_Track","h_SR_SF_SB_el_Track","h_CR_SF_SB_el_Track");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_ID","h_SR_SF_SB_el_ID","h_CR_SF_SB_el_ID");

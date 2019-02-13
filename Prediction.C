@@ -1223,20 +1223,24 @@ Bool_t Prediction::Process(Long64_t entry)
       //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
       
       //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
+      /*
       if(runOnSignalMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLm";
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
+*/
     }else if(MuonsNum_==0 && ElectronsNum_==1){
       for(unsigned int i=0;i<Electrons->size();i++){
 	if(Electrons_passIso->at(i))
 	  mtw =  Electrons_MTW->at(i);
       }
-      //std::cout<<" entry "<<entry<<" 1e event "<<endl;
+      /*  
+    //std::cout<<" entry "<<entry<<" 1e event "<<endl;
       if(runOnSignalMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLe";
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+*/
     }
     //do not consider event if mT>100 
     if(mtw > 100) return kTRUE;
@@ -1376,7 +1380,7 @@ Bool_t Prediction::Process(Long64_t entry)
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
-    if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
+    if(currentTree != treeName){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
       treeName = currentTree;
       OldSkimFilePath = SkimFilePath;
@@ -1453,7 +1457,7 @@ Bool_t Prediction::Process(Long64_t entry)
         }
         isrcorr = new ISRCorrector();
 	//		isrcorr->SetWeights(h_njetsisr,h_njetsisr);
-
+	//*AR-190207: h_isr=histogram "isr_weights_central" from isr/ISRWeights.root
 	isrcorr->SetWeights(h_isr,h_njetsisr);
 
       }
@@ -2189,6 +2193,8 @@ Bool_t Prediction::Process(Long64_t entry)
     double WeightBtagProb = Weight*bTagProb.at(i);
     unsigned bTagBin = bTagBins.at(i);
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
+    //    if(NJets < 4)
+    //std::cout<<" entry "<<entry<<" HT "<<HT<<" MHT "<<MHT<<" NJet "<<NJets<<" i "<<i<<" bin "<<bTagBin<<" prob "<<bTagProb.at(i)<<endl;
     //std::cout<<" WeightBtagProb "<<WeightBtagProb<<endl;
     double TF = -1;
     if(applySFs){ //true for data

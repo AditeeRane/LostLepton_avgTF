@@ -8,7 +8,7 @@ void TFMaker::Begin(TTree * /*tree*/)
     // When running with PROOF Begin() is only called on the client.
     // The tree argument is deprecated (on PROOF 0 is passed).
 
-    TH1::SetDefaultSumw2();
+  TH1::SetDefaultSumw2();
 }
 
 void TFMaker::SlaveBegin(TTree * /*tree*/)
@@ -441,11 +441,11 @@ Bool_t TFMaker::Process(Long64_t entry)
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //*AR-190110: This is skimfilepath irrespective of (GenElectronsNum_ + GenMuonsNum_) is zero or not
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
-    if(GenElectronsNum_ > GenMuonsNum_)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+    //    if(GenElectronsNum_ > GenMuonsNum_)
+    //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
 
     //*AR-180314-Name of skimfile won't change from event to event, so this loop has to be run only for every new tree
-    if(currentTree != treeName  || SkimFilePath!=OldSkimFilePath){
+    if(currentTree != treeName){
         treeName = currentTree;
 	OldSkimFilePath = SkimFilePath;
         TObjArray *optionArray = currentTree.Tokenize("/");
@@ -495,6 +495,7 @@ Bool_t TFMaker::Process(Long64_t entry)
         // Make sure you don't have negative number of events per sample
 	//*AR-180314-Histograms h_CR_SB,h_SR_SB,h_CR_SF_SB,h_SR_SF_SB are written newly for every tree
 	//*AR-180322-At this step, these are just empty, declared histograms.
+	//*AR-190213-PushHist(h,f)-adds h histogram to f(here any of bincontent of h<0, it's bincontent, binerror set to zero) and resets h
         PushHist(h_CR_SB_copy, h_CR_SB);
         PushHist(h_SR_SB_copy, h_SR_SB);
         PushHist(h_SR_LL_SB_copy, h_SR_LL_SB);
@@ -1170,7 +1171,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(1);
 		    //		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_2 "<< Vec_SF.size()<<endl;		      
 		  }
-		  .//		  std::cout<<" forth ScaleAcc**** "<<endl; 
+		  //		  std::cout<<" forth ScaleAcc**** "<<endl; 
 		}
 		else if(PDFAccSys){ 
 		  Vec_SF.clear();

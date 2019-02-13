@@ -18,27 +18,34 @@ class ISRCorrector {
 			if(!weights) return;
 			//normalize weights using overall NJetsISR spectrum so total number of gen events will stay the same
 			//std::cout<<" numerator exists "<<endl;
+			//*AR-190207: h_weights is "isr_weights_central" from isr/ISRWeights.root with X axis 0-7
 			h_weights = (TH1*)weights->Clone();
 			//std::cout<<" h_weights_1 "<<h_weights->GetBinContent(1)<<endl;
+			//*AR-190207: histogram "NJetsISR" from skim file of particular sample with X axis 0-7
 			h_njetsisr = all;
 			//std::cout<<" all_1 "<<all->GetBinContent(1)<<endl;
 
 			h_njetsisr =(TH1*)all->Clone();
 			//std::cout<<" denominator exists "<<endl;
+			//*AR-190207: integral of histogram "NJetsISR" from skim file of particular sample with X axis 0-7
 			double A_LO = h_njetsisr->Integral(0,h_njetsisr->GetNbinsX()+1);
 			//std::cout<<" A_LO "<<A_LO<<endl;
 			TH1* h_njetsisrW = (TH1*)all->Clone();
 			//std::cout<<" h_njetsisrW_1 "<<h_njetsisrW->GetBinContent(1)<<endl;
+			//*AR-190207: Multiply histogram "NJetsISR" from skim file of particular sample with "isr_weights_central" from isr/ISRWeights.root
 			h_njetsisrW->Multiply(h_weights);
 			//std::cout<<" h_njetsisrW_1_modified "<<h_njetsisrW->GetBinContent(1)<<endl;
+			//*AR-190207: integral of histogram "NJetsISR" from skim file after it is multiplied by "isr_weights_central" from isr/ISRWeights.root
 			double A_NLO = h_njetsisrW->Integral(0,h_njetsisrW->GetNbinsX()+1);
 			//std::cout<<" A_NLO "<<A_NLO<<endl;		
+			//scale "isr_weights_central" by [Integral(NJetsISR)/Integral(NJetsISR*isr_weights_central)]
 			h_weights->Scale(A_LO/A_NLO);
 		}
 		
 		//function
+		//*AR-190207: Reads NJetsISR from ntuple branch for particular event. Reads bincontent of h_weights histogram for bin corresponding to NJetsISR.
 		double GetCorrection(int NJetsISR){
-			return h_weights ? h_weights->GetBinContent(h_weights->GetXaxis()->FindBin(min(double(NJetsISR),h_weights->GetBinLowEdge(h_weights->GetNbinsX())))) : 1.;
+		  return h_weights ? h_weights->GetBinContent(h_weights->GetXaxis()->FindBin(min(double(NJetsISR),h_weights->GetBinLowEdge(h_weights->GetNbinsX())))) : 1.;
 		}
 		
 		//member variables
