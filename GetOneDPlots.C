@@ -187,7 +187,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sam
 
   _fileTTbarLL->cd();
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
-  //  hTTbarLL->Scale(35900);
+  hTTbarLL->Scale(137.06/118.77);
   /*
   TH1D *hTTbarLLOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
   TH1D *hTTbarLL = new TH1D("hTTbarLL","hTTbarLL",4,0,4);
@@ -210,7 +210,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sam
 */
   _fileWJetLL->cd();
   TH1D *hWJetLL = (TH1D*)_fileWJetLL->FindObjectAny(hname);
-  //  hWJetLL->Scale(35900);
+  hWJetLL->Scale(137.06/118.77);
   /*
   TH1D *hWJetLLOrg = (TH1D*)_fileWJetLL->FindObjectAny(hname);
   TH1D *hWJetLL = new TH1D("hWJetLL","hWJetLL",4,0,4);
@@ -233,7 +233,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sam
 */
   _fileSTLL->cd();
   TH1D *hSTLL = (TH1D*)_fileSTLL->FindObjectAny(hname);
-  //  hSTLL->Scale(35900);
+  hSTLL->Scale(137.06/118.77);
   /*
   TH1D *hSTLLOrg = (TH1D*)_fileSTLL->FindObjectAny(hname);
   TH1D *hSTLL = new TH1D("hSTLL","hSTLL",4,0,4);
@@ -388,7 +388,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sam
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.8 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "137.06 fb^{-1} (13 TeV)");
 
   
   gPad->Modified();
@@ -463,13 +463,13 @@ void GetOneDPlots(){
 
 
   
-  GetOneDPlots(1300,"NBtagv2Recipe","NBtag","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
+  GetOneDPlots(1300,"NBtagv2Recipe","NBtag","DataPredVsMCExp_ThreeYears","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
   
-  GetOneDPlots(1000,"MHTv2Recipe","MHT","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
+  GetOneDPlots(1000,"MHTv2Recipe","MHT","DataPredVsMCExp_ThreeYears","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
-  GetOneDPlots(1100,"HTv2Recipe","HT","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
+  GetOneDPlots(1100,"HTv2Recipe","HT","DataPredVsMCExp_ThreeYears","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
 
-  GetOneDPlots(1200,"NJetv2Recipe","NJet","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
+  GetOneDPlots(1200,"NJetv2Recipe","NJet","DataPredVsMCExp_ThreeYears","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
 
   
   //  GetOneDPlots(1200,"LepPt","DataVsMCRemovedExcessDeepCSV_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton pT","Data/MC",1,0,20,0,1000,0,2.49,50000);

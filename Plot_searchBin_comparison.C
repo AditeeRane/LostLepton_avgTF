@@ -45,7 +45,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
   //*AR:190112- MC expectation
   //  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExpWithBtagProb_0L_190111.root");
-  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExp_190126.root");
+  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExp_190213_CombinedYears.root");
 
   //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
   
@@ -54,7 +54,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_190126.root");
+  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_190213_CombinedYears.root");
 
  // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
@@ -87,7 +87,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //
   // Various vertical line coordinates
-  float ymax_top = 300000.;
+  float ymax_top = 1000000.;
   float ymin_top = 0.015;
 
   float ymax2_top = 1000.;
@@ -107,8 +107,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //
   // Luminosity information for scaling
-  double lumi     = 35.815; // normaliza to this lumi (fb-1)
-  double lumi_ref = 35.815; // normaliza to 3 (fb-1)
+  double lumi     = 137.06; // normaliza to this lumi (fb-1)
+  double lumi_ref = 137.06; // normaliza to 3 (fb-1)
   
    ///////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -212,12 +212,13 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   double search_x_min=1.-0.5;
   sprintf(tempname,"%s","h_Prediction");
 
-
   EstHistTemp=(TH1D*) LLFileAvg->Get(tempname)->Clone();
   EstHistDTemp=(TH1D*) LLFileAvg->Get(tempname)->Clone();
   
   GenHistTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
   GenHistDTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
+  GenHistTemp->Scale(137.06/118.77);
+  GenHistDTemp->Scale(137.06/118.77); 
   /*
   if(doClosurewoIsoTrackVeto){
       GenHistTemp=(TH1D*) dExp->Get("totalExp_woIsoTrack_LL")->Clone();
@@ -796,7 +797,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   CMS_lumi(canvas, iPeriod, iPos, lumi_sqrtS);
 
   if(doData){
-    sprintf(tempname,"Comparison_Data_Full_Plot.pdf");
+    sprintf(tempname,"Comparison_Data_Full_Plot_CombinedYears.pdf");
     if (pull==1)    sprintf(tempname,"Comparison_DataPull_Full_Plot.pdf");
   }else{
     if(doClosurewoIsoTrackVeto){
