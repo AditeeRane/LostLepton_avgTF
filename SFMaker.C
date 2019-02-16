@@ -197,7 +197,12 @@ Bool_t SFMaker::Process(Long64_t entry)
     fChain->GetTree()->GetEntry(entry);
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
-
+    bool CheckPhi=false;
+    bool CheckEta=false;
+    
+    bool CheckJetPhi=false;
+    bool CheckJetEta=false;
+    
     vector<int> MHTJetsIdxv2Recipe;    
     vector<int> ElectronMatchJetIdxv2Recipe;
     vector<TVector3> NewJets;
@@ -223,7 +228,18 @@ Bool_t SFMaker::Process(Long64_t entry)
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
 
+    for(unsigned j = 0; j < Jets->size(); ++j){
+      CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
+      CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
+      if(CheckJetPhi && CheckJetEta){
+	//	std::cout<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	break;
+      }
+    }
+    if(CheckJetPhi && CheckJetEta)
+      return kTRUE;  
 
+    //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
     //    std::cout<<" evtweight "<<Weight<<endl;
 
 
@@ -299,6 +315,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);         MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
       HT3JetVec= Order_the_Vec(HT3JetVec);
       MHT3JetVec= Order_the_Vec(MHT3JetVec);      
+
       /*
       if(HT3JetCSVvec.size()!=HT3JetVec.size() || HT3JetHTMaskvec.size()!=HT3JetVec.size() || HT3JetHadronFlavorvec.size()!=HT3JetVec.size()) 
 	std::cout<<" HT3 vectors not consistent in size "<<endl;
@@ -380,7 +397,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       }
     }
 
-
+    //    std::cout<<"&&& seg vio "<<endl;
     //    std::cout<<" **pass baseline** "<<" old jet "<<NJets<<" old HT "<< HT<<" old MHT "<<MHT<<" dphi1 "<<DeltaPhi1<<" dphi2 "<<DeltaPhi2<<" dphi3 "<<DeltaPhi3<<" dphi4 "<<DeltaPhi4<<endl;
       
     //if(newNJets==2)
@@ -828,6 +845,26 @@ Bool_t SFMaker::Process(Long64_t entry)
         std::cout << "WARNING! Number of isoPionTracks is not correct! Skipping event." << std::endl;
         return kTRUE;
     }
+
+    //*AR-190207: HEM electron veto
+    for(unsigned j=0; j< ElectronsNum_; j++){
+      if(Electrons_passIso->at(j)){
+	double LepPhi=Electrons->at(j).Phi();
+	double LepEta=Electrons->at(j).Eta();
+
+	CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+	CheckEta=LepEta < -1.4 && LepEta > -3.0;
+	if(CheckPhi && CheckEta){
+	  //	  std::cout<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	  break;
+	}
+      }
+    }
+    if(CheckPhi && CheckEta)
+      return kTRUE;
+
+    //    std::cout<<" entry "<<entry<<" no HEM electron "<<endl;
+
 
     // Match iso leptons/tracks to gen leptons
     // Apply SFs only to prompts
@@ -1588,7 +1625,7 @@ void SFMaker::Terminate()
 
     gStyle->SetPalette(87);
     gStyle->SetMarkerSize(1.3);
-
+    //    std::cout<<" seg vio1 "<<endl;
     TFile *outPutFile = new TFile(fileName,"RECREATE");
 
     h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
@@ -1607,6 +1644,7 @@ void SFMaker::Terminate()
 
     h_el_SFCR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_SFCR_etaPt"));
     h_el_SFCR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFCR_SB"));
+    //    std::cout<<" seg vio2 "<<endl;
 
     h_mu_nOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_nOnePrompt_etaPt"));
     h_mu_nOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nOnePrompt_SB"));
@@ -1624,6 +1662,7 @@ void SFMaker::Terminate()
     h_el_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFSR_SB"));
     h_mu_SFSR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_SFSR_etaPt"));
     h_mu_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFSR_SB"));
+    //    std::cout<<" seg vio3 "<<endl;
 
     h_di_nTwoPrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_nTwoPrompt_SB"));
 	h_di_nOneFoundTwoPrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_nOneFoundTwoPrompt_SB"));
@@ -1656,6 +1695,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio4 "<<endl;
 
       if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
@@ -1698,6 +1738,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //    std::cout<<" seg vio5 "<<endl;
 
       if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_el_nLostOnePrompt_SB->SetBinContent(nX, 0);
@@ -1740,6 +1781,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio6 "<<endl;
 
       if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
@@ -1802,6 +1844,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio7 "<<endl;
 
       if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
 	h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
@@ -1849,6 +1892,7 @@ void SFMaker::Terminate()
     h_el_SFSR_etaPt->Add(h_el_nOnePrompt_etaPt);
     h_el_SFSR_etaPt->Add(h_el_nFoundOnePrompt_SF_etaPt, -1);
     h_el_SFSR_etaPt->Divide(h_el_nLostOnePrompt_etaPt);
+    //    std::cout<<" seg vio8 "<<endl;
 
     h_el_SFSR_SB->Reset();
     h_el_SFSR_SB->Add(h_el_nOnePrompt_SB);
@@ -1958,7 +2002,6 @@ void SFMaker::Terminate()
 	    Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->Write();
 	  }
 	}
-
 	/*
     SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_el_nOnePrompt_SB, outPutFile);
@@ -1974,7 +2017,9 @@ void SFMaker::Terminate()
     SaveEff(h_el_nLostOnePrompt_etaPt, outPutFile, false, true);
     h_el_nLostOnePrompt_SB->Divide(h_el_nOnePrompt_SB);
     SaveEff(h_el_nLostOnePrompt_SB, outPutFile);
+
 */
+
 	for(int nX = 1; nX <= h_el_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
         h_el_SFCR_SB->SetBinError(nX, 0);
         h_el_SFSR_SB->SetBinError(nX, 0);
@@ -2005,14 +2050,16 @@ void SFMaker::Terminate()
 	    if(Vec_PDF_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_PDF_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
 	  }
 	}
-
+	
 	}
-	SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
-	SaveEff(h_el_SFCR_SB, outPutFile);
 
-    SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
-    SaveEff(h_el_SFSR_SB, outPutFile);
-      
+	//SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
+	SaveEff(h_el_SFCR_SB, outPutFile);
+	std::cout<<" seg vio "<<endl;
+
+	//    SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
+	SaveEff(h_el_SFSR_SB, outPutFile);
+	
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_el_SFCR_SB.at(iacc),outPutFile);
@@ -2100,12 +2147,14 @@ void SFMaker::Terminate()
 	}
 
     }
-    SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
+
+    //    SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFCR_SB, outPutFile);
     
-    SaveEff(h_mu_SFSR_etaPt, outPutFile, false, true);
+    //    SaveEff(h_mu_SFSR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFSR_SB, outPutFile);
-    
+    //    std::cout<<" seg vio9 "<<endl;
+
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_mu_SFCR_SB.at(iacc),outPutFile);
@@ -2154,6 +2203,8 @@ void SFMaker::Terminate()
         if(h_di_SFSR_SB->GetBinContent(nX) < 1) h_di_SFSR_SB->SetBinContent(nX, 1);
 	}
 
+	//	std::cout<<" seg vio11 "<<endl;
+
 	h_di_nTwoPrompt_SB->Write();
 	h_di_nTwoFoundTwoPrompt_SB->Write();
 	h_di_nOneFoundTwoPrompt_SB->Write();
@@ -2172,8 +2223,8 @@ void SFMaker::Terminate()
 	h_di_nLostTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
 	SaveEff(h_di_nLostTwoPrompt_SB, outPutFile);
 */	
-    SaveEff(h_di_SFCR_SB, outPutFile);
-    SaveEff(h_di_SFSR_SB, outPutFile);
+	//SaveEff(h_di_SFCR_SB, outPutFile);
+	//    SaveEff(h_di_SFSR_SB, outPutFile);
 
     outPutFile->Close();
 
@@ -2202,6 +2253,7 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
    	}
 
     std::string name = std::string(h->GetName());
+    //    std::cout<<" name "<<name<<endl;
     if(name.find(std::string("SFCR")) != std::string::npos || name.find(std::string("SFSR")) != std::string::npos){
     	if(name.find(std::string("SB")) != std::string::npos) h->GetYaxis()->SetRangeUser(0.79, 1.31);
     	if(name.find(std::string("etaPt")) != std::string::npos){
@@ -2215,7 +2267,8 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
             h->GetZaxis()->SetRangeUser(0.01, 1.01);
         }
     }
-    
+    //    std::cout<<" before colz "<<name<<endl;
+    /*  
     h->Draw("ColZ,Text");
 
     //if(name.find(std::string("SFCR")) != std::string::npos || name.find(std::string("SFSR")) != std::string::npos){
@@ -2225,7 +2278,9 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
 	//}
 
     delete c1;
+*/
     gROOT->SetBatch(false);
+    //std::cout<<" after colz "<<name<<endl;
 
     h->Write();
 }

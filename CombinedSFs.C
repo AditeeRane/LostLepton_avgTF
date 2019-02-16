@@ -113,6 +113,7 @@ void GetSFHistograms(const char* WJetTTbarMC,const char* SFHist, const char* his
 }
 //* AR-180313--this is to evaluate SFSR as a function of search bins in nominal case
 void GetSFHistograms(const char* WJetTTbarMC, const char* SFHist, const char* histOne,const char *histTwo,const char *histThree){
+  std::cout<<" SFSR "<<endl;
   std::cout<<"***"<<" histOne "<<histOne<<endl;
   TFile *_file0 = TFile::Open(WJetTTbarMC);
   TH1D *h1 = (TH1D*)_file0->FindObjectAny(histOne);
@@ -403,43 +404,43 @@ void CombinedSFs() {
 
   
   
-    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
-    GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
+  //    GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
+  //GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
+  GetSFHistograms("SFCR_0_TTbar_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
+  GetSFHistograms("SFCR_0_TTbar_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
   
   
-    GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
+    //GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
+    //  GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
     GetSFHistograms("SFCR_0_WJet_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
     GetSFHistograms("SFCR_0_WJet_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
 
 
     
-    GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
-    GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
+    //  GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nFoundOnePrompt_etaPt");
+    //  GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nFoundOnePrompt_etaPt");
     GetSFHistograms("SFCR_0_ST_.root","h_el_SFCR_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nFoundOnePrompt_SB");
     GetSFHistograms("SFCR_0_ST_.root","h_mu_SFCR_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nFoundOnePrompt_SB");
     
   
   
   
-  GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+    //    GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
+    //  GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
+    GetSFHistograms("SFSR_0_TTbar_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+    GetSFHistograms("SFSR_0_TTbar_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
 
     
-  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
+  //  GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
+    GetSFHistograms("SFSR_0_WJet_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+    GetSFHistograms("SFSR_0_WJet_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
   
   
-  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
-  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
-  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
+  //  GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_etaPt","h_el_nOnePrompt_etaPt","h_el_nFoundOnePrompt_SF_etaPt","h_el_nLostOnePrompt_etaPt");
+  //  GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_etaPt","h_mu_nOnePrompt_etaPt","h_mu_nFoundOnePrompt_SF_etaPt","h_mu_nLostOnePrompt_etaPt");
+    GetSFHistograms("SFSR_0_ST_.root","h_el_SFSR_SB","h_el_nOnePrompt_SB","h_el_nFoundOnePrompt_SF_SB","h_el_nLostOnePrompt_SB");
+    GetSFHistograms("SFSR_0_ST_.root","h_mu_SFSR_SB","h_mu_nOnePrompt_SB","h_mu_nFoundOnePrompt_SF_SB","h_mu_nLostOnePrompt_SB");
 
 
 
