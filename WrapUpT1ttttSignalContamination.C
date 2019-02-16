@@ -57,7 +57,7 @@ void WrapUpT1ttttSignalContamination(string type="T1bbbb",string outStr="Jul"){
   TH1D * temphist;
 
   vector<string> filesVec;
-  sprintf(tempname,"InputFiles_Signal/V12_T1tttt/%s_InputSignal.txt",type.c_str());
+  sprintf(tempname,"InputFiles_Signal/V16_T1tttt/%s_InputSignal.txt",type.c_str());
   ifstream fin(tempname);
   // check the timing of the file. If outdated alert. 
   struct stat t_stat; 

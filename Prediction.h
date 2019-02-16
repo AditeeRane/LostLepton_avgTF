@@ -30,18 +30,18 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
-const bool runOnSignalMC = false;  //<-check------------------------
+const bool runOnSignalMC = true;  //<-check------------------------
 bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.6324;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35815.165;
@@ -53,7 +53,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 
 // Useful for T2tt corridor studies
 //*AR:180621-"true" only for genMHT version of signal contamination
-const bool useGenHTMHT = false;
+const bool useGenHTMHT = true;
 
 // Do top-pt reweightung
 const bool topPTreweight = false;
@@ -62,7 +62,7 @@ const bool topPTreweight = false;
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
 const string path_bTagCalib("btag/DeepCSV_Moriond17_B_H.csv");
-const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
+const string path_bTagCalibFastSim("btag/fastsim_deepcsv_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
 // Signal x-sec: "dict_xsec.txt" for gluino pair prod; "dict_xsec_T2.txt" for (anti)stop pair prod.
@@ -907,6 +907,7 @@ void Prediction::Init(TTree *tree)
   // useFilterData = true; unless you want to run without MET filters
   // useFilterData = false; For FastSim Samples, e.g. Signal Scans! Met filters not simulated
   if(runOnStandardModelMC || runOnData) useFilterData = true;
+  //  useFilterData = true;
 
 
 
@@ -1020,6 +1021,22 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("DeltaPhi2Orig", 1);
   fChain->SetBranchStatus("DeltaPhi3Orig", 1);
   fChain->SetBranchStatus("DeltaPhi4Orig", 1);
+
+    fChain->SetBranchStatus("CSCTightHaloFilter", 1);
+    fChain->SetBranchStatus("EcalDeadCellTriggerPrimitiveFilter", 1);
+    fChain->SetBranchStatus("eeBadScFilter", 1);
+    //fChain->SetBranchStatus("eeBadSc4Filter", 1);    
+    fChain->SetBranchStatus("HBHENoiseFilter", 1);
+    fChain->SetBranchStatus("HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("ecalBadCalibFilter", 1); 
+    if(runOnData){
+      fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
+      fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
+      fChain->SetBranchStatus("BadPFMuonFilter", 1);
+    }
+      fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
+      fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
+      fChain->SetBranchStatus("BadPFMuonFilter", 1);
 
   if(!runOnSignalMC){
     fChain->SetBranchStatus("CSCTightHaloFilter", 1);
@@ -1189,6 +1206,26 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("MHTPhiOrig", &MHTPhiOrig, &b_MHTPhiOrig);
 
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
+
+
+    fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);
+    fChain->SetBranchAddress("EcalDeadCellTriggerPrimitiveFilter", &EcalDeadCellTriggerPrimitiveFilter, &b_EcalDeadCellTriggerPrimitiveFilter);
+    fChain->SetBranchAddress("eeBadScFilter", &eeBadScFilter, &b_eeBadScFilter);
+    //fChain->SetBranchAddress("eeBadSc4Filter", &eeBadSc4Filter, &b_eeBadSc4Filter);    
+    fChain->SetBranchAddress("HBHENoiseFilter", &HBHENoiseFilter, &b_HBHENoiseFilter);
+    fChain->SetBranchAddress("HBHEIsoNoiseFilter", &HBHEIsoNoiseFilter, &b_HBHEIsoNoiseFilter);
+      fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
+
+    if(runOnData){
+      fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
+      fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
+      fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
+
+    }
+
+    fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
+      fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
+      fChain->SetBranchAddress("BadPFMuonFilter", &BadPFMuonFilter, &b_BadPFMuonFilter);
 
   if(!runOnSignalMC){
     fChain->SetBranchAddress("CSCTightHaloFilter", &CSCTightHaloFilter, &b_CSCTightHaloFilter);

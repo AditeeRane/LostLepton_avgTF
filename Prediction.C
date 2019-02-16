@@ -1070,6 +1070,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR: 180917- only for signal
   if(runOnSignalMC && useGenHTMHT){
     for(unsigned j = 0; j < GenJets->size(); ++j){
+      //      std::cout<<" entry "<<entry<<" j "<<j<<" pt "<<GenJets->at(j).Pt()<<" eta "<<GenJets->at(j).Eta()<<endl;
       temp3Vec.SetPtEtaPhi(GenJets->at(j).Pt(),GenJets->at(j).Eta(),GenJets->at(j).Phi());
       if(GenJets->at(j).Pt() > 30 && fabs(GenJets->at(j).Eta())<2.4)
 	GenHT3JetVec.push_back(temp3Vec);
@@ -1157,9 +1158,9 @@ Bool_t Prediction::Process(Long64_t entry)
     h_CutFlow->Fill(2);
   }
   //   std::cout<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<DeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<DeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<DeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<DeltaPhi4v2Recipe<<endl;
-  //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
+  //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5. High dphi search bin only uses MHT>300
   if(runOnSignalMC && useGenHTMHT){
-    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
   }
   else{
     //    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -1174,10 +1175,12 @@ Bool_t Prediction::Process(Long64_t entry)
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
     double getHT5Cut;
     getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
+    /*
     if(HTDeltaPhi1v2Recipe < getHT5Cut){
       std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
       return kTRUE;
     }
+*/
   }
   else if(NJetsv2Recipe==3){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
@@ -1267,8 +1270,8 @@ Bool_t Prediction::Process(Long64_t entry)
   if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) &&!TriggerPass->at(112) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135)) return kTRUE;
 
   if(runOnSignalMC && useGenHTMHT){
-    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
+    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,BTagsv2Recipe);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,BTagsv2Recipe);
   }
   else{
     //  Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
@@ -1363,7 +1366,7 @@ Bool_t Prediction::Process(Long64_t entry)
     // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
     topPtSF /= 0.99;
   } //end of if(topPTreweight)
-  //std::cout<<" entry "<<entry<<" *** Seg Vio2 *** "<<endl;
+  //  std::cout<<" entry "<<entry<<" *** Seg Vio2 *** "<<endl;
   double madHTcut=0.0;
   //char SkimFile[500];
   if(runOnData){
@@ -1373,7 +1376,7 @@ Bool_t Prediction::Process(Long64_t entry)
     currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
     //    std::cout<<" currentFile "<<currentFile<<endl;
   }
-
+  
 
   if(!runOnData){
     //    string GetFastSimSkim=Skmname.c_str();
@@ -1381,13 +1384,14 @@ Bool_t Prediction::Process(Long64_t entry)
     //    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
     if(currentTree != treeName){ //treeName = " "
-      //  std::cout<<" new tree or new skimfile "<<endl;
+      std::cout<<" new tree or new skimfile "<<endl;
       treeName = currentTree;
       OldSkimFilePath = SkimFilePath;
       TObjArray *optionArray = currentTree.Tokenize("/");
       TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
       currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-      string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
+      std::cout<<" currentFile "<<currentFile<<endl;  
+    string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
       char SkimFile[500];
       if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
       else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
@@ -1429,8 +1433,10 @@ Bool_t Prediction::Process(Long64_t entry)
       //std::cout<<" subSampleKey "<<subSampleKey<<endl;
       if(runOnSignalMC){
 	vector<string> skimInput = skmInput(string(currFileName));
-	//	std::cout<<" 0 "<<skimInput[0]<<" 1 "<<skimInput[1]<<" 2 "<<skimInput[2]<<" 3 "<<skimInput[3]<<" 4 "<<skimInput[4]<<endl;
-	sprintf(SkimFile,"%s/tree_%s_%s_%s_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
+	std::cout<<" 0 "<<skimInput[0]<<" 1 "<<skimInput[1]<<" 2 "<<skimInput[2]<<" 3 "<<skimInput[3]<<" 4 "<<skimInput[4]<<endl;
+	sprintf(SkimFile,"%s/tree_%s_%s_%s_MC2016_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
+	//	sprintf(SkimFile,"%s/tree_T1tttt_1200_800_MC2016.root",SkimFilePath.c_str());
+	std::cout<<" skimfile "<<SkimFile<<endl;
       }
       else
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
@@ -1442,6 +1448,7 @@ Bool_t Prediction::Process(Long64_t entry)
       if(doISRcorr){//true only for signal MC
 	TFile *skimFile = TFile::Open(SkimFile, "READ");
 	h_njetsisr = (TH1*)skimFile->Get("NJetsISR");
+	//	std::cout<<" Read NjetISR "<<endl;
 	//        h_njetsisr = (TH1*) fChain->GetCurrentFile()->Get("NJetsISR");
 	//isrfile = TFile::Open(path_ISRcorr, "READ");
 	//h_isr = (TH1*)isrfile->Get("isr_weights_central");
@@ -1459,7 +1466,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	//		isrcorr->SetWeights(h_njetsisr,h_njetsisr);
 	//*AR-190207: h_isr=histogram "isr_weights_central" from isr/ISRWeights.root
 	isrcorr->SetWeights(h_isr,h_njetsisr);
-
+	//	std::cout<<" isr weight set "<<endl;
       }
       
       if(doBTagCorr){ //true only for signal and standard model mc
@@ -1477,13 +1484,15 @@ Bool_t Prediction::Process(Long64_t entry)
         }
 	
         btagcorr->SetCalib(path_bTagCalib);        
+	//	std::cout<<" btagcorrector set "<<endl;
+
         if(runOnSignalMC){
           btagcorr->SetCalibFastSim(path_bTagCalibFastSim);
+	  //	  std::cout<<" get eff and SFs "<<endl;
           btagcorr->SetFastSim(true);
         }
         else btagcorr->SetFastSim(false);
       } //end of if(doBTagCorr)
-      
       //*AR- Get a vector of pairs (susymothermass, xsec) based on name of new tree
       if(runOnSignalMC){ //false for SM MC
 	//*AR-180618:xsecsT1T5, xsecsT2 are vector of pairs like (220,2259.15) 
@@ -1530,7 +1539,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }// end of if(currentTree != treeName)
     if(runOnSignalMC){
       Weight = xsec / nEvtsTotal;
-      std::cout<<" weight_xsec "<<Weight<<endl;
+      //      std::cout<<" weight_xsec "<<Weight<<endl;
       if(Weight < 0) Weight *= -1;
     }
 
@@ -1558,8 +1567,8 @@ Bool_t Prediction::Process(Long64_t entry)
     if(doBTagCorr){ //true for signal and standard model mc
       bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
       if(runOnSignalMC && useGenHTMHT){
-	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};  
-	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};
+	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,2), NJetsv2Recipe < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,3)};  
+	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,0), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,1), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,2), NJetsv2Recipe < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,3)};
       }   
       else{
 	bTagBins = {SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,0), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,1), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,3)};  
