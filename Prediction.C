@@ -1004,20 +1004,20 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsv2=0;
   double PhiLeadJet=-99;
 
-
-  if(runOnData && RunNum>=319077){
-    for(unsigned j = 0; j < Jets->size(); ++j){
-      CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
-      CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
-      if(CheckJetPhi && CheckJetEta){
-	//	std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
-	break;
+  if(AddHEMVeto){
+    if(runOnData && RunNum>=319077){
+      for(unsigned j = 0; j < Jets->size(); ++j){
+	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
+	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
+	if(CheckJetPhi && CheckJetEta){
+	  //	std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	  break;
+	}
       }
+      if(CheckJetPhi && CheckJetEta)
+	return kTRUE;  
     }
-    if(CheckJetPhi && CheckJetEta)
-      return kTRUE;  
   }
-
   //  if(runOnData)
   //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM jet "<<endl;
 
@@ -1181,24 +1181,25 @@ Bool_t Prediction::Process(Long64_t entry)
 */
 
 
-
-  //*AR-190207: HEM electron veto
-  if(runOnData && RunNum>=319077){
-    for(unsigned j=0; j< ElectronsNum_; j++){
-      if(Electrons_passIso->at(j)){
-	double LepPhi=Electrons->at(j).Phi();
-	double LepEta=Electrons->at(j).Eta();
-	
-	CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
-	CheckEta=LepEta < -1.4 && LepEta > -3.0;
-	if(CheckPhi && CheckEta){
-	  //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
-	  break;
+  if(AddHEMVeto){
+    //*AR-190207: HEM electron veto
+    if(runOnData && RunNum>=319077){
+      for(unsigned j=0; j< ElectronsNum_; j++){
+	if(Electrons_passIso->at(j)){
+	  double LepPhi=Electrons->at(j).Phi();
+	  double LepEta=Electrons->at(j).Eta();
+	  
+	  CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+	  CheckEta=LepEta < -1.4 && LepEta > -3.0;
+	  if(CheckPhi && CheckEta){
+	    //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	    break;
+	  }
 	}
       }
+      if(CheckPhi && CheckEta)
+	return kTRUE;
     }
-    if(CheckPhi && CheckEta)
-      return kTRUE;
   }
   //  if(runOnData)
   //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM electron "<<endl;
@@ -2285,7 +2286,8 @@ Bool_t Prediction::Process(Long64_t entry)
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
     //std::cout<<" WeightBtagProb "<<WeightBtagProb<<endl;
     double TF = -1;
-    if(runOnData && RunNum>=319077){
+
+    if(AddHEMVeto && runOnData && RunNum>=319077){
       //      std::cout<<" TF_RmHEMEleJet "<<endl;
       if(applySFs){ //true for data
 	TF = h_0L1L_RmHEMEleJet_SF_SB->GetBinContent(bTagBinQCD);

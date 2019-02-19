@@ -40,6 +40,7 @@ bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+bool AddHEMVeto=true; //<---true to get 2018 Prediction with HEM affected region
 // Use TFs with/without SFs
 const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.4184;
