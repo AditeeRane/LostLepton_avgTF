@@ -227,18 +227,18 @@ Bool_t SFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
-
-    for(unsigned j = 0; j < Jets->size(); ++j){
-      CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
-      CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
-      if(CheckJetPhi && CheckJetEta){
-	//	std::cout<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
-	break;
+    if(AddHEMVeto){
+      for(unsigned j = 0; j < Jets->size(); ++j){
+	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
+	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
+	if(CheckJetPhi && CheckJetEta){
+	  //	std::cout<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	  break;
+	}
       }
+      if(CheckJetPhi && CheckJetEta)
+	return kTRUE;  
     }
-    if(CheckJetPhi && CheckJetEta)
-      return kTRUE;  
-
     //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
     //    std::cout<<" evtweight "<<Weight<<endl;
 
@@ -846,23 +846,24 @@ Bool_t SFMaker::Process(Long64_t entry)
         return kTRUE;
     }
 
-    //*AR-190207: HEM electron veto
-    for(unsigned j=0; j< ElectronsNum_; j++){
-      if(Electrons_passIso->at(j)){
-	double LepPhi=Electrons->at(j).Phi();
-	double LepEta=Electrons->at(j).Eta();
-
-	CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
-	CheckEta=LepEta < -1.4 && LepEta > -3.0;
-	if(CheckPhi && CheckEta){
-	  //	  std::cout<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
-	  break;
+    if(AddHEMVeto){
+      //*AR-190207: HEM electron veto
+      for(unsigned j=0; j< ElectronsNum_; j++){
+	if(Electrons_passIso->at(j)){
+	  double LepPhi=Electrons->at(j).Phi();
+	  double LepEta=Electrons->at(j).Eta();
+	  
+	  CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+	  CheckEta=LepEta < -1.4 && LepEta > -3.0;
+	  if(CheckPhi && CheckEta){
+	    //	  std::cout<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	    break;
+	  }
 	}
       }
+      if(CheckPhi && CheckEta)
+	return kTRUE;
     }
-    if(CheckPhi && CheckEta)
-      return kTRUE;
-
     //    std::cout<<" entry "<<entry<<" no HEM electron "<<endl;
 
 
