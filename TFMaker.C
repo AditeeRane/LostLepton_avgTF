@@ -437,11 +437,11 @@ Bool_t TFMaker::Process(Long64_t entry)
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //*AR-190110: This is skimfilepath irrespective of (GenElectronsNum_ + GenMuonsNum_) is zero or not
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
-    if(GenElectronsNum_ > GenMuonsNum_)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+    //    if(GenElectronsNum_ > GenMuonsNum_)
+    //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
 
     //*AR-180314-Name of skimfile won't change from event to event, so this loop has to be run only for every new tree
-    if(currentTree != treeName  || SkimFilePath!=OldSkimFilePath){
+    if(currentTree != treeName){
         treeName = currentTree;
 	OldSkimFilePath = SkimFilePath;
         TObjArray *optionArray = currentTree.Tokenize("/");

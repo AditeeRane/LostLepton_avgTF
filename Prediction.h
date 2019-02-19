@@ -30,7 +30,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
@@ -541,6 +541,9 @@ class Prediction : public TSelector {
   TH1D* h_0L1L_SB = 0;
   TH1D* h_0L1L_SF_SB = 0;
 
+  TH1D* h_0L1L_RmHEMEleJet_SB = 0;
+  TH1D* h_0L1L_RmHEMEleJet_SF_SB = 0;
+
   //open skim file as skimfile
   TH1* h_njetsisr = 0;
   double nEvtsTotal;
@@ -940,6 +943,10 @@ void Prediction::Init(TTree *tree)
   TFile *TF_histFile = TFile::Open("TF.root", "READ");
   h_0L1L_SB = (TH1D*) TF_histFile->Get("h_0L1L_SB")->Clone();
   h_0L1L_SF_SB = (TH1D*) TF_histFile->Get("h_0L1L_SF_SB")->Clone();
+
+  TFile *TF_RmHEMEleJet_histFile = TFile::Open("TF_RmHEMEleJet.root", "READ");
+  h_0L1L_RmHEMEleJet_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SB")->Clone();
+  h_0L1L_RmHEMEleJet_SF_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SF_SB")->Clone();
 
   TChain* temp = (TChain*)fChain;
   std::string infname=temp->GetFile()->GetName();

@@ -921,6 +921,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
   h_CutFlow->Fill(1);
+  
   //  MuonsNum_ = Muons->size();
   //  ElectronsNum_ = Electrons->size();
   //*AR: 180917: NMuons and NElectrons are number of isolated electrons and muons(passing medium id)
@@ -1002,6 +1003,24 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsDefault=0;
   int HTJetsv2=0;
   double PhiLeadJet=-99;
+
+
+  if(runOnData && RunNum>=319077){
+    for(unsigned j = 0; j < Jets->size(); ++j){
+      CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
+      CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
+      if(CheckJetPhi && CheckJetEta){
+	//	std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	break;
+      }
+    }
+    if(CheckJetPhi && CheckJetEta)
+      return kTRUE;  
+  }
+
+  //  if(runOnData)
+  //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM jet "<<endl;
+
   //  if(BTags>0)
   //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
   //*AR:181016: btags based on csv value instead of using value saved in ntuple
@@ -1011,14 +1030,6 @@ Bool_t Prediction::Process(Long64_t entry)
       BTagsfrmCSV++;
   }
 
-  for(unsigned j = 0; j < Jets->size(); ++j){
-    CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
-    CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
-    if(CheckJetPhi && CheckJetEta){
-      //      std::cout<<" entry "<<entry<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
-      break;
-    }
-  }
   //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
     double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
@@ -1168,6 +1179,29 @@ Bool_t Prediction::Process(Long64_t entry)
       h_CutFlow->Fill(21);
   }
 */
+
+
+
+  //*AR-190207: HEM electron veto
+  if(runOnData && RunNum>=319077){
+    for(unsigned j=0; j< ElectronsNum_; j++){
+      if(Electrons_passIso->at(j)){
+	double LepPhi=Electrons->at(j).Phi();
+	double LepEta=Electrons->at(j).Eta();
+	
+	CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+	CheckEta=LepEta < -1.4 && LepEta > -3.0;
+	if(CheckPhi && CheckEta){
+	  //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	  break;
+	}
+      }
+    }
+    if(CheckPhi && CheckEta)
+      return kTRUE;
+  }
+  //  if(runOnData)
+  //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM electron "<<endl;
   //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
   //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
   if(!GetSignalRegHists){
@@ -1283,20 +1317,20 @@ Bool_t Prediction::Process(Long64_t entry)
       //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
       
       //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
-      if(runOnSignalMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLm";
-      if(runOnStandardModelMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
+      //      if(runOnSignalMC)
+      //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLm";
+      //      if(runOnStandardModelMC)
+      //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
     }else if(MuonsNum_==0 && ElectronsNum_==1){
       for(unsigned int i=0;i<Electrons->size();i++){
 	if(Electrons_passIso->at(i))
 	  mtw =  Electrons_MTW->at(i);
       }
       //std::cout<<" entry "<<entry<<" 1e event "<<endl;
-      if(runOnSignalMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLe";
-      if(runOnStandardModelMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+      //      if(runOnSignalMC)
+      //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLe";
+      //      if(runOnStandardModelMC)
+      //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
     }
     //do not consider event if mT>100 
     if(mtw > 100) return kTRUE;
@@ -1436,7 +1470,7 @@ Bool_t Prediction::Process(Long64_t entry)
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
-    if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
+    if(currentTree != treeName){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
       treeName = currentTree;
       OldSkimFilePath = SkimFilePath;
@@ -2251,12 +2285,26 @@ Bool_t Prediction::Process(Long64_t entry)
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
     //std::cout<<" WeightBtagProb "<<WeightBtagProb<<endl;
     double TF = -1;
-    if(applySFs){ //true for data
-      TF = h_0L1L_SF_SB->GetBinContent(bTagBinQCD);
-      if(TF < 0) TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
-    }else{ //true for SM and signal MC
-      TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
+    if(runOnData && RunNum>=319077){
+      //      std::cout<<" TF_RmHEMEleJet "<<endl;
+      if(applySFs){ //true for data
+	TF = h_0L1L_RmHEMEleJet_SF_SB->GetBinContent(bTagBinQCD);
+	if(TF < 0) TF = h_0L1L_RmHEMEleJet_SB->GetBinContent(bTagBinQCD);
+      }else{ //true for SM and signal MC
+	TF = h_0L1L_RmHEMEleJet_SB->GetBinContent(bTagBinQCD);
+      }
     }
+    else{
+      //      std::cout<<" TF "<<endl;
+      if(applySFs){ //true for data
+	TF = h_0L1L_SF_SB->GetBinContent(bTagBinQCD);
+	if(TF < 0) TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
+      }else{ //true for SM and signal MC
+	TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
+      }
+    }
+
+
     HTRatio=HT5/HT;
     HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
     RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
@@ -2303,6 +2351,7 @@ Bool_t Prediction::Process(Long64_t entry)
       h_EleMTvsPt_Exp->Fill(mtw,ElePt,WeightBtagProb);
       h_EleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
       h_EleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
+      /*
       bool CheckJetEle=(CheckEta && CheckPhi) || (CheckJetPhi && CheckJetEta);
       //      std::cout<<" entry "<<entry<<" electron evt "<<" CheckEta "<<CheckEta<<" CheckPhi "<<CheckPhi<<" CheckJetPhi "<<CheckJetPhi<<" CheckJetEta "<<CheckJetEta<<" CheckJetEle "<<CheckJetEle<<endl; 
 
@@ -2320,6 +2369,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	h_HEMEleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
 	
       }
+*/
     }
 
     if(MuPt>0.0){
@@ -2338,7 +2388,8 @@ Bool_t Prediction::Process(Long64_t entry)
       h_EleMTvsPt_Exp->Fill(mtw,MuPt,WeightBtagProb);
       h_EleMTvsMET_Exp->Fill(mtw,MET,WeightBtagProb);
       h_EleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
-      bool CheckJetEle=(CheckEta && CheckPhi) || (CheckJetPhi && CheckJetEta);
+      /*  
+	  bool CheckJetEle=(CheckEta && CheckPhi) || (CheckJetPhi && CheckJetEta);
       //      std::cout<<" entry "<<entry<<" muon evt "<<" CheckEta "<<CheckEta<<" CheckPhi "<<CheckPhi<<" CheckJetPhi "<<CheckJetPhi<<" CheckJetEta "<<CheckJetEta<<" CheckJetEle "<<CheckJetEle<<endl; 
 
       if(CheckJetEle){
@@ -2356,6 +2407,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	h_HEMEleMTvsDphi_Exp->Fill(mtw,LepMETDphi,WeightBtagProb);
 	
       }
+*/
 
     }
 
