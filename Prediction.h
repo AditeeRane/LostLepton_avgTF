@@ -32,14 +32,14 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
-const bool runOnSignalMC = false;  //<-check------------------------
+const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
+const bool runOnSignalMC = true;  //<-check------------------------
 bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2017 MC
+bool GetNonPrefireProb=true;  //true for 2017 MC
 // Use TFs with/without SFs
 const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.4941;
@@ -53,7 +53,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 
 // Useful for T2tt corridor studies
 //*AR:180621-"true" only for genMHT version of signal contamination
-const bool useGenHTMHT = false;
+const bool useGenHTMHT = true;
 
 // Do top-pt reweightung
 const bool topPTreweight = false;
@@ -62,7 +62,7 @@ const bool topPTreweight = false;
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
 const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
-const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
+const string path_bTagCalibFastSim("btag/fastsim_deepcsv_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
 // Signal x-sec: "dict_xsec.txt" for gluino pair prod; "dict_xsec_T2.txt" for (anti)stop pair prod.

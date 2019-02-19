@@ -1215,20 +1215,23 @@ Bool_t Prediction::Process(Long64_t entry)
       //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
       
       //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
+      /*
       if(runOnSignalMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLm";
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
+*/
     }else if(MuonsNum_==0 && ElectronsNum_==1){
       for(unsigned int i=0;i<Electrons->size();i++){
 	if(Electrons_passIso->at(i))
 	  mtw =  Electrons_MTW->at(i);
       }
       //std::cout<<" entry "<<entry<<" 1e event "<<endl;
-      if(runOnSignalMC)
+      /*    if(runOnSignalMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/scan/tree_SLe";
       if(runOnStandardModelMC)
 	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+*/
     }
     //do not consider event if mT>100 
     if(mtw > 100) return kTRUE;
@@ -1366,7 +1369,7 @@ Bool_t Prediction::Process(Long64_t entry)
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
-    if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
+    if(currentTree != treeName ){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
       treeName = currentTree;
       OldSkimFilePath = SkimFilePath;
@@ -1416,7 +1419,7 @@ Bool_t Prediction::Process(Long64_t entry)
       if(runOnSignalMC){
 	vector<string> skimInput = skmInput(string(currFileName));
 	//	std::cout<<" 0 "<<skimInput[0]<<" 1 "<<skimInput[1]<<" 2 "<<skimInput[2]<<" 3 "<<skimInput[3]<<" 4 "<<skimInput[4]<<endl;
-	sprintf(SkimFile,"%s/tree_%s_%s_%s_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
+	sprintf(SkimFile,"%s/tree_%s_%s_%s_MC2017_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
       }
       else
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
@@ -1516,7 +1519,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }// end of if(currentTree != treeName)
     if(runOnSignalMC){
       Weight = xsec / nEvtsTotal;
-      std::cout<<" weight_xsec "<<Weight<<endl;
+      //      std::cout<<" weight_xsec "<<Weight<<endl;
       if(Weight < 0) Weight *= -1;
     }
 
