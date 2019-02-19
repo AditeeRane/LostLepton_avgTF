@@ -506,13 +506,14 @@ Bool_t SFMaker::Process(Long64_t entry)
     double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //std::cout<<" survived event "<< " entry "<<entry<<" currentTree "<<currentTree<<endl;
+    //*AR-190219-it is found that result is independent of whether skimfile is changed as a function of electron/muon event or not. This is because btagSF and NjetISR are property of MC sample and independent of whether event is electron/ muon event
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
-    if(GenElectronsNum_ > GenMuonsNum_)
-      SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
+    //    if(GenElectronsNum_ > GenMuonsNum_)
+    //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
     
     //treeName = " "
     //**AR-Nov3,2017-Loop below "if(currentTree != treeName)" only executes for every new tree in filelist or every new event with Electron > Muon condition, and not for every event. So variables to be checked for every event should be outside this loop.
-    if(currentTree != treeName  || SkimFilePath!=OldSkimFilePath){
+    if(currentTree != treeName ||){
         treeName = currentTree;
 	OldSkimFilePath = SkimFilePath;
 	//std::cout<<" treeName "<<treeName<<endl;
