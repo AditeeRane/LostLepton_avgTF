@@ -1004,13 +1004,17 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsv2=0;
   double PhiLeadJet=-99;
 
+  //  if(runOnData && RunNum<319077)
+  //return kTRUE;
+
+
   if(AddHEMVeto){
     if(runOnData && RunNum>=319077){
       for(unsigned j = 0; j < Jets->size(); ++j){
 	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
 	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
 	if(CheckJetPhi && CheckJetEta){
-	  //	std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	  //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
 	  break;
 	}
       }
@@ -1018,7 +1022,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	return kTRUE;  
     }
   }
-  //  if(runOnData)
+  //if(runOnData)
   //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM jet "<<endl;
 
   //  if(BTags>0)
@@ -1064,7 +1068,7 @@ Bool_t Prediction::Process(Long64_t entry)
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
 
-  //  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+  //if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
   //std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
 
   /*
@@ -1254,7 +1258,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //   std::cout<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<DeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<DeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<DeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<DeltaPhi4v2Recipe<<endl;
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
-    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
   }
   else{
     //    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -1267,32 +1271,42 @@ Bool_t Prediction::Process(Long64_t entry)
   if(NJetsv2Recipe>=4){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
   }
   else if(NJetsv2Recipe==3){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+   
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
   }
   else if(NJetsv2Recipe==2){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+  
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
+    
   }
   else
     return kTRUE;
@@ -1354,12 +1368,11 @@ Bool_t Prediction::Process(Long64_t entry)
 //  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
   // Signal region MET triggers applied only for data
 
-
-  if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) &&!TriggerPass->at(112) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135)) return kTRUE;
-
+  if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) && !TriggerPass->at(112) && !TriggerPass->at(113) && !TriggerPass->at(114) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(124) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(129) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135) && !TriggerPass->at(136)) return kTRUE;
+  
   if(runOnSignalMC && useGenHTMHT){
-    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
+    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,BTagsv2Recipe);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,BTagsv2Recipe);
   }
   else{
     //  Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
@@ -1649,8 +1662,8 @@ Bool_t Prediction::Process(Long64_t entry)
     if(doBTagCorr){ //true for signal and standard model mc
       bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);
       if(runOnSignalMC && useGenHTMHT){
-	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};  
-	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,0), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,1), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,2), NJets < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJets,3)};
+	bTagBins = {SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,0), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,1), SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,2), NJetsv2Recipe < 3 ? 999 : SearchBins_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,3)};  
+	bTagBinsQCD = {SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,0), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,1), SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,2), NJetsv2Recipe < 3 ? 999 : SearchBinsQCD_BTags_->GetBinNumber(newGenHT,newGenMHT,NJetsv2Recipe,3)};
       }   
       else{
 	bTagBins = {SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,0), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,1), SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,2), NJets < 3 ? 999 : SearchBins_BTags_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,3)};  

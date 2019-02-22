@@ -535,7 +535,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     LLPlusHadTau_TFRefHist_copy->Reset(); //Defines 174 bin histogram to copy nominal TF histogram 
 
     
-    //Reference TF with btag probability considered    
+    //Reference TF with btag probability considered which is used to derive systematics   
     sprintf(tempname,"TFLLPlusHadTau_JECRefWithBtagProb_binSFcorrected.root");
     TFile *RefTFWithBtagProbFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
@@ -543,7 +543,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
 
     //223(QCD) bin TF Stat error (error from MC) histogram
     TH1D* LLPlusHadTau_TFErrHist_input=(TH1D*) RefTFWithBtagProbFile->Get("h_0L1L_SF_SB")->Clone("LLPlusHadTau_TFErrHist_input");
-    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefWithBtagProbHist); //LLPlusHadTau_TFErrHist_input is reset and returns 1+(TFRefWithBtagProbHist_BinError/TFRefWithBtagProbHist_BinContent)
+    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefHist); //LLPlusHadTau_TFErrHist_input is reset and returns 1+(TFRefHist_BinError/TFRefHist_BinContent)
 
     TH1D *LLPlusHadTau_TFErrHist=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("LLPlusHadTau_TFErrHist"); 
     LLPlusHadTau_TFErrHist->Reset(); //Defines 174 bin histogram to copy TF Stat error histogram 
