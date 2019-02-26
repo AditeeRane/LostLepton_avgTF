@@ -1004,7 +1004,7 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsv2=0;
   double PhiLeadJet=-99;
 
-  if(runOnData && RunNum>=319077)
+  if(runOnData && RunNum<319077)
     return kTRUE;
 
 
@@ -1394,8 +1394,10 @@ Bool_t Prediction::Process(Long64_t entry)
   h_YieldCutFlow->Fill(0);
 
   if(EENoiseCutbyAditee){
-    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1))|| (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+    if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1))|| (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1))){
+      std::cout<<" pt1 "<< Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt() <<" pt2 "<<Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()<<" dphi1 "<<MHTminusHTDeltaPhi1v2Recipe<<" dphi2 "<<MHTminusHTDeltaPhi2v2Recipe<<endl;
       return kTRUE;
+    }
   }
 
   //*AR: 181107: check following condition if Dphi cut to be applied

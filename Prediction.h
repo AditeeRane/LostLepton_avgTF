@@ -30,11 +30,11 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
+const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
