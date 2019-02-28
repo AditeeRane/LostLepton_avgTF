@@ -57,6 +57,7 @@ const bool BtagSys=false;
 const bool PrefireSys=false;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC, 
 bool AddHEMVeto=true; //<---true to get 2018 TF for HEM affected region
+const bool ApplyHT5cut=true;
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 

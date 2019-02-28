@@ -378,22 +378,27 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_)) return kTRUE;
-      double getHT5Cut;
-      getHT5Cut = 1.025*(newHT5/newHT)-0.5875;
-      if(newDphi1 < getHT5Cut){
-	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
-	return kTRUE;
+
+      if(ApplyHT5cut){
+	double getHT5Cut;
+	getHT5Cut = 5.3*(newHT5/newHT)-4.78;
+	if(!(newDphi1 >= getHT5Cut || newHT5/newHT < 1.2)){
+	  //	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  return kTRUE;
+	}
       }
     }
     else{
       if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-      double getHT5Cut;
-      getHT5Cut = 1.025*(HT5/HT)-0.5875;
-      if(DeltaPhi1 < getHT5Cut){
-	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
-	return kTRUE;
+      if(ApplyHT5cut){
+	double getHT5Cut;
+	getHT5Cut = 5.3*(HT5/HT)-4.78;
+	if(!(DeltaPhi1 >= getHT5Cut || HT5/HT < 1.2)){
+	  std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" HT5/HT "<<HT5/HT<<" 5.3*HT5/HT "<<5.3*(HT5/HT)<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  return kTRUE;
+	}
       }
     }
 

@@ -1164,32 +1164,42 @@ Bool_t Prediction::Process(Long64_t entry)
   if(NJetsv2Recipe>=4){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
   }
   else if(NJetsv2Recipe==3){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+   
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
   }
   else if(NJetsv2Recipe==2){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
-    double getHT5Cut;
-    getHT5Cut = 1.025*(HT5v2Recipe/HTv2Recipe)-0.5875;
-    if(HTDeltaPhi1v2Recipe < getHT5Cut){
-      std::cout<<" HT "<<HTv2Recipe<<" HT5 "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<HTDeltaPhi1v2Recipe<<endl;
-      return kTRUE;
+  
+    if(ApplyHT5cut){
+      double getHT5Cut;
+      getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
+      if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
+	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	return kTRUE;
+      }
     }
+
   }
   else
     return kTRUE;
@@ -1254,8 +1264,7 @@ Bool_t Prediction::Process(Long64_t entry)
 //  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
   // Signal region MET triggers applied only for data
 
-
-  if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) &&!TriggerPass->at(112) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135)) return kTRUE;
+  if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) && !TriggerPass->at(112) && !TriggerPass->at(113) && !TriggerPass->at(114) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(124) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(129) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135) && !TriggerPass->at(136)) return kTRUE;
 
   if(runOnSignalMC && useGenHTMHT){
     Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
