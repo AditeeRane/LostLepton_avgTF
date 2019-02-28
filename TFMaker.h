@@ -53,6 +53,8 @@ const bool BtagSys=false;
 const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;
 const bool SysDn=true; //*AR, 180327: no need to change this for any run
+const bool ApplyHT5cut=true;
+
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35815;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC

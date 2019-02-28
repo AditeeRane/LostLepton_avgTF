@@ -32,16 +32,18 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
-const bool runOnSignalMC = true;  //<-check------------------------
+const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+const bool ApplyHT5cut=true;
+
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.6324;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35815.165;
@@ -53,7 +55,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 
 // Useful for T2tt corridor studies
 //*AR:180621-"true" only for genMHT version of signal contamination
-const bool useGenHTMHT = true;
+const bool useGenHTMHT = false; //check: default false
 
 // Do top-pt reweightung
 const bool topPTreweight = false;
