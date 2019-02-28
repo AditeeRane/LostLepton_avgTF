@@ -456,6 +456,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_photonMultiplicityforMHTminusHTv2Recipe_Exp =new TH1D("h_photonMultiplicityforMHTminusHTv2Recipe_Exp","h_photonMultiplicityforMHTminusHTv2Recipe_Exp",100,0,100);
   h_JetPtvsPhiforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvsPhiforMHTminusHTv2Recipe_Exp","h_JetPtvsPhiforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,70,-3.5,3.5);
   h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp","h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,32,0,3.2);
+  h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp","h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,32,0,3.2);
+
   h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp","h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,20,0,1);
   h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp","h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,20,0,1);
   h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp=new TH2D("h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp","h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp",20,0.0,1000.0,50,0,10);
@@ -861,6 +863,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_RecHTRatiovsDPhiforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsPhiforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp);
+  GetOutputList()->Add(h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp);
   GetOutputList()->Add(h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp);
@@ -1006,7 +1009,16 @@ Bool_t Prediction::Process(Long64_t entry)
 
   if(runOnData && RunNum<319077)
     return kTRUE;
-
+  if(runOnData && GetSignalRegHists){
+    if(!(RunNum>=320673 && RunNum<=321396))
+      return kTRUE;
+    /*  
+    if(!(RunNum>=315257 && RunNum<=316202)){
+      //      std::cout<<" skip run "<<RunNum<<endl;
+      return kTRUE;
+    }
+*/
+  }      
 
   if(AddHEMVeto){
     if(runOnData && RunNum>=319077){
@@ -1276,7 +1288,7 @@ Bool_t Prediction::Process(Long64_t entry)
       double getHT5Cut;
       getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
       if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
-	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	//	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
 	return kTRUE;
       }
     }
@@ -1289,7 +1301,7 @@ Bool_t Prediction::Process(Long64_t entry)
       double getHT5Cut;
       getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
       if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
-	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	//std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
 	return kTRUE;
       }
     }
@@ -1302,7 +1314,7 @@ Bool_t Prediction::Process(Long64_t entry)
       double getHT5Cut;
       getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
       if(!(HTDeltaPhi1v2Recipe >= getHT5Cut || HT5v2Recipe/HTv2Recipe < 1.2)){
-	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
+	//	std::cout<<" HTv2Recipe "<<HTv2Recipe<<" HT5v2Recipe "<<HT5v2Recipe<<" getHT5Cut "<<getHT5Cut<<" HTDeltaPhi1v2Recipe "<<HTDeltaPhi1v2Recipe<<endl;
 	return kTRUE;
       }
     }
@@ -1395,7 +1407,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   if(EENoiseCutbyAditee){
     if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1))|| (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1))){
-      std::cout<<" pt1 "<< Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt() <<" pt2 "<<Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()<<" dphi1 "<<MHTminusHTDeltaPhi1v2Recipe<<" dphi2 "<<MHTminusHTDeltaPhi2v2Recipe<<endl;
+      //      std::cout<<" pt1 "<< Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt() <<" pt2 "<<Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()<<" dphi1 "<<MHTminusHTDeltaPhi1v2Recipe<<" dphi2 "<<MHTminusHTDeltaPhi2v2Recipe<<endl;
       return kTRUE;
     }
   }
@@ -2189,7 +2201,8 @@ Bool_t Prediction::Process(Long64_t entry)
     int jetIdx=MHTminusHTJetsIdxv2Recipe[i]; 
     double DphiJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi() - MHTPhiv2Recipe ));
     h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT);
-
+    if(i<=1)
+      h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Pt(),DphiJetMHT);
     /*
     double rawPt=Jets->at(jetIdx).Pt()/Jets_jecFactor->at(jetIdx);
     if(!foundLeadMHTminusHTJetv2Recipe){
@@ -2682,6 +2695,7 @@ void Prediction::Terminate()
 
   h_JetPtvsPhiforHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsPhiforHTv2Recipe_Exp"));
   h_JetPtvsDPhiforHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsDPhiforHTv2Recipe_Exp"));
+
   h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp"));
   h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp"));
   h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp"));
@@ -2999,6 +3013,8 @@ void Prediction::Terminate()
 
   h_JetPtvsPhiforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsPhiforMHTminusHTv2Recipe_Exp"));
   h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp"));
+  h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp"));
+
   h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp"));
   h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp"));
   h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp= dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp"));
@@ -3440,6 +3456,7 @@ void Prediction::Terminate()
 
   h_JetPtvsPhiforMHTminusHTv2Recipe_Exp->Write();
   h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp->Write();
+  h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp->Write();
   h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp->Write();
   h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp->Write();

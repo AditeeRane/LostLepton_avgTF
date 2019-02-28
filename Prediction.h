@@ -36,7 +36,7 @@ const bool runOnData = true;   //<-check:true only for data---------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false; //true while getting MC expectation
+bool GetSignalRegHists= true; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
@@ -491,6 +491,7 @@ class Prediction : public TSelector {
 
   TH2D* h_JetPtvsPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp=0;
