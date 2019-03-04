@@ -34,9 +34,9 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
+const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true; //true while getting MC expectation
+bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
@@ -126,6 +126,8 @@ class Prediction : public TSelector {
   TH1D* h_YieldCutFlow=0;
   TH1D* h_CutFlow=0;
   TH1D* h_CSStat = 0;
+  TH2D* h_CSStat_MHTVsNbjet=0;
+  TH2D* h_Prediction_MHTVsNbjet=0;
   TH1D* h_HT_Exp=0;
   TH1D* h_HT5_Exp=0;
   TH1D* h_HTRatio_Exp=0;
@@ -577,6 +579,9 @@ class Prediction : public TSelector {
   SearchBins *SearchBinsQCD_ =0;
   SearchBins *SearchBins_BTags_ =0;
   SearchBins *SearchBinsQCD_BTags_ =0;
+  Int_t NonHEMEve=0;
+  Int_t HEMEve=0;
+  Int_t AllEve=0;
 
   Int_t           isoTracksNum;
   UShort_t JetsNum_;

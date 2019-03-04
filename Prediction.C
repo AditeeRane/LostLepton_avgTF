@@ -32,8 +32,14 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   // Initialize Histograms
   TH1::SetDefaultSumw2();
   unsigned nSB = SearchBins_->GetNbins();
+  Float_t MHTbins[5]= { 300, 350, 600, 850, 2000 };
+  Float_t Nbtagbins[5]= { 0, 1, 2, 3, 20 };
+
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
+  h_CSStat_MHTVsNbjet=new TH2D("h_CSStat_MHTVsNbjet","h_CSStat_MHTVsNbjet",4,MHTbins,4,Nbtagbins);
+  h_Prediction_MHTVsNbjet=new TH2D("h_Prediction_MHTVsNbjet","h_Prediction_MHTVsNbjet",4,MHTbins,4,Nbtagbins);
+
   h_CutFlow = new TH1D("h_CutFlow", "h_CutFlow", 30, 0, 30);
   h_CutFlow->GetXaxis()->SetBinLabel(1,"all");
   h_CutFlow->GetXaxis()->SetBinLabel(2,"HTgen_cut");
@@ -505,7 +511,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_Prediction);
   GetOutputList()->Add(h_CSStat); //one lepton CS
   GetOutputList()->Add(h_CutFlow); //one lepton CS
-
+  GetOutputList()->Add(h_CSStat_MHTVsNbjet);
+  GetOutputList()->Add(h_Prediction_MHTVsNbjet);
   GetOutputList()->Add(h_YieldCutFlow);
   GetOutputList()->Add(h_HT_Exp);
   GetOutputList()->Add(h_HT5_Exp);
@@ -1007,25 +1014,30 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsv2=0;
   double PhiLeadJet=-99;
 
+  //  std::cout<<" runnum1 "<<RunNum<<endl;
+
   if(runOnData && RunNum<319077)
     return kTRUE;
+  AllEve++;
+  std::cout<<" AllEve "<<AllEve<<endl;
   if(runOnData && GetSignalRegHists){
-    if(!(RunNum>=320673 && RunNum<=321396))
-      return kTRUE;
-    /*  
+    //    if(!(RunNum>=320673 && RunNum<=321396))
+    //return kTRUE;
+      
     if(!(RunNum>=315257 && RunNum<=316202)){
-      //      std::cout<<" skip run "<<RunNum<<endl;
+      //  std::cout<<" skip run "<<RunNum<<endl;
       return kTRUE;
     }
-*/
-  }      
 
+  }      
+  //std::cout<<" runnum "<<RunNum<<endl;
   if(AddHEMVeto){
     if(runOnData && RunNum>=319077){
       for(unsigned j = 0; j < Jets->size(); ++j){
 	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
 	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
 	if(CheckJetPhi && CheckJetEta){
+	  HEMEve++;
 	  //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
 	  break;
 	}
@@ -1208,6 +1220,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	  CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
 	  CheckEta=LepEta < -1.4 && LepEta > -3.0;
 	  if(CheckPhi && CheckEta){
+	    HEMEve++;
 	    //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
 	    break;
 	  }
@@ -1217,6 +1230,10 @@ Bool_t Prediction::Process(Long64_t entry)
 	return kTRUE;
     }
   }
+
+  NonHEMEve++;
+
+  std::cout<<" AllEve "<<AllEve<<" HEMeve "<<HEMEve<<" NonHEMEve "<<NonHEMEve<<endl;
   //  if(runOnData)
   //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM electron "<<endl;
   //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
@@ -2347,6 +2364,7 @@ Bool_t Prediction::Process(Long64_t entry)
     //    std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" bTagBinQCD "<<bTagBinQCD<<" *** Seg Vio3 *** "<<endl;
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
+    h_CSStat_MHTVsNbjet->Fill(MHTv2Recipe,BTagsfrmCSV,WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
     h_HT5_Exp->Fill(HT5,WeightBtagProb);
     h_HTRatio_Exp->Fill(HTRatio,WeightBtagProb);
@@ -2589,6 +2607,8 @@ Bool_t Prediction::Process(Long64_t entry)
       if(MHTv2Recipe>250 && MHTv2Recipe<300)
 	h_NBtag_forQCD_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
     }
+    h_Prediction_MHTVsNbjet->Fill(MHTv2Recipe,BTagsfrmCSV,WeightBtagProb*TF);
+
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
     /*  
@@ -2623,6 +2643,8 @@ void Prediction::Terminate()
   std::cout<<"***Prediction::Terminate***"<<std::endl;
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
+  h_CSStat_MHTVsNbjet = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_CSStat_MHTVsNbjet"));
+  h_Prediction_MHTVsNbjet = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_Prediction_MHTVsNbjet"));
   h_CutFlow = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CutFlow"));
 
   h_YieldCutFlow = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_YieldCutFlow"));
@@ -3087,6 +3109,8 @@ void Prediction::Terminate()
 */
   h_Prediction->Write();
   h_CSStat->Write();
+  h_CSStat_MHTVsNbjet->Write();
+  h_Prediction_MHTVsNbjet->Write();
   h_CutFlow->Write();
   h_YieldCutFlow->Write();
   h_HT_Exp->Write();
