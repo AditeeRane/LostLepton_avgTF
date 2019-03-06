@@ -36,7 +36,7 @@ const bool runOnData = true;   //<-check:true only for data---------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false; //true while getting MC expectation
+bool GetSignalRegHists= true; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
@@ -417,6 +417,9 @@ class Prediction : public TSelector {
 
   TH2D* h_JetPtvsPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforLeadingTwoforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforHEMcloseLeadingTwoforHTv2Recipe_Exp=0;
+
   TH2D* h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEMbyphotonFractionforHTv2Recipe_Exp=0;
@@ -436,6 +439,8 @@ class Prediction : public TSelector {
   TH2D* h_JetPhivsneutralHadronEnergyFractionforHTv2Recipe_Exp=0;
 
   TH2D* h_JetEtavsPhiforHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforLeadingTwoforHTv2Recipe_Exp=0;
+
   TH2D* h_JetEtavsDPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetEtavschargedHadronEnergyFractionforHTv2Recipe_Exp=0;
@@ -479,6 +484,8 @@ class Prediction : public TSelector {
   TH1D* h_qgLikelihoodforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsEtaforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetEtavsPhiforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetEtavsPhiforLeadingTwoforMHTminusHTv2Recipe_Exp=0;
+
   TH2D* h_JetEtavsPhiforHighPtforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetIdxvsEtaforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetMultvsEtaforMHTminusHTv2Recipe_Exp=0;
@@ -494,6 +501,7 @@ class Prediction : public TSelector {
   TH2D* h_JetPtvsPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforHEMcloseLeadingTwoforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp=0;
