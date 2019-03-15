@@ -29,10 +29,11 @@ void MakePrediction_Signal(const char *InputTxtFile,const char * subSampleKey, c
 	int numFiles=1;
 	//const string TxtFilename = argv[1];
 	sprintf(TxtFilename,"%s",InputTxtFile);
+	//	std::cout<<" TxtFilename "<<TxtFilename<<endl;
 	//  ifstream fin(InRootList.c_str());
 	ifstream fin(TxtFilename);
 	while(fin.getline(filenames, 500) ){filesVec.push_back(filenames);}
-	
+	//	std::cout<<" size "<<filesVec.size()<<endl;	
 	const int nChains = 1;
 	TChain *Effchain[nChains];
 	for(Int_t i=0; i<nChains; i++){

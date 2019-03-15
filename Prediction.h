@@ -35,12 +35,12 @@ const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false;
+bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;
+
 // Use TFs with/without SFs
-const bool applySFs =true; //check:true only for data
+const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.8484;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
@@ -82,7 +82,7 @@ const bool applyFilters=true;
 
 const double minHT_=300;
 //const double minHT_=250;
-const double minMHT_=250; 
+const double minMHT_=250;
 const double minNJets_=1.5;
 const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
@@ -128,8 +128,6 @@ class Prediction : public TSelector {
   TH1D* h_MHT_Exp=0;
   TH1D* h_MHTPhi_Exp=0;
   //  TH2D* h_MHTPhivsHTRatio_Exp=0;
-  TH2F* jMap=0;
-  TH2F* pMap=0;
 
   TH1D* h_MET_Exp=0;
   TH1D* h_METPhi_Exp=0;
@@ -142,18 +140,6 @@ class Prediction : public TSelector {
   TH1D* h_DphiFour_Exp=0;
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
-  TH1D* h_LepEta50_Exp=0;
-  TH1D* h_LepEta100_Exp=0;
-  TH1D* h_LepEta200_Exp=0;
-  TH1D* h_LepEtaInEle_Exp=0;
-  TH1D* h_LepEta50InEle_Exp=0;
-  TH1D* h_LepEta100InEle_Exp=0;
-  TH1D* h_LepEta200InEle_Exp=0;
-  TH1D* h_LepEtaInMu_Exp=0;
-  TH1D* h_LepEta50InMu_Exp=0;
-  TH1D* h_LepEta100InMu_Exp=0;
-  TH1D* h_LepEta200InMu_Exp=0;
-
   TH1D* h_LepPhi_Exp=0;
   TH1D* h_rawJetPtforHT_Exp=0;
   TH1D* h_rawJetPtforMHTminusHT_Exp=0; 
@@ -238,35 +224,6 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200forHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet2To3forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet2To3forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100Njet2To3forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet2To3forHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet4To6forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet4To6forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100Njet4To6forHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet4To6forHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet7ToAboveforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet7ToAboveforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100Njet7ToAboveforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet7ToAboveforHTv2Recipe_Exp=0;
-
-
-  TH1D* h_JetEtaInEleforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50InEleforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100InEleforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200InEleforHTv2Recipe_Exp=0;
-  TH1D* h_JetEtaInMuforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50InMuforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta100InMuforHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200InMuforHTv2Recipe_Exp=0;
-
   TH1D* h_JetPhiforHTv2Recipe_Exp=0;
   TH1D* h_JetPtforLowNJetforHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforLowNJetforHTv2Recipe_Exp=0;
@@ -346,38 +303,6 @@ class Prediction : public TSelector {
   TH1D* h_JetPhiforMHTminusHTv2RecipeNotLead_Exp=0;
   TH1D* h_JetPtforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_JetEtaforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50forMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100forMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200forMHTminusHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet2To3forMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet2To3forMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100Njet2To3forMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet2To3forMHTminusHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet4To6forMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet4To6forMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100Njet4To6forMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet4To6forMHTminusHTv2Recipe_Exp=0;
-
-  TH1D* h_JetEtaNjet7ToAboveforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50Njet7ToAboveforMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100Njet7ToAboveforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200Njet7ToAboveforMHTminusHTv2Recipe_Exp=0;
-
-
-
-
-
-  TH1D* h_JetEtaInEleforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50InEleforMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100InEleforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200InEleforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEtaInMuforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta50InMuforMHTminusHTv2Recipe_Exp=0; 
-  TH1D* h_JetEta100InMuforMHTminusHTv2Recipe_Exp=0;
-  TH1D* h_JetEta200InMuforMHTminusHTv2Recipe_Exp=0;
-
   TH1D* h_JetPhiforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiOneforMHTminusHTv2Recipe_Exp=0;
   TH1D* h_DphiTwoforMHTminusHTv2Recipe_Exp=0;
@@ -482,6 +407,12 @@ class Prediction : public TSelector {
   SearchBins *SearchBinsQCD_ =0;
   SearchBins *SearchBins_BTags_ =0;
   SearchBins *SearchBinsQCD_BTags_ =0;
+  int PassSkim=0;
+  int PassLep=0;
+  int PassmT=0;
+  int PassBaseline=0;
+  int PassFilter=0;
+  int PassSearchBin=0;
 
   Int_t           isoTracksNum;
   UShort_t JetsNum_;
@@ -541,7 +472,6 @@ class Prediction : public TSelector {
   //Bool_t           eeBadSc4Filter;
   std::vector<TLorentzVector> *GenElectrons=0;
   std::vector<TLorentzVector> *GenMuons=0;
-  std::vector<TLorentzVector> *Photons=0;
   Int_t          HBHENoiseFilter;
   Int_t          HBHEIsoNoiseFilter;
   Double_t        HT;
@@ -669,7 +599,6 @@ class Prediction : public TSelector {
   //TBranch        *b_eeBadSc4Filter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
   TBranch        *b_GenMuons=0;   //!
-  TBranch        *b_Photons=0;
   TBranch        *b_HBHENoiseFilter=0;   //!
   TBranch        *b_HBHEIsoNoiseFilter=0;   //!
   TBranch        *b_HT=0;   //!
@@ -831,13 +760,6 @@ void Prediction::Init(TTree *tree)
   ////////////////////////
   //////// End Options
   ///////////////////////
-
-  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2016BtoH.root", "READ");
-  jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2016BtoH")->Clone();
-  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2016BtoH.root", "READ");
-  pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2016BtoH")->Clone();
-
-
 
   // Open histograms with TFs
   TFile *TF_histFile = TFile::Open("TF.root", "READ");
@@ -1024,7 +946,7 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("GenMuons", 1);
   }  
   
-  fChain->SetBranchStatus("Photons", 1); 
+
   if(!runOnData){
     fChain->SetBranchStatus("Weight", 1);
     fChain->SetBranchStatus("Jets_hadronFlavor", 1);
@@ -1154,7 +1076,6 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
     fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
   }  
-  fChain->SetBranchAddress("Photons", &Photons, &b_Photons);
   if(!runOnData){
     fChain->SetBranchAddress("Weight", &Weight, &b_Weight);
     fChain->SetBranchAddress("Jets_hadronFlavor", &Jets_hadronFlavor, &b_Jets_hadronFlavor);
