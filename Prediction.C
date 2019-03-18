@@ -570,7 +570,10 @@ Bool_t Prediction::Process(Long64_t entry)
   else
     return kTRUE;
 
-    //    std::cout<<" Evtnum "<<EvtNum<<" run "<<RunNum<<" ht "<<HT<<" mht "<<MHT<<" mad "<<madHT<<std::endl;
+
+
+  if(entry%1000==0)
+    std::cout<<"***Prediction::Process***"<<" entry "<<entry<<" Evtnum "<<EvtNum<<" run "<<RunNum<<" njets "<<NJets<<" ht "<<HT<<" mht "<<MHT<<std::endl;
 
   //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
@@ -659,7 +662,8 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   //*AR-181016: Recalculation of search variables after applying MET v2-recipe
   for(unsigned j = 0; j < Jets->size(); ++j){
-    double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
+    
+    //double jetPtv2Recipe= Jets->at(j).Pt()/Jets_jecFactor->at(j);
     if(PhiLeadJet==-99.) 
       PhiLeadJet=Jets->at(j).Phi();
     //    std::cout<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<fabs(Jets->at(j).Eta())<<endl;
@@ -680,6 +684,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(Jets_bDiscriminatorCSV->at(jetIdx)>csvForBtag)
       BTagsv2Recipe++;
   }
+
   //  std::cout<<" htsize "<<HTJetsIdxv2Recipe.size()<<" njetsv2 "<<NJetsv2Recipe<<endl;
   for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
     int jetIdx=MHTJetsIdxv2Recipe[i];
@@ -687,7 +692,6 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
-
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
     if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<2.4){
@@ -726,7 +730,7 @@ Bool_t Prediction::Process(Long64_t entry)
     HTDeltaPhi3v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(HTJetsIdxv2Recipe[2]).Phi() - MHTPhiv2Recipe ));
   if(HTJetsIdxv2Recipe.size()>3)
     HTDeltaPhi4v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(HTJetsIdxv2Recipe[3]).Phi() - MHTPhiv2Recipe ));
-
+  
   //*AR-181017: get Dphi for leading 4 (MHT-HT) jets
 
   if(MHTminusHTJetsIdxv2Recipe.size()>0)
@@ -772,6 +776,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }  
     newGenMHT=newGenMHT3Vec.Pt();
   } //end of runOnSignalMC
+  //  std::cout<<" entry "<<entry<<" seg vio "<<endl;
 
   double LepPt=-99.0;
   double LepEta=-99.0;
@@ -781,6 +786,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
   if(!GetSignalRegHists){
     if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+
     if(MuonsNum_==1){
       for(unsigned int i=0;i<Muons->size();i++){
 	//if(Muons_passIso->at(i)){
@@ -801,13 +807,13 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
 
-    if(LepPt<20 || fabs(LepEta)>2.1) 
-      return kTRUE;
+    //    if(LepPt<20 || fabs(LepEta)>2.1) 
+    //return kTRUE;
   } //end of if(!GetSignalRegHists)
   else
     if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
-  PassLep++;
-
+  PassLep++;  
+  
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -817,6 +823,8 @@ Bool_t Prediction::Process(Long64_t entry)
     if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
 
   }
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" check baseline "<<endl;
+
   //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
   //for low dphi: only events with either of dphis<(0.5,0.5,0.3,0.3)
   if(NJetsv2Recipe>=4){
@@ -835,13 +843,14 @@ Bool_t Prediction::Process(Long64_t entry)
     return kTRUE;
 
   PassBaseline++;
-
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" pass baseline deltaPhi"<<endl;
   
   //  if(useDeltaPhiCut == 1)  if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
   //  if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
   
   if(applyFilters &&  !FiltersPass() ) return kTRUE;
   PassFilter++;
+
   //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
 
   //*AR: initialize skim path
@@ -850,6 +859,7 @@ Bool_t Prediction::Process(Long64_t entry)
   if(runOnStandardModelMC)
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
 
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" muon skim path default "<<endl;
 
 
 
@@ -885,6 +895,10 @@ Bool_t Prediction::Process(Long64_t entry)
       return kTRUE;
     }
   }
+
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" get skim file path"<<endl;
+
+  
 /*
   for(unsigned i=0;i<TriggerNames->size();i++){
     std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
@@ -910,6 +924,8 @@ Bool_t Prediction::Process(Long64_t entry)
   //*AR-181016: Use only events falling into search bins
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
   PassSearchBin++;
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" fall in search bin "<<endl;
+
   bool HTMatch=true;
   bool NJetMatch=true;
   bool MHTMatch=true;
@@ -946,7 +962,6 @@ Bool_t Prediction::Process(Long64_t entry)
   //if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
   //return kTRUE;
   h_YieldCutFlow->Fill(1.0);
-  //  std::cout<<" seg vio "<<endl;
   //  std::cout<<" evt falling in search bin "<<endl;
   //*AR: 180917- Initialization of vectors
   bTagProb = {1, 0, 0, 0};
@@ -1003,7 +1018,8 @@ Bool_t Prediction::Process(Long64_t entry)
   if(!runOnData){
     //    string GetFastSimSkim=Skmname.c_str();
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
-    //    std::cout<<" currentTree "<<currentTree<<endl;
+
+    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
     if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
@@ -1012,30 +1028,29 @@ Bool_t Prediction::Process(Long64_t entry)
       TObjArray *optionArray = currentTree.Tokenize("/");
       TString currFileName = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
       currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
-
       std::cout<<" currentFile "<<currentFile<<endl;
       string skimName="tree_TTJets_SingleLeptFromT.root";
       char SkimFile[500];
-      if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
-      else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT.root"; 
-      else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept.root";
-      else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800.root";
-      else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200.root";
-      else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500.root";
-      else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf.root";
+      if(currentFile.find("TTbar_Tbar_SingleLep")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar.root"; 
+      else if(currentFile.find("TTbar_T_SingleLep")!=string::npos) skimName="tree_TTJets_SingleLeptFromT.root"; 
+      else if(currentFile.find("TTbar_DiLept")!=string::npos)skimName="tree_TTJets_DiLept.root";
+      else if(currentFile.find("TTbar_HT_600_800")!=string::npos)skimName="tree_TTJets_HT-600to800.root";
+      else if(currentFile.find("TTbar_HT_800_1200")!=string::npos)skimName="tree_TTJets_HT-800to1200.root";
+      else if(currentFile.find("TTbar_HT_1200_2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500.root";
+      else if(currentFile.find("TTbar_HT_2500_Inf")!=string::npos)skimName="tree_TTJets_HT-2500toInf.root";
       else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets.root";
-      else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200.root";
-      else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400.root";
-      else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600.root";
-      else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800.root";
-      else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200.root";
-      else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500.root";
-      else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf.root"; 
-      else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop.root";
+      else if(currentFile.find("WJet_100_200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200.root";
+      else if(currentFile.find("WJet_200_400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400.root";
+      else if(currentFile.find("WJet_400_600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600.root";
+      else if(currentFile.find("WJet_600_800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800.root";
+      else if(currentFile.find("WJet_800_1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200.root";
+      else if(currentFile.find("WJet_1200_2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500.root";
+      else if(currentFile.find("WJet_2500_Inf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf.root"; 
+      else if(currentFile.find("ST_tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop.root";
       else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top.root";
-      else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
-      else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
-      else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+      else if(currentFile.find("t_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
+      else if(currentFile.find("t_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
+      else if(currentFile.find("s_channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
       else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
       else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
       else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
@@ -1058,13 +1073,14 @@ Bool_t Prediction::Process(Long64_t entry)
 	vector<string> skimInput = skmInput(string(currFileName));
 	//	std::cout<<" 0 "<<skimInput[0]<<" 1 "<<skimInput[1]<<" 2 "<<skimInput[2]<<" 3 "<<skimInput[3]<<" 4 "<<skimInput[4]<<endl;
 	sprintf(SkimFile,"%s/tree_%s_%s_%s_fast.root",SkimFilePath.c_str(),skimInput[0].c_str(),skimInput[2].c_str(),skimInput[4].c_str());
+	std::cout<<" SkimFile "<<SkimFile<<endl;
       }
       else
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 
       //std::cout<<" currFileName "<<currFileName<<" skimFile "<<SkimFile<<endl;
       TFile *skimFile = TFile::Open(SkimFile, "READ");	
-
+      
       //*AR: 180619-Sets attributes of isrcorr and btagcorr for a new tree 
       if(doISRcorr){//true only for signal MC
 	TFile *skimFile = TFile::Open(SkimFile, "READ");
@@ -1125,7 +1141,8 @@ Bool_t Prediction::Process(Long64_t entry)
           return kTRUE;
         }
       } //end of runOnSignalMC
-
+      std::cout<<" seg vio "<<endl;
+	
       //*AR- Get relative weight of susy signal event based on mother mass for every new tree
       if(runOnSignalMC){
 	TFile *skimFile = TFile::Open(SkimFile, "READ");
@@ -1165,7 +1182,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(Weight < 0)
       return kTRUE;
     
-    if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos || currentFile.find("TTJets_SingleLeptFromT")!=string::npos || currentFile.find("DiLept")!=string::npos){
+    if(currentFile.find("TTbar_Tbar_SingleLep")!=string::npos || currentFile.find("TTbar_T_SingleLep")!=string::npos || currentFile.find("DiLept")!=string::npos){
       madHTcut=600;
       if(madHT > madHTcut){
 	//	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
@@ -1280,9 +1297,9 @@ Bool_t Prediction::Process(Long64_t entry)
 
 
   if(runOnSignalMC){
-    //Account for efficiency of JetID since we cannot apply it on fastSim
+    //Account for efficiency of Jets_ID since we cannot apply it on fastSim
     Weight *= 0.99;
-    //std::cout<<" weight_afterJetID "<<Weight<<endl;
+    //std::cout<<" weight_afterJets_ID "<<Weight<<endl;
   }
   //*AR: true only for signal MC and useGenHTMHT=false
   if(useTriggerEffWeight){ // false for SM MC
@@ -1316,6 +1333,7 @@ Bool_t Prediction::Process(Long64_t entry)
   double LeadMHTminusHTJetPt=-99;
   bool foundLeadHTJet=false;
   bool foundLeadMHTminusHTJet=false;
+  /*
   for(unsigned j = 0; j < Jets->size(); ++j){
     if(Jets->at(j).Pt()>30 && fabs(Jets->at(j).Eta()) <2.4){
       double rawPt=Jets->at(j).Pt()/Jets_jecFactor->at(j);
@@ -1360,7 +1378,7 @@ Bool_t Prediction::Process(Long64_t entry)
       h_JetPtvsEtaforMHTminusHT_Exp->Fill(Jets->at(j).Pt(),Jets->at(j).Eta());
     }
   }  //end of jet pT, eta distribution in default case
-    
+   */ 
   
   //*AR:181016-jet pT, eta distribution of those contributing to HT and excess ones contributing to  MHT after applying MET-v2 recipe
   double LeadHTJetv2RecipePt=-99;
@@ -1372,7 +1390,7 @@ Bool_t Prediction::Process(Long64_t entry)
 
   bool foundLeadHTJetv2Recipe=false;
   bool foundLeadMHTminusHTJetv2Recipe=false;
-
+  /*
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
     int jetIdx=HTJetsIdxv2Recipe[i]; 
     double rawPt=Jets->at(jetIdx).Pt()/Jets_jecFactor->at(jetIdx);
@@ -1474,9 +1492,9 @@ Bool_t Prediction::Process(Long64_t entry)
 
   }
 
+*/
 
-
-
+  /*
 
   for(unsigned int i=0;i<MHTminusHTJetsIdxv2Recipe.size();i++){
     int jetIdx=MHTminusHTJetsIdxv2Recipe[i]; 
@@ -1562,7 +1580,7 @@ Bool_t Prediction::Process(Long64_t entry)
     h_JetPhivsneutralHadronEnergyFractionforMHTminusHTv2Recipe_Exp->Fill(Jets->at(jetIdx).Phi(),Jets_neutralHadronEnergyFraction->at(jetIdx));
 
   }
-  
+  */
   /*
 
 
@@ -1699,12 +1717,14 @@ Bool_t Prediction::Process(Long64_t entry)
     }else{ //true for SM and signal MC
       TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
     }
-    HTRatio=HT5/HT;
-    HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
-    RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
+
+    //    HTRatio=HT5/HT;
+    //HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
+    //RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
 //std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" *** Seg Vio3 *** "<<endl;
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
+    
     h_HT_Exp->Fill(HT,WeightBtagProb);
     h_HT5_Exp->Fill(HT5,WeightBtagProb);
     h_HTRatio_Exp->Fill(HTRatio,WeightBtagProb);
@@ -1841,6 +1861,7 @@ void Prediction::SlaveTerminate()
   //std::cout<<"--- QCD binning ---"<<std::endl;
   //SearchBinsQCD_->PrintUsed();
   std::cout<<" PassSkim "<<PassSkim<<" PassLep "<<PassLep<<" PassBaseline "<<PassBaseline<<" PassFilter "<<PassFilter<<" PassmT "<<PassmT<<" PassSearchBin "<<PassSearchBin<<endl;
+
   std::cout<<"--- Search bins ---"<<std::endl;
   SearchBins_->PrintUsed();  
 }
@@ -2464,12 +2485,21 @@ bool Prediction::FiltersPass()
     }    
   }
   if(NVtx<=0) result=false;
-
+  //std::cout<<" nvtx "<<endl;
   // Do not apply on fastSim samples!
-  if(!runOnSignalMC) if(!JetID) result=false;
-
+  //  if(!runOnSignalMC) if(!Jets_ID) result=false;
+  if(result && !runOnSignalMC){
+    for(unsigned j = 0; j < Jets->size(); j++){
+      bool PassJetID=Jets_ID->at(j);
+      if(!PassJetID){
+	result=false;
+	break;
+      }
+    }
+  }
   // Preliminary filters
   if(PFCaloMETRatio>5) result=false;
+  //  std::cout<<" pfcalometratio "<<endl;
 
   // Check efficiency of filter
   
@@ -2488,6 +2518,7 @@ bool Prediction::FiltersPass()
     for(unsigned j = 0; j < Jets->size(); ++j){
       if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
       bool genMatched = false;
+      std::cout<<" GenJets_size "<<GenJets->size()<<endl;
       for(unsigned g = 0; g < GenJets->size(); ++g){
 	if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
 	  genMatched = true;

@@ -32,10 +32,10 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= true;
+bool GetSignalRegHists= false;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 
@@ -490,7 +490,6 @@ class Prediction : public TSelector {
   Int_t           isoElectronTracksNum;
   Int_t           isoMuonTracksNum;
   Int_t           isoPionTracksNum;
-  Bool_t          JetID;
   std::vector<bool> *Muons_passIso=0;
   std::vector<bool> *Electrons_passIso=0;
 
@@ -517,6 +516,7 @@ class Prediction : public TSelector {
   std::vector<int>     *Jets_hadronFlavor=0;
   std::vector<double>     *Jets_chargedHadronEnergyFraction=0;
   std::vector<bool>    *Jets_HTMask=0;
+  std::vector<bool>    *Jets_ID=0;
   Double_t        METPhi;
   Double_t        MET;
   Double_t        METPhiclean;
@@ -615,7 +615,7 @@ class Prediction : public TSelector {
   TBranch        *b_Muons_passIso=0;
   TBranch        *b_Electrons_passIso=0;
 
-  TBranch        *b_JetID=0;   //!
+  TBranch        *b_Jets_ID=0;   //!
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
@@ -772,12 +772,15 @@ void Prediction::Init(TTree *tree)
   TFile* skimfile = temp->GetFile();
 
   std::string baseName(infname);
+  std::cout<<" basename1 "<<baseName<<endl;
   size_t pos=baseName.rfind("/");
   if(pos!=std::string::npos){
     if(pos!=baseName.size()-1){
       baseName.erase(0,pos+1);
     }
   }
+  std::cout<<" basename2 "<<baseName<<endl;
+
   pos=baseName.rfind(".root");
   if(pos!=std::string::npos){
     if(pos!=baseName.size()-1){
@@ -889,7 +892,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("isoElectronTracks", 1);
   fChain->SetBranchStatus("isoMuonTracks", 1);
   fChain->SetBranchStatus("isoPionTracks", 1);
-  fChain->SetBranchStatus("JetID", 1);
+  fChain->SetBranchStatus("Jets_ID", 1);
   fChain->SetBranchStatus("Jets", 1);
   fChain->SetBranchStatus("Jets_HTMask", 1);
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
@@ -1036,7 +1039,7 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("isoElectronTracks", &isoElectronTracksNum, &b_isoElectronTracksNum);
   fChain->SetBranchAddress("isoMuonTracks", &isoMuonTracksNum, &b_isoMuonTracksNum);
   fChain->SetBranchAddress("isoPionTracks", &isoPionTracksNum, &b_isoPionTracksNum);
-  fChain->SetBranchAddress("JetID", &JetID, &b_JetID);
+  fChain->SetBranchAddress("Jets_ID", &Jets_ID, &b_Jets_ID);
   fChain->SetBranchAddress("Jets", &Jets, &b_Jets);
   fChain->SetBranchAddress("Jets_HTMask", &Jets_HTMask, &b_Jets_HTMask);
 
