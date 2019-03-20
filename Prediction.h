@@ -419,6 +419,7 @@ class Prediction : public TSelector {
   TH2D* h_JetPtvsDPhiforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforLeadingTwoforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforHEMcloseLeadingTwoforHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforRedSpotsLeadingTwoforHTv2Recipe_Exp=0;
 
   TH2D* h_JetPtvschargedEmEnergyFractionforHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforHTv2Recipe_Exp=0;
@@ -502,6 +503,8 @@ class Prediction : public TSelector {
   TH2D* h_JetPtvsDPhiforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforLeadingTwoforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsDPhiforHEMcloseLeadingTwoforMHTminusHTv2Recipe_Exp=0;
+  TH2D* h_JetPtvsDPhiforRedSpotsLeadingTwoforMHTminusHTv2Recipe_Exp=0;
+
   TH2D* h_JetPtvschargedEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEmEnergyFractionforMHTminusHTv2Recipe_Exp=0;
   TH2D* h_JetPtvsneutralEMbyphotonFractionforMHTminusHTv2Recipe_Exp=0;
