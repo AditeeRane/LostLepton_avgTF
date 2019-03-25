@@ -98,7 +98,18 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_LepEtaclean_Exp=new TH1D("h_LepEtaclean_Exp","h_LepEtaclean_Exp",10,-2.5,2.5);
   h_LepPhiclean_Exp=new TH1D("h_LepPhiclean_Exp","h_LepPhiclean_Exp",7,-3.5,3.5);
 
+  h_HTv2Recipe_BeforeBaseline_Exp =new TH1D("h_HTv2Recipe_BeforeBaseline_Exp","h_HTv2Recipe_BeforeBaseline_Exp",12,100,2500);
+  h_MHTv2Recipe_BeforeBaseline_Exp =new TH1D("h_MHTv2Recipe_BeforeBaseline_Exp","h_MHTv2Recipe_BeforeBaseline_Exp",16,200,1000);
+  h_NJetv2Recipe_BeforeBaseline_Exp =new TH1D("h_NJetv2Recipe_BeforeBaseline_Exp","h_NJetv2Recipe_BeforeBaseline_Exp",10,2,12);
+  h_NBtagv2Recipe_BeforeBaseline_Exp =new TH1D("h_NBtagv2Recipe_BeforeBaseline_Exp","h_NBtagv2Recipe_BeforeBaseline_Exp",5,0,5);
+  h_DphiOnev2Recipe_BeforeBaseline_Exp =new TH1D("h_DphiOnev2Recipe_BeforeBaseline_Exp","h_DphiOnev2Recipe_BeforeBaseline_Exp",32,0,3.2);
+  h_DphiTwov2Recipe_BeforeBaseline_Exp =new TH1D("h_DphiTwov2Recipe_BeforeBaseline_Exp","h_DphiTwov2Recipe_BeforeBaseline_Exp",32,0,3.2);
+  h_DphiThreev2Recipe_BeforeBaseline_Exp =new TH1D("h_DphiThreev2Recipe_BeforeBaseline_Exp","h_DphiThreev2Recipe_BeforeBaseline_Exp",32,0,3.2);
+  h_DphiFourv2Recipe_BeforeBaseline_Exp =new TH1D("h_DphiFourv2Recipe_BeforeBaseline_Exp","h_DphiFourv2Recipe_BeforeBaseline_Exp",32,0,3.2);
+
+
   h_HTv2Recipe_Exp =new TH1D("h_HTv2Recipe_Exp","h_HTv2Recipe_Exp",12,100,2500);
+
   h_HTforLowNJetv2Recipe_Exp =new TH1D("h_HTforLowNJetv2Recipe_Exp","h_HTforLowNJetv2Recipe_Exp",12,100,2500);
   h_HTforHighNJetv2Recipe_Exp =new TH1D("h_HTforHighNJetv2Recipe_Exp","h_HTforHighNJetv2Recipe_Exp",12,100,2500);
 
@@ -370,6 +381,15 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_LepEtaclean_Exp);
   GetOutputList()->Add(h_LepPhiclean_Exp); 
 
+  GetOutputList()->Add(h_HTv2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_MHTv2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_NJetv2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_NBtagv2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_DphiOnev2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_DphiTwov2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_DphiThreev2Recipe_BeforeBaseline_Exp);
+  GetOutputList()->Add(h_DphiFourv2Recipe_BeforeBaseline_Exp);
+
   GetOutputList()->Add(h_HTv2Recipe_Exp);
   GetOutputList()->Add(h_HTforLowNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTforHighNJetv2Recipe_Exp);
@@ -565,11 +585,13 @@ Bool_t Prediction::Process(Long64_t entry)
 
   resetValues();
   fChain->GetTree()->GetEntry(entry);
+
+  /*
   if(HT>200 && MHT>200 && madHT<=600)
     PassSkim++;
   else
     return kTRUE;
-
+*/
 
 
   if(entry%1000==0)
@@ -813,7 +835,23 @@ Bool_t Prediction::Process(Long64_t entry)
   else
     if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
   PassLep++;  
-  
+
+  if(GetSignalRegHists){
+    if(isoTracksNum ==0){
+      h_HTv2Recipe_BeforeBaseline_Exp->Fill(HTv2Recipe,Weight*scaleFactorWeight);
+      h_MHTv2Recipe_BeforeBaseline_Exp->Fill(MHTv2Recipe,Weight*scaleFactorWeight);
+      h_NJetv2Recipe_BeforeBaseline_Exp->Fill(NJetsv2Recipe,Weight*scaleFactorWeight);
+      h_NBtagv2Recipe_BeforeBaseline_Exp->Fill(BTagsv2Recipe,Weight*scaleFactorWeight);
+      if(NJetsv2Recipe>=2){
+	h_DphiOnev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi1v2Recipe,Weight*scaleFactorWeight);
+	h_DphiTwov2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi2v2Recipe,Weight*scaleFactorWeight);
+      }
+      if(NJetsv2Recipe>=3)
+	h_DphiThreev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi3v2Recipe,Weight*scaleFactorWeight);
+      if(NJetsv2Recipe>=4)
+	h_DphiFourv2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi4v2Recipe,Weight*scaleFactorWeight);
+    }
+  }
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
@@ -1019,7 +1057,7 @@ Bool_t Prediction::Process(Long64_t entry)
     //    string GetFastSimSkim=Skmname.c_str();
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
 
-    std::cout<<" currentTree "<<currentTree<<endl;
+    //    std::cout<<" currentTree "<<currentTree<<endl;
     //*AR- Only runs for every new tree
     if(currentTree != treeName || SkimFilePath!=OldSkimFilePath){ //treeName = " "
       //  std::cout<<" new tree or new skimfile "<<endl;
@@ -1051,6 +1089,8 @@ Bool_t Prediction::Process(Long64_t entry)
       else if(currentFile.find("t_top")!=string::npos)skimName="tree_ST_t-channel_top.root";
       else if(currentFile.find("t_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop.root"; 
       else if(currentFile.find("s_channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+      else if(currentFile.find("s_channel")!=string::npos)skimName="tree_ST_s-channel.root"; 
+
       else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
       else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
       else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
@@ -1065,6 +1105,20 @@ Bool_t Prediction::Process(Long64_t entry)
       else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
       else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
       else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      else if(currentFile.find("ZJet_HT_100_200")!=string::npos)skimName="tree_ZJetsToNuNu_HT-100to200.root";
+      else if(currentFile.find("ZJet_HT_200_400")!=string::npos)skimName="tree_ZJetsToNuNu_HT-200to400.root";
+      else if(currentFile.find("ZJet_HT_400_600")!=string::npos)skimName="tree_ZJetsToNuNu_HT-400to600.root";
+      else if(currentFile.find("ZJet_HT_600_800")!=string::npos)skimName="tree_ZJetsToNuNu_HT-600to800.root";
+      else if(currentFile.find("ZJet_HT_800_1200")!=string::npos)skimName="tree_ZJetsToNuNu_HT-800to1200.root";
+      else if(currentFile.find("ZJet_HT_1200_2500")!=string::npos)skimName="tree_ZJetsToNuNu_HT-1200to2500.root";
+      else if(currentFile.find("ZJet_HT_2500_Inf")!=string::npos)skimName="tree_ZJetsToNuNu_HT-2500toInf.root";
+      else if(currentFile.find("QCD_HT_200_300")!=string::npos)skimName="tree_QCD_HT-200to300.root";
+      else if(currentFile.find("QCD_HT_300_500")!=string::npos)skimName="tree_QCD_HT-300to500.root";
+      else if(currentFile.find("QCD_HT_500_700")!=string::npos)skimName="tree_QCD_HT-500to700.root";
+      else if(currentFile.find("QCD_HT_700_1000")!=string::npos)skimName="tree_QCD_HT-700to1000.root";
+      else if(currentFile.find("QCD_HT_1000_1500")!=string::npos)skimName="tree_QCD_HT-1000to1500.root";
+      else if(currentFile.find("QCD_HT_1500_2000")!=string::npos)skimName="tree_QCD_HT-1500to2000.root";
+      else if(currentFile.find("QCD_HT_2000_Inf")!=string::npos)skimName="tree_QCD_HT-2000toInf.root";
 
       //*AR: 180619-Gets skim file name for a new tree
 
@@ -1958,6 +2012,14 @@ void Prediction::Terminate()
   h_LepEtaclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtaclean_Exp"));
   h_LepPhiclean_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPhiclean_Exp"));
 
+  h_HTv2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_BeforeBaseline_Exp"));
+  h_MHTv2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_BeforeBaseline_Exp"));
+  h_NJetv2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJetv2Recipe_BeforeBaseline_Exp"));
+  h_NBtagv2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtagv2Recipe_BeforeBaseline_Exp"));
+  h_DphiOnev2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiOnev2Recipe_BeforeBaseline_Exp"));
+  h_DphiTwov2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiTwov2Recipe_BeforeBaseline_Exp"));
+  h_DphiThreev2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiThreev2Recipe_BeforeBaseline_Exp"));
+  h_DphiFourv2Recipe_BeforeBaseline_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFourv2Recipe_BeforeBaseline_Exp"));
 
   h_HTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTv2Recipe_Exp"));
   h_HTforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTforLowNJetv2Recipe_Exp"));
@@ -2223,6 +2285,14 @@ void Prediction::Terminate()
   h_LepEtaclean_Exp->Write(); 
   h_LepPhiclean_Exp->Write(); 
 
+  h_HTv2Recipe_BeforeBaseline_Exp->Write();
+  h_MHTv2Recipe_BeforeBaseline_Exp->Write();
+  h_NJetv2Recipe_BeforeBaseline_Exp->Write();
+  h_NBtagv2Recipe_BeforeBaseline_Exp->Write();
+  h_DphiOnev2Recipe_BeforeBaseline_Exp->Write();
+  h_DphiTwov2Recipe_BeforeBaseline_Exp->Write();
+  h_DphiThreev2Recipe_BeforeBaseline_Exp->Write();
+  h_DphiFourv2Recipe_BeforeBaseline_Exp->Write();
 
   h_HTv2Recipe_Exp->Write();
   h_HTforLowNJetv2Recipe_Exp->Write();

@@ -32,15 +32,15 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool runOnSignalMC = false;  //<-check------------------------
-bool GetSignalRegHists= false;
+bool GetSignalRegHists= true;
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.8484;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 35862.351;
@@ -180,7 +180,18 @@ class Prediction : public TSelector {
   TH1D* h_LepEtaclean_Exp=0;
   TH1D* h_LepPhiclean_Exp=0;
 
+  TH1D* h_HTv2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_MHTv2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_NJetv2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_NBtagv2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_DphiOnev2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_DphiTwov2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_DphiThreev2Recipe_BeforeBaseline_Exp=0;
+  TH1D* h_DphiFourv2Recipe_BeforeBaseline_Exp=0;
+
+
   TH1D* h_HTv2Recipe_Exp=0;
+
   TH1D* h_HTforLowNJetv2Recipe_Exp=0;
   TH1D* h_HTforHighNJetv2Recipe_Exp=0;
   TH1D* h_HT5v2Recipe_Exp=0;
@@ -747,7 +758,7 @@ void Prediction::Init(TTree *tree)
   if(runOnSignalMC) doPUreweighting = true;
   //if(runOnStandardModelMC) doPUreweighting = true;
   // bTag corrections. Use for signal scan
-  //  if(!runOnData && !GetSignalRegHists) doBTagCorr = true;
+  //  if(!runOnData) doBTagCorr = true;
   // ISR corrections.
   if(runOnSignalMC) doISRcorr = true; //<-check---------------------------------------
 

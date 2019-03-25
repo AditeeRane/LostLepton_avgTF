@@ -37,7 +37,8 @@ void MakePrediction_separate(const char *InputTxtFile,const char * subSampleKey,
   const int nChains = 1;
   TChain *Effchain[nChains];
   for(Int_t i=0; i<nChains; i++){
-    Effchain[i] = new TChain("TreeMaker2/PreSelection");
+    std::cout<<" i "<<i<<" add tree "<<endl;
+    Effchain[i] = new TChain("PreSelection");
   }
 
   for(unsigned int in=0; in<filesVec.size(); in++){
