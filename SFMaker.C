@@ -227,18 +227,25 @@ Bool_t SFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
+
     if(AddHEMVeto){
+      bool JetInHEMArea=false;
       for(unsigned j = 0; j < Jets->size(); ++j){
-	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
-	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
-	if(CheckJetPhi && CheckJetEta){
-	  //	std::cout<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.67 && Jets->at(j).Phi() > -1.77;
+	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.2 && Jets->at(j).Eta() > -3.2;
+	double DphiHEMJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(j).Phi() - MHTPhi));
+	if(CheckJetPhi && CheckJetEta && (DphiHEMJetMHT<0.7)){
+	  //if(CheckJetPhi && CheckJetEta){
+	  //	  HEMEve++;
+	  //std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<" dphi "<<DphiHEMJetMHT<<endl;
+	  JetInHEMArea=true;
 	  break;
 	}
       }
-      if(CheckJetPhi && CheckJetEta)
+      if(JetInHEMArea)
 	return kTRUE;  
     }
+    
     //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
     //    std::cout<<" evtweight "<<Weight<<endl;
 
@@ -396,7 +403,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	double getHT5Cut;
 	getHT5Cut = 5.3*(HT5/HT)-4.78;
 	if(!(DeltaPhi1 >= getHT5Cut || HT5/HT < 1.2)){
-	  std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" HT5/HT "<<HT5/HT<<" 5.3*HT5/HT "<<5.3*(HT5/HT)<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  //	  std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" HT5/HT "<<HT5/HT<<" 5.3*HT5/HT "<<5.3*(HT5/HT)<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
 	  return kTRUE;
 	}
       }

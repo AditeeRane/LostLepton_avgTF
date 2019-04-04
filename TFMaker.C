@@ -184,18 +184,25 @@ Bool_t TFMaker::Process(Long64_t entry)
     vector<double> Vec_SF;
     int MuonsNumPassIdIso_=0;
     int ElectronsNumPassIdIso_=0;
+
     if(AddHEMVeto){
+      bool JetInHEMArea=false;
       for(unsigned j = 0; j < Jets->size(); ++j){
-	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.87 && Jets->at(j).Phi() > -1.57;
-	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.4 && Jets->at(j).Eta() > -3.0;
-	if(CheckJetPhi && CheckJetEta){
-	  //	std::cout<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<endl;
+	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.67 && Jets->at(j).Phi() > -1.77;
+	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.2 && Jets->at(j).Eta() > -3.2;
+	double DphiHEMJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(j).Phi() - MHTPhi));
+	if(CheckJetPhi && CheckJetEta && (DphiHEMJetMHT<0.5)){
+	  //if(CheckJetPhi && CheckJetEta){
+	  //	  HEMEve++;
+	  //std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<" dphi "<<DphiHEMJetMHT<<endl;
+	  JetInHEMArea=true;
 	  break;
 	}
       }
-      if(CheckJetPhi && CheckJetEta)
+      if(JetInHEMArea)
 	return kTRUE;  
     }
+
     //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
   //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
     if(JECSys){ 

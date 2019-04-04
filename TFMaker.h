@@ -32,7 +32,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
