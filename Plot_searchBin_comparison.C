@@ -45,8 +45,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
   //*AR:190112- MC expectation
   //  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExpWithBtagProb_0L_190111.root");
-  sprintf(tempname,"Prediction_0_haddData_LLHadtauPred_WithTF2017_RmHEMEleJet_190208.root");
-  
+  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExp_0L_190111.root");
+
   //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
   
   //  sprintf(tempnameAvg,"HadtauPrediction_0_Data_WithBtagSF.root");
@@ -54,7 +54,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_WithTF2017_190129.root");
+  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_WithWidenedHEMvetoForJetsWithDphiPt5Cut_1L_190320.root");
 
  // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
@@ -217,12 +217,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   EstHistDTemp=(TH1D*) LLFileAvg->Get(tempname)->Clone();
   EstHistTemp->Scale(41486.328/59777.551);
   EstHistDTemp->Scale(41486.328/59777.551);
-  GenHistTemp=(TH1D*) LLFile->Get("h_Prediction")->Clone();
-  GenHistDTemp=(TH1D*) LLFile->Get("h_Prediction")->Clone();
-
-  GenHistTemp->Scale(41486.328/59777.551);
-  GenHistDTemp->Scale(41486.328/59777.551);
-
+  GenHistTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
+  GenHistDTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
   /*
   if(doClosurewoIsoTrackVeto){
       GenHistTemp=(TH1D*) dExp->Get("totalExp_woIsoTrack_LL")->Clone();
@@ -547,7 +543,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   sprintf(tempname,"LL+Had#tau background");
   catLeg1->SetHeader(tempname);
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
-  sprintf(tempname,"Prediction-HEMveto");
+  sprintf(tempname,"Direct from simulation");
   catLeg1->AddEntry(GenHist,tempname,"pe");
   //  sprintf(tempname,"MC Expectation");
   //sprintf(tempname,"MC Expectation using BtagProb");
@@ -611,7 +607,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
       //
       //sprintf(ytitlename,"#frac{Estimate - #tau_{had} BG}{#tau_{had} BG} ");
       //*AR-180124----for prediction vs prediction
-      sprintf(ytitlename,"#frac{Aftveto}{Bfrveto}");
+      sprintf(ytitlename,"#frac{Direct}{Prediction}");
       //*AR-180124----for MC exp vs prediction
       //sprintf(ytitlename,"#frac{Avg TF}{Exp} ");
 
@@ -801,7 +797,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   CMS_lumi(canvas, iPeriod, iPos, lumi_sqrtS);
 
   if(doData){
-    sprintf(tempname,"Comparison_Data_Full_Plot_AfterVsBeforeRmHEMEleJetCorrectedTF.pdf");
+    sprintf(tempname,"Comparison_Data_Full_Plot_WidenHEMveto.pdf");
     if (pull==1)    sprintf(tempname,"Comparison_DataPull_Full_Plot.pdf");
   }else{
     if(doClosurewoIsoTrackVeto){

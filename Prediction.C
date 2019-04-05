@@ -1039,9 +1039,10 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //  std::cout<<" runnum1 "<<RunNum<<endl;
 
-  if(runOnData && RunNum>=319077)
+  if(runOnData && RunNum<319077)
     return kTRUE;
   AllEve++;
+  
   //  std::cout<<" AllEve "<<AllEve<<endl;
   if(runOnData && GetSignalRegHists){
     /*
@@ -1050,7 +1051,7 @@ Bool_t Prediction::Process(Long64_t entry)
     
     */
     if(!(RunNum>=315257 && RunNum<=316202)){
-      //  std::cout<<" skip run "<<RunNum<<endl;
+      std::cout<<" skip run "<<RunNum<<endl;
       return kTRUE;
     }
     
@@ -1254,7 +1255,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	  CheckEta=LepEta < -1.4 && LepEta > -3.0;
 	  if(CheckPhi && CheckEta){
 	    HEMEve++;
-	    //	  std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	    //	    std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
 	    break;
 	  }
 	}
