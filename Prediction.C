@@ -52,8 +52,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow->GetXaxis()->SetBinLabel(6,"HBHENoise");
   h_CutFlow->GetXaxis()->SetBinLabel(7,"HBHEIsoNoise");
   h_CutFlow->GetXaxis()->SetBinLabel(8,"EcalDeadCell");
-  h_CutFlow->GetXaxis()->SetBinLabel(9,"eeBadSc");
-  h_CutFlow->GetXaxis()->SetBinLabel(10,"NVtx");
+  h_CutFlow->GetXaxis()->SetBinLabel(9,"BadPFMuon");
+  h_CutFlow->GetXaxis()->SetBinLabel(10,"globalSuperTightHalo");
   h_CutFlow->GetXaxis()->SetBinLabel(11,"JetID");
   h_CutFlow->GetXaxis()->SetBinLabel(12,"PFCaloMETRatio");
   h_CutFlow->GetXaxis()->SetBinLabel(13,"BadMuonJet");
@@ -69,6 +69,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow->GetXaxis()->SetBinLabel(20,"1mu");
   h_CutFlow->GetXaxis()->SetBinLabel(21,"1L-gen");
   h_CutFlow->GetXaxis()->SetBinLabel(22,"Hadtaus");
+  h_CutFlow->GetXaxis()->SetBinLabel(23,"ecalBadCalibReduced");
+  h_CutFlow->GetXaxis()->SetBinLabel(24,"ecalBadCalibReducedExtra");
+  h_CutFlow->GetXaxis()->SetBinLabel(25,"eeBadSc");
+  h_CutFlow->GetXaxis()->SetBinLabel(26,"Nvtx");
 
   h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2);
 
@@ -947,7 +951,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
-  //std::cout<<"***Prediction::Process***"<<" entry "<<entry<<std::endl;
+  //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<" jetid "<<JetID<<std::endl;
   h_CutFlow->Fill(0);
   resetValues();
   fChain->GetTree()->GetEntry(entry);
@@ -1039,8 +1043,8 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //  std::cout<<" runnum1 "<<RunNum<<endl;
 
-  if(runOnData && RunNum<319077)
-    return kTRUE;
+  //  if(runOnData && RunNum<319077)
+  //return kTRUE;
   AllEve++;
   
   //  std::cout<<" AllEve "<<AllEve<<endl;
@@ -1064,6 +1068,7 @@ Bool_t Prediction::Process(Long64_t entry)
   //std::cout<<" entry "<<" jets_size "<<Jets->size()<<" njets "<<NJets<<" btags "<<BTags<<endl;
   //*AR:181016: btags based on csv value instead of using value saved in ntuple
   for(unsigned j = 0; j < Jets->size(); ++j){
+    // std::cout<<" j "<<j<<" pT "<<Jets->at(j).Pt()<<endl;
     double jetCSV=Jets_bJetTagDeepCSVprobb->at(j) + Jets_bJetTagDeepCSVprobbb->at(j);
     if(jetCSV>csvForBtag && Jets->at(j).Pt() > 30 && fabs(Jets->at(j).Eta())<2.4)
       BTagsfrmCSV++;
@@ -1103,8 +1108,8 @@ Bool_t Prediction::Process(Long64_t entry)
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
 
-  //if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
-  //std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
+  if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
+    std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
 
   /*
   for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
@@ -3662,11 +3667,11 @@ bool Prediction::FiltersPass()
       //      std::cout<<" failed HBHE "<<endl;
     }
     if(result) h_CutFlow->Fill(5);
+
     if(HBHEIsoNoiseFilter!=1){
       result=false;
       //      std::cout<<" failed HBHEIso "<<endl;
     }
-
     if(result) h_CutFlow->Fill(6);
     if(EcalDeadCellTriggerPrimitiveFilter!=1){
       result=false;    
@@ -3683,29 +3688,34 @@ bool Prediction::FiltersPass()
     if(BadPFMuonFilter!=1) result=false;
       
     if(result) h_CutFlow->Fill(8);
-    if(BadChargedCandidateFilter!=1) result=false;
+    //    if(BadChargedCandidateFilter!=1) result=false;
 
     if(!runOnSignalMC){
       if(globalSuperTightHalo2016Filter!=1) result=false;
     }
     if(result) h_CutFlow->Fill(9);
+    //std::cout<<" ecalBadCalib "<<ecalBadCalibFilter<<" ecalBadCalibReducedFilter "<<ecalBadCalibReducedFilter<<" ecalBadCalibReducedExtraFilter "<<ecalBadCalibReducedExtraFilter<<endl;
+    if(!ecalBadCalibReducedFilter) result=false;
+    if(result) h_CutFlow->Fill(22);
+    if(!ecalBadCalibReducedExtraFilter) result=false;
+    if(result) h_CutFlow->Fill(23);
 
-    //if(ecalBadCalibFilter!=1) result=false;
     if(runOnData){
       if(eeBadScFilter!=1) result=false;
       // if(globalSuperTightHalo2016Filter!=1) result=false;
     }    
+    if(result) h_CutFlow->Fill(24);
   }
   if(NVtx<=0){
     result=false;
     //    std::cout<<" failed nvtx "<<endl;
   }
-
+  if(result) h_CutFlow->Fill(25);
 
   // Do not apply on fastSim samples!
   if(!runOnSignalMC) if(!JetID){
       result=false;
-      //    std::cout<<" failed jetID "<<endl;
+      std::cout<<"failed jetID "<<endl;
   }
 
   if(result) h_CutFlow->Fill(10);
@@ -3713,7 +3723,7 @@ bool Prediction::FiltersPass()
   if(PFCaloMETRatio>5) result=false;
   if(result) h_CutFlow->Fill(11);
   // Check efficiency of filter
-  
+  //  std::cout<<" PFCaloMETRatio "<<PFCaloMETRatio<<endl;
   if(result)
     for(unsigned j = 0; j < Jets->size(); j++){
       if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
@@ -3724,7 +3734,17 @@ bool Prediction::FiltersPass()
     }
   if(result) h_CutFlow->Fill(12);
 
-
+  //*AR-190406---filter devided to take care of anomalous jets affecting QCD control region
+  if(result)
+    for(unsigned j = 0; j < 1; j++){
+	if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
+	if(Jets_neutralEmEnergyFraction->at(j)<0.03 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
+	  std::cout<<"found bad QCD CR jet"<<std::endl;
+	  result=false;
+	}
+      }
+	  
+	  
   //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
   if(result && runOnSignalMC)
     for(unsigned j = 0; j < Jets->size(); ++j){

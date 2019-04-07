@@ -30,7 +30,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 const bool runOnData = true;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
@@ -44,7 +44,7 @@ const bool ApplyHT5cut=true;
 bool AddHEMVeto=true; //<---true to get 2018 Prediction with HEM affected region
 // Use TFs with/without SFs
 const bool applySFs = true; //check:true only for data
-const double csvForBtag=0.4941;
+const double csvForBtag=0.4184;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 59777.551; //not used for data
 
@@ -613,6 +613,8 @@ class Prediction : public TSelector {
   Bool_t           BadChargedCandidateFilter;
   Bool_t           BadPFMuonFilter;
   Bool_t           ecalBadCalibFilter;
+  Bool_t           ecalBadCalibReducedFilter;
+  Bool_t           ecalBadCalibReducedExtraFilter; 
   Int_t           BTags;
   Int_t           BTagsDeepCSV;
 
@@ -767,6 +769,8 @@ class Prediction : public TSelector {
   TBranch        *b_BadChargedCandidateFilter=0;   //!
   TBranch        *b_BadPFMuonFilter=0;   //!
   TBranch        *b_ecalBadCalibFilter=0;
+  TBranch        *b_ecalBadCalibReducedFilter=0; 
+  TBranch        *b_ecalBadCalibReducedExtraFilter=0; 
   TBranch        *b_CSCTightHaloFilter=0;   //!
   TBranch        *b_DeltaPhi1=0;   //!
   TBranch        *b_DeltaPhi2=0;   //!
@@ -1077,6 +1081,9 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchStatus("HBHENoiseFilter", 1);
     fChain->SetBranchStatus("HBHEIsoNoiseFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibFilter", 1); 
+    fChain->SetBranchStatus("ecalBadCalibReducedFilter", 1);
+    fChain->SetBranchStatus("ecalBadCalibReducedExtraFilter", 1);
+
     if(runOnData){
       fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
       fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
@@ -1246,6 +1253,8 @@ void Prediction::Init(TTree *tree)
     fChain->SetBranchAddress("HBHENoiseFilter", &HBHENoiseFilter, &b_HBHENoiseFilter);
     fChain->SetBranchAddress("HBHEIsoNoiseFilter", &HBHEIsoNoiseFilter, &b_HBHEIsoNoiseFilter);
       fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
+      fChain->SetBranchAddress("ecalBadCalibReducedFilter", &ecalBadCalibReducedFilter, &b_ecalBadCalibReducedFilter);
+      fChain->SetBranchAddress("ecalBadCalibReducedExtraFilter", &ecalBadCalibReducedExtraFilter, &b_ecalBadCalibReducedExtraFilter);
 
     if(runOnData){
       fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
