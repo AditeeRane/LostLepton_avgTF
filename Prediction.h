@@ -46,7 +46,7 @@ bool AddHEMVeto=true; //<---true to get 2018 Prediction with HEM affected region
 const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.4184;
 // Use TFs with/without SFs
-const double scaleFactorWeight = 59777.551; //not used for data
+const double scaleFactorWeight = 59546.381; //not used for data
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
