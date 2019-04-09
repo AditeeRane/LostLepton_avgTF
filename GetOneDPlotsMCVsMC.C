@@ -176,7 +176,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   string var(Var);
 
   sprintf(header,"%s",LegHeader);
-  sprintf(hname,"h_%s_Pre",Var);
+  sprintf(hname,"h_%s_Exp",Var);
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
   sprintf(cname,"h_%s_Pre_%s",Var,Sample);
@@ -193,7 +193,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_NJetv2Recipe_Exp");
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_MHTv2Recipe_Exp");
   TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
-  hTTbarLL->Scale(41486.328/59777.551);
+  hTTbarLL->Scale(59546.381/41486.328);
+  //  hTTbarLL->Scale(41486.328/59777.551);
   /* This block is needed only while comparing btags because MC expectation has btags>4 but not for MC prediction as we use btag prob for MC prediction. This is not the case for Data prediction.
 
   TH1D *hTTbarLLOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
@@ -237,7 +238,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
   TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hname);
-  hTTbarHadtau->Scale(41486.328/59777.551);
+  //  hTTbarHadtau->Scale(41486.328/59777.551);
   /* This block is needed only while comparing btags
 
   TH1D *hTTbarHadtauOrg = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
@@ -316,8 +317,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //  tl->AddEntry(hTTbarHadtau, "Data17F:v1");
   //  tl->AddEntry(hTTbarLL, "Data17F:v2"); 
 
-  tl->AddEntry(hTTbarHadtau, "AfterHEMVeto");
-  tl->AddEntry(hTTbarLL, "BeforeHEMVeto"); 
+  tl->AddEntry(hTTbarHadtau, "2018 MC(V17)");
+  tl->AddEntry(hTTbarLL, "2017 MC(V16)"); 
 
   //  tl->AddEntry(hTTbarHadtau, "Data17(F)");
   //  tl->AddEntry(hTTbarLL, "Data17(B:E)");
@@ -339,7 +340,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * Sample,char const
   //*AR:B:E vs F   
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "41.486 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "59.546 fb^{-1} (13 TeV)");
   
   gPad->Modified();
   
@@ -1101,27 +1102,27 @@ void GetOneDPlotsMCVsMC(){
 
   //*AR: 1L reg MC2017(V16) vs MC2016(V12)
     
-  GetOneDPlotsMCVsMC(1020,"MHT","PredAfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"MHT","Aftveto/Bfrveto",1,0,16,200,1000,0.5,1.5,30000);
+  GetOneDPlotsMCVsMC(1020,"MHTv2Recipe","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"MHT","2018MC/2017MC",1,0,16,200,1000,0.5,1.5,30000);
   
-  GetOneDPlotsMCVsMC(1120,"HT","PredAfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"HT","Aftveto/Bfrveto",1,0,12,100,2500,0.5,1.5,45000);
+  GetOneDPlotsMCVsMC(1120,"HTv2Recipe","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"HT","2018MC/2017MC",1,0,12,100,2500,0.5,1.5,45000);
 
-  GetOneDPlotsMCVsMC(1220,"NJet","PredAfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NJet","Aftveto/Bfrveto",1,0,10,2,12,0.5,1.5,25000);
+  GetOneDPlotsMCVsMC(1220,"NJetv2Recipe","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NJet","2018MC/2017MC",1,0,10,2,12,0.5,1.5,25000);
   
 
-  GetOneDPlotsMCVsMC(1320,"NBtag","PredAfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","0L Region",0.57,0.7,0.87,0.87,"NBtag","Aftveto/Bfrveto",1,0,5,0,5,0.5,1.5,50500);
-  /*
-  GetOneDPlotsMCVsMC(1320,"EleEta","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron #eta","Aftveto/Bfrveto",0,0,10,-2.5,2.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(1320,"NBtagv2Recipe","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"NBtag","2018MC/2017MC",1,0,5,0,5,0.5,1.5,50500);
+  
+  GetOneDPlotsMCVsMC(1320,"EleEta","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron #eta","2018MC/2017MC",0,0,10,-2.5,2.5,0.5,1.5,50500);
 
-  GetOneDPlotsMCVsMC(1320,"ElePhi","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron #phi","Aftveto/Bfrveto",0,0,7,-3.5,3.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(1320,"ElePhi","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron #phi","2018MC/2017MC",0,0,7,-3.5,3.5,0.5,1.5,50500);
 
-  GetOneDPlotsMCVsMC(1320,"ElePt","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron pT","Aftveto/Bfrveto",1,0,20,0,1000,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(1320,"ElePt","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Electron pT","2018MC/2017MC",1,0,20,0,1000,0.5,1.5,50500);
 
-  GetOneDPlotsMCVsMC(1320,"MuEta","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon #eta","Aftveto/Bfrveto",0,0,10,-2.5,2.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(1320,"MuEta","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon #eta","2018MC/2017MC",0,0,10,-2.5,2.5,0.5,1.5,50500);
 
-  GetOneDPlotsMCVsMC(1320,"MuPhi","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon #phi","Aftveto/Bfrveto",0,0,7,-3.5,3.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(1320,"MuPhi","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon #phi","2018MC/2017MC",0,0,7,-3.5,3.5,0.5,1.5,50500);
 
-  GetOneDPlotsMCVsMC(1320,"MuPt","AfterHEMvetoVsBeforeHEMveto","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon pT","Aftveto/Bfrveto",1,0,20,0,1000,0.5,1.5,50500);
-*/
+  GetOneDPlotsMCVsMC(1320,"MuPt","2018MCV17vs2017MCV16","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","1L Region",0.57,0.7,0.87,0.87,"Muon pT","2018MC/2017MC",1,0,20,0,1000,0.5,1.5,50500);
+
   
 
 

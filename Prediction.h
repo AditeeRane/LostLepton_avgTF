@@ -63,7 +63,7 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_94XSF_V3_B_F.csv");
+const string path_bTagCalib("btag/DeepCSV_102XSF_V1_1018_190404.csv");
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
@@ -967,9 +967,11 @@ void Prediction::Init(TTree *tree)
   h_0L1L_SB = (TH1D*) TF_histFile->Get("h_0L1L_SB")->Clone();
   h_0L1L_SF_SB = (TH1D*) TF_histFile->Get("h_0L1L_SF_SB")->Clone();
 
-  TFile *TF_RmHEMEleJet_histFile = TFile::Open("TF_RmHEMEleJet.root", "READ");
-  h_0L1L_RmHEMEleJet_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SB")->Clone();
-  h_0L1L_RmHEMEleJet_SF_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SF_SB")->Clone();
+  if(runOnData){
+    TFile *TF_RmHEMEleJet_histFile = TFile::Open("TF_RmHEMEleJet.root", "READ");
+    h_0L1L_RmHEMEleJet_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SB")->Clone();
+    h_0L1L_RmHEMEleJet_SF_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SF_SB")->Clone();
+  }
 
   TChain* temp = (TChain*)fChain;
   std::string infname=temp->GetFile()->GetName();
