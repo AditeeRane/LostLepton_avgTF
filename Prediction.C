@@ -73,7 +73,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_CutFlow->GetXaxis()->SetBinLabel(24,"ecalBadCalibReducedExtra");
   h_CutFlow->GetXaxis()->SetBinLabel(25,"eeBadSc");
   h_CutFlow->GetXaxis()->SetBinLabel(26,"Nvtx");
-
+  h_CutFlow->GetXaxis()->SetBinLabel(27,"HTMHTNJetOrg"); 
   h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2);
 
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
@@ -1043,8 +1043,8 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //  std::cout<<" runnum1 "<<RunNum<<endl;
 
-  if(runOnData && RunNum<319077)
-    return kTRUE;
+  //  if(runOnData && RunNum>=319077)
+  //return kTRUE;
   AllEve++;
   
   //  std::cout<<" AllEve "<<AllEve<<endl;
@@ -1329,7 +1329,8 @@ Bool_t Prediction::Process(Long64_t entry)
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
   }
   else{
-    //    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    h_CutFlow->Fill(26);
     if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
     h_CutFlow->Fill(3);
   }
@@ -2646,7 +2647,7 @@ Bool_t Prediction::Process(Long64_t entry)
     h_MHT_Pre->Fill(MHTv2Recipe,WeightBtagProb*TF);
     h_NJet_Pre->Fill(NJetsv2Recipe,WeightBtagProb*TF);
     if(doBTagCorr) //true for signal and SM MC
-      h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
+      h_NBtag_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
     else //true for data
       h_NBtag_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
 
@@ -3715,7 +3716,7 @@ bool Prediction::FiltersPass()
   // Do not apply on fastSim samples!
   if(!runOnSignalMC) if(!JetID){
       result=false;
-      std::cout<<"failed jetID "<<endl;
+      //      std::cout<<"failed jetID "<<endl;
   }
 
   if(result) h_CutFlow->Fill(10);
@@ -3736,13 +3737,15 @@ bool Prediction::FiltersPass()
 
   //*AR-190406---filter devided to take care of anomalous jets affecting QCD control region
   if(result)
-    for(unsigned j = 0; j < 1; j++){
+    for(unsigned j = 0; j < Jets->size(); j++){
+      if(j==0){
 	if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
 	if(Jets_neutralEmEnergyFraction->at(j)<0.03 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
-	  std::cout<<"found bad QCD CR jet"<<std::endl;
+	  //	  std::cout<<"found bad QCD CR jet"<<std::endl;
 	  result=false;
 	}
       }
+    }
 	  
 	  
   //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1

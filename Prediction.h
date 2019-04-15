@@ -32,8 +32,8 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false; //true while getting MC expectation
@@ -41,9 +41,9 @@ bool GetSignalRegHists= false; //true while getting MC expectation
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 const bool ApplyHT5cut=true;
-bool AddHEMVeto=true; //<---true to get 2018 Prediction with HEM affected region
+bool AddHEMVeto=false; //<---true to get 2018 Prediction with HEM affected region
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 const double csvForBtag=0.4184;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 59546.381; //not used for data

@@ -16,7 +16,7 @@ rm SFCR_0_haddWJet_.root
 
 hadd SFCR_0_haddWJet_.root `ls SFCR_0_WJet_*_.root`
 
-for i in  t_top tW_top t_antitop tW_antitop s_channel; do
+for i in  tW_top tW_antitop s_channel; do
 
     rm SFCR_0_ST_${i}_.root
     hadd SFCR_0_ST_${i}_.root `ls SFCR_0_ST_${i}_*00.root`

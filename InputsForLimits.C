@@ -793,11 +793,11 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     reLabel(searchBin_LLPlusHadTau_BMistagDn);
     searchBin_LLPlusHadTau_BMistagDn->Write("totalPredBMistagDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_JECSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.96,1.02);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.95,1.04);
     reLabel(searchBin_LLPlusHadTau_JECSysDn);
     searchBin_LLPlusHadTau_JECSysDn->Write("totalPred_JECSysDown_LLPlusHadTau");
     searchBin_MTSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MTSysDn,0.996,1.000);
+    CorrectLowStatBins(searchBin_MTSysDn,0.998,1.000);
     reLabel(searchBin_MTSysDn);
     searchBin_MTSysDn->Write("totalPredMTWSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysPDFDn->Add(searchBin_one); 
@@ -805,7 +805,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     reLabel(searchBin_LLPlusHadTau_AccSysPDFDn);
     searchBin_LLPlusHadTau_AccSysPDFDn->Write("totalPredLepAccSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysScaleDn->Add(searchBin_one); 
-    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.000,1.006);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.000,1.005);
     reLabel(searchBin_LLPlusHadTau_AccSysScaleDn);
     searchBin_LLPlusHadTau_AccSysScaleDn->Write("totalPredLepAccQsquareSysDown_LLPlusHadTau");
     /*
@@ -815,30 +815,30 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     searchBin_MuRecoSysDn->Write("totalPredMuRecoSysDown_LLPlusHadTau");
 */
     searchBin_MuIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIDSysDn,1.0038,1.0042);
+    CorrectLowStatBins(searchBin_MuIDSysDn,1.0035,1.006);
     reLabel(searchBin_MuIDSysDn);
     searchBin_MuIDSysDn->Write("totalPredMuIDSysDown_LLPlusHadTau");
 
 
     searchBin_MuIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIsoSysDn,1.015,1.024);
+    CorrectLowStatBins(searchBin_MuIsoSysDn,1.001,1.003);
     reLabel(searchBin_MuIsoSysDn);
     searchBin_MuIsoSysDn->Write("totalPredMuIsoSysDown_LLPlusHadTau");
 
 
     searchBin_EleRecoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleRecoSysDn,1.004,1.02);
+    CorrectLowStatBins(searchBin_EleRecoSysDn,1.003,1.006);
     reLabel(searchBin_EleRecoSysDn);
     searchBin_EleRecoSysDn->Write("totalPredEleRecoSysDown_LLPlusHadTau");
 
 
     searchBin_EleIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIsoSysDn,1.003,1.004);
+    CorrectLowStatBins(searchBin_EleIsoSysDn,1.003,1.005);
     reLabel(searchBin_EleIsoSysDn);
     searchBin_EleIsoSysDn->Write("totalPredEleIsoSysDown_LLPlusHadTau");
 
     searchBin_EleIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIDSysDn,1.007,1.01);
+    CorrectLowStatBins(searchBin_EleIDSysDn,1.005,1.007);
     reLabel(searchBin_EleIDSysDn);
     searchBin_EleIDSysDn->Write("totalPredEleIDSysDown_LLPlusHadTau");
 

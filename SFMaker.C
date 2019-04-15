@@ -26,6 +26,7 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
   //*AR-180315--histograms and vector of histograms are redefined for every new tree
   // Initialize Histograms
   TH1::SetDefaultSumw2();
+  
   unsigned nSB = SearchBins_->GetNbins();
     if(useCombinedBins) nSB = SearchBins_->GetNbinsCombined();
     h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
@@ -39,25 +40,13 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     h_el_nFoundOnePrompt_SB = new TH1D("h_el_nFoundOnePrompt_SB", "h_el_nFoundOnePrompt_SB", nSB, 0.5, nSB+0.5);
     h_el_nFoundOnePrompt_SF_etaPt = new TH2D("h_el_nFoundOnePrompt_SF_etaPt", "h_el_nFoundOnePrompt_SF_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_nFoundOnePrompt_SF_SB = new TH1D("h_el_nFoundOnePrompt_SF_SB", "h_el_nFoundOnePrompt_SF_SB", nSB, 0.5, nSB+0.5);
-    h_el_nFoundOnePrompt_SF_SB_Track = new TH1D("h_el_nFoundOnePrompt_SF_SB_Track", "h_el_nFoundOnePrompt_SF_SB_Track", nSB, 0.5, nSB+0.5);
-    h_el_nFoundOnePrompt_SF_SB_ID = new TH1D("h_el_nFoundOnePrompt_SF_SB_ID", "h_el_nFoundOnePrompt_SF_SB_ID", nSB, 0.5, nSB+0.5);
-    h_el_nFoundOnePrompt_SF_SB_Iso = new TH1D("h_el_nFoundOnePrompt_SF_SB_Iso", "h_el_nFoundOnePrompt_SF_SB_Iso", nSB, 0.5, nSB+0.5);
-
     h_el_nLostOnePrompt_etaPt = new TH2D("h_el_nLostOnePrompt_etaPt", "h_el_nLostOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_nLostOnePrompt_SB = new TH1D("h_el_nLostOnePrompt_SB", "h_el_nLostOnePrompt_SB", nSB, 0.5, nSB+0.5);
 
     h_el_SFCR_etaPt = new TH2D("h_el_SFCR_etaPt", "h_el_SFCR_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_SFCR_SB = new TH1D("h_el_SFCR_SB", "h_el_SFCR_SB", nSB, 0.5, nSB+0.5);
-    h_el_SFCR_SB_Track = new TH1D("h_el_SFCR_SB_Track", "h_el_SFCR_SB_Track", nSB, 0.5, nSB+0.5);
-    h_el_SFCR_SB_ID = new TH1D("h_el_SFCR_SB_ID", "h_el_SFCR_SB_ID", nSB, 0.5, nSB+0.5);
-    h_el_SFCR_SB_Iso = new TH1D("h_el_SFCR_SB_Iso", "h_el_SFCR_SB_Iso", nSB, 0.5, nSB+0.5);
-
-
     h_el_SFSR_etaPt = new TH2D("h_el_SFSR_etaPt", "h_el_SFSR_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_el_SFSR_SB = new TH1D("h_el_SFSR_SB", "h_el_SFSR_SB", nSB, 0.5, nSB+0.5);
-    h_el_SFSR_SB_Track = new TH1D("h_el_SFSR_SB_Track", "h_el_SFSR_SB_Track", nSB, 0.5, nSB+0.5);
-    h_el_SFSR_SB_ID = new TH1D("h_el_SFSR_SB_ID", "h_el_SFSR_SB_ID", nSB, 0.5, nSB+0.5);
-    h_el_SFSR_SB_Iso = new TH1D("h_el_SFSR_SB_Iso", "h_el_SFSR_SB_Iso", nSB, 0.5, nSB+0.5);
 
     h_mu_nOnePrompt_etaPt = new TH2D("h_mu_nOnePrompt_etaPt", "h_mu_nOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_mu_nOnePrompt_SB = new TH1D("h_mu_nOnePrompt_SB", "h_mu_nOnePrompt_SB", nSB, 0.5, nSB+0.5);    
@@ -65,24 +54,13 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     h_mu_nFoundOnePrompt_SB = new TH1D("h_mu_nFoundOnePrompt_SB", "h_mu_nFoundOnePrompt_SB", nSB, 0.5, nSB+0.5);
     h_mu_nFoundOnePrompt_SF_etaPt = new TH2D("h_mu_nFoundOnePrompt_SF_etaPt", "h_mu_nFoundOnePrompt_SF_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_mu_nFoundOnePrompt_SF_SB = new TH1D("h_mu_nFoundOnePrompt_SF_SB", "h_mu_nFoundOnePrompt_SF_SB", nSB, 0.5, nSB+0.5);
-    h_mu_nFoundOnePrompt_SF_SB_Track = new TH1D("h_mu_nFoundOnePrompt_SF_SB_Track", "h_mu_nFoundOnePrompt_SF_SB_Track", nSB, 0.5, nSB+0.5);
-    h_mu_nFoundOnePrompt_SF_SB_ID = new TH1D("h_mu_nFoundOnePrompt_SF_SB_ID", "h_mu_nFoundOnePrompt_SF_SB_ID", nSB, 0.5, nSB+0.5);
-    h_mu_nFoundOnePrompt_SF_SB_Iso = new TH1D("h_mu_nFoundOnePrompt_SF_SB_Iso", "h_mu_nFoundOnePrompt_SF_SB_Iso", nSB, 0.5, nSB+0.5);
-
     h_mu_nLostOnePrompt_etaPt = new TH2D("h_mu_nLostOnePrompt_etaPt", "h_mu_nLostOnePrompt_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_mu_nLostOnePrompt_SB = new TH1D("h_mu_nLostOnePrompt_SB", "h_mu_nLostOnePrompt_SB", nSB, 0.5, nSB+0.5);
 
     h_mu_SFCR_etaPt = new TH2D("h_mu_SFCR_etaPt", "h_mu_SFCR_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_mu_SFCR_SB = new TH1D("h_mu_SFCR_SB", "h_mu_SFCR_SB", nSB, 0.5, nSB+0.5);
-    h_mu_SFCR_SB_Track = new TH1D("h_mu_SFCR_SB_Track", "h_mu_SFCR_SB_Track", nSB, 0.5, nSB+0.5);
-    h_mu_SFCR_SB_ID = new TH1D("h_mu_SFCR_SB_ID", "h_mu_SFCR_SB_ID", nSB, 0.5, nSB+0.5);
-    h_mu_SFCR_SB_Iso = new TH1D("h_mu_SFCR_SB_Iso", "h_mu_SFCR_SB_Iso", nSB, 0.5, nSB+0.5);
-  
-  h_mu_SFSR_etaPt = new TH2D("h_mu_SFSR_etaPt", "h_mu_SFSR_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
+    h_mu_SFSR_etaPt = new TH2D("h_mu_SFSR_etaPt", "h_mu_SFSR_etaPt", nBins_etaElec-1, bins_etaElec, nBins_pT-1, bins_pT);
     h_mu_SFSR_SB = new TH1D("h_mu_SFSR_SB", "h_mu_SFSR_SB", nSB, 0.5, nSB+0.5);
-    h_mu_SFSR_SB_Track = new TH1D("h_mu_SFSR_SB_Track", "h_mu_SFSR_SB_Track", nSB, 0.5, nSB+0.5);
-    h_mu_SFSR_SB_ID = new TH1D("h_mu_SFSR_SB_ID", "h_mu_SFSR_SB_ID", nSB, 0.5, nSB+0.5);
-    h_mu_SFSR_SB_Iso = new TH1D("h_mu_SFSR_SB_Iso", "h_mu_SFSR_SB_Iso", nSB, 0.5, nSB+0.5);
 
     h_di_nTwoPrompt_SB = new TH1D("h_di_nTwoPrompt_SB", "h_di_nTwoPrompt_SB", nSB, 0.5, nSB+0.5);
     h_di_nOneFoundTwoPrompt_SB = new TH1D("h_di_nOneFoundTwoPrompt_SB", "h_di_nOneFoundTwoPrompt_SB", nSB, 0.5, nSB+0.5);
@@ -107,23 +85,12 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     GetOutputList()->Add(h_el_nFoundOnePrompt_SB);
     GetOutputList()->Add(h_el_nFoundOnePrompt_SF_etaPt);
     GetOutputList()->Add(h_el_nFoundOnePrompt_SF_SB);
-    GetOutputList()->Add(h_el_nFoundOnePrompt_SF_SB_Track);
-    GetOutputList()->Add(h_el_nFoundOnePrompt_SF_SB_ID);
-    GetOutputList()->Add(h_el_nFoundOnePrompt_SF_SB_Iso);
-
     GetOutputList()->Add(h_el_nLostOnePrompt_etaPt);
     GetOutputList()->Add(h_el_nLostOnePrompt_SB);
     GetOutputList()->Add(h_el_SFCR_etaPt);
     GetOutputList()->Add(h_el_SFCR_SB);
-    GetOutputList()->Add(h_el_SFCR_SB_Track);
-    GetOutputList()->Add(h_el_SFCR_SB_ID);
-    GetOutputList()->Add(h_el_SFCR_SB_Iso);
-
     GetOutputList()->Add(h_el_SFSR_etaPt);
     GetOutputList()->Add(h_el_SFSR_SB);
-    GetOutputList()->Add(h_el_SFSR_SB_Track);
-    GetOutputList()->Add(h_el_SFSR_SB_ID);
-    GetOutputList()->Add(h_el_SFSR_SB_Iso);
 
 
     GetOutputList()->Add(h_mu_nOnePrompt_etaPt);
@@ -132,23 +99,12 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     GetOutputList()->Add(h_mu_nFoundOnePrompt_SB);
     GetOutputList()->Add(h_mu_nFoundOnePrompt_SF_etaPt);
     GetOutputList()->Add(h_mu_nFoundOnePrompt_SF_SB);
-    GetOutputList()->Add(h_mu_nFoundOnePrompt_SF_SB_Track);
-    GetOutputList()->Add(h_mu_nFoundOnePrompt_SF_SB_ID);
-    GetOutputList()->Add(h_mu_nFoundOnePrompt_SF_SB_Iso);
-
     GetOutputList()->Add(h_mu_nLostOnePrompt_etaPt);
     GetOutputList()->Add(h_mu_nLostOnePrompt_SB);
     GetOutputList()->Add(h_mu_SFCR_etaPt);
     GetOutputList()->Add(h_mu_SFCR_SB);
-    GetOutputList()->Add(h_mu_SFCR_SB_Track);
-    GetOutputList()->Add(h_mu_SFCR_SB_ID);
-    GetOutputList()->Add(h_mu_SFCR_SB_Iso);
-
     GetOutputList()->Add(h_mu_SFSR_etaPt);
     GetOutputList()->Add(h_mu_SFSR_SB);
-    GetOutputList()->Add(h_mu_SFSR_SB_Track);
-    GetOutputList()->Add(h_mu_SFSR_SB_ID);
-    GetOutputList()->Add(h_mu_SFSR_SB_Iso);
 
     GetOutputList()->Add(h_di_nTwoPrompt_SB);
     GetOutputList()->Add(h_di_nOneFoundTwoPrompt_SB);
@@ -166,7 +122,6 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
     //    vector<TH1*> Vec_scale_el_nOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SB, Vec_scale_el_nFoundOnePrompt_SF_SB,Vec_scale_el_nLostOnePrompt_SB,Vec_scale_el_SFCR_SB,Vec_scale_el_SFSR_SB;
     
     //    vector<TH1*> Vec_scale_mu_nOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SB, Vec_scale_mu_nFoundOnePrompt_SF_SB,Vec_scale_mu_nLostOnePrompt_SB,Vec_scale_mu_SFCR_SB,Vec_scale_mu_SFSR_SB;
-    
     if(ScaleAccSys){
       
       char tempname[200];
@@ -198,7 +153,7 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 	Vec_scale_mu_SFSR_SB.push_back(static_cast<TH1*>(h_mu_SFSR_SB->Clone(tempname)));
       }
     } //end of if(ScaleAccSys)
-    
+
     if(PDFAccSys){
       
       char tempname[200];
@@ -235,14 +190,20 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 
 Bool_t SFMaker::Process(Long64_t entry)
 {
-  //std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<std::endl;
+  //  std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<std::endl;
   
     resetValues();
-
+    
     fChain->GetTree()->GetEntry(entry);
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
-
+    //std::cout<<" entry "<<entry<<" passfilters "<<endl;
+    bool CheckPhi=false;
+    bool CheckEta=false;
+    
+    bool CheckJetPhi=false;
+    bool CheckJetEta=false;
+    
     vector<int> MHTJetsIdxv2Recipe;    
     vector<int> ElectronMatchJetIdxv2Recipe;
     vector<TVector3> NewJets;
@@ -268,7 +229,29 @@ Bool_t SFMaker::Process(Long64_t entry)
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
 
+    //    std::cout<<"scale "<<ScaleWeights->size()<<" pdf "<<PDFWeights->size()<<endl;
+    Scalesize=ScaleWeights->size();
+    PDFsize=PDFWeights->size();    
 
+    if(AddHEMVeto){
+      bool JetInHEMArea=false;
+      for(unsigned j = 0; j < Jets->size(); ++j){
+	CheckJetPhi=Jets->at(j).Pt() > 30 && Jets->at(j).Phi() < -0.67 && Jets->at(j).Phi() > -1.77;
+	CheckJetEta=Jets->at(j).Pt() > 30 && Jets->at(j).Eta() < -1.2 && Jets->at(j).Eta() > -3.2;
+	double DphiHEMJetMHT=fabs(TVector2::Phi_mpi_pi(Jets->at(j).Phi() - MHTPhi));
+	if(CheckJetPhi && CheckJetEta && (DphiHEMJetMHT<0.5)){
+	  //if(CheckJetPhi && CheckJetEta){
+	  //	  HEMEve++;
+	  //std::cout<<" run "<<RunNum<<" entry "<<entry<<" HEM jet "<<" j "<<j<<" pt "<<Jets->at(j).Pt()<<" eta "<<Jets->at(j).Eta()<<" phi "<<Jets->at(j).Phi()<<" dphi "<<DphiHEMJetMHT<<endl;
+	  JetInHEMArea=true;
+	  break;
+	}
+      }
+      if(JetInHEMArea)
+	return kTRUE;  
+    }
+    
+    //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
     //    std::cout<<" evtweight "<<Weight<<endl;
 
 
@@ -344,6 +327,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       MHT3JetHadronFlavorvec= Order_the_Vec(MHT3JetVec,MHT3JetHadronFlavorvec);         MHT3JetLorentzVec= Order_the_Vec(MHT3JetVec,MHT3JetLorentzVec);
       HT3JetVec= Order_the_Vec(HT3JetVec);
       MHT3JetVec= Order_the_Vec(MHT3JetVec);      
+
       /*
       if(HT3JetCSVvec.size()!=HT3JetVec.size() || HT3JetHTMaskvec.size()!=HT3JetVec.size() || HT3JetHadronFlavorvec.size()!=HT3JetVec.size()) 
 	std::cout<<" HT3 vectors not consistent in size "<<endl;
@@ -390,7 +374,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  MHTJetsIdxv2Recipe.push_back(j);
       }
     }
-
+    //    std::cout<<" entry "<<entry<<" derives search vars "<<endl;
     //    if(Jets->size() !=MHT3JetVec.size())
     //std::cout<<" jets "<<Jets->size()<<" MHT3 "<<MHT3JetVec.size()<<" btags "<<BTags<<" newBTags "<<newBTags<<endl;
       //  if(entry % 3 != 0) return kTRUE;
@@ -406,26 +390,33 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(newHT<minHT_ || newMHT< minMHT_ || newNJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(newDphi1 < deltaPhi1_ || newDphi2 < deltaPhi2_ || newDphi3 < deltaPhi3_ || newDphi4 < deltaPhi4_)) return kTRUE;
-      double getHT5Cut;
-      getHT5Cut = 1.025*(newHT5/newHT)-0.5875;
-      if(newDphi1 < getHT5Cut){
-	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
-	return kTRUE;
+      //      std::cout<<" before HT5 cut "<<endl;
+      if(ApplyHT5cut){
+	double getHT5Cut;
+	getHT5Cut = 5.3*(newHT5/newHT)-4.78;
+	if(!(newDphi1 >= getHT5Cut || newHT5/newHT < 1.2)){
+	  //	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  return kTRUE;
+	}
       }
     }
     else{
       if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-      double getHT5Cut;
-      getHT5Cut = 1.025*(HT5/HT)-0.5875;
-      if(DeltaPhi1 < getHT5Cut){
-	//	std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
-	return kTRUE;
+      if(ApplyHT5cut){
+	double getHT5Cut;
+	getHT5Cut = 5.3*(HT5/HT)-4.78;
+	//	std::cout<<" entry "<< entry<<" before HT5 cut "<<endl;
+      
+	if(!(DeltaPhi1 >= getHT5Cut || HT5/HT < 1.2)){
+	  //	  std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" HT5/HT "<<HT5/HT<<" 5.3*HT5/HT "<<5.3*(HT5/HT)<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  return kTRUE;
+	}
       }
     }
 
-
+    //    std::cout<<"&&& seg vio "<<endl;
     //    std::cout<<" **pass baseline** "<<" old jet "<<NJets<<" old HT "<< HT<<" old MHT "<<MHT<<" dphi1 "<<DeltaPhi1<<" dphi2 "<<DeltaPhi2<<" dphi3 "<<DeltaPhi3<<" dphi4 "<<DeltaPhi4<<endl;
       
     //if(newNJets==2)
@@ -458,7 +449,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       if(Bin_ > 900) return kTRUE;
     }
 
-
+    //    std::cout<<"falling into QCD bin "<<endl;
     //    std::cout<<" falling into search bin "<<endl;
     // TH1 cannot properly deal with negative bin contents
     // At most 1% difference in SFs expected (rare BGs only)
@@ -502,7 +493,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     double madHTcut=0.0;
     TString currentTree = TString(fChain->GetCurrentFile()->GetName());
     //std::cout<<" survived event "<< " entry "<<entry<<" currentTree "<<currentTree<<endl;
-    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm";
+    SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV17/tree_SLm";
+
     //    if(GenElectronsNum_ > GenMuonsNum_)
     //SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLe";
     
@@ -518,42 +510,42 @@ Bool_t SFMaker::Process(Long64_t entry)
 	//	std::cout<<" currFileName "<<currentFile<<endl;
 	//
 	//*AR- 180315-for every new tree find corresponding skimtree
-	string skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
+	string skimName="tree_TTJets_SingleLeptFromT_MC2018.root";
 	char SkimFile[500];
-	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
-	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
-	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2016.root";
-	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2016.root";
-	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2016.root";
-	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2016.root";
-	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2016.root";
-	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2016.root";
-	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2016.root"; 
-	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2016.root";
-	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2016.root";
-	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2016.root";
-	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2016.root"; 
-	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2016.root"; 
-	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2016.root"; 
-	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2016.root";
-	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2016.root";
-	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2016.root";
-	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2016.root";
-	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2016.root";
-	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2016.root";
-	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2016.root";
-	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2016.root";
-	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2016.root";
-	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2016.root";
-	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2016.root";
-	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2016.root";
-	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2016.root";
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2018.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2018.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2018.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2018.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2018.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2018.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2018.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2018.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2018.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2018.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2018.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2018.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2018.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2018.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2018.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2018.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2018.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2018.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2018.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2018.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2018.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2018.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2018.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2018.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2018.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2018.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2018.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2018.root";
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 	//	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm/%s",skimName.c_str());
 	//	std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
@@ -610,7 +602,7 @@ Bool_t SFMaker::Process(Long64_t entry)
           }
         }*/
     } // end of "if(currentTree != treeName)"
-
+    //    std::cout<<" entry "<<entry<<" found skim file path "<<endl;
     /*if(runOnSignalMC){
         TH1F *nEventProc = (TH1F*)fChain->GetCurrentFile()->Get("nEventProc");
         TH1F *nEventNeg = (TH1F*)fChain->GetCurrentFile()->Get("nEventNeg");
@@ -636,11 +628,11 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     //*AR- 180315-Here onward execution happens for every new event.
     //    std::cout<<" weight before prefire map "<<Weight<<endl;
-    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
+    //    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
 
 
 
-    
+    //    std::cout<<" entry "<<entry<<" seg vio 1 "<<endl;
   
     if(GetNonPrefireProb){
     
@@ -655,6 +647,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	int binX=jMap->GetXaxis()->FindBin(jEta);
 	int binY=jMap->GetYaxis()->FindBin(jPt);
 	NonPrefireJetWt=1-jMap->GetBinContent(binX,binY);
+	if(PrefireSys)
+	  NonPrefireJetWt=1-(jMap->GetBinContent(binX,binY)-jMap->GetBinError(binX,binY));
 	//std::cout<<" jetidx "<<i<<" jPt "<<jPt<<" jEta "<<jEta<<" binX "<<binX<<" binY "<<binY<<" preWt "<<jMap->GetBinContent(binX,binY)<<" NonPrefireJetWt "<<NonPrefireJetWt<<endl;
 	for(unsigned j = 0; j < Electrons->size(); ++j){
 	  if(Electrons_passIso->at(j)){
@@ -663,6 +657,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    int binpX=pMap->GetXaxis()->FindBin(pEta);
 	    int binpY=pMap->GetYaxis()->FindBin(pPt);
 	    double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	    if(PrefireSys)
+	      double PreElectronWt=pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY);
 	    //std::cout<<" photonidx "<<j<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
 	    
 	    double dEtaJetElectron=Electrons->at(j).Eta()-jEta;
@@ -671,6 +667,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(dRJetElectron<0.4){
 	      //std::cout<<" dRJetElectron "<<dRJetElectron<<endl;
 	      NonPrefireMatchElectronWt *= (1-pMap->GetBinContent(binpX,binpY));
+	      if(PrefireSys)
+		NonPrefireMatchElectronWt *= (1-(pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY)));
 	      ElectronMatchJetIdxv2Recipe.push_back(j);
 	    } //end of dRJetElectron
 	    //	std::cout<<" electron "<<j<<" NonPrefireMatchElectronWt "<<NonPrefireMatchElectronWt<<endl;
@@ -683,7 +681,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       } //end of loop over MHT jets
       //      std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
       
-      std::cout<<" weight_afterAllJets "<<Weight<<endl;
+      //    std::cout<<" weight_afterAllJets "<<Weight<<endl;
       
       for(unsigned j = 0; j < Electrons->size(); ++j){
 	if(Electrons_passIso->at(j)){
@@ -693,6 +691,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  int binpX=pMap->GetXaxis()->FindBin(pEta);
 	  int binpY=pMap->GetYaxis()->FindBin(pPt);
 	  double PreElectronWt=pMap->GetBinContent(binpX,binpY);
+	  if(PrefireSys)
+	    double PreElectronWt=pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY);
 	  //      std::cout<<" pPt "<<pPt<<" pEta "<<pEta<<" binpX "<<binpX<<" binpY "<<binpY<<" preWt "<<pMap->GetBinContent(binpX,binpY)<<" 1-prewt "<<1-pMap->GetBinContent(binpX,binpY)<<endl;
 	  
 	  for(unsigned k = 0; k <ElectronMatchJetIdxv2Recipe.size();k++){
@@ -706,6 +706,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  } //end of loop over ElectronMatchJetIdxv2Recipe
 	  if(!MatchedtoJet){
 	    Weight *= (1-pMap->GetBinContent(binpX,binpY));
+	    if(PrefireSys)
+	      Weight *= (1-(pMap->GetBinContent(binpX,binpY)-pMap->GetBinError(binpX,binpY)));
 	    //std::cout<<" weight after nonmatchedelectron "<<j<<" is "<<Weight<<endl;
 	  }
 	} //end of Electrons_passIso
@@ -713,7 +715,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       //    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
     } // end of GetNonPrefireProb
     
-    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
+    //  std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
     
     if(Weight < 0)
       return kTRUE;
@@ -739,6 +741,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	bTagProb = btagcorr->GetCorrections(MHT3JetLorentzVec,MHT3JetHadronFlavorvec,MHT3JetHTMaskvec); //*AR-180326--In short this function returns (efficiency,SF,SF if fastsim), where efficiency means probability for a given jet to have that flavor and SF means SF for that jet based on it's pT, eta, flav and whether wanted central/up/down SF.
       else
 	bTagProb = btagcorr->GetCorrections(Jets,Jets_hadronFlavor,Jets_HTMask);//*AR-these are jets up to |eta|<5 GeV.
+      //      std::cout<<" entry "<<entry<<" get btag prob "<<endl;
       if(useCombinedBins){
 	bTagBins = {Bin_, Bin_, Bin_, Bin_};
       }
@@ -798,6 +801,8 @@ Bool_t SFMaker::Process(Long64_t entry)
     }
     
 */
+    //    std::cout<<" entry "<<entry<<" seg vio 2 "<<endl;
+
     GenMuonsAccNum_ = GenMuonsAcc.size();
     GenElectronsAccNum_ = GenElectronsAcc.size();
     //*AR-180101---Skip the event if there is no electron and no muon with pT>5 and abs(eta)<2.5=> Survived events: events which passed filters and have atleast one gen lepton(ele or muon) with pT>5 and abs(eta)<2.5
@@ -863,6 +868,28 @@ Bool_t SFMaker::Process(Long64_t entry)
         std::cout << "WARNING! Number of isoPionTracks is not correct! Skipping event." << std::endl;
         return kTRUE;
     }
+
+    if(AddHEMVeto){
+      //*AR-190207: HEM electron veto
+      for(unsigned j=0; j< ElectronsNum_; j++){
+	if(Electrons_passIso->at(j)){
+	  double LepPhi=Electrons->at(j).Phi();
+	  double LepEta=Electrons->at(j).Eta();
+	  
+	  CheckPhi=LepPhi < -0.87 && LepPhi > -1.57;
+	  CheckEta=LepEta < -1.4 && LepEta > -3.0;
+	  if(CheckPhi && CheckEta){
+	    //	  std::cout<<" entry "<<entry<<" HEM electron "<<" j "<<j<<" eta "<<LepEta<<" phi "<<LepPhi<<endl;
+	    break;
+	  }
+	}
+      }
+      if(CheckPhi && CheckEta)
+	return kTRUE;
+    }
+    //    std::cout<<" entry "<<entry<<" no HEM electron "<<endl;
+
+    //    std::cout<<" entry "<<entry<<" seg vio 3 "<<endl;
 
     // Match iso leptons/tracks to gen leptons
     // Apply SFs only to prompts
@@ -969,12 +996,13 @@ Bool_t SFMaker::Process(Long64_t entry)
       else
 	nLoops = (NJets == 2 ? 3 : 4);
     }
+    //    std::cout<<" entry "<<entry<<" seg vio 4 "<<endl;
 
     for(int i = 0; i < nLoops; i++){
     	double WeightBtagProb = Weight*bTagProb.at(i);
 	//	std::cout<<" i "<<i<<" btagProb "<<bTagProb.at(i)<<endl;    
 	unsigned bTagBin = bTagBins.at(i);
-	//	std::cout<<" i "<<i<<endl;	
+	
 	//*AR, Nov20,2017- Checks if a gen muon is found and gen electron is not found
 	//*AR, Nov20,2017- input histograms for deriving SF are only filled when there is electron /muon within acceptance pt>5 and |eta|<2.5
 	if(GenMuonsAccNum_ == 1 && GenElectronsAccNum_ == 0){
@@ -982,16 +1010,16 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 	  h_mu_nOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	  h_mu_nOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
+	  //	  std::cout<<" scale "<<Scalesize<<" pdf "<<PDFsize<<endl;
 	  if(ScaleAccSys){
 	    for(int iacc=0; iacc < Scalesize; iacc++){
 	      //	      std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" scaleweight "<<ScaleWeights->at(iacc)<<endl;
 	      Vec_scale_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	    }
 	  }
-	  std::cout<<" pdfsize "<<PDFWeights->size()<<endl;
 	  if(PDFAccSys){
 	    for(int iacc=0; iacc < PDFsize; iacc++){
-	      std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" PDFweight "<<PDFWeights->at(iacc)<<endl;
+	      //std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" PDFweight "<<PDFWeights->at(iacc)<<endl;
 	      Vec_PDF_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*PDFWeights->at(iacc));
 	    }
 	  }
@@ -1001,60 +1029,40 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    //std::cout<<" SF "<<GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))<<" SF Unc "<<GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.01)<<endl;
 	    if(SysUp)
 	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
-	    if(SysDn)
-	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
+	    if(SysDn){
+	      double isoUnc=GetSFUnc(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0); 
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),isoUnc);
+	    }
 	  }
-	  else{
+	  else
 	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	    isoSFDn = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
-	  }
 	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 	  if(IDMuSys){
 	    //	    std::pair<double, double> MyPair;
 	    //MyPair=EvalSF(h_muIDSF,GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
 	    //	    std::cout<<" pt "<<GenMuonsAccPt_<<" eta "<<GenMuonsAccEta_<<" MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<endl;
 	    if(SysUp)
-	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
-	    if(SysDn)
-	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	    if(SysDn){
+	      double idUnc=GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),idUnc);
+	    }
 	  }
-	  else{
+	  else
 	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	    recoSFDn = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
-	  }
 	  //	  std::cout<<" idSF "<<recoSF<<endl;
-	 
+	  /*	  
 	  if(TrackRecoMuSys){
-	    if(GenMuonsAccPt_ > 10){
 	      if(SysUp)
-		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
-	      
-	      if(SysDn){
-		//	std::pair<double, double> MyPair;
-		//		MyPair=EvalSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-		//		std::cout<<" eta "<<GenMuonsAccEta_<<"MuPair_1 "<<MyPair.first<<" MuPair_2 "<<MyPair.second<<" totUnc "<<GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01)<<endl;	
-		trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
-	      }
-	    }
-	    else{
-	      if(SysUp)
-		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
+		trackingSF = GetSF(h_muTrkSF, GenMuonsAccEta_)+GetSFUnc(h_muTrkSF, GenMuonsAccEta_,0.01);  
 	      if(SysDn)
-		trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
-	    }
+		trackingSF = GetSF(h_muTrkSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkSF, GenMuonsAccEta_,0.01);
 	  }
-	  else{
-	    if(GenMuonsAccPt_ > 10){
-	      trackingSF = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_);
-	      trackingSFDn = GetSF(h_muTrkHighPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkHighPtSF, GenMuonsAccEta_,0.01);
-	    }
-	    else{
-	      trackingSF = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_);
-	      trackingSFDn = GetSF(h_muTrkLowPtSF, GenMuonsAccEta_)-GetSFUnc(h_muTrkLowPtSF, GenMuonsAccEta_,0.01);
-	    }
-	    //	    std::cout<<" pt "<<GenMuonsAccPt_<<" eta "<<GenMuonsAccEta_<<" mu_tracksf "<<trackingSF<<endl;
-	  }
- 
+	  else
+	    trackingSF = GetSF(h_muTrkSF,GenMuonsAccEta_);
+	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
+*/
+	  
 	  
 	  //*AR, Nov20,2017-  three possible cases are considered here: 1] Reco level muon is found(applied isoSF,recoSF and trackingSF) 2] Reco level muon is not found but isotrack veto(when applied) counted one isolated muon track(applied only trackingSF) 3] Reco level muon is not found and also no isolated muon track was recorded either beacause isolated track veto was not applied so number of tracks were not counted or even after applying isolated track veto somehow no isolated muon track was recorded. (no SF is applied)
 	  
@@ -1062,11 +1070,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  
 	  //*AR, 20180102---Thus when isotrack veto is applied, lost e event is one which has reco electron=0 and isolated electron track=0. When isotrack veto is not applied,lost e event is one with reco electron=0 
 	  if(MuonsPromptNum_ == 1){
-	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF; 
-	    double WeightCorrDnTrack=WeightBtagProb * isoSF * recoSF * trackingSFDn;
-	    double WeightCorrDnID=WeightBtagProb * isoSF * recoSFDn * trackingSF;
-	    double WeightCorrDnIso=WeightBtagProb * isoSFDn * recoSF * trackingSF;
-
+	    double WeightCorr = WeightBtagProb * isoSF * recoSF;
+	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 
@@ -1083,9 +1088,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-	    h_mu_nFoundOnePrompt_SF_SB_Track->Fill(bTagBin,WeightCorrDnTrack);
-	    h_mu_nFoundOnePrompt_SF_SB_ID->Fill(bTagBin,WeightCorrDnID);
-	    h_mu_nFoundOnePrompt_SF_SB_Iso->Fill(bTagBin,WeightCorrDnIso);
+
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
@@ -1098,11 +1101,8 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 
 	  }else if(includeIsotrkVeto && MuonsPromptNum_ == 0 && MuonTracksPromptNum_ == 1){
-	    double WeightCorr = WeightBtagProb * trackingSF;
-	    double WeightCorrDnTrack=WeightBtagProb * trackingSFDn;
-	    double WeightCorrDnID=WeightBtagProb * trackingSF;
-	    double WeightCorrDnIso=WeightBtagProb * trackingSF;
-
+	    double WeightCorr = WeightBtagProb;
+	    
 	    h_mu_nFoundOnePrompt_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightBtagProb);
 	    h_mu_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
 	    if(ScaleAccSys){
@@ -1118,10 +1118,6 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 	    h_mu_nFoundOnePrompt_SF_etaPt->Fill(GenMuonsAccEta_, GenMuonsAccPt_, WeightCorr);
 	    h_mu_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-	    h_mu_nFoundOnePrompt_SF_SB_Track->Fill(bTagBin,WeightCorrDnTrack);
-	    h_mu_nFoundOnePrompt_SF_SB_ID->Fill(bTagBin,WeightCorrDnID);
-	    h_mu_nFoundOnePrompt_SF_SB_Iso->Fill(bTagBin,WeightCorrDnIso);
-
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
@@ -1171,75 +1167,48 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 
 	  //	  std::cout<<" h_el_nOnePrompt_SB filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
-
-	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 	  if(IsoEleSys){
 	    if(SysUp)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_)+GetSFUnc(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	    if(SysDn)
-	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	      isoSF = GetSF(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	  }
-	  else{
-	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-	    isoSFDn = GetSF(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIsoSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
-	  }
-
+	  else
+	    isoSF = GetSF(h_elecIsoSF, GenElectronsAccEta_,GenElectronsAccPt_);
+	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 
 	  if(IDEleSys){
 	    //	    std::pair<double, double> MyPair;
 	    //MyPair=EvalSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
 	    //std::cout<<" pt "<<GenElectronsAccPt_<<" eta "<<GenElectronsAccEta_<<" ElePair_1 "<<MyPair.first<<" ElePair_2 "<<MyPair.second<<endl;
-	   
- 
+	    
 	    if(SysUp)
-	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))+GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_)+GetSFUnc(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	    if(SysDn)
-	      recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
+	      recoSF = GetSF(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	  }
-	  else{
-	    recoSF = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_));
-	    recoSFDn = GetSF(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_))-GetSFUnc(h_elecIDSF, GenElectronsAccPt_, std::abs(GenElectronsAccEta_),0.0);
-	  }
-	  
-//	  std::cout<<" idSF "<<recoSF<<endl;
+	  else
+	    recoSF = GetSF(h_elecIDSF, GenElectronsAccEta_,GenElectronsAccPt_);
+	  //	  std::cout<<" idSF "<<recoSF<<endl;
 
 
 	  //*AR-180306---According to lepton SF twiki, 1% systematics should be added on top for electrons with pt<20 or >80 GeV, as Scale factors are found to be flat with pT. Nevertheless the pT dependence is hard to verify below 20GeV and above 80 GeV.
-	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
 	  if(TrackRecoEleSys){
-	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80){
-	      if(SysUp)
-		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
-	      if(SysDn)
-		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
+	    if(SysUp){
+	      trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	    }
-	    else{
-	      if(SysUp)
-		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
-	      if(SysDn){
-		/*		
-		std::pair<double, double> MyPair;
-		MyPair=EvalSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_);
-		std::cout<<" eta "<<GenElectronsAccEta_<<"ElecPair_1 "<<MyPair.first<<" ElecPair_2 "<<MyPair.second<<" totUnc "<<GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0)<<endl;
-*/
-		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
-	      }
+	    if(SysDn){
+	      trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	    }
 	  }
 	  else{
-	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_); 
-	    if(GenElectronsAccPt_<20 || GenElectronsAccPt_>80)
-	      trackingSFDn = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.01);
-	    else
-	      trackingSFDn = GetSF(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_, GenElectronsAccPt_,0.0);
+	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_);
 	  }
+	  //	  std::cout<<" trackSF "<<trackingSF<<endl;
 
-
+	  
 	  if(ElectronsPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
-	    double WeightCorrDnTrack=WeightBtagProb * isoSF * recoSF * trackingSFDn;
-	    double WeightCorrDnID=WeightBtagProb * isoSF * recoSFDn * trackingSF;
-	    double WeightCorrDnIso=WeightBtagProb * isoSFDn * recoSF * trackingSF;
 	    
 	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -1258,10 +1227,6 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-	    h_el_nFoundOnePrompt_SF_SB_Track->Fill(bTagBin,WeightCorrDnTrack);
-	    h_el_nFoundOnePrompt_SF_SB_ID->Fill(bTagBin,WeightCorrDnID);
-	    h_el_nFoundOnePrompt_SF_SB_Iso->Fill(bTagBin,WeightCorrDnIso);
-
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
@@ -1275,9 +1240,6 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    
 	  }else if(includeIsotrkVeto && ElectronsPromptNum_ == 0 && ElectronTracksPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * trackingSF;
-	    double WeightCorrDnTrack=WeightBtagProb * trackingSFDn;
-	    double WeightCorrDnID=WeightBtagProb * trackingSF;
-	    double WeightCorrDnIso=WeightBtagProb * trackingSF;
 	    
 	    h_el_nFoundOnePrompt_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightBtagProb);
 	    h_el_nFoundOnePrompt_SB->Fill(bTagBin, WeightBtagProb);
@@ -1294,10 +1256,6 @@ Bool_t SFMaker::Process(Long64_t entry)
 
 	    h_el_nFoundOnePrompt_SF_etaPt->Fill(GenElectronsAccEta_, GenElectronsAccPt_, WeightCorr);
 	    h_el_nFoundOnePrompt_SF_SB->Fill(bTagBin, WeightCorr);
-	    h_el_nFoundOnePrompt_SF_SB_Track->Fill(bTagBin,WeightCorrDnTrack);
-	    h_el_nFoundOnePrompt_SF_SB_ID->Fill(bTagBin,WeightCorrDnID);
-	    h_el_nFoundOnePrompt_SF_SB_Iso->Fill(bTagBin,WeightCorrDnIso);
-
 	    if(ScaleAccSys){
 	      for(int iacc=0; iacc < Scalesize; iacc++){
 		Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->Fill(bTagBin, WeightCorr*ScaleWeights->at(iacc));
@@ -1692,7 +1650,7 @@ void SFMaker::Terminate()
 
     gStyle->SetPalette(87);
     gStyle->SetMarkerSize(1.3);
-
+    //    std::cout<<" seg vio1 "<<endl;
     TFile *outPutFile = new TFile(fileName,"RECREATE");
 
     h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
@@ -1706,18 +1664,12 @@ void SFMaker::Terminate()
     h_el_nFoundOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SB"));
     h_el_nFoundOnePrompt_SF_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SF_etaPt"));
     h_el_nFoundOnePrompt_SF_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SF_SB"));
-    h_el_nFoundOnePrompt_SF_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SF_SB_Track"));
-    h_el_nFoundOnePrompt_SF_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SF_SB_ID"));
-    h_el_nFoundOnePrompt_SF_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nFoundOnePrompt_SF_SB_Iso"));
-
     h_el_nLostOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_nLostOnePrompt_etaPt"));
     h_el_nLostOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_nLostOnePrompt_SB"));
 
     h_el_SFCR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_SFCR_etaPt"));
     h_el_SFCR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFCR_SB"));
-    h_el_SFCR_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFCR_SB_Track"));
-    h_el_SFCR_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFCR_SB_ID"));
-    h_el_SFCR_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFCR_SB_Iso"));
+    //    std::cout<<" seg vio2 "<<endl;
 
     h_mu_nOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_nOnePrompt_etaPt"));
     h_mu_nOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nOnePrompt_SB"));
@@ -1725,30 +1677,17 @@ void SFMaker::Terminate()
     h_mu_nFoundOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SB"));
     h_mu_nFoundOnePrompt_SF_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SF_etaPt"));
     h_mu_nFoundOnePrompt_SF_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SF_SB"));
-    h_mu_nFoundOnePrompt_SF_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SF_SB_Track"));
-    h_mu_nFoundOnePrompt_SF_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SF_SB_ID"));
-    h_mu_nFoundOnePrompt_SF_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nFoundOnePrompt_SF_SB_Iso"));
-
     h_mu_nLostOnePrompt_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_nLostOnePrompt_etaPt"));
     h_mu_nLostOnePrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_nLostOnePrompt_SB"));
 
     h_mu_SFCR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_SFCR_etaPt"));
     h_mu_SFCR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFCR_SB"));
-    h_mu_SFCR_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFCR_SB_Track"));
-    h_mu_SFCR_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFCR_SB_ID"));
-    h_mu_SFCR_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFCR_SB_Iso"));
 
     h_el_SFSR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_el_SFSR_etaPt"));
     h_el_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFSR_SB"));
-    h_el_SFSR_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFSR_SB_Track"));
-    h_el_SFSR_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFSR_SB_ID"));
-    h_el_SFSR_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_el_SFSR_SB_Iso"));
-
     h_mu_SFSR_etaPt = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_mu_SFSR_etaPt"));
     h_mu_SFSR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFSR_SB"));
-    h_mu_SFSR_SB_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFSR_SB_Track"));
-    h_mu_SFSR_SB_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFSR_SB_ID"));
-    h_mu_SFSR_SB_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_mu_SFSR_SB_Iso"));
+    //    std::cout<<" seg vio3 "<<endl;
 
     h_di_nTwoPrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_nTwoPrompt_SB"));
 	h_di_nOneFoundTwoPrompt_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_di_nOneFoundTwoPrompt_SB"));
@@ -1781,6 +1720,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio4 "<<endl;
 
       if(h_el_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_el_nFoundOnePrompt_SB->SetBinContent(nX, 0);
@@ -1807,22 +1747,6 @@ void SFMaker::Terminate()
 	h_el_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
 	std::cout<<"h_el_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
-
-      if(h_el_nFoundOnePrompt_SF_SB_Track->GetBinContent(nX) < 0){
-	h_el_nFoundOnePrompt_SF_SB_Track->SetBinContent(nX, 0);
-	std::cout<<"h_el_nFoundOnePrompt_SF_SB_Track (Bin "<<nX<<") negative value"<<std::endl;
-      }
-
-      if(h_el_nFoundOnePrompt_SF_SB_ID->GetBinContent(nX) < 0){
-	h_el_nFoundOnePrompt_SF_SB_ID->SetBinContent(nX, 0);
-	std::cout<<"h_el_nFoundOnePrompt_SF_SB_ID (Bin "<<nX<<") negative value"<<std::endl;
-      }
-      if(h_el_nFoundOnePrompt_SF_SB_Iso->GetBinContent(nX) < 0){
-	h_el_nFoundOnePrompt_SF_SB_Iso->SetBinContent(nX, 0);
-	std::cout<<"h_el_nFoundOnePrompt_SF_SB_Iso (Bin "<<nX<<") negative value"<<std::endl;
-      }
-
-
       if(ScaleAccSys){ 
 	for(int iacc=0; iacc < Scalesize; iacc++){
 	  if(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
@@ -1839,6 +1763,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //    std::cout<<" seg vio5 "<<endl;
 
       if(h_el_nLostOnePrompt_SB->GetBinContent(nX) < 0){
             h_el_nLostOnePrompt_SB->SetBinContent(nX, 0);
@@ -1881,12 +1806,12 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio6 "<<endl;
 
       if(h_mu_nFoundOnePrompt_SB->GetBinContent(nX) < 0){
 	h_mu_nFoundOnePrompt_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nFoundOnePrompt_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
-
       if(ScaleAccSys){ 
 	for(int iacc=0; iacc < Scalesize; iacc++){
 	  if(Vec_scale_mu_nFoundOnePrompt_SB.at(iacc)->GetBinContent(nX) < 0){
@@ -1907,22 +1832,6 @@ void SFMaker::Terminate()
 	h_mu_nFoundOnePrompt_SF_SB->SetBinContent(nX, 0);
 	std::cout<<"h_mu_nFoundOnePrompt_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
       }
-
-      if(h_mu_nFoundOnePrompt_SF_SB_Track->GetBinContent(nX) < 0){
-	h_mu_nFoundOnePrompt_SF_SB_Track->SetBinContent(nX, 0);
-	std::cout<<"h_mu_nFoundOnePrompt_SF_SB_Track (Bin "<<nX<<") negative value"<<std::endl;
-      }
-
-      if(h_mu_nFoundOnePrompt_SF_SB_ID->GetBinContent(nX) < 0){
-	h_mu_nFoundOnePrompt_SF_SB_ID->SetBinContent(nX, 0);
-	std::cout<<"h_mu_nFoundOnePrompt_SF_SB_ID (Bin "<<nX<<") negative value"<<std::endl;
-      }
-      if(h_mu_nFoundOnePrompt_SF_SB_Iso->GetBinContent(nX) < 0){
-	h_mu_nFoundOnePrompt_SF_SB_Iso->SetBinContent(nX, 0);
-	std::cout<<"h_mu_nFoundOnePrompt_SF_SB_Iso (Bin "<<nX<<") negative value"<<std::endl;
-      }
-
-
       if(ScaleAccSys){ 
 	for(int iacc=0; iacc < Scalesize; iacc++){
 	  if(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc)->GetBinContent(nX) < 0){
@@ -1960,6 +1869,7 @@ void SFMaker::Terminate()
 	  }
 	}
       }
+      //      std::cout<<" seg vio7 "<<endl;
 
       if(h_di_nTwoPrompt_SB->GetBinContent(nX) < 0){
 	h_di_nTwoPrompt_SB->SetBinContent(nX, 0);
@@ -2007,28 +1917,12 @@ void SFMaker::Terminate()
     h_el_SFSR_etaPt->Add(h_el_nOnePrompt_etaPt);
     h_el_SFSR_etaPt->Add(h_el_nFoundOnePrompt_SF_etaPt, -1);
     h_el_SFSR_etaPt->Divide(h_el_nLostOnePrompt_etaPt);
+    //    std::cout<<" seg vio8 "<<endl;
 
     h_el_SFSR_SB->Reset();
     h_el_SFSR_SB->Add(h_el_nOnePrompt_SB);
     h_el_SFSR_SB->Add(h_el_nFoundOnePrompt_SF_SB, -1);
     h_el_SFSR_SB->Divide(h_el_nLostOnePrompt_SB);
-
-    h_el_SFSR_SB_Track->Reset();
-    h_el_SFSR_SB_Track->Add(h_el_nOnePrompt_SB);
-    h_el_SFSR_SB_Track->Add(h_el_nFoundOnePrompt_SF_SB_Track, -1);
-    h_el_SFSR_SB_Track->Divide(h_el_nLostOnePrompt_SB);
-
-    h_el_SFSR_SB_ID->Reset();
-    h_el_SFSR_SB_ID->Add(h_el_nOnePrompt_SB);
-    h_el_SFSR_SB_ID->Add(h_el_nFoundOnePrompt_SF_SB_ID, -1);
-    h_el_SFSR_SB_ID->Divide(h_el_nLostOnePrompt_SB);
-
-    h_el_SFSR_SB_Iso->Reset();
-    h_el_SFSR_SB_Iso->Add(h_el_nOnePrompt_SB);
-    h_el_SFSR_SB_Iso->Add(h_el_nFoundOnePrompt_SF_SB_Iso, -1);
-    h_el_SFSR_SB_Iso->Divide(h_el_nLostOnePrompt_SB);
-
-
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	Vec_scale_el_SFSR_SB.at(iacc)->Reset();
@@ -2056,21 +1950,6 @@ void SFMaker::Terminate()
     h_mu_SFSR_SB->Add(h_mu_nFoundOnePrompt_SF_SB, -1);
     h_mu_SFSR_SB->Divide(h_mu_nLostOnePrompt_SB);
 
-    h_mu_SFSR_SB_Track->Reset();
-    h_mu_SFSR_SB_Track->Add(h_mu_nOnePrompt_SB);
-    h_mu_SFSR_SB_Track->Add(h_mu_nFoundOnePrompt_SF_SB_Track, -1);
-    h_mu_SFSR_SB_Track->Divide(h_mu_nLostOnePrompt_SB);
-
-    h_mu_SFSR_SB_ID->Reset();
-    h_mu_SFSR_SB_ID->Add(h_mu_nOnePrompt_SB);
-    h_mu_SFSR_SB_ID->Add(h_mu_nFoundOnePrompt_SF_SB_ID, -1);
-    h_mu_SFSR_SB_ID->Divide(h_mu_nLostOnePrompt_SB);
-
-    h_mu_SFSR_SB_Iso->Reset();
-    h_mu_SFSR_SB_Iso->Add(h_mu_nOnePrompt_SB);
-    h_mu_SFSR_SB_Iso->Add(h_mu_nFoundOnePrompt_SF_SB_Iso, -1);
-    h_mu_SFSR_SB_Iso->Divide(h_mu_nLostOnePrompt_SB);
-
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	Vec_scale_mu_SFSR_SB.at(iacc)->Reset();
@@ -2091,12 +1970,6 @@ void SFMaker::Terminate()
     // SF for CRs
     h_mu_SFCR_etaPt->Divide(h_mu_nFoundOnePrompt_SF_etaPt, h_mu_nFoundOnePrompt_etaPt);
 	h_mu_SFCR_SB->Divide(h_mu_nFoundOnePrompt_SF_SB, h_mu_nFoundOnePrompt_SB);
-	h_mu_SFCR_SB_Track->Divide(h_mu_nFoundOnePrompt_SF_SB_Track, h_mu_nFoundOnePrompt_SB);
-	h_mu_SFCR_SB_ID->Divide(h_mu_nFoundOnePrompt_SF_SB_ID, h_mu_nFoundOnePrompt_SB);
-	h_mu_SFCR_SB_Iso->Divide(h_mu_nFoundOnePrompt_SF_SB_Iso, h_mu_nFoundOnePrompt_SB);
-
-
-
 	if(ScaleAccSys){ 
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    Vec_scale_mu_SFCR_SB.at(iacc)->Divide(Vec_scale_mu_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_mu_nFoundOnePrompt_SB.at(iacc));
@@ -2110,10 +1983,6 @@ void SFMaker::Terminate()
 
 	h_el_SFCR_etaPt->Divide(h_el_nFoundOnePrompt_SF_etaPt, h_el_nFoundOnePrompt_etaPt);
 	h_el_SFCR_SB->Divide(h_el_nFoundOnePrompt_SF_SB, h_el_nFoundOnePrompt_SB);
-	h_el_SFCR_SB_Track->Divide(h_el_nFoundOnePrompt_SF_SB_Track, h_el_nFoundOnePrompt_SB);
-	h_el_SFCR_SB_ID->Divide(h_el_nFoundOnePrompt_SF_SB_ID, h_el_nFoundOnePrompt_SB);
-	h_el_SFCR_SB_Iso->Divide(h_el_nFoundOnePrompt_SF_SB_Iso, h_el_nFoundOnePrompt_SB);
-
 	if(ScaleAccSys){ 
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    Vec_scale_el_SFCR_SB.at(iacc)->Divide(Vec_scale_el_nFoundOnePrompt_SF_SB.at(iacc),Vec_scale_el_nFoundOnePrompt_SB.at(iacc));
@@ -2140,10 +2009,6 @@ void SFMaker::Terminate()
 	h_el_nFoundOnePrompt_SB->Write();
 	h_el_nFoundOnePrompt_SF_etaPt->Write();
 	h_el_nFoundOnePrompt_SF_SB->Write();
-	h_el_nFoundOnePrompt_SF_SB_Track->Write();
-	h_el_nFoundOnePrompt_SF_SB_ID->Write();
-	h_el_nFoundOnePrompt_SF_SB_Iso->Write();
-
 	h_el_nLostOnePrompt_etaPt->Write();
 	h_el_nLostOnePrompt_SB->Write();
 	if(ScaleAccSys){ 
@@ -2162,7 +2027,6 @@ void SFMaker::Terminate()
 	    Vec_PDF_el_nLostOnePrompt_SB.at(iacc)->Write();
 	  }
 	}
-
 	/*
     SaveEff(h_el_nOnePrompt_etaPt, outPutFile, false, true);
     SaveEff(h_el_nOnePrompt_SB, outPutFile);
@@ -2178,7 +2042,9 @@ void SFMaker::Terminate()
     SaveEff(h_el_nLostOnePrompt_etaPt, outPutFile, false, true);
     h_el_nLostOnePrompt_SB->Divide(h_el_nOnePrompt_SB);
     SaveEff(h_el_nLostOnePrompt_SB, outPutFile);
+
 */
+
 	for(int nX = 1; nX <= h_el_SFCR_SB->GetXaxis()->GetNbins(); ++nX){
         h_el_SFCR_SB->SetBinError(nX, 0);
         h_el_SFSR_SB->SetBinError(nX, 0);
@@ -2189,38 +2055,6 @@ void SFMaker::Terminate()
         // Fix for sample with negative weights
         if(h_el_SFCR_SB->GetBinContent(nX) > 1) h_el_SFCR_SB->SetBinContent(nX, 1);
         if(h_el_SFSR_SB->GetBinContent(nX) < 1) h_el_SFSR_SB->SetBinContent(nX, 1);
-
-        h_el_SFCR_SB_Track->SetBinError(nX, 0);
-        h_el_SFSR_SB_Track->SetBinError(nX, 0);
-
-        if(h_el_SFCR_SB_Track->GetBinContent(nX) < 1e-8) h_el_SFCR_SB_Track->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_Track->GetBinContent(nX) < 1e-8) h_el_SFSR_SB_Track->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_el_SFCR_SB_Track->GetBinContent(nX) > 1) h_el_SFCR_SB_Track->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_Track->GetBinContent(nX) < 1) h_el_SFSR_SB_Track->SetBinContent(nX, 1);
-
-        h_el_SFCR_SB_ID->SetBinError(nX, 0);
-        h_el_SFSR_SB_ID->SetBinError(nX, 0);
-
-        if(h_el_SFCR_SB_ID->GetBinContent(nX) < 1e-8) h_el_SFCR_SB_ID->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_ID->GetBinContent(nX) < 1e-8) h_el_SFSR_SB_ID->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_el_SFCR_SB_ID->GetBinContent(nX) > 1) h_el_SFCR_SB_ID->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_ID->GetBinContent(nX) < 1) h_el_SFSR_SB_ID->SetBinContent(nX, 1);
-
-        h_el_SFCR_SB_Iso->SetBinError(nX, 0);
-        h_el_SFSR_SB_Iso->SetBinError(nX, 0);
-
-        if(h_el_SFCR_SB_Iso->GetBinContent(nX) < 1e-8) h_el_SFCR_SB_Iso->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_Iso->GetBinContent(nX) < 1e-8) h_el_SFSR_SB_Iso->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_el_SFCR_SB_Iso->GetBinContent(nX) > 1) h_el_SFCR_SB_Iso->SetBinContent(nX, 1);
-        if(h_el_SFSR_SB_Iso->GetBinContent(nX) < 1) h_el_SFSR_SB_Iso->SetBinContent(nX, 1);
-
-
 	if(ScaleAccSys){ 
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    Vec_scale_el_SFCR_SB.at(iacc)->SetBinError(nX, 0);
@@ -2241,21 +2075,16 @@ void SFMaker::Terminate()
 	    if(Vec_PDF_el_SFSR_SB.at(iacc)->GetBinContent(nX) < 1) Vec_PDF_el_SFSR_SB.at(iacc)->SetBinContent(nX, 1);
 	  }
 	}
-
+	
 	}
-	SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
+
+	//SaveEff(h_el_SFCR_etaPt, outPutFile, false, true);
 	SaveEff(h_el_SFCR_SB, outPutFile);
-	SaveEff(h_el_SFCR_SB_Track, outPutFile);
-	SaveEff(h_el_SFCR_SB_ID, outPutFile);
-	SaveEff(h_el_SFCR_SB_Iso, outPutFile);
+	std::cout<<" seg vio "<<endl;
 
-
-    SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
-    SaveEff(h_el_SFSR_SB, outPutFile);
-    SaveEff(h_el_SFSR_SB_Track, outPutFile);
-    SaveEff(h_el_SFSR_SB_ID, outPutFile);
-    SaveEff(h_el_SFSR_SB_Iso, outPutFile);
-    
+	//    SaveEff(h_el_SFSR_etaPt, outPutFile, false, true);
+	SaveEff(h_el_SFSR_SB, outPutFile);
+	
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_el_SFCR_SB.at(iacc),outPutFile);
@@ -2275,11 +2104,6 @@ void SFMaker::Terminate()
     h_mu_nFoundOnePrompt_SB->Write();
     h_mu_nFoundOnePrompt_SF_etaPt->Write();
     h_mu_nFoundOnePrompt_SF_SB->Write();
-    h_mu_nFoundOnePrompt_SF_SB_Track->Write();
-    h_mu_nFoundOnePrompt_SF_SB_ID->Write();
-    h_mu_nFoundOnePrompt_SF_SB_Iso->Write();
-
-
     h_mu_nLostOnePrompt_etaPt->Write();
     h_mu_nLostOnePrompt_SB->Write();
     if(ScaleAccSys){ 
@@ -2326,40 +2150,6 @@ void SFMaker::Terminate()
         // Fix for sample with negative weights
         if(h_mu_SFCR_SB->GetBinContent(nX) > 1) h_mu_SFCR_SB->SetBinContent(nX, 1);
         if(h_mu_SFSR_SB->GetBinContent(nX) < 1) h_mu_SFSR_SB->SetBinContent(nX, 1);
-
-
-        h_mu_SFCR_SB_Track->SetBinError(nX, 0);
-        h_mu_SFSR_SB_Track->SetBinError(nX, 0);
-
-        if(h_mu_SFCR_SB_Track->GetBinContent(nX) < 1e-8) h_mu_SFCR_SB_Track->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_Track->GetBinContent(nX) < 1e-8) h_mu_SFSR_SB_Track->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_mu_SFCR_SB_Track->GetBinContent(nX) > 1) h_mu_SFCR_SB_Track->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_Track->GetBinContent(nX) < 1) h_mu_SFSR_SB_Track->SetBinContent(nX, 1);
-
-        h_mu_SFCR_SB_ID->SetBinError(nX, 0);
-        h_mu_SFSR_SB_ID->SetBinError(nX, 0);
-
-        if(h_mu_SFCR_SB_ID->GetBinContent(nX) < 1e-8) h_mu_SFCR_SB_ID->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_ID->GetBinContent(nX) < 1e-8) h_mu_SFSR_SB_ID->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_mu_SFCR_SB_ID->GetBinContent(nX) > 1) h_mu_SFCR_SB_ID->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_ID->GetBinContent(nX) < 1) h_mu_SFSR_SB_ID->SetBinContent(nX, 1);
-
-        h_mu_SFCR_SB_Iso->SetBinError(nX, 0);
-        h_mu_SFSR_SB_Iso->SetBinError(nX, 0);
-
-        if(h_mu_SFCR_SB_Iso->GetBinContent(nX) < 1e-8) h_mu_SFCR_SB_Iso->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_Iso->GetBinContent(nX) < 1e-8) h_mu_SFSR_SB_Iso->SetBinContent(nX, 1);
-
-        // Fix for sample with negative weights
-        if(h_mu_SFCR_SB_Iso->GetBinContent(nX) > 1) h_mu_SFCR_SB_Iso->SetBinContent(nX, 1);
-        if(h_mu_SFSR_SB_Iso->GetBinContent(nX) < 1) h_mu_SFSR_SB_Iso->SetBinContent(nX, 1);
-
-
-
 	if(ScaleAccSys){ 
 	  for(int iacc=0; iacc < Scalesize; iacc++){
 	    Vec_scale_mu_SFCR_SB.at(iacc)->SetBinError(nX, 0);
@@ -2382,18 +2172,14 @@ void SFMaker::Terminate()
 	}
 
     }
-    SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
+
+    //    SaveEff(h_mu_SFCR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFCR_SB, outPutFile);
-    SaveEff(h_mu_SFCR_SB_Track, outPutFile);
-    SaveEff(h_mu_SFCR_SB_ID, outPutFile);
-    SaveEff(h_mu_SFCR_SB_Iso, outPutFile);
     
-    SaveEff(h_mu_SFSR_etaPt, outPutFile, false, true);
+    //    SaveEff(h_mu_SFSR_etaPt, outPutFile, false, true);
     SaveEff(h_mu_SFSR_SB, outPutFile);
-    SaveEff(h_mu_SFSR_SB_Track, outPutFile);
-    SaveEff(h_mu_SFSR_SB_ID, outPutFile);
-    SaveEff(h_mu_SFSR_SB_Iso, outPutFile);
-    
+    //    std::cout<<" seg vio9 "<<endl;
+
     if(ScaleAccSys){ 
       for(int iacc=0; iacc < Scalesize; iacc++){
 	SaveEff(Vec_scale_mu_SFCR_SB.at(iacc),outPutFile);
@@ -2442,6 +2228,8 @@ void SFMaker::Terminate()
         if(h_di_SFSR_SB->GetBinContent(nX) < 1) h_di_SFSR_SB->SetBinContent(nX, 1);
 	}
 
+	//	std::cout<<" seg vio11 "<<endl;
+
 	h_di_nTwoPrompt_SB->Write();
 	h_di_nTwoFoundTwoPrompt_SB->Write();
 	h_di_nOneFoundTwoPrompt_SB->Write();
@@ -2460,8 +2248,8 @@ void SFMaker::Terminate()
 	h_di_nLostTwoPrompt_SB->Divide(h_di_nTwoPrompt_SB);
 	SaveEff(h_di_nLostTwoPrompt_SB, outPutFile);
 */	
-    SaveEff(h_di_SFCR_SB, outPutFile);
-    SaveEff(h_di_SFSR_SB, outPutFile);
+	//SaveEff(h_di_SFCR_SB, outPutFile);
+	//    SaveEff(h_di_SFSR_SB, outPutFile);
 
     outPutFile->Close();
 
@@ -2490,6 +2278,7 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
    	}
 
     std::string name = std::string(h->GetName());
+    //    std::cout<<" name "<<name<<endl;
     if(name.find(std::string("SFCR")) != std::string::npos || name.find(std::string("SFSR")) != std::string::npos){
     	if(name.find(std::string("SB")) != std::string::npos) h->GetYaxis()->SetRangeUser(0.79, 1.31);
     	if(name.find(std::string("etaPt")) != std::string::npos){
@@ -2503,7 +2292,8 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
             h->GetZaxis()->SetRangeUser(0.01, 1.01);
         }
     }
-    
+    //    std::cout<<" before colz "<<name<<endl;
+    /*  
     h->Draw("ColZ,Text");
 
     //if(name.find(std::string("SFCR")) != std::string::npos || name.find(std::string("SFSR")) != std::string::npos){
@@ -2513,109 +2303,84 @@ void SFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
 	//}
 
     delete c1;
+*/
     gROOT->SetBatch(false);
+    //std::cout<<" after colz "<<name<<endl;
 
     h->Write();
 }
 
 bool SFMaker::FiltersPass()
 {
-
-
-  bool result=true;
-  if(useFilterData){
-    if(HBHENoiseFilter!=1){
-      result=false;
-      //      std::cout<<" failed HBHE "<<endl;
+    bool result=true;
+    //*AR-180101- useFilterData true for other than FastSim
+    if(useFilterData){
+        if(HBHENoiseFilter!=1) result=false;
+        if(HBHEIsoNoiseFilter!=1) result=false;
+        if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
+	//  if(eeBadScFilter!=1) result=false;
+	//	if(ecalBadCalibFilter!=1) result=false;
+        //if(runOnData){
+        //    if(!BadChargedCandidateFilter) result=false;
+	if(BadPFMuonFilter!=1) result=false; 
+	if(globalSuperTightHalo2016Filter!=1) result=false;
+	if(!ecalBadCalibReducedFilter) result=false;
+	if(!ecalBadCalibReducedExtraFilter) result=false; 
+        //}    
     }
-    //    if(result) h_CutFlow->Fill(5);
-    if(HBHEIsoNoiseFilter!=1){
-      result=false;
-      //      std::cout<<" failed HBHEIso "<<endl;
+    if(NVtx<=0) result=false;
+    //    std::cout<<" result after Nvtx check"<<result<<endl;
+    // Preliminary filters
+    if(PFCaloMETRatio>5) result=false;
+
+    for(unsigned j = 0; j < Jets->size(); j++){
+      //*AR-180101- return std::isnan(x)----> A non-zero value (true) if x is a NaN value; and zero (false) otherwise.
+        if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
+        if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
+            //std::cout<<"found bad muon jet"<<std::endl;
+            result=false;
+            break;
+        }
     }
-
-    //    if(result) h_CutFlow->Fill(6);
-    if(EcalDeadCellTriggerPrimitiveFilter!=1){
-      result=false;    
-      //      std::cout<<" failed EcalDeadCell "<<endl;
-    }
-
-    //    if(result) h_CutFlow->Fill(7);
-    /*
-    if(eeBadScFilter!=1){
-      result=false;
-      //      std::cout<<" failed eeBadSc "<<endl;
-    }
-*/
-    if(BadPFMuonFilter!=1) result=false;
-      
-    //    if(result) h_CutFlow->Fill(8);
-    if(BadChargedCandidateFilter!=1) result=false;
-
-    //    if(!runOnSignalMC){
-      if(globalSuperTightHalo2016Filter!=1) result=false;
-      //    }
-    //    if(result) h_CutFlow->Fill(9);
-
-    //if(ecalBadCalibFilter!=1) result=false;
-      //    if(runOnData){
-      if(eeBadScFilter!=1) result=false;
-      // if(globalSuperTightHalo2016Filter!=1) result=false;
-      //    }    
-  }
-  if(NVtx<=0){
-    result=false;
-    //    std::cout<<" failed nvtx "<<endl;
-  }
-
-
-  // Do not apply on fastSim samples!
-  //if(!runOnSignalMC)
-  if(!JetID){
-    result=false;
-    //    std::cout<<" failed jetID "<<endl;
-  }
-  
-  //  if(result) h_CutFlow->Fill(10);
-  // Preliminary filters
-  if(PFCaloMETRatio>5) result=false;
-  //  if(result) h_CutFlow->Fill(11);
-  // Check efficiency of filter
-  
+    
+    //    std::cout<<" result after bad muon jet"<<result<<endl;
+    
+  //*AR-190406---filter devided to take care of anomalous jets affecting QCD control region
   if(result)
     for(unsigned j = 0; j < Jets->size(); j++){
-      if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
-      if(Jets->at(j).Pt()>200 && Jets_muonEnergyFraction->at(j)>0.5 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
-	//std::cout<<"found bad muon jet"<<std::endl;
-	result=false;
-      }
-    }
-  //  if(result) h_CutFlow->Fill(12);
-
-
-  //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
-  /*  if(result && runOnSignalMC)
-    for(unsigned j = 0; j < Jets->size(); ++j){
-      if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
-      bool genMatched = false;
-      for(unsigned g = 0; g < GenJets->size(); ++g){
-	if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
-	  genMatched = true;
-	  break;
+      if(j==0){
+	if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
+	if(Jets_neutralEmEnergyFraction->at(j)<0.03 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
+	  //	  std::cout<<"found bad QCD CR jet"<<std::endl;
+	  result=false;
 	}
       }
-      if(!genMatched && Jets_chargedHadronEnergyFraction->at(j) < 0.1){
-	result = false;
-	break;
-      }
     }
-*/
-  //  if(result) h_CutFlow->Fill(13);
-  
-  
-  return result;
-  
-  
+
+
+  //    std::cout<<" result after QCD bad jet"<<result<<endl;
+
+    //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
+    /*if (runOnSignalMC)
+    for(unsigned j = 0; j < Jets->size(); ++j){
+        if(Jets->at(j).Pt() <= 20 || fabs(Jets->at(j).Eta())>=2.5) continue;
+        bool genMatched = false;
+        for(unsigned g = 0; g < GenJets->size(); ++g){
+            if(GenJets->at(g).DeltaR(Jets->at(j)) < 0.3) {
+             genMatched = true;
+             break;
+            }
+        }
+        if(!genMatched && Jets_chargedHadronEnergyFraction->at(j) < 0.1){
+            result = false;
+            break;
+        }
+    }
+    */
+    // Do not apply on fastSim samples!
+    //if(!runOnSignalMC) 
+    if(!JetID) result=false;
+    return result;
 }
 /*
 std::pair<vector<TVector3>,vector<int>> SFMaker::Order_the_Vec(vector<TVector3> vec)

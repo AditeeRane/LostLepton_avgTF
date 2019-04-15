@@ -45,7 +45,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
   //*AR:190112- MC expectation
   //  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExpWithBtagProb_0L_190111.root");
-  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExp_0L_190111.root");
+  sprintf(tempname,"Prediction_0_haddTTbarWJetST_0L_2018_Exp_190410.root");
 
   //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
   
@@ -54,11 +54,11 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_WithWidenedHEMvetoForJetsWithDphiPt5Cut_1L_190320.root");
+  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_1L_2018_Pre_190412.root");
 
  // true: do closure test (MC prediction vs MC truth)
   // false: do data driven prediction and compare to MC truth
-  bool doData = true;
+  bool doData = false;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
@@ -107,8 +107,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //
   // Luminosity information for scaling
-  double lumi     = 41.486; // normaliza to this lumi (fb-1)
-  double lumi_ref = 41.486; // normaliza to 3 (fb-1)
+  double lumi     = 59.546; // normaliza to this lumi (fb-1)
+  double lumi_ref = 59.546; // normaliza to 3 (fb-1)
   
    ///////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -215,8 +215,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   EstHistTemp=(TH1D*) LLFileAvg->Get(tempname)->Clone();
   EstHistDTemp=(TH1D*) LLFileAvg->Get(tempname)->Clone();
-  EstHistTemp->Scale(41486.328/59777.551);
-  EstHistDTemp->Scale(41486.328/59777.551);
+  //  EstHistTemp->Scale(41486.328/59777.551);
+  //  EstHistDTemp->Scale(41486.328/59777.551);
   GenHistTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
   GenHistDTemp=(TH1D*) LLFile->Get("h_CSStat")->Clone();
   /*
