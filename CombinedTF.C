@@ -416,7 +416,7 @@ void GetTFHistograms(char* WJetTTbarMC,char* Wgun,char* SFHist, char* histOne,ch
 void CombinedTF() {
 
   //*AR: 190116- TF in nominal case  
-  
+  /*
   GetTFHistograms("TF_0.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
 
@@ -426,17 +426,17 @@ void CombinedTF() {
   GetTFHistograms("TF_0.root","h_0L1L_Hadtau_SB","h_SR_Hadtau_SB","h_CR_SB");
   GetTFHistograms("TF_0.root","h_0L1L_SF_Hadtau_SB","h_SR_SF_Hadtau_SB","h_CR_SF_SB");
 
-
+*/
   //*AR: 190116- TF in scale sys case
 
-  //  GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
-  //  GetTFHistograms("TF_0.root","h_scale_0L1L_SF_SB","h_scale_SR_SF_SB","h_scale_CR_SF_SB",9);
+  GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
+  GetTFHistograms("TF_0.root","h_scale_0L1L_SF_SB","h_scale_SR_SF_SB","h_scale_CR_SF_SB",9);
 
   //*AR: 190116- TF in PDF sys case
-
-  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",101);
-  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",101);
-
+  /*
+    GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",102);
+    GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",102);
+*/
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
   //  GetTFHistograms("TF_0.root","ARElog115_GenInfo_HadTauEstimation_stacked.root","h_0L1L_SB","h_SR_SB","h_CR_SB","QCD_Up");

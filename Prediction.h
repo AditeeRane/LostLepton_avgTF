@@ -32,8 +32,8 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 bool GetSignalRegHists= false; //true while getting MC expectation
@@ -43,7 +43,7 @@ bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 const bool ApplyHT5cut=true;
 bool AddHEMVeto=false; //<---true to get 2018 Prediction with HEM affected region
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs = true; //check:true only for data
 const double csvForBtag=0.4184;
 // Use TFs with/without SFs
 const double scaleFactorWeight = 59546.381; //not used for data
@@ -123,9 +123,22 @@ class Prediction : public TSelector {
 
   // Output
   TH1D* h_Prediction = 0;
+
+  TH2D* h_Prediction_NJetvsNBtag = 0;
+  TH2D* h_Prediction_HTvsMHT = 0;
+
+  TH1D* h_Prediction_NJetvsNBtag_1D = 0;
+  TH1D* h_Prediction_HTvsMHT_1D = 0;
+
   TH1D* h_YieldCutFlow=0;
   TH1D* h_CutFlow=0;
   TH1D* h_CSStat = 0;
+  TH2D* h_CSStat_NJetvsNBtag=0;
+  TH2D* h_CSStat_HTvsMHT=0;
+
+  TH1D* h_CSStat_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_HTvsMHT_1D=0;
+
   TH2D* h_CSStat_MHTVsNbjet=0;
   TH2D* h_Prediction_MHTVsNbjet=0;
   TH1D* h_HT_Exp=0;
@@ -251,6 +264,8 @@ class Prediction : public TSelector {
   TH1D* h_HTRatioforTwoNbv2Recipe_Exp=0;  
   TH1D* h_HTRatioforNotTwoNbv2Recipe_Exp=0;
   TH1D* h_MHTv2Recipe_Exp=0;
+  TH1D* h_MHTv2RecipeExtend_Exp=0;
+
   TH1D* h_MHTv2Recipe_forQCD_Exp=0;
 
   TH1D* h_MHTforLowNJetv2Recipe_Exp=0;
@@ -543,6 +558,8 @@ class Prediction : public TSelector {
   TH1D* h_HT_forQCD_Pre=0;
 
   TH1D* h_MHT_Pre=0;
+  TH1D* h_MHTExtend_Pre=0;
+
   TH1D* h_MHT_forQCD_Pre=0;
 
   TH1D* h_NJet_Pre=0;
@@ -601,7 +618,9 @@ class Prediction : public TSelector {
   Float_t MuonsPt_, MuonsEta_;
   Float_t ElectronsPt_, ElectronsEta_;
   Float_t mtw;
-  
+  UShort_t GenElectronsNum_, GenMuonsNum_;
+  UShort_t GenTausNum_;
+  UShort_t GenTausHadNum_;  
   UShort_t Bin_, BinQCD_;
 
   Int_t NMuons=-1;

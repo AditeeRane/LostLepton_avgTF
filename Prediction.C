@@ -37,6 +37,18 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
+  h_CSStat_NJetvsNBtag = new TH2D("h_CSStat_NJetvsNBtag", "h_CSStat_NJetvsNBtag",5,2,12,4,0,4);
+  h_Prediction_NJetvsNBtag = new TH2D("h_Prediction_NJetvsNBtag", "h_Prediction_NJetvsNBtag",5,2,12,4,0,4);
+
+  h_CSStat_NJetvsNBtag_1D = new TH1D("h_CSStat_NJetvsNBtag_1D", "h_CSStat_NJetvsNBtag_1D",20,1,20);
+  h_Prediction_NJetvsNBtag_1D = new TH1D("h_Prediction_NJetvsNBtag_1D", "h_Prediction_NJetvsNBtag_1D",20,1,20);
+
+  h_CSStat_HTvsMHT = new TH2D("h_CSStat_HTvsMHT", "h_CSStat_HTvsMHT",4,300,1100,4,250,1050);
+  h_Prediction_HTvsMHT = new TH2D("h_Prediction_HTvsMHT", "h_Prediction_HTvsMHT",4,300,1100,4,250,1050);
+
+  h_CSStat_HTvsMHT_1D = new TH1D("h_CSStat_HTvsMHT_1D", "h_CSStat_HTvsMHT_1D",17,1,17);
+  h_Prediction_HTvsMHT_1D = new TH1D("h_Prediction_HTvsMHT_1D", "h_Prediction_HTvsMHT_1D",17,1,17);
+
   h_CSStat_MHTVsNbjet=new TH2D("h_CSStat_MHTVsNbjet","h_CSStat_MHTVsNbjet",4,MHTbins,4,Nbtagbins);
   h_Prediction_MHTVsNbjet=new TH2D("h_Prediction_MHTVsNbjet","h_Prediction_MHTVsNbjet",4,MHTbins,4,Nbtagbins);
 
@@ -200,6 +212,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_HTRatioforNotTwoNbv2Recipe_Exp =new TH1D("h_HTRatioforNotTwoNbv2Recipe_Exp","h_HTRatioforNotTwoNbv2Recipe_Exp",20,0,5);
 
   h_MHTv2Recipe_Exp =new TH1D("h_MHTv2Recipe_Exp","h_MHTv2Recipe_Exp",16,200,1000);
+  h_MHTv2RecipeExtend_Exp =new TH1D("h_MHTv2RecipeExtend_Exp","h_MHTv2RecipeExtend_Exp",36,200,2000);
+
   h_MHTv2Recipe_forQCD_Exp =new TH1D("h_MHTv2Recipe_forQCD_Exp","h_MHTv2Recipe_forQCD_Exp",40,0,2000);
 
   h_MHTforTwoNbv2Recipe_Exp =new TH1D("h_MHTforTwoNbv2Recipe_Exp","h_MHTforTwoNbv2Recipe_Exp",16,200,1000);
@@ -516,6 +530,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_HT_forQCD_Pre =new TH1D("h_HT_forQCD_Pre","h_HT_forQCD_Pre",50,0,2500);
 
   h_MHT_Pre =new TH1D("h_MHT_Pre","h_MHT_Pre",16,200,1000);
+  h_MHTExtend_Pre =new TH1D("h_MHTExtend_Pre","h_MHTExtend_Pre",36,200,2000);
+
   h_MHT_forQCD_Pre =new TH1D("h_MHT_forQCD_Pre","h_MHT_forQCD_Pre",40,0,2000);
 
   h_NJet_Pre =new TH1D("h_NJet_Pre","h_NJet_Pre",10,2,12);
@@ -528,6 +544,18 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_Prediction);
   GetOutputList()->Add(h_CSStat); //one lepton CS
   GetOutputList()->Add(h_CutFlow); //one lepton CS
+  GetOutputList()->Add(h_CSStat_NJetvsNBtag);
+  GetOutputList()->Add(h_CSStat_HTvsMHT);
+
+  GetOutputList()->Add(h_CSStat_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_HTvsMHT_1D);
+
+  GetOutputList()->Add(h_Prediction_NJetvsNBtag);
+  GetOutputList()->Add(h_Prediction_HTvsMHT);
+
+  GetOutputList()->Add(h_Prediction_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_Prediction_HTvsMHT_1D);
+
   GetOutputList()->Add(h_CSStat_MHTVsNbjet);
   GetOutputList()->Add(h_Prediction_MHTVsNbjet);
   GetOutputList()->Add(h_YieldCutFlow);
@@ -535,6 +563,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_HT5_Exp);
   GetOutputList()->Add(h_HTRatio_Exp);
   GetOutputList()->Add(h_MHT_Exp);
+
   GetOutputList()->Add(h_MET_Exp);
   GetOutputList()->Add(h_METPhi_Exp);
   GetOutputList()->Add(h_MHTPhi_Exp);
@@ -652,6 +681,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_HTRatioforTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_HTRatioforNotTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_MHTv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTv2RecipeExtend_Exp);
+
   GetOutputList()->Add(h_MHTv2Recipe_forQCD_Exp);
 
   GetOutputList()->Add(h_MHTforLowNJetv2Recipe_Exp);
@@ -934,6 +965,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_HT_Pre);
   GetOutputList()->Add(h_MHT_Pre);
+  GetOutputList()->Add(h_MHTExtend_Pre);
+
   GetOutputList()->Add(h_NJet_Pre);
   GetOutputList()->Add(h_NBtag_Pre);
   GetOutputList()->Add(h_HT_forQCD_Pre);
@@ -1148,7 +1181,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	return kTRUE;  
     }
   }
-
+  
   //  std::cout<<" run "<<RunNum<<" entry "<<entry<<" passed event "<<endl;
 
   /*
@@ -1427,6 +1460,38 @@ Bool_t Prediction::Process(Long64_t entry)
     if(isoTracksNum !=0)
       //  std::cout<<" isotrack nonzero "<<endl;
       return kTRUE;
+    //    std::cout<<" isotrack, ele, mu==0 "<<endl;
+  
+    //*AR-190423:CHECK IF EVENT IS LOST LEPTON OR HADTAU
+    GenMuonsNum_ = GenMuons->size();
+    GenElectronsNum_ = GenElectrons->size();
+    GenTausNum_ = GenTaus->size();
+    bool LLEvt=false;
+    bool HadtauEvt=false;
+
+    if(GenElectronsNum_ + GenMuonsNum_ == 0){
+      //	  std::cout<<" gen_taus "<<GenTaus->size()<<" gen taus had bool "<<GenTaus_had->size()<<endl;
+      if(GenTausNum_ > 0){ //gen taus size
+	int HadronicTaus=0;
+	for(unsigned i=0; i<GenTaus->size();i++){
+	  if(GenTaus_had->at(i)==1){ //checks if tau is hadronic tau
+	    //	std::cout<<" it's a hadronic tau "<<endl;
+	    HadronicTaus++;
+	  }
+	}
+	if(HadronicTaus >0){
+	  HadtauEvt=true;
+	}
+      }
+    }
+    else{
+      LLEvt=true; 
+    }
+    if(!LLEvt && !HadtauEvt){
+      std::cout<<" no LL or Hadtau event "<<endl;
+      return kTRUE;
+    }
+  
     h_CutFlow->Fill(14);
   }
   /*
@@ -2414,6 +2479,92 @@ Bool_t Prediction::Process(Long64_t entry)
       }
     }
 
+    double Bmax=-99;
+    double JetMax=-99;
+    double MaxHT=-99;
+    double MaxMHT=-99;
+    double NjIdx=-99;
+    double NbIdx=-99;
+    double HTIdx=-99;
+    double MHTIdx=-99;
+    int ix=-99;
+    int jx=-99;
+
+    int iy=-99;
+    int jy=-99;
+
+
+    if(NJetsv2Recipe>=2 && NJetsv2Recipe<=3)
+      ix=1;
+    else if(NJetsv2Recipe>=4 && NJetsv2Recipe<=5)
+      ix=4;
+    else if(NJetsv2Recipe>=6 && NJetsv2Recipe<=7)
+      ix=8;
+    else if(NJetsv2Recipe>=8 && NJetsv2Recipe<=9)
+      ix=12;
+    else
+      ix=16;
+    if(ix==1){
+      if(BTagsv2Recipe==0)
+	jx=0;
+      if(BTagsv2Recipe==1)
+	jx=1;
+      if(BTagsv2Recipe>=2)
+	jx=2;
+    }
+    else{
+      if(BTagsv2Recipe==0)
+	jx=0;
+      if(BTagsv2Recipe==1)
+	jx=1;
+      if(BTagsv2Recipe==2)
+	jx=2;
+      if(BTagsv2Recipe>=3)
+	jx=3;
+    }
+
+    if(HTv2Recipe>=300 && HTv2Recipe<500)
+      iy=1;
+    if(HTv2Recipe>=500 && HTv2Recipe<700)
+      iy=5;
+    if(HTv2Recipe>=700 && HTv2Recipe<900)
+      iy=9;
+    if(HTv2Recipe>=900)
+      iy=13;
+
+    if(MHTv2Recipe>=250 && MHTv2Recipe<450)
+      jy=0;
+    if(MHTv2Recipe>=450 && MHTv2Recipe<650)
+      jy=1;
+    if(MHTv2Recipe>=650 && MHTv2Recipe<850)
+      jy=2;
+    if(MHTv2Recipe>=850)
+      jy=3;
+
+
+    if(NJetsv2Recipe>=12)
+      JetMax=11;
+    else
+      JetMax=NJetsv2Recipe;
+
+
+    if(BTagsv2Recipe>=4)
+      Bmax=3;
+    else
+      Bmax=BTagsv2Recipe;
+
+    if(HTv2Recipe>=1100)
+      MaxHT=1099;
+    else
+      MaxHT=HTv2Recipe;
+
+    if(MHTv2Recipe>=1050)
+      MaxMHT=1049;
+    else
+      MaxMHT=MHTv2Recipe;
+    //    if(MaxMHT>MHTv2Recipe)
+      //      std::cout<<" NJetsv2Recipe "<<NJetsv2Recipe<<" JetMax "<<JetMax<<" BTagsv2Recipe "<<BTagsv2Recipe<<" Bmax "<<Bmax<<" HTv2Recipe "<<HTv2Recipe<<" MaxHT "<<MaxHT<<" MHTv2Recipe "<<MHTv2Recipe<<" maxMHT "<<MaxMHT<<endl;
+    //    std::cout<<" NJetsv2Recipe "<<NJetsv2Recipe<<" BTagsv2Recipe "<<BTagsv2Recipe<<" ix+jx "<<ix+jx<<" HTv2Recipe "<<HTv2Recipe<<" MHTv2Recipe "<<MHTv2Recipe<<" iy+jy "<<iy+jy<<endl;
 
     HTRatio=HT5/HT;
     HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
@@ -2421,6 +2572,19 @@ Bool_t Prediction::Process(Long64_t entry)
     //    std::cout<<" i "<<i<<" bTagBin "<<bTagBin<<" bTagBinQCD "<<bTagBinQCD<<" *** Seg Vio3 *** "<<endl;
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
+    if(doBTagCorr){
+      h_CSStat_NJetvsNBtag->Fill(JetMax,i,WeightBtagProb);
+      h_CSStat_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb);
+      h_CSStat_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+      h_CSStat_HTvsMHT_1D->Fill(iy+jy,WeightBtagProb);
+    }
+    else{
+      h_CSStat_NJetvsNBtag->Fill(JetMax,Bmax,WeightBtagProb);
+      h_CSStat_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb);
+      h_CSStat_NJetvsNBtag_1D->Fill(ix+jx,WeightBtagProb);
+      h_CSStat_HTvsMHT_1D->Fill(iy+jy,WeightBtagProb);
+    }
+
     h_CSStat_MHTVsNbjet->Fill(MHTv2Recipe,BTagsfrmCSV,WeightBtagProb);
     h_HT_Exp->Fill(HT,WeightBtagProb);
     h_HT5_Exp->Fill(HT5,WeightBtagProb);
@@ -2579,6 +2743,9 @@ Bool_t Prediction::Process(Long64_t entry)
     h_HT5v2Recipe_Exp->Fill(HT5v2Recipe,WeightBtagProb);
     h_HTRatiov2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
     h_MHTv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+    h_MHTv2RecipeExtend_Exp->Fill(MHTv2Recipe,WeightBtagProb);
+
+    h_MHTv2RecipeExtend_Exp->Fill(MHTv2Recipe,WeightBtagProb);
     h_MHTv2Recipe_forQCD_Exp->Fill(MHTv2Recipe,WeightBtagProb);
 
     h_MHTPhiv2Recipe_Exp->Fill(MHTPhiv2Recipe,WeightBtagProb);
@@ -2604,9 +2771,18 @@ Bool_t Prediction::Process(Long64_t entry)
 
     h_NJetforMHTminusHTv2Recipe_Exp->Fill(NJetsforMHTminusHTv2Recipe,WeightBtagProb);
 
-    h_NBtagv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
-    if(MHTv2Recipe>250 && MHTv2Recipe<300)
-      h_NBtagv2Recipe_forQCD_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    if(doBTagCorr){ //true for signal and SM MC 
+      h_NBtagv2Recipe_Exp->Fill(i,WeightBtagProb);
+      if(MHTv2Recipe>250 && MHTv2Recipe<300)
+	h_NBtagv2Recipe_forQCD_Exp->Fill(i,WeightBtagProb);
+    }
+    else{ //true for signal and SM MC 
+      h_NBtagv2Recipe_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+      if(MHTv2Recipe>250 && MHTv2Recipe<300)
+	h_NBtagv2Recipe_forQCD_Exp->Fill(BTagsv2Recipe,WeightBtagProb);
+    }
+
+
 
     h_DphiOneforHTv2Recipe_Exp->Fill(HTDeltaPhi1v2Recipe,WeightBtagProb);
     h_DphiTwoforHTv2Recipe_Exp->Fill(HTDeltaPhi2v2Recipe,WeightBtagProb);
@@ -2645,9 +2821,11 @@ Bool_t Prediction::Process(Long64_t entry)
     //*AR: 180917- These histograms represent yield in SR as TF is applied
     h_HT_Pre->Fill(HTv2Recipe,WeightBtagProb*TF);
     h_MHT_Pre->Fill(MHTv2Recipe,WeightBtagProb*TF);
+    h_MHTExtend_Pre->Fill(MHTv2Recipe,WeightBtagProb*TF);
+
     h_NJet_Pre->Fill(NJetsv2Recipe,WeightBtagProb*TF);
     if(doBTagCorr) //true for signal and SM MC
-      h_NBtag_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
+      h_NBtag_Pre->Fill(i,WeightBtagProb*TF);
     else //true for data
       h_NBtag_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
 
@@ -2658,13 +2836,27 @@ Bool_t Prediction::Process(Long64_t entry)
       h_NJet_forQCD_Pre->Fill(NJetsv2Recipe,WeightBtagProb*TF);
     if(doBTagCorr){ //true for signal and SM MC
       if(MHTv2Recipe>250 && MHTv2Recipe<300)
-	h_NBtag_forQCD_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
+	h_NBtag_forQCD_Pre->Fill(i,WeightBtagProb*TF);
     }
     else{ //true for data
       if(MHTv2Recipe>250 && MHTv2Recipe<300)
 	h_NBtag_forQCD_Pre->Fill(BTagsv2Recipe,WeightBtagProb*TF);
     }
     h_Prediction_MHTVsNbjet->Fill(MHTv2Recipe,BTagsfrmCSV,WeightBtagProb*TF);
+
+    if(doBTagCorr){
+      h_Prediction_NJetvsNBtag->Fill(JetMax,i,WeightBtagProb*TF);
+      h_Prediction_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb*TF);
+      h_Prediction_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb*TF);
+      h_Prediction_HTvsMHT_1D->Fill(iy+jy,WeightBtagProb*TF);
+    }
+    else{
+      h_Prediction_NJetvsNBtag->Fill(JetMax,Bmax,WeightBtagProb*TF);
+      h_Prediction_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb*TF);
+      h_Prediction_NJetvsNBtag_1D->Fill(ix+jx,WeightBtagProb*TF);
+      h_Prediction_HTvsMHT_1D->Fill(iy+jy,WeightBtagProb*TF);
+    }
+
 
     h_Prediction->Fill(bTagBin, WeightBtagProb*TF);
     //    std::cout<<" ** hist filled "<<" WeightBtagProb "<<WeightBtagProb<<endl;
@@ -2700,6 +2892,17 @@ void Prediction::Terminate()
   std::cout<<"***Prediction::Terminate***"<<std::endl;
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
+
+  h_CSStat_NJetvsNBtag = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_CSStat_NJetvsNBtag"));
+  h_Prediction_NJetvsNBtag = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_Prediction_NJetvsNBtag"));
+  h_CSStat_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_NJetvsNBtag_1D"));
+  h_Prediction_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction_NJetvsNBtag_1D"));
+
+  h_CSStat_HTvsMHT = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_CSStat_HTvsMHT"));
+  h_Prediction_HTvsMHT = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_Prediction_HTvsMHT"));
+  h_CSStat_HTvsMHT_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_HTvsMHT_1D"));
+  h_Prediction_HTvsMHT_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction_HTvsMHT_1D"));
+
   h_CSStat_MHTVsNbjet = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_CSStat_MHTVsNbjet"));
   h_Prediction_MHTVsNbjet = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_Prediction_MHTVsNbjet"));
   h_CutFlow = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CutFlow"));
@@ -2860,6 +3063,8 @@ void Prediction::Terminate()
   h_HTRatioforNotTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforNotTwoNbv2Recipe_Exp"));
 
   h_MHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_Exp"));
+  h_MHTv2RecipeExtend_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2RecipeExtend_Exp"));
+
   h_MHTv2Recipe_forQCD_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_forQCD_Exp"));
 
   h_MHTforLowNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTforLowNJetv2Recipe_Exp"));
@@ -3160,6 +3365,8 @@ void Prediction::Terminate()
 
   h_HT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Pre"));
   h_MHT_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHT_Pre"));
+  h_MHTExtend_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTExtend_Pre"));
+
   h_NJet_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NJet_Pre"));
   h_NBtag_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_NBtag_Pre"));
   h_HT_forQCD_Pre = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_forQCD_Pre"));
@@ -3178,6 +3385,17 @@ void Prediction::Terminate()
   h_CSStat->Write();
   h_CSStat_MHTVsNbjet->Write();
   h_Prediction_MHTVsNbjet->Write();
+  h_CSStat_NJetvsNBtag->Write();
+  h_Prediction_NJetvsNBtag->Write();
+  h_CSStat_NJetvsNBtag_1D->Write();
+  h_Prediction_NJetvsNBtag_1D->Write();
+
+  h_CSStat_HTvsMHT->Write();
+  h_Prediction_HTvsMHT->Write();
+
+  h_CSStat_HTvsMHT_1D->Write();
+  h_Prediction_HTvsMHT_1D->Write();
+
   h_CutFlow->Write();
   h_YieldCutFlow->Write();
   h_HT_Exp->Write();
@@ -3295,6 +3513,8 @@ void Prediction::Terminate()
   h_HTRatioforTwoNbv2Recipe_Exp->Write();
   h_HTRatioforNotTwoNbv2Recipe_Exp->Write();
   h_MHTv2Recipe_Exp->Write();
+  h_MHTv2RecipeExtend_Exp->Write();
+
   h_MHTv2Recipe_forQCD_Exp->Write();
   h_MHTforLowNJetv2Recipe_Exp->Write();
   h_MHTforHighNJetv2Recipe_Exp->Write();
@@ -3308,6 +3528,7 @@ void Prediction::Terminate()
   h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp->Write();
   h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp->Write();
   h_NJetv2Recipe_Exp->Write();
+  //  h_NJetv2RecipeExtend_Exp->Write();
   h_NJetv2Recipe_forQCD_Exp->Write();
   
   h_NJetforTwoNbv2Recipe_Exp->Write();
@@ -3319,6 +3540,8 @@ void Prediction::Terminate()
   h_NJetvsNBFracv2Recipe_Exp->Write();
   h_NJetforMHTminusHTv2Recipe_Exp->Write();
   h_NBtagv2Recipe_Exp->Write();
+  //  h_NBtagv2RecipeExtend_Exp->Write();
+
   h_NBtagv2Recipe_forQCD_Exp->Write();
 
   h_NBtagforLowNJetv2Recipe_Exp->Write();
@@ -3620,6 +3843,7 @@ void Prediction::Terminate()
 
   h_HT_Pre->Write();
   h_MHT_Pre->Write();
+  h_MHTExtend_Pre->Write();
   h_NJet_Pre->Write();
   h_NBtag_Pre->Write();
   h_HT_forQCD_Pre->Write();

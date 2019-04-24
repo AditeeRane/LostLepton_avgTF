@@ -32,7 +32,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
@@ -41,7 +41,7 @@ const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
 const bool JECSys=false; //false by default
 const bool ScaleAccSys=false;
-const bool PDFAccSys=true;
+const bool PDFAccSys=false;
 const bool BtagSys=false;
 const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;
@@ -49,7 +49,7 @@ const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs
 const double scaleFactorWeight = 59546.381;
 bool GetNonPrefireProb=false; //<---true for 2016 and 2017 MC
-bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
+bool AddHEMVeto=true; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
