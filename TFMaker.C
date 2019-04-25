@@ -35,22 +35,67 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
   h_0L1L_Hadtau_SB = new TH1D("h_0L1L_Hadtau_SB", "h_0L1L_Hadtau_SB", nSB, 0.5, nSB+0.5);
 
   h_CR_SF_SB = new TH1D("h_CR_SF_SB", "h_CR_SF_SB", nSB, 0.5, nSB+0.5);
+  if(LeptonSys){
+    h_CR_SF_SB_el_Track = new TH1D("h_CR_SF_SB_el_Track", "h_CR_SF_SB_el_Track", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_el_ID = new TH1D("h_CR_SF_SB_el_ID", "h_CR_SF_SB_el_ID", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_el_Iso = new TH1D("h_CR_SF_SB_el_Iso", "h_CR_SF_SB_el_Iso", nSB, 0.5, nSB+0.5);
+ 
+    h_CR_SF_SB_mu_Track = new TH1D("h_CR_SF_SB_mu_Track", "h_CR_SF_SB_mu_Track", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_mu_ID = new TH1D("h_CR_SF_SB_mu_ID", "h_CR_SF_SB_mu_ID", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_mu_Iso = new TH1D("h_CR_SF_SB_mu_Iso", "h_CR_SF_SB_mu_Iso", nSB, 0.5, nSB+0.5);
+  }
   h_SR_SF_SB = new TH1D("h_SR_SF_SB", "h_SR_SF_SB", nSB, 0.5, nSB+0.5);
+  if(LeptonSys){
+    h_SR_SF_SB_el_Track = new TH1D("h_SR_SF_SB_el_Track", "h_SR_SF_SB_el_Track", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_el_ID = new TH1D("h_SR_SF_SB_el_ID", "h_SR_SF_SB_el_ID", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_el_Iso = new TH1D("h_SR_SF_SB_el_Iso", "h_SR_SF_SB_el_Iso", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_Track = new TH1D("h_SR_SF_SB_mu_Track", "h_SR_SF_SB_mu_Track", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_ID = new TH1D("h_SR_SF_SB_mu_ID", "h_SR_SF_SB_mu_ID", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_Iso = new TH1D("h_SR_SF_SB_mu_Iso", "h_SR_SF_SB_mu_Iso", nSB, 0.5, nSB+0.5);
+
+
+  }
   h_SR_SF_LL_SB = new TH1D("h_SR_SF_LL_SB", "h_SR_SF_LL_SB", nSB, 0.5, nSB+0.5);
   h_SR_SF_Hadtau_SB = new TH1D("h_SR_SF_Hadtau_SB", "h_SR_SF_Hadtau_SB", nSB, 0.5, nSB+0.5);
-
   h_0L1L_SF_SB = new TH1D("h_0L1L_SF_SB", "h_0L1L_SF_SB", nSB, 0.5, nSB+0.5);
+  if(LeptonSys){  
+    h_0L1L_SF_SB_el_Track = new TH1D("h_0L1L_SF_SB_el_Track", "h_0L1L_SF_SB_el_Track", nSB, 0.5, nSB+0.5);
+    h_0L1L_SF_SB_el_ID = new TH1D("h_0L1L_SF_SB_el_ID", "h_0L1L_SF_SB_el_ID", nSB, 0.5, nSB+0.5);
+    h_0L1L_SF_SB_el_Iso = new TH1D("h_0L1L_SF_SB_el_Iso", "h_0L1L_SF_SB_el_Iso", nSB, 0.5, nSB+0.5);
+    h_0L1L_SF_SB_mu_Track = new TH1D("h_0L1L_SF_SB_mu_Track", "h_0L1L_SF_SB_mu_Track", nSB, 0.5, nSB+0.5);
+    h_0L1L_SF_SB_mu_ID = new TH1D("h_0L1L_SF_SB_mu_ID", "h_0L1L_SF_SB_mu_ID", nSB, 0.5, nSB+0.5);
+    h_0L1L_SF_SB_mu_Iso = new TH1D("h_0L1L_SF_SB_mu_Iso", "h_0L1L_SF_SB_mu_Iso", nSB, 0.5, nSB+0.5);
+  }
+
   h_0L1L_SF_LL_SB = new TH1D("h_0L1L_SF_LL_SB", "h_0L1L_SF_LL_SB", nSB, 0.5, nSB+0.5);
   h_0L1L_SF_Hadtau_SB = new TH1D("h_0L1L_SF_Hadtau_SB", "h_0L1L_SF_Hadtau_SB", nSB, 0.5, nSB+0.5);
 
   // Use those histograms per sample. You don't want net negative weights
   h_CR_SB_copy = new TH1D("h_CR_SB_copy", "h_CR_SB_copy", nSB, 0.5, nSB+0.5);
+
   h_SR_SB_copy = new TH1D("h_SR_SB_copy", "h_SR_SB_copy", nSB, 0.5, nSB+0.5);
   h_SR_LL_SB_copy = new TH1D("h_SR_LL_SB_copy", "h_SR_LL_SB_copy", nSB, 0.5, nSB+0.5);
   h_SR_Hadtau_SB_copy = new TH1D("h_SR_Hadtau_SB_copy", "h_SR_Hadtau_SB_copy", nSB, 0.5, nSB+0.5);
 
   h_CR_SF_SB_copy = new TH1D("h_CR_SF_SB_copy", "h_CR_SF_SB_copy", nSB, 0.5, nSB+0.5);
+  if(LeptonSys){
+    h_CR_SF_SB_el_Track_copy = new TH1D("h_CR_SF_SB_el_Track_copy", "h_CR_SF_SB_el_Track_copy", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_el_ID_copy = new TH1D("h_CR_SF_SB_el_ID_copy", "h_CR_SF_SB_el_ID_copy", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_el_Iso_copy = new TH1D("h_CR_SF_SB_el_Iso_copy", "h_CR_SF_SB_el_Iso_copy", nSB, 0.5, nSB+0.5);
+
+    h_CR_SF_SB_mu_Track_copy = new TH1D("h_CR_SF_SB_mu_Track_copy", "h_CR_SF_SB_mu_Track_copy", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_mu_ID_copy = new TH1D("h_CR_SF_SB_mu_ID_copy", "h_CR_SF_SB_mu_ID_copy", nSB, 0.5, nSB+0.5);
+    h_CR_SF_SB_mu_Iso_copy = new TH1D("h_CR_SF_SB_mu_Iso_copy", "h_CR_SF_SB_mu_Iso_copy", nSB, 0.5, nSB+0.5);
+  }
   h_SR_SF_SB_copy = new TH1D("h_SR_SF_SB_copy", "h_SR_SF_SB_copy", nSB, 0.5, nSB+0.5);
+  if(LeptonSys){
+    h_SR_SF_SB_el_Track_copy = new TH1D("h_SR_SF_SB_el_Track_copy", "h_SR_SF_SB_el_Track_copy", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_el_ID_copy = new TH1D("h_SR_SF_SB_el_ID_copy", "h_SR_SF_SB_el_ID_copy", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_el_Iso_copy = new TH1D("h_SR_SF_SB_el_Iso_copy", "h_SR_SF_SB_el_Iso_copy", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_Track_copy = new TH1D("h_SR_SF_SB_mu_Track_copy", "h_SR_SF_SB_mu_Track_copy", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_ID_copy = new TH1D("h_SR_SF_SB_mu_ID_copy", "h_SR_SF_SB_mu_ID_copy", nSB, 0.5, nSB+0.5);
+    h_SR_SF_SB_mu_Iso_copy = new TH1D("h_SR_SF_SB_mu_Iso_copy", "h_SR_SF_SB_mu_Iso_copy", nSB, 0.5, nSB+0.5);
+  }
   h_SR_SF_LL_SB_copy = new TH1D("h_SR_SF_LL_SB_copy", "h_SR_SF_LL_SB_copy", nSB, 0.5, nSB+0.5);
   h_SR_SF_Hadtau_SB_copy = new TH1D("h_SR_SF_Hadtau_SB_copy", "h_SR_SF_Hadtau_SB_copy", nSB, 0.5, nSB+0.5);
 
@@ -69,10 +114,35 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_CR_SF_SB);
   GetOutputList()->Add(h_SR_SF_SB);
+  if(LeptonSys){
+    GetOutputList()->Add(h_CR_SF_SB_el_Track);
+    GetOutputList()->Add(h_CR_SF_SB_el_ID);
+    GetOutputList()->Add(h_CR_SF_SB_el_Iso);
+    
+    GetOutputList()->Add(h_SR_SF_SB_el_Track);
+    GetOutputList()->Add(h_SR_SF_SB_el_ID);
+    GetOutputList()->Add(h_SR_SF_SB_el_Iso);
+
+    GetOutputList()->Add(h_CR_SF_SB_mu_Track);
+    GetOutputList()->Add(h_CR_SF_SB_mu_ID);
+    GetOutputList()->Add(h_CR_SF_SB_mu_Iso);
+    
+    GetOutputList()->Add(h_SR_SF_SB_mu_Track);
+    GetOutputList()->Add(h_SR_SF_SB_mu_ID);
+    GetOutputList()->Add(h_SR_SF_SB_mu_Iso);
+  }
   GetOutputList()->Add(h_SR_SF_LL_SB);
   GetOutputList()->Add(h_SR_SF_Hadtau_SB);
 
   GetOutputList()->Add(h_0L1L_SF_SB);
+  if(LeptonSys){
+    GetOutputList()->Add(h_0L1L_SF_SB_el_Track);
+    GetOutputList()->Add(h_0L1L_SF_SB_el_ID);
+    GetOutputList()->Add(h_0L1L_SF_SB_el_Iso);
+    GetOutputList()->Add(h_0L1L_SF_SB_mu_Track);
+    GetOutputList()->Add(h_0L1L_SF_SB_mu_ID);
+    GetOutputList()->Add(h_0L1L_SF_SB_mu_Iso);
+  }
   GetOutputList()->Add(h_0L1L_SF_LL_SB);
   GetOutputList()->Add(h_0L1L_SF_Hadtau_SB);
 
@@ -83,6 +153,24 @@ void TFMaker::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_CR_SF_SB_copy);
   GetOutputList()->Add(h_SR_SF_SB_copy);
+  if(LeptonSys){
+    GetOutputList()->Add(h_CR_SF_SB_el_Track_copy);
+    GetOutputList()->Add(h_CR_SF_SB_el_ID_copy);
+    GetOutputList()->Add(h_CR_SF_SB_el_Iso_copy);
+    
+    GetOutputList()->Add(h_SR_SF_SB_el_Track_copy);
+    GetOutputList()->Add(h_SR_SF_SB_el_ID_copy);
+    GetOutputList()->Add(h_SR_SF_SB_el_Iso_copy);
+
+    GetOutputList()->Add(h_CR_SF_SB_mu_Track_copy);
+    GetOutputList()->Add(h_CR_SF_SB_mu_ID_copy);
+    GetOutputList()->Add(h_CR_SF_SB_mu_Iso_copy);
+    
+    GetOutputList()->Add(h_SR_SF_SB_mu_Track_copy);
+    GetOutputList()->Add(h_SR_SF_SB_mu_ID_copy);
+    GetOutputList()->Add(h_SR_SF_SB_mu_Iso_copy);
+
+  }
   GetOutputList()->Add(h_SR_SF_LL_SB_copy);
   GetOutputList()->Add(h_SR_SF_Hadtau_SB_copy);
 
@@ -145,17 +233,15 @@ Bool_t TFMaker::Process(Long64_t entry)
     fChain->GetTree()->GetEntry(entry);
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
-    
-    //  if(entry % 3 != 0) return kTRUE;
-
-    //if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
     bool CheckPhi=false;
     bool CheckEta=false;
     
     bool CheckJetPhi=false;
     bool CheckJetEta=false;
+    
+    //  if(entry % 3 != 0) return kTRUE;
 
-
+    //if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
     vector<int> MHTJetsIdxv2Recipe;
     vector<int> ElectronMatchJetIdxv2Recipe;
 
@@ -202,8 +288,13 @@ Bool_t TFMaker::Process(Long64_t entry)
       if(JetInHEMArea)
 	return kTRUE;  
     }
-
     //    std::cout<<" entry "<<entry<<" no HEM jet "<<endl;
+
+
+
+
+
+
   //*AR-180115-As in jet collection there are jets saved with pt>30 and eta<5, MHT3JetVec size remains same while HT3JetVec size reduces.
     if(JECSys){ 
       for(unsigned int i=0;i < Jets->size();i++){
@@ -311,7 +402,7 @@ Bool_t TFMaker::Process(Long64_t entry)
       if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
       if(useDeltaPhiCut == 1) if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
       if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-
+     
       if(ApplyHT5cut){
 	double getHT5Cut;
 	getHT5Cut = 5.3*(HT5/HT)-4.78;
@@ -320,6 +411,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  return kTRUE;
 	}
       }
+
     }
 
 
@@ -394,7 +486,9 @@ Bool_t TFMaker::Process(Long64_t entry)
 	//	std::cout<<" currentFile "<<currentFile<<endl;
 
 	string skimName="tree_TTJets_SingleLeptFromT_MC2018.root";
+
 	char SkimFile[500];
+
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2018.root"; 
 	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2018.root"; 
 	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2018.root";
@@ -429,6 +523,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2018.root";
 	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2018.root";
 	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2018.root";
+
+
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 
 	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
@@ -442,21 +538,54 @@ Bool_t TFMaker::Process(Long64_t entry)
 
         PushHist(h_CR_SF_SB_copy, h_CR_SF_SB);
         PushHist(h_SR_SF_SB_copy, h_SR_SF_SB);
+	if(LeptonSys){
+	  PushHist(h_CR_SF_SB_el_Track_copy, h_CR_SF_SB_el_Track);
+	  PushHist(h_CR_SF_SB_el_ID_copy, h_CR_SF_SB_el_ID);
+	  PushHist(h_CR_SF_SB_el_Iso_copy, h_CR_SF_SB_el_Iso);
+	  
+	  PushHist(h_SR_SF_SB_el_Track_copy, h_SR_SF_SB_el_Track);
+	  PushHist(h_SR_SF_SB_el_ID_copy, h_SR_SF_SB_el_ID);
+	  PushHist(h_SR_SF_SB_el_Iso_copy, h_SR_SF_SB_el_Iso);
+
+	  PushHist(h_CR_SF_SB_mu_Track_copy, h_CR_SF_SB_mu_Track);
+	  PushHist(h_CR_SF_SB_mu_ID_copy, h_CR_SF_SB_mu_ID);
+	  PushHist(h_CR_SF_SB_mu_Iso_copy, h_CR_SF_SB_mu_Iso);
+	  
+	  PushHist(h_SR_SF_SB_mu_Track_copy, h_SR_SF_SB_mu_Track);
+	  PushHist(h_SR_SF_SB_mu_ID_copy, h_SR_SF_SB_mu_ID);
+	  PushHist(h_SR_SF_SB_mu_Iso_copy, h_SR_SF_SB_mu_Iso);
+
+
+	}
         PushHist(h_SR_SF_LL_SB_copy, h_SR_SF_LL_SB);
         PushHist(h_SR_SF_Hadtau_SB_copy, h_SR_SF_Hadtau_SB);
 
 	//*AR-180314-individual SF histograms and vector of SF histograms to be used need to be reset for every new tree( and not for event).
         // Open histograms for SFs
         if(SFCR_histFile!=0 || SFSR_histFile!=0){
-            h_el_SFCR_etaPt = 0;
+	  //            h_el_SFCR_etaPt = 0;
             h_el_SFCR_SB = 0;
-            h_el_SFSR_etaPt = 0;
-            h_el_SFSR_SB = 0;
+            h_el_SFCR_SB_Track = 0;
+            h_el_SFCR_SB_ID = 0;
+            h_el_SFCR_SB_Iso = 0;
 
-            h_mu_SFCR_etaPt = 0;
+	    //            h_el_SFSR_etaPt = 0;
+            h_el_SFSR_SB = 0;
+            h_el_SFSR_SB_Track = 0;
+            h_el_SFSR_SB_ID = 0;
+            h_el_SFSR_SB_Iso = 0;
+
+	    //            h_mu_SFCR_etaPt = 0;
             h_mu_SFCR_SB = 0;
-            h_mu_SFSR_etaPt = 0;
+            h_mu_SFCR_SB_Track = 0;
+            h_mu_SFCR_SB_ID = 0;
+            h_mu_SFCR_SB_Iso = 0;
+
+	    //            h_mu_SFSR_etaPt = 0;
             h_mu_SFSR_SB = 0;
+            h_mu_SFSR_SB_Track = 0;
+            h_mu_SFSR_SB_ID = 0;
+            h_mu_SFSR_SB_Iso = 0;
 
             h_di_SFCR_SB = 0;
             h_di_SFSR_SB = 0;
@@ -559,25 +688,43 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  //	  std::cout<<" segvio1**** "<<endl;
 	  //	  h_el_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_el_SFCR_etaPt")->Clone();
 	  h_el_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB")->Clone();
-	  //	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
 	  h_mu_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB")->Clone();
+	  h_el_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB")->Clone();      
+	  h_mu_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB")->Clone();
+
+	  if(LeptonSys){
+	    h_el_SFCR_SB_Track = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB_Track")->Clone();
+	    h_el_SFCR_SB_ID = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB_ID")->Clone();
+	    h_el_SFCR_SB_Iso = (TH1D*) SFCR_histFile->Get("h_el_SFCR_SB_Iso")->Clone();
+	    
+	    //	  h_mu_SFCR_etaPt = (TH2D*) SFCR_histFile->Get("h_mu_SFCR_etaPt")->Clone();
+	    h_mu_SFCR_SB_Track = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB_Track")->Clone();
+	    h_mu_SFCR_SB_ID = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB_ID")->Clone();
+	    h_mu_SFCR_SB_Iso = (TH1D*) SFCR_histFile->Get("h_mu_SFCR_SB_Iso")->Clone();
+	  	  
 	  //	  h_di_SFCR_SB = (TH1D*) SFCR_histFile->Get("h_di_SFCR_SB")->Clone();
 	  
 	  //	  h_el_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_el_SFSR_etaPt")->Clone();
-	  h_el_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB")->Clone();        
-	  //	  h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
-	  h_mu_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB")->Clone();
+	    h_el_SFSR_SB_Track = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB_Track")->Clone();
+	    h_el_SFSR_SB_ID = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB_ID")->Clone();
+	    h_el_SFSR_SB_Iso = (TH1D*) SFSR_histFile->Get("h_el_SFSR_SB_Iso")->Clone();
+	    
+	    //	  h_mu_SFSR_etaPt = (TH2D*) SFSR_histFile->Get("h_mu_SFSR_etaPt")->Clone();
+	    h_mu_SFSR_SB_Track = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB_Track")->Clone();
+	    h_mu_SFSR_SB_ID = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB_ID")->Clone();
+	    h_mu_SFSR_SB_Iso = (TH1D*) SFSR_histFile->Get("h_mu_SFSR_SB_Iso")->Clone();
+	  }
 	  //	  h_di_SFSR_SB = (TH1D*) SFSR_histFile->Get("h_di_SFSR_SB")->Clone();
 	  /*	  
-	  if(h_di_SFCR_SB->GetNbinsX() < 100){
-            useCombinedBinsCR = true;
-            std::cout<<"Using combined bins in CR"<<std::endl;
-	  }
-	  if(h_di_SFSR_SB->GetNbinsX() < 100){
-            useCombinedBinsSR = true;
+		  if(h_di_SFCR_SB->GetNbinsX() < 100){
+		  useCombinedBinsCR = true;
+		  std::cout<<"Using combined bins in CR"<<std::endl;
+		  }
+		  if(h_di_SFSR_SB->GetNbinsX() < 100){
+		  useCombinedBinsSR = true;
             std::cout<<"Using combined bins in SR"<<std::endl;
-	  }
-*/
+	    }
+	  */
 	}
 	
 	//* AR-20180115-As following loop is not executing, it is not modified to account for JECSys effect.
@@ -869,6 +1016,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	return kTRUE;
     }
     //    std::cout<<" entry "<<entry<<" no HEM electron "<<endl;
+
+    
     //*AR:190109- If there are gen electrons/ muons with abs(eta)<2.5, pT>5, match iso leptons/tracks to gen leptons: ElectronsPromptNum_,ElectronTracksPromptNum_,MuonsPromptNum_, MuonTrcksPromptNum_: number of reco leptons(passing id, iso criteria) and tracks matching to gen electrons/muons with pT>5 and eta<2.5
     // Apply SFs only to prompts
 
@@ -991,6 +1140,14 @@ Bool_t TFMaker::Process(Long64_t entry)
       // CONTROL REGION: if there is electron at reco level(after checking iso or id criteria), get it's mT
       if(ElectronsNumPassIdIso_ + MuonsNumPassIdIso_ == 1){ //*AR-180322--these are just reco objects, not matched to gen objects yet
 	double SF = 1;
+	double SF_el_Track=1;
+	double SF_el_ID=1;
+	double SF_el_Iso=1;
+
+	double SF_mu_Track=1;
+	double SF_mu_ID=1;
+	double SF_mu_Iso=1;
+
 	double binSF = bTagBin; //based on (HT,MHT,Njet,Nbtag_true)
 	//	    double bTagBin = (double)bTagBins.at(i);
 	
@@ -1047,8 +1204,17 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    //		std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_1 "<< Vec_SF.size()<<endl;
 		  }
 		}
-		else
+		else{
 		  SF = GetSF(h_el_SFCR_SB,binSF);  //as there was a reco electron passing id, iso and also gen electron passing pT>5 and eta<2.5, pick SF as a function of search bins
+		  if(LeptonSys){
+		    SF_el_Track=GetSF(h_el_SFCR_SB_Track,binSF);
+		    SF_el_ID=GetSF(h_el_SFCR_SB_ID,binSF);
+		    SF_el_Iso=GetSF(h_el_SFCR_SB_Iso,binSF);
+		    SF_mu_Track=SF;
+		    SF_mu_ID=SF;
+		    SF_mu_Iso=SF;
+		  }
+		}
 		//		std::cout<<"  el CR SF "<<SF<<endl;
 	      } //end of if GenElectronsAccNum_ == 1, ie gen electron with pT>5 and eta<2.5
 	      //else if((GenElectronsAccNum_ == 2 && GenMuonsAccNum_ == 0) || (GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 1)){
@@ -1071,8 +1237,18 @@ Bool_t TFMaker::Process(Long64_t entry)
 		  }
 		  std::cout<<" forth PDFAcc**** "<<endl; 
 		}
-		else
+		else{
 		  SF = 1; //as there was a reco electron passing id, iso but no gen electron passing pT>5 and eta<2.5, let SF=1
+		  if(LeptonSys){
+		    SF_el_Track=1;
+		    SF_el_ID=1;
+		    SF_el_Iso=1;
+		    SF_mu_Track=1;
+		    SF_mu_ID=1;
+		    SF_mu_Iso=1;
+
+		  }
+		}
 		//		std::cout<<"  no gen ele passing acceptance "<<SF<<endl;
 	      } //end of else of "if(GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0)"
 	      
@@ -1092,10 +1268,20 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    //std::cout<<" entry "<<entry<<" nloop "<<i<<" iacc "<<iacc<<" size_SF_3 "<< Vec_SF.size()<<endl;
 		  }
 		}
-		else
+		else{
 		  SF = 1; //as there was a reco electron passing id, iso but there was no electron matched to gen electron passing pT>5 and eta<2.5, let SF=1
-		//		std::cout<<"  gen ele exists but not matched to reco "<<SF<<endl;
+		  if(LeptonSys){
+		    SF_el_Track=1;
+		    SF_el_ID=1;
+		    SF_el_Iso=1;
+		    SF_mu_Track=1;
+		    SF_mu_ID=1;
+		    SF_mu_Iso=1;
+		  }
+		}
 
+		//		std::cout<<"  gen ele exists but not matched to reco "<<SF<<endl;
+		
 	      } //end of ElectronsPromptNum_==0
 	    } //end of Electrons_passIso  
 	  } //end of loop over ElectronsNum_
@@ -1130,8 +1316,17 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(GetSF(Vec_PDF_mu_SFCR_SB.at(iacc), binSF)); 
 		  }
 		}
-		else
+		else{
 		  SF = GetSF(h_mu_SFCR_SB, binSF);  //as there was a reco muon passing id, iso and also gen muon passing pT>5 and eta<2.5, pick SF as a function of search bins
+		  if(LeptonSys){
+		    SF_mu_Track=GetSF(h_mu_SFCR_SB_Track,binSF);
+		    SF_mu_ID=GetSF(h_mu_SFCR_SB_ID,binSF);
+		    SF_mu_Iso=GetSF(h_mu_SFCR_SB_Iso,binSF);
+		    SF_el_Track=SF;
+		    SF_el_ID=SF;
+		    SF_el_Iso=SF;
+		  }
+		}
 		//		std::cout<<"  mu CR SF "<<SF<<endl;
  
 	      }
@@ -1151,8 +1346,17 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(1);
 		  }
 		}
-		else
+		else{
 		  SF = 1; //as there was a reco electron passing id, iso but no gen electron passing pT>5 and eta<2.5, let SF=1
+		  if(LeptonSys){
+		    SF_el_Track=1;
+		    SF_el_ID=1;
+		    SF_el_Iso=1;
+		    SF_mu_Track=1;
+		    SF_mu_ID=1;
+		    SF_mu_Iso=1;
+		  }
+		}
 		//		std::cout<<"  no gen mu passing acceptance "<<SF<<endl;
 
 	      }
@@ -1171,8 +1375,19 @@ Bool_t TFMaker::Process(Long64_t entry)
 		    Vec_SF.push_back(1);
 		  }
 		}
-		else
+		else{
 		  SF = 1; //as there was a reco muon passing id, iso but there was no muon matched to gen muon passing pT>5 and eta<2.5, let SF=1
+		  if(LeptonSys){
+		    SF_el_Track=1;
+		    SF_el_ID=1;
+		    SF_el_Iso=1;
+		    SF_mu_Track=1;
+		    SF_mu_ID=1;
+		    SF_mu_Iso=1;
+
+		  }
+		}
+
 		//		std::cout<<"  reco mu exists but not matched to gen "<<SF<<endl;
 
 	      } //end of MuonsPromptNum_==0
@@ -1210,6 +1425,16 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  //if(binSF==137)
 	  //std::cout<<" evt "<<entry<<" loop "<<i<<" true b "<<BTags<<" sf "<< SF<<endl;
 	  h_CR_SF_SB_copy->Fill(binSF, WeightBtagProb*SF);
+	  if(LeptonSys){
+	    h_CR_SF_SB_el_Track_copy->Fill(binSF, WeightBtagProb*SF_el_Track);
+	    h_CR_SF_SB_el_ID_copy->Fill(binSF, WeightBtagProb*SF_el_ID);
+	    h_CR_SF_SB_el_Iso_copy->Fill(binSF, WeightBtagProb*SF_el_Iso);
+	    h_CR_SF_SB_mu_Track_copy->Fill(binSF, WeightBtagProb*SF_mu_Track);
+	    h_CR_SF_SB_mu_ID_copy->Fill(binSF, WeightBtagProb*SF_mu_ID);
+	    h_CR_SF_SB_mu_Iso_copy->Fill(binSF, WeightBtagProb*SF_mu_Iso);
+
+	  }
+
 	}
       } //end of ElectronsNumPassIdIso_ + MuonsNumPassIdIso_ == 1
       
@@ -1218,6 +1443,14 @@ Bool_t TFMaker::Process(Long64_t entry)
 	  //Four cases possible here:
 	  //1] No lepton at gen level: skip event as SR requires there is a lepton at gen level but no lepton at reco level 2] there was gen electron with pt>5 and eta<2.5: use ele_SF in SR 3] there was gen muon with pt>5 and eta<2.5: use muon_SF in SR 4] no gen electron/muon with pt>5 and eta<2.5(out of acceptance) : use SF=1
 	double SF = 1;
+	double SF_el_Track=1;
+	double SF_el_ID=1;
+	double SF_el_Iso=1;
+
+	double SF_mu_Track=1;
+	double SF_mu_ID=1;
+	double SF_mu_Iso=1;
+
 	//            double binSF = Bin_;
 	double binSF = bTagBin;
 	
@@ -1261,6 +1494,15 @@ Bool_t TFMaker::Process(Long64_t entry)
 		
 		h_SR_SB_copy->Fill(binSF, WeightBtagProb);
 		h_SR_SF_SB_copy->Fill(binSF, WeightBtagProb);
+		if(LeptonSys){
+		  h_SR_SF_SB_el_Track_copy->Fill(binSF, WeightBtagProb);
+		  h_SR_SF_SB_el_ID_copy->Fill(binSF, WeightBtagProb);
+		  h_SR_SF_SB_el_Iso_copy->Fill(binSF, WeightBtagProb);
+		  h_SR_SF_SB_mu_Track_copy->Fill(binSF, WeightBtagProb);
+		  h_SR_SF_SB_mu_ID_copy->Fill(binSF, WeightBtagProb);
+		  h_SR_SF_SB_mu_Iso_copy->Fill(binSF, WeightBtagProb);
+
+		}
 	      }
 	    }
 	  }
@@ -1279,8 +1521,18 @@ Bool_t TFMaker::Process(Long64_t entry)
 		Vec_SF.push_back(GetSF(Vec_PDF_el_SFSR_SB.at(iacc), binSF)); 
 	      }
 	    }
-	    else
+	    else{
 	      SF = GetSF(h_el_SFSR_SB,binSF);
+	      if(LeptonSys){
+		SF_el_Track=GetSF(h_el_SFSR_SB_Track,binSF);
+		SF_el_ID=GetSF(h_el_SFSR_SB_ID,binSF);
+		SF_el_Iso=GetSF(h_el_SFSR_SB_Iso,binSF);
+		SF_mu_Track=SF;
+		SF_mu_ID=SF;
+		SF_mu_Iso=SF;
+
+	      }
+	    }
 	    //	    std::cout<<"  el SR SF "<<SF<<endl;
 	    
 	  } //end of GenElectronsAccNum_ == 1 && GenMuonsAccNum_ == 0
@@ -1309,8 +1561,19 @@ Bool_t TFMaker::Process(Long64_t entry)
 	      }
 	      
 	    }
-	    else
+	    else{
 	      SF = GetSF(h_mu_SFSR_SB, binSF); 
+	      if(LeptonSys){
+		SF_mu_Track=GetSF(h_mu_SFSR_SB_Track,binSF);
+		SF_mu_ID=GetSF(h_mu_SFSR_SB_ID,binSF);
+		SF_mu_Iso=GetSF(h_mu_SFSR_SB_Iso,binSF);
+		SF_el_Track=SF;
+		SF_el_ID=SF;
+		SF_el_Iso=SF;
+
+	      }
+	    }
+
 	    //	    std::cout<<"  mu SR SF "<<SF<<endl;
 	  } //end of (GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 1)
 	  //else if(GenElectronsAccNum_ + GenMuonsAccNum_ == 2){
@@ -1329,8 +1592,18 @@ Bool_t TFMaker::Process(Long64_t entry)
 		Vec_SF.push_back(1);
 	      }
 	    }
-	    else
+	    else{
 	      SF = 1;
+	      if(LeptonSys){
+		SF_el_Track=1;
+		SF_el_ID=1;
+		SF_el_Iso=1;
+		SF_mu_Track=1;
+		SF_mu_ID=1;
+		SF_mu_Iso=1;
+
+	      }
+	    }
 	  } //end of GenElectronsAccNum_ == 0 && GenMuonsAccNum_ == 0
 	  
 	  if(ScaleAccSys){
@@ -1357,6 +1630,16 @@ Bool_t TFMaker::Process(Long64_t entry)
 
 	    h_SR_SB_copy->Fill(binSF, WeightBtagProb);
 	    h_SR_SF_SB_copy->Fill(binSF, WeightBtagProb*SF);
+	    if(LeptonSys){
+	      h_SR_SF_SB_el_Track_copy->Fill(binSF, WeightBtagProb*SF_el_Track);
+	      h_SR_SF_SB_el_ID_copy->Fill(binSF, WeightBtagProb*SF_el_ID);
+	      h_SR_SF_SB_el_Iso_copy->Fill(binSF, WeightBtagProb*SF_el_Iso);
+	      h_SR_SF_SB_mu_Track_copy->Fill(binSF, WeightBtagProb*SF_mu_Track);
+	      h_SR_SF_SB_mu_ID_copy->Fill(binSF, WeightBtagProb*SF_mu_ID);
+	      h_SR_SF_SB_mu_Iso_copy->Fill(binSF, WeightBtagProb*SF_mu_Iso);
+
+	    }
+	    
 	  }
 	} //end of GenElectronsNum_ + GenMuonsNum_ != 0
       } //end of ElectronsNumPassIdIso_ + MuonsNumPassIdIso_ == 0 && isoTracksNum == 0
@@ -1364,10 +1647,10 @@ Bool_t TFMaker::Process(Long64_t entry)
     } //end over nLoops
     
     return kTRUE;
-}
-
+    }
+    
 void TFMaker::SlaveTerminate()
-{
+    {
   std::cout<<"***TFMaker::SlaveTerminate***"<<std::endl;
     // The SlaveTerminate() function is called after all entries or objects
     // have been processed. When running with PROOF SlaveTerminate() is called
@@ -1401,8 +1684,29 @@ void TFMaker::Terminate()
 
     h_CR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SB"));
     h_CR_SF_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB"));
+    if(LeptonSys){
+      h_CR_SF_SB_el_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_Track"));
+      h_CR_SF_SB_el_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_ID"));
+      h_CR_SF_SB_el_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_Iso"));
+      h_CR_SF_SB_mu_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_Track"));
+      h_CR_SF_SB_mu_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_ID"));
+      h_CR_SF_SB_mu_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_Iso"));
+
+    }
+
     h_SR_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SB"));
     h_SR_SF_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB"));
+    if(LeptonSys){
+      h_SR_SF_SB_el_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_Track"));
+      h_SR_SF_SB_el_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_ID"));
+      h_SR_SF_SB_el_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_Iso"));
+     
+      h_SR_SF_SB_mu_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_Track"));
+      h_SR_SF_SB_mu_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_ID"));
+      h_SR_SF_SB_mu_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_Iso"));
+        
+}
+ 
     h_SR_LL_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_LL_SB"));
     h_SR_SF_LL_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_LL_SB"));
     h_SR_Hadtau_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_Hadtau_SB"));
@@ -1410,6 +1714,16 @@ void TFMaker::Terminate()
    
     h_0L1L_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SB"));
     h_0L1L_SF_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB"));
+    if(LeptonSys){
+      h_0L1L_SF_SB_el_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_el_Track"));
+      h_0L1L_SF_SB_el_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_el_ID"));
+      h_0L1L_SF_SB_el_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_el_Iso"));
+      h_0L1L_SF_SB_mu_Track = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_mu_Track"));
+      h_0L1L_SF_SB_mu_ID = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_mu_ID"));
+      h_0L1L_SF_SB_mu_Iso = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_SB_mu_Iso"));
+
+    }
+
     h_0L1L_LL_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_LL_SB"));
     h_0L1L_SF_LL_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_SF_LL_SB"));
     h_0L1L_Hadtau_SB = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_0L1L_Hadtau_SB"));
@@ -1417,8 +1731,26 @@ void TFMaker::Terminate()
 
     h_CR_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SB_copy"));
     h_CR_SF_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_copy"));
+    if(LeptonSys){
+      h_CR_SF_SB_el_Track_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_Track_copy"));
+      h_CR_SF_SB_el_ID_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_ID_copy"));
+      h_CR_SF_SB_el_Iso_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_el_Iso_copy"));
+      h_CR_SF_SB_mu_Track_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_Track_copy"));
+      h_CR_SF_SB_mu_ID_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_ID_copy"));
+      h_CR_SF_SB_mu_Iso_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CR_SF_SB_mu_Iso_copy"));
+    }
+
     h_SR_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SB_copy"));
     h_SR_SF_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_copy"));
+    if(LeptonSys){
+      h_SR_SF_SB_el_Track_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_Track_copy"));
+      h_SR_SF_SB_el_ID_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_ID_copy"));
+      h_SR_SF_SB_el_Iso_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_el_Iso_copy"));
+      h_SR_SF_SB_mu_Track_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_Track_copy"));
+      h_SR_SF_SB_mu_ID_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_ID_copy"));
+      h_SR_SF_SB_mu_Iso_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_SB_mu_Iso_copy"));
+    }
+
     h_SR_LL_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_LL_SB_copy"));
     h_SR_SF_LL_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_SF_LL_SB_copy"));
     h_SR_Hadtau_SB_copy = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_SR_Hadtau_SB_copy"));
@@ -1434,7 +1766,24 @@ void TFMaker::Terminate()
     PushHist(h_SR_Hadtau_SB_copy, h_SR_Hadtau_SB);
 
     PushHist(h_CR_SF_SB_copy, h_CR_SF_SB);
+    if(LeptonSys){
+      PushHist(h_CR_SF_SB_el_Track_copy, h_CR_SF_SB_el_Track);
+      PushHist(h_CR_SF_SB_el_ID_copy, h_CR_SF_SB_el_ID);
+      PushHist(h_CR_SF_SB_el_Iso_copy, h_CR_SF_SB_el_Iso);
+      PushHist(h_CR_SF_SB_mu_Track_copy, h_CR_SF_SB_mu_Track);
+      PushHist(h_CR_SF_SB_mu_ID_copy, h_CR_SF_SB_mu_ID);
+      PushHist(h_CR_SF_SB_mu_Iso_copy, h_CR_SF_SB_mu_Iso);
+    }
     PushHist(h_SR_SF_SB_copy, h_SR_SF_SB);
+    if(LeptonSys){
+      PushHist(h_SR_SF_SB_el_Track_copy, h_SR_SF_SB_el_Track);
+      PushHist(h_SR_SF_SB_el_ID_copy, h_SR_SF_SB_el_ID);
+      PushHist(h_SR_SF_SB_el_Iso_copy, h_SR_SF_SB_el_Iso);
+      PushHist(h_SR_SF_SB_mu_Track_copy, h_SR_SF_SB_mu_Track);
+      PushHist(h_SR_SF_SB_mu_ID_copy, h_SR_SF_SB_mu_ID);
+      PushHist(h_SR_SF_SB_mu_Iso_copy, h_SR_SF_SB_mu_Iso);
+    }
+
     PushHist(h_SR_SF_LL_SB_copy, h_SR_SF_LL_SB);
     PushHist(h_SR_SF_Hadtau_SB_copy, h_SR_SF_Hadtau_SB);
     
@@ -1464,6 +1813,22 @@ void TFMaker::Terminate()
 
       h_0L1L_SF_SB->Reset();
       h_0L1L_SF_SB->Divide(h_SR_SF_SB, h_CR_SF_SB);
+      if(LeptonSys){
+	h_0L1L_SF_SB_el_Track->Reset();
+	h_0L1L_SF_SB_el_Track->Divide(h_SR_SF_SB_el_Track, h_CR_SF_SB_el_Track);
+	h_0L1L_SF_SB_el_ID->Reset();
+	h_0L1L_SF_SB_el_ID->Divide(h_SR_SF_SB_el_ID, h_CR_SF_SB_el_ID);
+	h_0L1L_SF_SB_el_Iso->Reset();
+	h_0L1L_SF_SB_el_Iso->Divide(h_SR_SF_SB_el_Iso, h_CR_SF_SB_el_Iso);
+	h_0L1L_SF_SB_mu_Track->Reset();
+	h_0L1L_SF_SB_mu_Track->Divide(h_SR_SF_SB_mu_Track, h_CR_SF_SB_mu_Track);
+	h_0L1L_SF_SB_mu_ID->Reset();
+	h_0L1L_SF_SB_mu_ID->Divide(h_SR_SF_SB_mu_ID, h_CR_SF_SB_mu_ID);
+	h_0L1L_SF_SB_mu_Iso->Reset();
+	h_0L1L_SF_SB_mu_Iso->Divide(h_SR_SF_SB_mu_Iso, h_CR_SF_SB_mu_Iso);
+
+      }
+
       h_0L1L_SF_LL_SB->Reset();
       h_0L1L_SF_LL_SB->Divide(h_SR_SF_LL_SB, h_CR_SF_SB);
       h_0L1L_SF_Hadtau_SB->Reset();
@@ -1491,6 +1856,15 @@ void TFMaker::Terminate()
 	else{
 	  if(h_0L1L_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SB (Bin "<<nX<<") negative value"<<std::endl;
 	  if(h_0L1L_SF_SB->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB (Bin "<<nX<<") negative value"<<std::endl;
+	  if(LeptonSys){
+	    if(h_0L1L_SF_SB_el_Track->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_el_Track (Bin "<<nX<<") negative value"<<std::endl;
+	    if(h_0L1L_SF_SB_el_ID->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_el_ID (Bin "<<nX<<") negative value"<<std::endl;
+	    if(h_0L1L_SF_SB_el_Iso->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_el_Iso (Bin "<<nX<<") negative value"<<std::endl;
+	    if(h_0L1L_SF_SB_mu_Track->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_mu_Track (Bin "<<nX<<") negative value"<<std::endl;
+	    if(h_0L1L_SF_SB_mu_ID->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_mu_ID (Bin "<<nX<<") negative value"<<std::endl;
+	    if(h_0L1L_SF_SB_mu_Iso->GetBinContent(nX) < 0) std::cout<<"h_0L1L_SF_SB_mu_Iso (Bin "<<nX<<") negative value"<<std::endl;
+
+	  }
 	}
     }
     
@@ -1519,6 +1893,23 @@ void TFMaker::Terminate()
       h_CR_SF_SB->Write();
       h_SR_SB->Write();
       h_SR_SF_SB->Write();
+
+      if(LeptonSys){
+	h_CR_SF_SB_el_Track->Write();
+	h_CR_SF_SB_el_ID->Write();
+	h_CR_SF_SB_el_Iso->Write();
+	h_SR_SF_SB_el_Track->Write();
+	h_SR_SF_SB_el_ID->Write();
+	h_SR_SF_SB_el_Iso->Write();
+	h_CR_SF_SB_mu_Track->Write();
+	h_CR_SF_SB_mu_ID->Write();
+	h_CR_SF_SB_mu_Iso->Write();
+	h_SR_SF_SB_mu_Track->Write();
+	h_SR_SF_SB_mu_ID->Write();
+	h_SR_SF_SB_mu_Iso->Write();
+
+      }
+
       h_SR_LL_SB->Write();
       h_SR_SF_LL_SB->Write();
       h_SR_Hadtau_SB->Write();
@@ -1526,6 +1917,15 @@ void TFMaker::Terminate()
 
       h_0L1L_SB->Write();
       h_0L1L_SF_SB->Write();
+      if(LeptonSys){
+	h_0L1L_SF_SB_el_Track->Write();
+	h_0L1L_SF_SB_el_ID->Write();
+	h_0L1L_SF_SB_el_Iso->Write();
+	h_0L1L_SF_SB_mu_Track->Write();
+	h_0L1L_SF_SB_mu_ID->Write();
+	h_0L1L_SF_SB_mu_Iso->Write();
+      }
+
       h_0L1L_LL_SB->Write();
       h_0L1L_SF_LL_SB->Write();
       h_0L1L_Hadtau_SB->Write();
@@ -1601,7 +2001,9 @@ void TFMaker::SaveEff(TH1* h, TFile* oFile, bool xlog, bool ylog)
 
 bool TFMaker::FiltersPass()
 {
-    bool result=true;
+
+ bool result=true;
+
     if(useFilterData){
         if(HBHENoiseFilter!=1) result=false;
         if(HBHEIsoNoiseFilter!=1) result=false;

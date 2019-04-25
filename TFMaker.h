@@ -32,13 +32,20 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
+const bool LeptonSys=true;
+const bool IsoMuSys=false;//false by default
+const bool IsoEleSys=false;
+const bool IDMuSys=false;//false by default
+const bool IDEleSys=false;
+const bool TrackRecoMuSys=false;
+const bool TrackRecoEleSys=false;
 const bool JECSys=false; //false by default
 const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
@@ -51,6 +58,7 @@ const double scaleFactorWeight = 59546.381;
 bool GetNonPrefireProb=false; //<---true for 2016 and 2017 MC
 bool AddHEMVeto=true; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
+
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -58,6 +66,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
 const string path_bTagCalib("btag/DeepCSV_102XSF_V1_1018_190404.csv");
+
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
@@ -110,13 +119,26 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
 
   TH2D* h_el_SFCR_etaPt = 0;
   TH1D* h_el_SFCR_SB = 0;
+  TH1D* h_el_SFCR_SB_Track = 0;
+  TH1D* h_el_SFCR_SB_ID = 0;
+  TH1D* h_el_SFCR_SB_Iso = 0;
   TH2D* h_el_SFSR_etaPt = 0;
   TH1D* h_el_SFSR_SB = 0;
+  TH1D* h_el_SFSR_SB_Track = 0;
+  TH1D* h_el_SFSR_SB_ID = 0;
+  TH1D* h_el_SFSR_SB_Iso = 0;
 
   TH2D* h_mu_SFCR_etaPt = 0;
   TH1D* h_mu_SFCR_SB = 0;
+  TH1D* h_mu_SFCR_SB_Track = 0;
+  TH1D* h_mu_SFCR_SB_ID = 0;
+  TH1D* h_mu_SFCR_SB_Iso = 0;
+
   TH2D* h_mu_SFSR_etaPt = 0;
   TH1D* h_mu_SFSR_SB = 0;
+  TH1D* h_mu_SFSR_SB_Track = 0;
+  TH1D* h_mu_SFSR_SB_ID = 0;
+  TH1D* h_mu_SFSR_SB_Iso = 0;
 
   TH1D* h_di_SFCR_SB = 0;
   TH1D* h_di_SFSR_SB = 0;
@@ -130,12 +152,34 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TH1D* h_0L1L_LL_SB = 0;
   TH1D* h_0L1L_Hadtau_SB = 0;
 
+
   TH1D* h_CR_SF_SB = 0;
+  TH1D* h_CR_SF_SB_el_Track = 0;
+  TH1D* h_CR_SF_SB_el_ID = 0;
+  TH1D* h_CR_SF_SB_el_Iso = 0;
+  TH1D* h_CR_SF_SB_mu_Track = 0;
+  TH1D* h_CR_SF_SB_mu_ID = 0;
+  TH1D* h_CR_SF_SB_mu_Iso = 0;
+
   TH1D* h_SR_SF_SB = 0;
+  TH1D* h_SR_SF_SB_el_Track = 0;
+  TH1D* h_SR_SF_SB_el_ID = 0;
+  TH1D* h_SR_SF_SB_el_Iso = 0;
+  TH1D* h_SR_SF_SB_mu_Track = 0;
+  TH1D* h_SR_SF_SB_mu_ID = 0;
+  TH1D* h_SR_SF_SB_mu_Iso = 0;
+
   TH1D* h_SR_SF_LL_SB = 0;
   TH1D* h_SR_SF_Hadtau_SB = 0;
 
   TH1D* h_0L1L_SF_SB = 0;
+  TH1D* h_0L1L_SF_SB_el_Track = 0;
+  TH1D* h_0L1L_SF_SB_el_ID = 0;
+  TH1D* h_0L1L_SF_SB_el_Iso = 0;
+  TH1D* h_0L1L_SF_SB_mu_Track = 0;
+  TH1D* h_0L1L_SF_SB_mu_ID = 0;
+  TH1D* h_0L1L_SF_SB_mu_Iso = 0;
+
   TH1D* h_0L1L_SF_LL_SB = 0;
   TH1D* h_0L1L_SF_Hadtau_SB = 0;
 
@@ -145,7 +189,21 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TH1D* h_SR_Hadtau_SB_copy = 0;
 
   TH1D* h_CR_SF_SB_copy = 0;
+  TH1D* h_CR_SF_SB_el_Track_copy = 0;
+  TH1D* h_CR_SF_SB_el_ID_copy = 0;
+  TH1D* h_CR_SF_SB_el_Iso_copy = 0;
+  TH1D* h_CR_SF_SB_mu_Track_copy = 0;
+  TH1D* h_CR_SF_SB_mu_ID_copy = 0;
+  TH1D* h_CR_SF_SB_mu_Iso_copy = 0;
+
   TH1D* h_SR_SF_SB_copy = 0;
+  TH1D* h_SR_SF_SB_el_Track_copy = 0;
+  TH1D* h_SR_SF_SB_el_ID_copy = 0;
+  TH1D* h_SR_SF_SB_el_Iso_copy = 0;
+  TH1D* h_SR_SF_SB_mu_Track_copy = 0;
+  TH1D* h_SR_SF_SB_mu_ID_copy = 0;
+  TH1D* h_SR_SF_SB_mu_Iso_copy = 0;
+
   TH1D* h_SR_SF_LL_SB_copy = 0;
   TH1D* h_SR_SF_Hadtau_SB_copy = 0;
 
@@ -178,10 +236,11 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   string OldSkimFilePath=" ";
 
 
-  TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
-  TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
-  TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
-  TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+   TFile *JetPrefireMap = TFile::Open("btag/L1prefiring_jetpt_2017BtoF.root", "READ");
+   TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
+   TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
+   TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+
 
   TH1D* h_muIsoTrack_NJetsunc = 0;
   TH1D* h_elecIsoTrack_NJetsunc = 0;
@@ -246,6 +305,7 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   Bool_t           ecalBadCalibFilter;
   Bool_t           ecalBadCalibReducedFilter;
   Bool_t           ecalBadCalibReducedExtraFilter;
+
   Int_t           BTags;
   Int_t           BTagsDeepCSV;
 
@@ -362,6 +422,7 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch        *b_ecalBadCalibFilter=0;
   TBranch        *b_ecalBadCalibReducedFilter=0;
   TBranch        *b_ecalBadCalibReducedExtraFilter=0;
+
   TBranch        *b_CSCTightHaloFilter=0;   //!
   TBranch        *b_DeltaPhi1=0;   //!
   TBranch        *b_DeltaPhi2=0;   //!
@@ -394,8 +455,7 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch        *b_Jets=0;   //!
   TBranch        *b_Jets_jecUnc=0;
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
-  TBranch        *b_Jets_neutralEmEnergyFraction=0;   //!
-
+  TBranch        *b_Jets_neutralEmEnergyFraction=0;
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
   TBranch        *b_Jets_bJetTagDeepCSVprobb=0;   //!
   TBranch        *b_Jets_bJetTagDeepCSVprobbb=0;   //!
@@ -580,6 +640,7 @@ void TFMaker::Init(TTree *tree)
     fChain->SetBranchStatus("ecalBadCalibFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibReducedFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibReducedExtraFilter", 1);
+
     //if(runOnData){
       fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
       fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
@@ -622,7 +683,6 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_jecUnc" , 1);
   fChain->SetBranchStatus("Jets_muonEnergyFraction", 1);
   fChain->SetBranchStatus("Jets_neutralEmEnergyFraction", 1);
-
   fChain->SetBranchStatus("Jets_bDiscriminatorCSV", 1);
   fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobb", 1);
   fChain->SetBranchStatus("Jets_bJetTagDeepCSVprobbb", 1);
@@ -714,6 +774,9 @@ void TFMaker::Init(TTree *tree)
     fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
     fChain->SetBranchAddress("ecalBadCalibReducedFilter", &ecalBadCalibReducedFilter, &b_ecalBadCalibReducedFilter);
     fChain->SetBranchAddress("ecalBadCalibReducedExtraFilter", &ecalBadCalibReducedExtraFilter, &b_ecalBadCalibReducedExtraFilter);
+    fChain->SetBranchAddress("Jets_neutralEmEnergyFraction", &Jets_neutralEmEnergyFraction, &b_Jets_neutralEmEnergyFraction);
+
+
     //if(runOnData){
     fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
     fChain->SetBranchAddress("BadChargedCandidateFilter", &BadChargedCandidateFilter, &b_BadChargedCandidateFilter);
@@ -760,8 +823,6 @@ void TFMaker::Init(TTree *tree)
 
   fChain->SetBranchAddress("Jets_jecUnc", &Jets_jecUnc, &b_Jets_jecUnc);
   fChain->SetBranchAddress("Jets_muonEnergyFraction", &Jets_muonEnergyFraction, &b_Jets_muonEnergyFraction);
-  fChain->SetBranchAddress("Jets_neutralEmEnergyFraction", &Jets_neutralEmEnergyFraction, &b_Jets_neutralEmEnergyFraction);
-
   fChain->SetBranchAddress("Jets_bDiscriminatorCSV", &Jets_bDiscriminatorCSV, &b_Jets_bDiscriminatorCSV);
   fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobb", &Jets_bJetTagDeepCSVprobb, &b_Jets_bJetTagDeepCSVprobb);
   fChain->SetBranchAddress("Jets_bJetTagDeepCSVprobbb", &Jets_bJetTagDeepCSVprobbb, &b_Jets_bJetTagDeepCSVprobbb);

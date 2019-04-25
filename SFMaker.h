@@ -32,9 +32,9 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -45,6 +45,7 @@ const bool useFilterData = true; // false for FastSim since not simulated
 const bool SysUp=false;
 const bool SysDn=true;
 const bool JECSys=false;//false by default
+//const bool LepSys=false;
 const bool IsoMuSys=false;//false by default
 const bool IsoEleSys=false;
 const bool IDMuSys=false;//false by default
@@ -58,6 +59,7 @@ const bool PrefireSys=false;
 bool GetNonPrefireProb=false; //<---true for 2016 and 2017 MC, 
 bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
+
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -71,6 +73,7 @@ const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 const TString path_ISRcorr("isr/ISRWeights.root");
 
 // Scalefactors
+
 const TString path_elecID("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
 const TString hist_elecID("Run2018_CutBasedVetoNoIso94XV2");
 const TString path_elecIso("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
@@ -79,7 +82,6 @@ const TString hist_elecIso("Run2018_Mini");
 // Electron tracking inefficiency
 const TString path_elecTrk("SFs_Moriond17/egammaEffi.txt_EGM2D_updatedAll_Above10GeV_2018_190404.root");
 const TString hist_elecTrk("EGamma_SF2D");
-
 
 const TString path_muID("SFs_Moriond17/RunABCD_SF_ID_Mu_2018_190404.root");
 const TString hist_muID("NUM_MediumID_DEN_TrackerMuons_pt_abseta");
@@ -92,9 +94,10 @@ const TString path_muIso_sys("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
 const TString hist_muIso_sys("NUM_TightRelIso_DEN_MediumID_pt_abseta_syst");
 
 // Muon tracking inefficiency
-//const TString path_muonTrk("SFs_Moriond17/EfficienciesAndSF_Muon2017_MediumID.root");
-//const TString hist_muonTrk("MediumID/eta_ratio");
-//const TString hist_muonTrkLowPt("mutrksfptl10");
+//const TString path_muonTrk("SFs_Moriond17/Tracking_EfficienciesAndSF_BCDEFGH.root");
+//const TString hist_muonTrkHighPt("ratio_eff_eta3_dr030e030_corr");
+//const TString hist_muonTrkLowPt("ratio_eff_eta3_tk0_dr030e030_corr");
+
 
 // Isotrack uncertainty
 const TString path_isoTrackunc("SFs_ICHEP16/NJets_uncertainty.root");
@@ -136,6 +139,7 @@ const double deltaPhi4_=0.3;
 const double csvForBtag=0.4184;
 int Scalesize=9;
 int PDFsize=102;
+
 class SFMaker : public TSelector {
  public :
   TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -163,13 +167,24 @@ class SFMaker : public TSelector {
   TH1D* h_el_nFoundOnePrompt_SB = 0;
   TH2D* h_el_nFoundOnePrompt_SF_etaPt = 0;
   TH1D* h_el_nFoundOnePrompt_SF_SB = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_Track = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_ID = 0;
+  TH1D* h_el_nFoundOnePrompt_SF_SB_Iso = 0;
+
   TH2D* h_el_nLostOnePrompt_etaPt = 0;
   TH1D* h_el_nLostOnePrompt_SB = 0;
 
   TH2D* h_el_SFCR_etaPt = 0;
   TH1D* h_el_SFCR_SB = 0;
+  TH1D* h_el_SFCR_SB_Track = 0;
+  TH1D* h_el_SFCR_SB_ID = 0;
+  TH1D* h_el_SFCR_SB_Iso = 0;
+
   TH2D* h_el_SFSR_etaPt = 0;
   TH1D* h_el_SFSR_SB = 0;
+  TH1D* h_el_SFSR_SB_Track = 0;
+  TH1D* h_el_SFSR_SB_ID = 0;
+  TH1D* h_el_SFSR_SB_Iso = 0;
 
   TH2D* h_mu_nOnePrompt_etaPt = 0;
   TH1D* h_mu_nOnePrompt_SB = 0;
@@ -177,13 +192,24 @@ class SFMaker : public TSelector {
   TH1D* h_mu_nFoundOnePrompt_SB = 0;
   TH2D* h_mu_nFoundOnePrompt_SF_etaPt = 0;
   TH1D* h_mu_nFoundOnePrompt_SF_SB = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_Track = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_ID = 0;
+  TH1D* h_mu_nFoundOnePrompt_SF_SB_Iso = 0;
+
   TH2D* h_mu_nLostOnePrompt_etaPt = 0;
   TH1D* h_mu_nLostOnePrompt_SB = 0;
 
   TH2D* h_mu_SFCR_etaPt = 0;
   TH1D* h_mu_SFCR_SB = 0;
+  TH1D* h_mu_SFCR_SB_Track = 0;
+  TH1D* h_mu_SFCR_SB_ID = 0;
+  TH1D* h_mu_SFCR_SB_Iso = 0;
+
   TH2D* h_mu_SFSR_etaPt = 0;
   TH1D* h_mu_SFSR_SB = 0;
+  TH1D* h_mu_SFSR_SB_Track = 0;
+  TH1D* h_mu_SFSR_SB_ID = 0;
+  TH1D* h_mu_SFSR_SB_Iso = 0;
 
   TH1D* h_di_nTwoPrompt_SB = 0;
   TH1D* h_di_nOneFoundTwoPrompt_SB = 0;
@@ -212,11 +238,8 @@ class SFMaker : public TSelector {
   TH1* puhist = 0;
 
   TH1D * h_muTrkSF = 0;
-  //  TH1D * h_muTrkHighPtSF = 0;
 
   TH2F * h_elecTrkSF = 0;
-  //TH2F * h_elecTrkHighPtSF = 0; 
-  //  TH2F * h_elecTrkLowPtSF = 0; 
 
   //open skim file as skimfile
   TH1* h_njetsisr = 0;
@@ -237,6 +260,10 @@ class SFMaker : public TSelector {
   Double_t      recoSF;
   Double_t      isoSF;
   Double_t      trackingSF;
+  Double_t      recoSFDn;
+  Double_t      isoSFDn;
+  Double_t      trackingSFDn;
+
   Double_t      recoSF2;
   Double_t      isoSF2;
   Double_t      trackingSF2;
@@ -250,10 +277,10 @@ class SFMaker : public TSelector {
   TH2F * jMap = (TH2F*) JetPrefireMap->Get("L1prefiring_jetpt_2017BtoF");
   TFile *PhotonPrefireMap = TFile::Open("btag/L1prefiring_photonpt_2017BtoF.root", "READ");
   TH2F * pMap = (TH2F*)PhotonPrefireMap->Get("L1prefiring_photonpt_2017BtoF");
+  
 
   TH2F* h_muIDSF = 0;
   TH2F* h_muIsoSF = 0;
-
   TH2F* h_muIDSF_sys = 0;
   TH2F* h_muIsoSF_sys = 0;
 
@@ -326,6 +353,7 @@ class SFMaker : public TSelector {
   Bool_t           ecalBadCalibFilter;
   Bool_t           ecalBadCalibReducedFilter;
   Bool_t           ecalBadCalibReducedExtraFilter; 
+
   Int_t           BTags;
   Int_t           BTagsDeepCSV;
   Int_t          CSCTightHaloFilter;
@@ -357,6 +385,7 @@ class SFMaker : public TSelector {
   std::vector<TLorentzVector> *Jets=0;
   std::vector<double>     *Jets_muonEnergyFraction=0;
   std::vector<double>     *Jets_neutralEmEnergyFraction=0; 
+
   std::vector<double>     *Jets_bDiscriminatorCSV=0;
   std::vector<double>     *Jets_bJetTagDeepCSVprobb=0;
   std::vector<double>     *Jets_bJetTagDeepCSVprobbb=0;
@@ -460,7 +489,6 @@ class SFMaker : public TSelector {
   TBranch        *b_Jets_jecUnc=0;
   TBranch        *b_Jets_muonEnergyFraction=0;   //!
   TBranch        *b_Jets_neutralEmEnergyFraction=0;   //!
-
   TBranch        *b_Jets_bDiscriminatorCSV=0;   //!
   TBranch        *b_Jets_bJetTagDeepCSVprobb=0;   //!
   TBranch        *b_Jets_bJetTagDeepCSVprobbb=0;   //!
@@ -613,15 +641,8 @@ void SFMaker::Init(TTree *tree)
   TFile *muIDSF_histFile = TFile::Open(path_muID, "READ");
   h_muIDSF = (TH2F*) muIDSF_histFile->Get(hist_muID)->Clone();
 
-  TFile *muIDSFsys_histFile = TFile::Open(path_muID_sys, "READ");
-  h_muIDSF_sys = (TH2F*) muIDSFsys_histFile->Get(hist_muID_sys)->Clone();
-
-
   TFile *muIsoSF_histFile = TFile::Open(path_muIso, "READ");
   h_muIsoSF = (TH2F*) muIsoSF_histFile->Get(hist_muIso)->Clone();
-
-  TFile *muIsoSFsys_histFile = TFile::Open(path_muIso_sys, "READ");
-  h_muIsoSF_sys = (TH2F*) muIsoSFsys_histFile->Get(hist_muIso_sys)->Clone();
 
   TFile *elecIDSF_histFile = TFile::Open(path_elecID, "READ");
   h_elecIDSF = (TH2F*) elecIDSF_histFile->Get(hist_elecID)->Clone();
@@ -634,16 +655,24 @@ void SFMaker::Init(TTree *tree)
   h_elecIsoTrack_NJetsunc = (TH1D*) isoTrackunc_histFile->Get("electron_trkveto_syst")->Clone();
   h_pionIsoTrack_NJetsunc = (TH1D*) isoTrackunc_histFile->Get("pion_trkveto_syst")->Clone(); 
 
+  TFile *muIDSFsys_histFile = TFile::Open(path_muID_sys, "READ");
+  h_muIDSF_sys = (TH2F*) muIDSFsys_histFile->Get(hist_muID_sys)->Clone();
+
+
+  TFile *muIsoSFsys_histFile = TFile::Open(path_muIso_sys, "READ");
+  h_muIsoSF_sys = (TH2F*) muIsoSFsys_histFile->Get(hist_muIso_sys)->Clone();
 
   //  TFile *muTrkSF_histFile = TFile::Open(path_muonTrk, "READ");
   //  h_muTrkSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrk)->Clone();
   //  h_muTrkHighPtSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrkHighPt)->Clone();
+
 
   TFile *elecTrkSF_histFile = TFile::Open(path_elecTrk, "READ");
   h_elecTrkSF = (TH2F*) elecTrkSF_histFile->Get(hist_elecTrk)->Clone();  
 
   //  TFile *elecTrkLowPtSF_histFile = TFile::Open(path_elecTrkLowPt, "READ");
   //  h_elecTrkLowPtSF = (TH2F*) elecTrkLowPtSF_histFile->Get(hist_elecTrkLowPt)->Clone();  
+
 
   if(doISRcorr){
     // ISR setup
@@ -678,6 +707,7 @@ void SFMaker::Init(TTree *tree)
     fChain->SetBranchStatus("ecalBadCalibFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibReducedFilter", 1);
     fChain->SetBranchStatus("ecalBadCalibReducedExtraFilter", 1);
+
     //if(runOnData){
       fChain->SetBranchStatus("globalSuperTightHalo2016Filter", 1);
       fChain->SetBranchStatus("BadChargedCandidateFilter", 1);
@@ -801,6 +831,7 @@ void SFMaker::Init(TTree *tree)
     fChain->SetBranchAddress("ecalBadCalibFilter", &ecalBadCalibFilter, &b_ecalBadCalibFilter);
     fChain->SetBranchAddress("ecalBadCalibReducedFilter", &ecalBadCalibReducedFilter, &b_ecalBadCalibReducedFilter);
     fChain->SetBranchAddress("ecalBadCalibReducedExtraFilter", &ecalBadCalibReducedExtraFilter, &b_ecalBadCalibReducedExtraFilter);
+
 
     //if(runOnData){
       fChain->SetBranchAddress("globalSuperTightHalo2016Filter", &globalSuperTightHalo2016Filter, &b_globalSuperTightHalo2016Filter);
