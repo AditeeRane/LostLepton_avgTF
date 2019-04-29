@@ -8,7 +8,7 @@
 
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have different names
-//void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+//void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,ochar const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have same name
 void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
@@ -167,9 +167,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   //*AR:181207-In 2016, LL+Hadtau data prediction in 0L region (i.e in file "Prediction_0_Data_MET_afterhadd_180830_With1DPredHists.root") is saved with "h_%s_Exp" (After applying TF) while in 2017 same (MC and Data) prediction saved with "h_%s_Pre" (After applying TF and met v2 recipe). MC Expectation in 0L region is saved with "h_%s_Exp" (if met v2 recipe not applied, example 2016) or with "h_%sv2recipe_Exp"(if met v2 recipe not applied, example 2017)  
 
   sprintf(header,"%s",LegHeader);
-  //  sprintf(hname,"h_%s_Exp",Var);
   sprintf(hname,"h_%s_Exp",Var);
-
   //  sprintf(hnameRev,"h_%s_Pre",VarTwo);
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
@@ -185,6 +183,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TFile *_fileWJetHadtau = TFile::Open(WJetHadtau);
   TFile *_fileSTHadtau = TFile::Open(STHadtau);
 */
+
   TFile *_fileData = TFile::Open(DataPred);
 
   _fileTTbarLL->cd();
@@ -195,7 +194,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TH1D *hTTbarLL = new TH1D("hTTbarLL","hTTbarLL",4,0,4);
   //  hTTbarLL->Sumw2();
   int nbins=hTTbarLL->GetXaxis()->GetNbins();
-  for(int i=1;i<=nbins;i++){
+  for(int i=1;i<=4;i++){
     if(i<=3){
       double val=hTTbarLLOrg->GetBinContent(i);
       hTTbarLL->SetBinContent(i,val);
@@ -218,7 +217,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TH1D *hWJetLL = new TH1D("hWJetLL","hWJetLL",4,0,4);
   //  hWJetLL->Sumw2();
   nbins=hWJetLL->GetXaxis()->GetNbins();
-  for(int i=1;i<=nbins;i++){
+  for(int i=1;i<=4;i++){
     if(i<=3){
       double val=hWJetLLOrg->GetBinContent(i);
       hWJetLL->SetBinContent(i,val);
@@ -241,7 +240,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TH1D *hSTLL = new TH1D("hSTLL","hSTLL",4,0,4);
   //  hSTLL->Sumw2();
   nbins=hSTLL->GetXaxis()->GetNbins();
-  for(int i=1;i<=nbins;i++){
+  for(int i=1;i<=4;i++){
     if(i<=3){
       double val=hSTLLOrg->GetBinContent(i);
       hSTLL->SetBinContent(i,val);
@@ -255,22 +254,24 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hSTLL->SetBinError(i,err);
     }
   }
-*/
+  */
   _fileData->cd();
   TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
-  std::cout<<" seg vio "<<endl;
+  //  std::cout<<" seg vio "<<endl;
   //  hDataLLHadtau->Scale(41486.328/59546.381);
   /*
-  TH1D *hDataLLHadtauOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hnameRev);
+  TH1D *hDataLLHadtauOrg = (TH1D*)_fileData->FindObjectAny(hname);
   TH1D *hDataLLHadtau = new TH1D("hDataLLHadtau","hDataLLHadtau",4,0,4);
   //  hDataLLHadtau->Sumw2();
-  nbins=hDataLLHadtau->GetXaxis()->GetNbins();
-  for(int i=1;i<=nbins;i++){
+  //  nbins=hDataLLHadtau->GetXaxis()->GetNbins();
+  
+  for(int i=1;i<=4;i++){
     if(i<=3){
       double val=hDataLLHadtauOrg->GetBinContent(i);
       hDataLLHadtau->SetBinContent(i,val);
       double err=hDataLLHadtauOrg->GetBinError(i);
       hDataLLHadtau->SetBinError(i,err);
+
     }
     else{
       double val=hDataLLHadtauOrg->GetBinContent(i)+hDataLLHadtauOrg->GetBinContent(i+1);
@@ -279,8 +280,8 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hDataLLHadtau->SetBinError(i,err);
     }
   }
-  */
-  /*
+*/
+    /*
  hTTbarLL->Rebin(5);
   hWJetLL->Rebin(5);
   hSTLL->Rebin(5);
@@ -347,19 +348,19 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   
   if(hDataLLHadtau->GetMaximum()>hExp->GetMaximum()){
     if(logy)
-      hExp->SetMaximum(3*hDataLLHadtau->GetMaximum());
+      hExp->SetMaximum(5*hDataLLHadtau->GetMaximum());
     else 
       hExp->SetMaximum(1.5*hDataLLHadtau->GetMaximum());
   }
   else{
     if(logy)
-      hExp->SetMaximum(3*hExp->GetMaximum());
+      hExp->SetMaximum(5*hExp->GetMaximum());
     else 
       hExp->SetMaximum(1.5*hExp->GetMaximum());
   }
   std::cout<<" seg vio 2"<<endl;  
   //*AR:190104-If you get segmentation violation for arbitary plot due to SetMinimum() command then switch off "if" loops used to set minimum of histogram. Instead fix minimum to some fixed value. 
-  hExp->SetMinimum(5);
+  hExp->SetMinimum(9);
   /*
   if(hDataLLHadtau->GetMinimum()<hExp->GetMinimum()){
     hExp->SetMinimum(0.5*hDataLLHadtau->GetMinimum());
@@ -368,7 +369,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   else{
     hExp->SetMinimum(0.5*hSTLLHadtau->GetMinimum());
     //hExp->SetMinimum(10);
-    
+
     std::cout<<" seg vio 4"<<endl;  
   }
 */
@@ -392,7 +393,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "59.546 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "41.486 fb^{-1} (13 TeV)");
 
   
   gPad->Modified();
@@ -466,18 +467,12 @@ void GetOneDPlots(){
 */    
 
   
-
-  
-
-
-
-
   /*
   GetOneDPlots(1300,"NBtagv2Recipe","NBtag","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
+  
+  GetOneDPlots(1000,"MHTv2Recipe","MHT","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
   GetOneDPlots(1100,"HTv2Recipe","HT","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
-
-  GetOneDPlots(1000,"MHTv2Recipe","MHT","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
   GetOneDPlots(1200,"NJetv2Recipe","NJet","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
 */
@@ -499,33 +494,43 @@ void GetOneDPlots(){
 
   GetOneDPlots(1200,"NJetv2Recipe","NJet","DataPredVsMCExpWithBtagProb","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
 */
-  //  GetOneDPlots(1300,"NBtagv2Recipe","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,5,0,5,0,2.49,200000);
-  
-  //  GetOneDPlots(1000,"MHTv2Recipe","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
-
-  GetOneDPlots(1000,"MHTv2RecipeExtend","Data_V17_MC_V17_1L_MHTextend_NoJetLepHEMveto","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,36,200,2000,0,2.49,70000);
-
-  /*
-  GetOneDPlots(1100,"HTv2Recipe","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
-
-  GetOneDPlots(1200,"NJetv2Recipe","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
 
 
 
   
-  GetOneDPlots(1200,"ElePt","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Eletron pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  //  GetOneDPlots(1300,"NBtagv2Recipe","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,4,0,4,0,2.49,200000);
   
-  GetOneDPlots(1200,"EleEta","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
-
-  GetOneDPlots(1200,"ElePhi","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
-
-  GetOneDPlots(1200,"MuPt","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
   
-  GetOneDPlots(1200,"MuEta","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+  GetOneDPlots(1000,"MHTv2Recipe","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
-  GetOneDPlots(1200,"MuPhi","Data_V17_MC_V17_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+  GetOneDPlots(1100,"HTv2Recipe","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
 
-*/
+  GetOneDPlots(1200,"NJetv2Recipe","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NJet","Data/MC",1,0,10,2,12,0,2.49,50000);
+
+
+
+  
+  GetOneDPlots(1200,"ElePt","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Eletron pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  GetOneDPlots(1200,"EleEta","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"ElePhi","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1e CR",0.57,0.6,0.87,0.87,"Electron #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"MuPt","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  GetOneDPlots(1200,"MuEta","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"MuPhi","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1#mu CR",0.57,0.6,0.87,0.87,"Muon #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+
+
+  GetOneDPlots(1200,"LepPt","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
+  
+  GetOneDPlots(1200,"LepEta","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
+
+  GetOneDPlots(1200,"LepPhi","2017_Final_1L","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+
+
   
   //  GetOneDPlots(1200,"JetPtforHTv2Recipe","DataVsMC_1L_HighDphi_AppliedAsElectronPrefireMapNoAcceptanceOnMC","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.7,0.87,0.87,"pT","Data/MC",1,0,20,0,1000,0,2.49,50000);
   

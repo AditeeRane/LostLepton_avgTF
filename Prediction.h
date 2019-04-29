@@ -32,21 +32,27 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+bool RunFor2017=true;
+bool RunFor2018=false;
+bool RunFor2016=false;
+
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
+
 bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
 const bool ApplyHT5cut=true;
 bool AddHEMVeto=false; //<---true to get 2018 Prediction with HEM affected region
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
-const double csvForBtag=0.4184;
+const bool applySFs = false; //check:true only for data
+double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 // Use TFs with/without SFs
-const double scaleFactorWeight = 59546.381; //not used for data
+double scaleFactorWeight = 59546.381; //*AR:190429:don't change here, yearwise change of file is made later
+
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -63,7 +69,9 @@ const bool topPTreweight = false;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_102XSF_V1_1018_190404.csv");
+string path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";   //*AR:190429:don't change here, yearwise change of file is made later
+
+
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const TString path_ISRcorr("isr/ISRWeights.root");
@@ -949,6 +957,22 @@ void Prediction::Init(TTree *tree)
   ////////////////////////
   //////// Options
   ///////////////////////
+
+  if(RunFor2018)
+    csvForBtag=0.4184;
+  if(RunFor2017)
+    csvForBtag=0.4941;
+
+  if(RunFor2018)
+    scaleFactorWeight = 59546.381; //not used for data
+  if(RunFor2017)
+    scaleFactorWeight = 41486.136;
+
+  if(RunFor2018)
+    path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
+  if(RunFor2017)
+    path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
+  
 
   if(!((runOnData && !runOnStandardModelMC && !runOnSignalMC) || (!runOnData && runOnStandardModelMC && !runOnSignalMC) || (!runOnData && !runOnStandardModelMC && runOnSignalMC))){
     fprintf(stderr, "CHECK OPTIONS! EITHER RUN ON DATA, MC, OR SIGNAL!!!");
