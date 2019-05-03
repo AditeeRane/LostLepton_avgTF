@@ -34,7 +34,11 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
+bool RunFor2017=true;
+bool RunFor2018=false;
+bool RunFor2016=false;
+
+const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 
@@ -56,7 +60,7 @@ const bool ScaleAccSys=false;
 const bool PDFAccSys=false;
 const bool BtagSys=false;
 const bool PrefireSys=false;
-bool GetNonPrefireProb=false; //<---true for 2016 and 2017 MC, 
+bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC, 
 bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
 
@@ -66,7 +70,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_102XSF_V1_1018_190404.csv");
+string path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";   //*AR:190429:don't change here, yearwise change of file is made later
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
@@ -74,6 +78,35 @@ const TString path_ISRcorr("isr/ISRWeights.root");
 
 // Scalefactors
 
+TString path_elecID=TString("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
+TString hist_elecID=TString("Run2018_CutBasedVetoNoIso94XV2");
+TString path_elecIso=TString("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
+TString hist_elecIso=TString("Run2018_Mini");
+
+// Electron tracking inefficiency
+TString path_elecTrk=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_updatedAll_Above10GeV_2018_190404.root");
+TString hist_elecTrk=TString("EGamma_SF2D");
+TString path_elecTrkHighPt=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_updatedAll_Above10GeV_2018_190404.root");
+TString hist_elecTrkHighPt=TString("EGamma_SF2D");
+
+TString path_elecTrkLowPt=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_updatedAll_Above10GeV_2018_190404.root");
+TString hist_elecTrkLowPt=TString("EGamma_SF2D");
+
+TString path_muID=TString("SFs_Moriond17/RunABCD_SF_ID_Mu_2018_190404.root");
+TString hist_muID=TString("NUM_MediumID_DEN_TrackerMuons_pt_abseta");
+TString path_muID_sys=TString("SFs_Moriond17/RunBCDEF_SF_ID_syst.root");
+TString hist_muID_sys=TString("NUM_MediumID_DEN_genTracks_pt_abseta_syst");
+
+TString path_muIso=TString("SFs_Moriond17/RunABCD_SF_ISO_Mu_2018_190404.root");
+TString hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
+TString path_muIso_sys=TString("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
+TString hist_muIso_sys=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta_syst");
+
+
+
+
+
+/*
 const TString path_elecID("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
 const TString hist_elecID("Run2018_CutBasedVetoNoIso94XV2");
 const TString path_elecIso("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
@@ -98,7 +131,7 @@ const TString hist_muIso_sys("NUM_TightRelIso_DEN_MediumID_pt_abseta_syst");
 //const TString hist_muonTrkHighPt("ratio_eff_eta3_dr030e030_corr");
 //const TString hist_muonTrkLowPt("ratio_eff_eta3_tk0_dr030e030_corr");
 
-
+*/
 // Isotrack uncertainty
 const TString path_isoTrackunc("SFs_ICHEP16/NJets_uncertainty.root");
 
@@ -136,7 +169,7 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
-const double csvForBtag=0.4184;
+double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 int Scalesize=9;
 int PDFsize=102;
 
@@ -240,7 +273,8 @@ class SFMaker : public TSelector {
   TH1D * h_muTrkSF = 0;
 
   TH2F * h_elecTrkSF = 0;
-
+  TH2F * h_elecTrkHighPtSF = 0;
+  TH2F * h_elecTrkLowPtSF = 0; 
   //open skim file as skimfile
   TH1* h_njetsisr = 0;
   double nEvtsTotal;
@@ -398,6 +432,9 @@ class SFMaker : public TSelector {
   std::vector<double> *PDFWeights=0;
   Double_t        METPhi;
   Double_t        MET;
+  Double_t        NonPrefiringProb;
+  Double_t        NonPrefiringProbUp;
+  Double_t        NonPrefiringProbDown;
   Double_t        PFCaloMETRatio;
   Double_t        MHT;
   Double_t        MHTPhi;
@@ -498,6 +535,10 @@ class SFMaker : public TSelector {
   TBranch        *b_Jets_HTMask=0;   //!
   TBranch        *b_METPhi=0;   //!
   TBranch        *b_MET=0;   //!
+  TBranch        *b_NonPrefiringProb=0;   //!
+  TBranch        *b_NonPrefiringProbUp=0;   //!
+  TBranch        *b_NonPrefiringProbDown=0;   //!
+
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
@@ -589,6 +630,69 @@ void SFMaker::Init(TTree *tree)
   fChain->SetMakeClass(1);
 
 
+  if(RunFor2018)
+    csvForBtag=0.4184;
+  if(RunFor2017)
+    csvForBtag=0.4941;
+  /*
+  if(RunFor2018)
+    scaleFactorWeight = 59546.381; //not used for data
+  if(RunFor2017)
+    scaleFactorWeight = 41486.136;
+*/
+  if(RunFor2018)
+    path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
+  if(RunFor2017)
+    path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
+
+
+  if(RunFor2018){
+    path_elecID=TString("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
+    hist_elecID=TString("Run2018_CutBasedVetoNoIso94XV2");
+    path_elecIso=TString("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
+    hist_elecIso=TString("Run2018_Mini");
+
+    // Electron tracking inefficiency
+    path_elecTrk=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_updatedAll_Above10GeV_2018_190404.root");
+    hist_elecTrk=TString("EGamma_SF2D");
+
+    path_muID=TString("SFs_Moriond17/RunABCD_SF_ID_Mu_2018_190404.root");
+    hist_muID=TString("NUM_MediumID_DEN_TrackerMuons_pt_abseta");
+    path_muID_sys=TString("SFs_Moriond17/RunBCDEF_SF_ID_syst.root");
+    hist_muID_sys=TString("NUM_MediumID_DEN_genTracks_pt_abseta_syst");
+
+    path_muIso=TString("SFs_Moriond17/RunABCD_SF_ISO_Mu_2018_190404.root");
+    hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
+    path_muIso_sys=TString("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
+    hist_muIso_sys=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta_syst");
+  }
+  if(RunFor2017){
+    path_elecID=TString("SFs_Moriond17/ElectronScaleFactors_Run2017_190404.root");
+    hist_elecID=TString("Run2017_CutBasedVetoNoIso94XV2");
+    path_elecIso=TString("SFs_Moriond17/ElectronScaleFactors_Run2017_190404.root");
+    hist_elecIso=TString("Run2017_MVAVLooseTightIP2DMini");
+
+    // Electron tracking inefficiency
+    path_elecTrkHighPt=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_2017_190404.root");
+    hist_elecTrkHighPt=TString("EGamma_SF2D");
+
+    // Electron tracking inefficiency
+    path_elecTrkLowPt=TString("SFs_Moriond17/egammaEffi.txt_EGM2D_runBCDEF_passingRECO_lowEt_2017_190404.root");
+    hist_elecTrkLowPt=TString("EGamma_SF2D");
+
+
+    path_muID=TString("SFs_Moriond17/RunBCDEF_SF_ID_Mu_2017_190404.root");
+    hist_muID=TString("NUM_MediumID_DEN_genTracks_pt_abseta");
+    path_muID_sys=TString("SFs_Moriond17/RunBCDEF_SF_ID_syst.root");
+    hist_muID_sys=TString("NUM_MediumID_DEN_genTracks_pt_abseta");
+
+    path_muIso=TString("SFs_Moriond17/RunBCDEF_SF_ISO_Mu_2017_190404.root");
+    hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
+    path_muIso_sys=TString("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
+    hist_muIso_sys=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
+  }
+
+
   ////////////////////////
   //////// End Options
   ///////////////////////
@@ -650,6 +754,7 @@ void SFMaker::Init(TTree *tree)
   TFile *elecIsoSF_histFile = TFile::Open(path_elecIso, "READ");
   h_elecIsoSF = (TH2F*) elecIsoSF_histFile->Get(hist_elecIso)->Clone();
 
+
   TFile *isoTrackunc_histFile = TFile::Open(path_isoTrackunc, "READ");
   h_muIsoTrack_NJetsunc = (TH1D*) isoTrackunc_histFile->Get("muon_trkveto_syst")->Clone();
   h_elecIsoTrack_NJetsunc = (TH1D*) isoTrackunc_histFile->Get("electron_trkveto_syst")->Clone();
@@ -666,9 +771,17 @@ void SFMaker::Init(TTree *tree)
   //  h_muTrkSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrk)->Clone();
   //  h_muTrkHighPtSF = (TH1D*) muTrkSF_histFile->Get(hist_muonTrkHighPt)->Clone();
 
+  if(RunFor2018){
+    TFile *elecTrkSF_histFile = TFile::Open(path_elecTrk, "READ");
+    h_elecTrkSF = (TH2F*) elecTrkSF_histFile->Get(hist_elecTrk)->Clone();  
+  }
+  if(RunFor2017){
+    TFile *elecTrkHighPtSF_histFile = TFile::Open(path_elecTrkHighPt, "READ");
+    h_elecTrkHighPtSF = (TH2F*) elecTrkHighPtSF_histFile->Get(hist_elecTrkHighPt)->Clone();
+    TFile *elecTrkLowPtSF_histFile = TFile::Open(path_elecTrkLowPt, "READ");
+    h_elecTrkLowPtSF = (TH2F*) elecTrkLowPtSF_histFile->Get(hist_elecTrkLowPt)->Clone();
+  }
 
-  TFile *elecTrkSF_histFile = TFile::Open(path_elecTrk, "READ");
-  h_elecTrkSF = (TH2F*) elecTrkSF_histFile->Get(hist_elecTrk)->Clone();  
 
   //  TFile *elecTrkLowPtSF_histFile = TFile::Open(path_elecTrkLowPt, "READ");
   //  h_elecTrkLowPtSF = (TH2F*) elecTrkLowPtSF_histFile->Get(hist_elecTrkLowPt)->Clone();  
@@ -725,11 +838,15 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("Jets_HTMask", 1);
   fChain->SetBranchStatus("METPhi", 1);
   fChain->SetBranchStatus("MET", 1);
+  fChain->SetBranchStatus("NonPrefiringProb", 1);
+  fChain->SetBranchStatus("NonPrefiringProbUp", 1);
+  fChain->SetBranchStatus("NonPrefiringProbDown", 1);
+
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
   fChain->SetBranchStatus("HT5", 1);
-
+ 
   fChain->SetBranchStatus("Muons", 1);
   fChain->SetBranchStatus("NJets", 1);
   fChain->SetBranchStatus("NVtx", 1);
@@ -848,6 +965,10 @@ void SFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("Jets_HTMask", &Jets_HTMask, &b_Jets_HTMask);
   fChain->SetBranchAddress("METPhi", &METPhi, &b_METPhi);
   fChain->SetBranchAddress("MET", &MET, &b_MET);
+  fChain->SetBranchAddress("NonPrefiringProb",&NonPrefiringProb, &b_NonPrefiringProb);
+  fChain->SetBranchAddress("NonPrefiringProbUp",&NonPrefiringProbUp, &b_NonPrefiringProbUp);
+  fChain->SetBranchAddress("NonPrefiringProbDown",&NonPrefiringProbDown, &b_NonPrefiringProbDown);
+
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);

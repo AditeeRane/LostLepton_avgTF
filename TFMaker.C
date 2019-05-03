@@ -231,6 +231,9 @@ Bool_t TFMaker::Process(Long64_t entry)
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
+
+    //    std::cout<<" csvForBtag "<<csvForBtag<<" btagcalib "<<path_bTagCalib<<" lumi "<<scaleFactorWeight<<endl;
+
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
     bool CheckPhi=false;
@@ -407,7 +410,7 @@ Bool_t TFMaker::Process(Long64_t entry)
 	double getHT5Cut;
 	getHT5Cut = 5.3*(HT5/HT)-4.78;
 	if(!(DeltaPhi1 >= getHT5Cut || HT5/HT < 1.2)){
-	  std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
+	  // std::cout<<" HT "<<HT<<" HT5 "<<HT5<<" getHT5Cut "<<getHT5Cut<<" DeltaPhi1 "<<DeltaPhi1<<endl;
 	  return kTRUE;
 	}
       }
@@ -489,6 +492,9 @@ Bool_t TFMaker::Process(Long64_t entry)
 
 	char SkimFile[500];
 
+      if(RunFor2018){
+	skimName="tree_TTJets_SingleLeptFromT_MC2018.root";
+	//	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2018.root"; 
 	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2018.root"; 
 	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2018.root";
@@ -509,25 +515,63 @@ Bool_t TFMaker::Process(Long64_t entry)
 	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2018.root";
 	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2018.root"; 
 	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2018.root"; 
-	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2018.root"; 
-	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2018.root";
-	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2018.root";
-	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2018.root";
-	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2018.root";
-	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2018.root";
-	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2018.root";
-	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2018.root";
-	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2018.root";
-	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2018.root";
-	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2018.root";
-	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2018.root";
-	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2018.root";
-	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2018.root";
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      }
+      if(RunFor2017){
+	skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
+	//	char SkimFile[500];
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2017.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2017.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2017.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2017.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2017.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2017.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2017.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2017.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2017.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2017.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2017.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      }
+      
+      sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 
-
-	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
-
-	//std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
+      //      std::cout<<" currFileName "<<currFileName<<" skimname "<<skimName<<endl;
         // Make sure you don't have negative number of events per sample
 	//*AR-180314-Histograms h_CR_SB,h_SR_SB,h_CR_SF_SB,h_SR_SF_SB are written newly for every tree
 	//*AR-180322-At this step, these are just empty, declared histograms.
@@ -800,7 +844,7 @@ Bool_t TFMaker::Process(Long64_t entry)
     //*AR-180314--Here onward execution happens for every event
 
     if(GetNonPrefireProb){
-    
+      /*  
       for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
 	double NonPrefireWt=1.0;
 	double NonPrefireJetWt=1.0;
@@ -868,6 +912,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 	} //end of Electrons_passIso
       } //end of loop over electrons
       //    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
+*/
+      Weight *=NonPrefiringProb;
     } // end of GetNonPrefireProb
     
     //    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
@@ -2039,7 +2085,7 @@ bool TFMaker::FiltersPass()
       if(j==0){
 	if(TMath::IsNaN(Jets->at(j).Phi()-METPhi)) result=false;
 	if(Jets_neutralEmEnergyFraction->at(j)<0.03 && (TVector2::Phi_mpi_pi(Jets->at(j).Phi()-METPhi)>(TMath::Pi()-0.4))){
-	  std::cout<<"found bad QCD CR jet"<<std::endl;
+	  //	  std::cout<<"found bad QCD CR jet"<<std::endl;
 	  result=false;
 	}
       }

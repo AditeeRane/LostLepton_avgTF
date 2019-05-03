@@ -93,13 +93,13 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
   // Define canvas
   //
-  TCanvas *canvas = new TCanvas("canvas","canvas",10,10,W,H);
+  TCanvas *canvas = new TCanvas("canvas","canvas",W,H);
 
   canvas->SetFillColor(0);
   canvas->SetBorderMode(0);
   canvas->SetFrameFillStyle(0);
   canvas->SetFrameBorderMode(0);
-  canvas->SetLeftMargin( L/W );
+  canvas->SetLeftMargin(3*L/W );
   canvas->SetRightMargin( R/W );
   canvas->SetRightMargin( 0.2 );
   canvas->SetTopMargin( T/H );
@@ -128,7 +128,9 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
 
   //*AR: canvas_dw:(0,0.04,0.97,0.3)
-  canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
+  //  canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
+  canvas_dw->SetPad(0., dw_height_offset, 0.97, 0.29);
+
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
   canvas_up->SetTopMargin(0.10);
@@ -154,7 +156,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
   //  gStyle->SetPadBottomMargin(0.15);
-  gStyle->SetPadLeftMargin(0.15);
+  gStyle->SetPadLeftMargin(0.16);
   int col1 = kRed;
   int col2 = kBlack;
   int i=0;
@@ -193,7 +195,12 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_NJetv2Recipe_Exp");
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny("h_MHTv2Recipe_Exp");
   //Use this line only for Njet, HT, MHT
-  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  TH1D *hTTbarLL, *hTTbarDLL;
+
+  //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  hTTbarLL=(TH1D*) _fileTTbarLL->Get(hname)->Clone();
+  hTTbarDLL=(TH1D*) _fileTTbarLL->Get(hname)->Clone();
+
   //  hTTbarLL->Scale(137.06/118.77);
   // This block is needed only while comparing btags because MC expectation has btags>4 but not for MC prediction as we use btag prob for MC prediction. This is not the case for Data prediction.
   /*
@@ -221,10 +228,12 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   //  hTTbarLL->Scale(13498.0/27987.0);
   //*AR:16 Vs 17
   //  hTTbarLL->Scale(35900.0/5000.0);
+  /*
   hTTbarLL->SetLineColor(kRed);
   hTTbarLL->SetLineWidth(2);
   hTTbarLL->SetMarkerStyle(21);
   hTTbarLL->SetMarkerColor(kRed);
+
   double xmin=hTTbarLL->GetXaxis()->GetXmin();
   double xmax=hTTbarLL->GetXaxis()->GetXmax();
   double diff=xmax-xmin;  
@@ -234,11 +243,74 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
   //  _fileData->cd();
   //  TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
-
+*/
   _fileTTbarHadtau->cd();
+
+
+  TH1D *hTTbarHadtau, *hTTbarDHadtau;
+
+  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  hTTbarHadtau=(TH1D*) _fileTTbarHadtau->Get(hnameRev)->Clone();
+  hTTbarDHadtau=(TH1D*) _fileTTbarHadtau->Get(hnameRev)->Clone();
+
+
+  
+  
+  if(hTTbarHadtau->GetMaximum()>hTTbarLL->GetMaximum()){
+    if(logy)
+      hTTbarLL->SetMaximum(3*hTTbarHadtau->GetMaximum());
+    else 
+      hTTbarLL->SetMaximum(1.5*hTTbarHadtau->GetMaximum());
+  }
+  else{
+    if(logy)
+      hTTbarLL->SetMaximum(3*hTTbarLL->GetMaximum());
+    else 
+      hTTbarLL->SetMaximum(1.5*hTTbarLL->GetMaximum());
+  }
+  hTTbarLL->SetMinimum(9);
+  
+
+  TExec *ex1 = new TExec("ex1","gStyle->SetErrorX(0);");
+  TExec *ex2 = new TExec("ex2","gStyle->SetErrorX(0.5);");
+
+  hTTbarLL->SetLineColor(4);
+  hTTbarHadtau->SetLineColor(4);
+
+
+  hTTbarLL->GetYaxis()->SetLabelSize(0.045*1.15);
+  hTTbarLL->GetYaxis()->SetTitleSize(0.06*1.15);
+  hTTbarLL->GetYaxis()->SetTitleOffset(0.6);
+  hTTbarLL->GetYaxis()->SetTitleFont(42);
+
+
+  hTTbarLL->SetTitle("");
+  hTTbarLL->SetMarkerStyle(20);
+  hTTbarLL->SetMarkerSize(1.2);
+  hTTbarLL->SetLineColor(1);
+  TH1D * hTTbarLL_Normalize = static_cast<TH1D*>(hTTbarLL->Clone("hTTbarLL_Normalize"));
+  ex1->Draw();
+  hTTbarLL_Normalize->DrawCopy("e");
+
+  hTTbarHadtau->SetFillStyle(1001);
+  hTTbarHadtau->SetFillColor(kRed-9);
+  hTTbarHadtau->SetMarkerStyle(20);
+  hTTbarHadtau->SetMarkerSize(0.0001);
+  TH1D * hTTbarHadtau_Normalize = static_cast<TH1D*>(hTTbarHadtau->Clone("hTTbarHadtau_Normalize"));
+  ex2->Draw();
+  hTTbarHadtau_Normalize->DrawCopy("e2same");
+  TH1D *hTTbarHadtau_Normalize_Clone = (TH1D*)hTTbarHadtau_Normalize->Clone();
+  for(int i=1; i<hTTbarHadtau_Normalize_Clone->GetNbinsX(); i++) {
+    hTTbarHadtau_Normalize_Clone->SetBinError(i,0);
+  }
+  hTTbarHadtau_Normalize_Clone->SetFillColor(kWhite);
+  hTTbarHadtau_Normalize_Clone->Draw("esame");
+
+  ex1->Draw();
+  hTTbarLL_Normalize->DrawCopy("esame");
   //TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_MHT_Exp");
   //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny("h_DphiOne_Exp");
-  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
+  //  TH1D *hTTbarHadtau = (TH1D*)_fileTTbarHadtau->FindObjectAny(hnameRev);
   //hTTbarHadtau->Scale(137.06/118.77);
   // This block is needed only while comparing btags
   /*
@@ -264,10 +336,12 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 */
 
   //  hTTbarHadtau->Scale(35900.0/41486.0);
+  /*
   hTTbarHadtau->SetLineColor(kBlue);
   hTTbarHadtau->SetMarkerColor(kBlue);
   hTTbarHadtau->SetLineWidth(2);
   hTTbarHadtau->SetMarkerStyle(24);
+*/
   //  hTTbarHadtau->SetMarkerSize(0.0001);
   //  hTTbarHadtau->SetFillStyle(3144);
   //  hTTbarHadtau->SetFillColor(kBlue);
@@ -279,7 +353,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   
   if(logx)
     canvas_up->SetLogx();
-
+  /*
   
   if(hTTbarHadtau->GetMaximum()>hTTbarLL->GetMaximum()){
     if(logy)
@@ -297,12 +371,17 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   if(hTTbarHadtau->GetMinimum()<hTTbarLL->GetMinimum())
     hTTbarLL->SetMinimum(0.5*hTTbarHadtau->GetMinimum());
 */
+  /*
   hTTbarLL->SetMinimum(9);
   if(!logy)
     hTTbarLL->SetMinimum(0);
 
+
+  ex1->Draw();
   hTTbarLL->Draw("e");
-  hTTbarHadtau->Draw("esame");
+  ex2->Draw();
+  hTTbarHadtau->Draw("e2same");
+*/
   //  hTTbarHadtau->GetYaxis()->SetRangeUser(0,ymax);
   
   //  TLegend *tl=new TLegend(0.57,0.7,0.87,0.87);
@@ -318,20 +397,20 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   //  tl->AddEntry(hTTbarHadtau, "Data17F:v1");
   //  tl->AddEntry(hTTbarLL, "Data17F:v2"); 
 
-  tl->AddEntry(hTTbarHadtau, "MC Pred");
-  tl->AddEntry(hTTbarLL, "MC Exp"); 
+  tl->AddEntry(hTTbarHadtau, "Treat simulation like data");
+  tl->AddEntry(hTTbarLL, "Direct from simulation"); 
 
   //  tl->AddEntry(hTTbarHadtau, "Data17(F)");
   //  tl->AddEntry(hTTbarLL, "Data17(B:E)");
  
 
-  tl->SetLineColor(kWhite);
+  //  tl->SetLineColor(kWhite);
   tl->Draw("same");
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
   //ttext->DrawLatex(GetRatioXmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
   //  ttext->DrawLatex(xmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
-  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Preliminary}");
+  ttext->DrawLatexNDC(0,0.91, "#bf{CMS} #it{Simulation}");
   
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
@@ -341,10 +420,107 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   //*AR:B:E vs F   
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "136.8 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "137 fb^{-1} (13 TeV)");
   
   gPad->Modified();
   
+
+    // Preparing ratio histograms
+  TH1D * numerator   = static_cast<TH1D*>(hTTbarLL->Clone("numerator"));
+  TH1D * numerator_fullstaterr   = static_cast<TH1D*>(hTTbarLL->Clone("numerator_fullstaterr"));
+  TH1D * denominator = static_cast<TH1D*>(hTTbarHadtau->Clone("denominator"));
+  
+  TH1D * hTTbarLL_Clone = static_cast<TH1D*>(hTTbarLL->Clone("hTTbarLL_Clone"));
+  TH1D * hTTbarHadtau_Clone = static_cast<TH1D*>(hTTbarHadtau->Clone("hTTbarHadtau_Clone"));
+  TH1D * hTTbarHadtau_NoError = static_cast<TH1D*>(hTTbarHadtau->Clone("hTTbarHadtau_NoError"));
+  TH1D * One_NoError = static_cast<TH1D*>(hTTbarHadtau->Clone("hTTbarHadtau_NoError"));
+  for (int ibin=0; ibin<hTTbarHadtau_NoError->GetNbinsX()+2; ibin++){ // scan including underflow and overflow bins
+    hTTbarHadtau_NoError->SetBinError(ibin,0.);
+    One_NoError->SetBinContent(ibin,1.);
+    One_NoError->SetBinError(ibin,0.);
+  }
+  
+  //hTTbarHadtauD->Add(hTTbarLLD,-1);
+  numerator->Divide(hTTbarLL_Clone,hTTbarHadtau_NoError,1,1,"");
+  denominator->Divide(hTTbarHadtau_Clone,hTTbarHadtau_NoError,1,1,"");
+  
+  //      if(pull==1){
+  //      		numerator_fullstaterr->Add(hTTbarLL_Clone,hTTbarHadtau_Clone,1,-1); // Expectation-Prediction
+  //      }else{
+  numerator_fullstaterr->Divide(hTTbarLL_Clone,hTTbarHadtau_Clone,1,1,"");  // Expectation/Prediction
+  numerator_fullstaterr->Add(One_NoError,-1.);                        // Expectation/Prediction-1
+  //      }
+  //  double font_size_dw  = 0.1;  
+
+  // draw bottom figure
+      canvas_dw->cd();
+      gStyle->SetPadBottomMargin(0.3);
+      numerator->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
+      /*
+  cOne->GetXaxis()->SetTitleOffset(0.9);
+  cOne->GetXaxis()->SetTitleSize(0.13);
+  cOne->GetXaxis()->SetTitleFont(42);
+  cOne->GetXaxis()->SetLabelOffset(0.008);
+
+  cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
+  cOne->GetYaxis()->SetTitleOffset(0.35);
+  cOne->GetYaxis()->SetTitleSize(0.13);
+  cOne->GetYaxis()->SetTitleFont(42);
+  cOne->GetYaxis()->SetLabelOffset(0.008);
+
+  gStyle->SetPadTickY(1);
+  cOne->GetYaxis()->SetNdivisions(8);
+  cOne->SetLabelSize(0.115,"XY");
+*/
+      // font size
+      numerator->GetXaxis()->SetLabelSize(font_size_dw);
+      numerator->GetXaxis()->SetTitleSize(font_size_dw);
+      numerator->GetYaxis()->SetLabelSize(font_size_dw);
+      numerator->GetYaxis()->SetTitleSize(font_size_dw);
+
+
+      numerator->GetXaxis()->SetLabelSize(0.18*0.045/0.06);
+      //      numerator->GetXaxis()->SetTitleSize(0.18);
+      numerator->GetXaxis()->SetTitleSize(0.13);
+
+      numerator->GetXaxis()->SetTitleOffset(0.9);
+      numerator->GetXaxis()->SetTitleFont(42);
+      //numerator->GetYaxis()->SetLabelFont(42);
+      //numerator->GetYaxis()->SetLabelOffset(0.007);
+      numerator->GetYaxis()->SetLabelOffset(0.008);
+      gStyle->SetPadTickY(1);
+      numerator->GetYaxis()->SetLabelSize(0.18*0.045/0.06);
+      numerator->GetYaxis()->SetTitleSize(0.13);
+      //numerator->GetYaxis()->SetTitleOffset(0.5);
+      //      numerator->GetYaxis()->SetTitleOffset(0.28);
+      numerator->GetYaxis()->SetTitleOffset(0.40);
+      numerator->GetYaxis()->SetTitleFont(42);
+
+
+      numerator->GetXaxis()->SetTitle(RatioLabelX);
+      numerator->GetYaxis()->SetTitle(RatioLabelY);
+
+
+      // Plotting
+      numerator->GetYaxis()->SetNdivisions(505);
+      numerator->GetYaxis()->SetTickLength(0.015);
+      numerator->GetXaxis()->SetTickLength(0.08);
+      numerator->SetTitle("");
+      ex1->Draw();
+      numerator->DrawCopy();
+
+      ex2->Draw();
+      denominator->DrawCopy("e2same");
+      //denominator->DrawCopy("same");
+
+      TH1D *denominator_Clone = (TH1D*)denominator->Clone();
+      denominator_Clone->SetFillColor(kWhite);
+      denominator_Clone->Draw("hist same");
+
+      ex1->Draw();
+      numerator->DrawCopy("same");
+      /*
+
   TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
   cOne=(TH1D *) hTTbarHadtau->Clone("Ratio");
   cOne->Divide(hTTbarLL);
@@ -369,6 +545,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   gStyle->SetPadTickY(1);
   cOne->GetYaxis()->SetNdivisions(8);
   cOne->SetLabelSize(0.115,"XY");
+*/
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
@@ -1123,13 +1300,13 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","LL_2017_NbtagExpUpdated","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"MHT","Pred/Exp",1,0,16,200,1000,0.5,1.5,20000);
+  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.5,1.5,20000);
 
-  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","LL_2017_NbtagExpUpdated","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"HT","Pred/Exp",1,0,12,100,2500,0.5,1.5,20000);
+  //  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,20000);
 
-  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","LL_2017_NbtagExpUpdated","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NJet","Pred/Exp",1,0,10,2,12,0.5,1.5,20000);
+  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,2,12,0.5,1.5,20000);
 
-  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","LL_2017_NbtagExpUpdated","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau",0.57,0.7,0.87,0.87,"NBtag","Pred/Exp",1,0,5,0,5,0.5,1.5,20000);
+  //  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{b}","#frac{Direct}{Prediction}",1,0,5,0,5,0.5,1.5,20000);
 
 
 

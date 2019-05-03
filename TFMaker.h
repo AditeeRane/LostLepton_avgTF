@@ -33,13 +33,18 @@
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
+
+bool RunFor2017=true;
+bool RunFor2018=false;
+bool RunFor2016=false;
+
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
 const bool doISRcorr = false;  //true for fastsim signal in prediction code
 const bool doTopPtReweighting = false; 
 const bool applyFilters = true;
 const bool useFilterData = true; // false for FastSim since not simulated
-const bool LeptonSys=true;
+const bool LeptonSys=false;
 const bool IsoMuSys=false;//false by default
 const bool IsoEleSys=false;
 const bool IDMuSys=false;//false by default
@@ -54,9 +59,9 @@ const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as
 const bool SysUp=false;
 const bool SysDn=true; //*AR, 180327: no need to change this for any run
 // Use TFs with/without SFs
-const double scaleFactorWeight = 59546.381;
-bool GetNonPrefireProb=false; //<---true for 2016 and 2017 MC
-bool AddHEMVeto=true; //<---true to get 2018 TF for HEM affected region
+double scaleFactorWeight = 59546.381;
+bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
+bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
 
 // Path to Skims for btag reweighting
@@ -65,8 +70,7 @@ const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2
 // PU
 const TString path_puHist("PU/PileupHistograms_0721_63mb_pm5.root");
 // bTag corrections
-const string path_bTagCalib("btag/DeepCSV_102XSF_V1_1018_190404.csv");
-
+string path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";   //*AR:190429:don't change here, yearwise change of file is made later
 const string path_bTagCalibFastSim("btag/fastsim_csvv2_ttbar_26_1_2017.csv");
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ISR corrections
@@ -88,7 +92,8 @@ const double deltaPhi1_=0.5;
 const double deltaPhi2_=0.5;
 const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
-const double csvForBtag=0.4184;
+double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
+
 int Scalesize=9;
 int PDFsize=102;
 //vector<double> *Vec_SF;
@@ -354,6 +359,10 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
 
   Double_t        METPhi;
   Double_t        MET;
+  Double_t        NonPrefiringProb;
+  Double_t        NonPrefiringProbUp;
+  Double_t        NonPrefiringProbDown;
+
   std::vector<double> *METUp=0;
   std::vector<double> *METDown=0;
   std::vector<double> *METPhiUp=0;
@@ -469,6 +478,10 @@ vector<TH1*> Vec_PDF_el_SFCR_SB,Vec_PDF_el_SFSR_SB,Vec_PDF_mu_SFCR_SB,Vec_PDF_mu
   TBranch *b_METDown=0; //!
   TBranch *b_METPhiUp=0; //!
   TBranch *b_METPhiDown=0; //!
+  TBranch        *b_NonPrefiringProb=0;   //!
+  TBranch        *b_NonPrefiringProbUp=0;   //!
+  TBranch        *b_NonPrefiringProbDown=0;   //!
+
   TBranch        *b_PFCaloMETRatio=0;   //!
   TBranch        *b_MHT=0;   //!
   TBranch        *b_MHTPhi=0;   //!
@@ -560,6 +573,21 @@ void TFMaker::Init(TTree *tree)
   fChain = tree;
   fChain->SetMakeClass(1);
 
+  if(RunFor2018)
+    csvForBtag=0.4184;
+  if(RunFor2017)
+    csvForBtag=0.4941;
+
+  
+  if(RunFor2018)
+    scaleFactorWeight = 59546.381; //not used for data
+  if(RunFor2017)
+    scaleFactorWeight = 41486.136;
+
+  if(RunFor2018)
+    path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
+  if(RunFor2017)
+    path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
 
   ////////////////////////
   //////// End Options
@@ -661,6 +689,10 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchStatus("METDown", 1);
   fChain->SetBranchStatus("METPhiUp", 1);
   fChain->SetBranchStatus("METPhiDown", 1);
+  fChain->SetBranchStatus("NonPrefiringProb", 1);
+  fChain->SetBranchStatus("NonPrefiringProbUp", 1);
+  fChain->SetBranchStatus("NonPrefiringProbDown", 1);
+
   fChain->SetBranchStatus("PFCaloMETRatio", 1);
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
@@ -796,6 +828,10 @@ void TFMaker::Init(TTree *tree)
   fChain->SetBranchAddress("METDown", &METDown, &b_METDown);
   fChain->SetBranchAddress("METPhiUp", &METPhiUp, &b_METPhiUp);
   fChain->SetBranchAddress("METPhiDown", &METPhiDown, &b_METPhiDown);
+  fChain->SetBranchAddress("NonPrefiringProb",&NonPrefiringProb, &b_NonPrefiringProb);
+  fChain->SetBranchAddress("NonPrefiringProbUp",&NonPrefiringProbUp, &b_NonPrefiringProbUp);
+  fChain->SetBranchAddress("NonPrefiringProbDown",&NonPrefiringProbDown, &b_NonPrefiringProbDown);
+
   fChain->SetBranchAddress("PFCaloMETRatio", &PFCaloMETRatio, &b_PFCaloMETRatio);
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);

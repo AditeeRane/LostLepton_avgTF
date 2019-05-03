@@ -65,7 +65,7 @@ const bool useGenHTMHT = false;
 
 // Do top-pt reweightung
 const bool topPTreweight = false;
-
+//TString SFCR_histFile_path=0;
 // pu
 const TString path_puHist("pu/PileupHistograms_0121_69p2mb_pm4p6.root");
 // bTag corrections
@@ -124,10 +124,13 @@ class Prediction : public TSelector {
   string currentFile;
   TFile* pufile = 0;
   TH1* puhist = 0;
-  
+  TFile *SFCR_histFile = 0;
+
   std::vector<std::pair<double, double>> xsecsT1T5;
   std::vector<std::pair<double, double>> xsecsT2;
   std::vector<std::pair<double, double>> *xsecs = 0;
+  TH1D* h_el_SFCR_SB = 0;
+  TH1D* h_mu_SFCR_SB = 0;
 
   // Output
   TH1D* h_Prediction = 0;
@@ -136,6 +139,8 @@ class Prediction : public TSelector {
   TH2D* h_Prediction_HTvsMHT = 0;
 
   TH1D* h_Prediction_NJetvsNBtag_1D = 0;
+  TH1D* h_PredictionLL_NJetvsNBtag_1D = 0;
+  TH1D* h_PredictionHadtau_NJetvsNBtag_1D = 0;
   TH1D* h_Prediction_HTvsMHT_1D = 0;
 
   TH1D* h_YieldCutFlow=0;
@@ -187,6 +192,16 @@ class Prediction : public TSelector {
   TH1D* h_ElePt_Exp=0;
   TH1D* h_EleEta_Exp=0;
   TH1D* h_ElePhi_Exp=0;
+
+  TH1D* h_ElePtMCCor_Exp=0;
+  TH1D* h_EleEtaMCCor_Exp=0;
+  TH1D* h_ElePhiMCCor_Exp=0;
+  TH1D* h_LepPtMCCor_Exp=0;
+  TH1D* h_LepEtaMCCor_Exp=0;
+  TH1D* h_LepPhiMCCor_Exp=0;
+  TH1D* h_MuPtMCCor_Exp=0;
+  TH1D* h_MuEtaMCCor_Exp=0;
+  TH1D* h_MuPhiMCCor_Exp=0;
 
   TH2D* h_EleEtavsPt_Exp=0;
   TH2D* h_EleEtavsPhi_Exp=0;
@@ -259,6 +274,7 @@ class Prediction : public TSelector {
   TH2D * h_WeightBeforeScalePrefirevsRecoHT_Exp=0;  
 
   TH1D* h_HTv2Recipe_Exp=0;
+  TH1D* h_HTv2RecipeMCCor_Exp=0;
   TH1D* h_HTv2Recipe_forQCD_Exp=0;
 
   TH1D* h_HTforLowNJetv2Recipe_Exp=0;
@@ -272,6 +288,8 @@ class Prediction : public TSelector {
   TH1D* h_HTRatioforTwoNbv2Recipe_Exp=0;  
   TH1D* h_HTRatioforNotTwoNbv2Recipe_Exp=0;
   TH1D* h_MHTv2Recipe_Exp=0;
+  TH1D* h_MHTv2RecipeMCCor_Exp=0;
+
   TH1D* h_MHTv2RecipeExtend_Exp=0;
 
   TH1D* h_MHTv2Recipe_forQCD_Exp=0;
@@ -297,6 +315,8 @@ class Prediction : public TSelector {
   TH2D* h_MHTPhivsHTRatioforLowNJetv2Recipe_Exp=0;
   TH2D* h_MHTPhivsHTRatioforHighNJetv2Recipe_Exp=0;
   TH1D* h_NJetv2Recipe_Exp=0;
+  TH1D* h_NJetv2RecipeMCCor_Exp=0;
+
   TH1D* h_NJetv2Recipe_forQCD_Exp=0;
 
   TH1D* h_NJetforTwoNbv2Recipe_Exp=0;
@@ -308,6 +328,8 @@ class Prediction : public TSelector {
   TH2D* h_NJetvsNBtagv2Recipe_Exp=0;
   TH2D* h_NJetvsNBFracv2Recipe_Exp=0;
   TH1D* h_NBtagv2Recipe_Exp=0;
+  TH1D* h_NBtagv2RecipeMCCor_Exp=0;
+
   TH1D* h_NBtagv2Recipe_forQCD_Exp=0;
 
   TH1D* h_NBtagforLowNJetv2Recipe_Exp=0;
@@ -580,6 +602,8 @@ class Prediction : public TSelector {
 
   // TFs
   TH1D* h_0L1L_SB = 0;
+  TH1D* h_0L1L_LL_SB = 0;
+  TH1D* h_0L1L_Hadtau_SB = 0;
   TH1D* h_0L1L_SF_SB = 0;
 
   TH1D* h_0L1L_RmHEMEleJet_SB = 0;
@@ -737,6 +761,10 @@ class Prediction : public TSelector {
   std::vector<bool>    *Jets_HTMask=0;
   Double_t        METPhi;
   Double_t        MET;
+  Double_t        NonPrefiringProb;
+  Double_t        NonPrefiringProbUp;
+  Double_t        NonPrefiringProbDown;
+
   Double_t        METPhiclean;
   Double_t        METclean;
   Double_t        METPhiOrig;
@@ -869,6 +897,10 @@ class Prediction : public TSelector {
   TBranch        *b_Jets_HTMask=0;   //!
   TBranch        *b_METPhi=0;   //!
   TBranch        *b_MET=0;   //!
+  TBranch        *b_NonPrefiringProb=0;   //!
+  TBranch        *b_NonPrefiringProbUp=0;   //!
+  TBranch        *b_NonPrefiringProbDown=0;   //!
+
   TBranch        *b_METPhiclean=0;   //!
   TBranch        *b_METclean=0;   //!
   TBranch        *b_METPhiOrig=0;   //!
@@ -1005,9 +1037,12 @@ void Prediction::Init(TTree *tree)
   //////// End Options
   ///////////////////////
 
+
   // Open histograms with TFs
   TFile *TF_histFile = TFile::Open("TF.root", "READ");
   h_0L1L_SB = (TH1D*) TF_histFile->Get("h_0L1L_SB")->Clone();
+  h_0L1L_LL_SB = (TH1D*) TF_histFile->Get("h_0L1L_LL_SB")->Clone();
+  h_0L1L_Hadtau_SB = (TH1D*) TF_histFile->Get("h_0L1L_Hadtau_SB")->Clone();
   h_0L1L_SF_SB = (TH1D*) TF_histFile->Get("h_0L1L_SF_SB")->Clone();
 
   if(runOnData){
@@ -1162,6 +1197,10 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchStatus("MHT", 1);
   fChain->SetBranchStatus("MHTPhi", 1);
   fChain->SetBranchStatus("MET", 1);
+  fChain->SetBranchStatus("NonPrefiringProb", 1);
+  fChain->SetBranchStatus("NonPrefiringProbUp", 1);
+  fChain->SetBranchStatus("NonPrefiringProbDown", 1);
+
   fChain->SetBranchStatus("METPhi", 1);
 
   fChain->SetBranchStatus("METPhiOrig", 1);
@@ -1265,6 +1304,10 @@ void Prediction::Init(TTree *tree)
   fChain->SetBranchAddress("HT5clean", &HT5clean, &b_HT5clean);
   fChain->SetBranchAddress("METPhi", &METPhi, &b_METPhi);
   fChain->SetBranchAddress("MET", &MET, &b_MET);
+  fChain->SetBranchAddress("NonPrefiringProb",&NonPrefiringProb, &b_NonPrefiringProb);
+  fChain->SetBranchAddress("NonPrefiringProbUp",&NonPrefiringProbUp, &b_NonPrefiringProbUp);
+  fChain->SetBranchAddress("NonPrefiringProbDown",&NonPrefiringProbDown, &b_NonPrefiringProbDown);
+
   fChain->SetBranchAddress("MHT", &MHT, &b_MHT);
   fChain->SetBranchAddress("MHTPhi", &MHTPhi, &b_MHTPhi);
   fChain->SetBranchAddress("NJets", &NJets, &b_NJets);

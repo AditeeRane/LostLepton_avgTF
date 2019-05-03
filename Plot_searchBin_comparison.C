@@ -45,7 +45,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
   //*AR:190112- MC expectation
   //  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExpWithBtagProb_0L_190111.root");
-  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExp_CheckLLHadtauInSigReg_190423_2016.root");
+  sprintf(tempname,"Prediction_0_haddTTbarWJetST_0L_190417_16Plus17Plus18.root");
 
   //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
   
@@ -54,7 +54,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPre_CheckLLHadtauInSigReg_190423_2016.root");
+  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_1L_190417_16Plus17Plus18.root");
 
  // false: do closure test (MC prediction vs MC truth)
   // true: do data driven prediction and compare to MC truth
@@ -107,8 +107,8 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //
   // Luminosity information for scaling
-  double lumi     = 35.9; // normaliza to this lumi (fb-1)
-  double lumi_ref = 35.9; // normaliza to 3 (fb-1)
+  double lumi     = 137; // normaliza to this lumi (fb-1)
+  double lumi_ref = 137; // normaliza to 3 (fb-1)
   
    ///////////////////////////////////////////////////////////////////////////////////////////
   //
@@ -345,7 +345,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //
 
   TString line = "";
-  sprintf(tempname,"%8.1f",lumi);
+  sprintf(tempname,"%8.0f",lumi);
   line+=tempname;
   line+=" fb^{-1} (13 TeV)";
   
@@ -806,7 +806,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
       if (pull==1)    sprintf(tempname,"ComparisonPull_woIsoTrack_Full_Plot.pdf");
     }else{
       if(option.find("QCD")!=string::npos) sprintf(tempname,"Comparison_QCD_HDP_Full_Plot.pdf");
-        else sprintf(tempname,"Comparison_Full_Plot_2016_CheckLLHadtauInSigReg.pdf");
+        else sprintf(tempname,"Comparison_Full_Plot_2016Plus17Plus18_CorrectLumi137.pdf");
       if (pull==1)    sprintf(tempname,"ComparisonPull_Full_Plot.pdf");
     }
   }

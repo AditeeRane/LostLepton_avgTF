@@ -236,10 +236,14 @@ void SFMaker::SlaveBegin(TTree * /*tree*/)
 Bool_t SFMaker::Process(Long64_t entry)
 {
   //std::cout<<"***SFMaker::Process***"<<" entry "<<entry<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<std::endl;
-  
+
     resetValues();
 
     fChain->GetTree()->GetEntry(entry);
+
+
+    //    std::cout<<" csvForBtag "<<csvForBtag<<" btagcalib "<<path_bTagCalib<<" ele-id "<<path_elecID<<" ele-iso "<<path_elecIso<<" ele-trk-high "<<path_elecTrkHighPt<<" ele-trk-low "<<path_elecTrkLowPt<<" muID "<<path_muID<<" muIso "<<path_muIso<<" muIso_sys "<<path_muIso_sys<<"  muID_sys "<<path_muID_sys<<endl;
+
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
     bool CheckPhi=false;
@@ -272,7 +276,7 @@ Bool_t SFMaker::Process(Long64_t entry)
     int newNJets=-99;
     double newDphi1=99.,newDphi2=99.,newDphi3=99.,newDphi4=99.;
     int newBTagsDeepCSV = 0;
-    //    std::cout<<"scale "<<ScaleWeights->size()<<" pdf "<<PDFWeights->size()<<endl;
+    //std::cout<<"scale "<<ScaleWeights->size()<<" pdf "<<PDFWeights->size()<<endl;
     Scalesize=ScaleWeights->size();
     PDFsize=PDFWeights->size();    
     
@@ -559,6 +563,9 @@ Bool_t SFMaker::Process(Long64_t entry)
 	string skimName="tree_TTJets_SingleLeptFromT_MC2018.root";
 	char SkimFile[500];
 
+      if(RunFor2018){
+	skimName="tree_TTJets_SingleLeptFromT_MC2018.root";
+	//	char SkimFile[500];
 	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2018.root"; 
 	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2018.root"; 
 	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2018.root";
@@ -579,20 +586,60 @@ Bool_t SFMaker::Process(Long64_t entry)
 	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2018.root";
 	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2018.root"; 
 	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2018.root"; 
-	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ_MC2018.root"; 
-	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q_MC2018.root";
-	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ_MC2018.root";
-	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu_MC2018.root";
-	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q_MC2018.root";
-	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ_MC2018.root";
-	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu_MC2018.root";
-	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q_MC2018.root";
-	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ_MC2018.root";
-	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu_MC2018.root";
-	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ_MC2018.root";
-	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu_MC2018.root";
-	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT_MC2018.root";
-	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets_MC2018.root";
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      }
+      if(RunFor2017){
+	skimName="tree_TTJets_SingleLeptFromT_MC2017.root";
+	//	char SkimFile[500];
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2017.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2017.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2017.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2017.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2017.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2017.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2017.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2017.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2017.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2017.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2017.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2017.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2017.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2017.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      }
+
 
 	sprintf(SkimFile,"%s/%s",SkimFilePath.c_str(),skimName.c_str());
 	//	sprintf(SkimFile,"root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV16/tree_SLm/%s",skimName.c_str());
@@ -676,14 +723,14 @@ Bool_t SFMaker::Process(Long64_t entry)
 
     //*AR- 180315-Here onward execution happens for every new event.
     //    std::cout<<" weight before prefire map "<<Weight<<endl;
-    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
+    //    std::cout<<" HT "<<HT<<" MHT "<<MHT<<" NJets "<<NJets<<" BTags "<<BTags<<" Bin_ "<<Bin_<<endl;
 
 
 
     
   
     if(GetNonPrefireProb){
-    
+      /*  
       for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
 	double NonPrefireWt=1.0;
 	double NonPrefireJetWt=1.0;
@@ -731,7 +778,7 @@ Bool_t SFMaker::Process(Long64_t entry)
       } //end of loop over MHT jets
       //      std::cout<<"weight_afterjet "<<i<<" is "<<Weight<<endl;
       
-      std::cout<<" weight_afterAllJets "<<Weight<<endl;
+      //      std::cout<<" weight_afterAllJets "<<Weight<<endl;
       
       for(unsigned j = 0; j < Electrons->size(); ++j){
 	if(Electrons_passIso->at(j)){
@@ -764,10 +811,12 @@ Bool_t SFMaker::Process(Long64_t entry)
 	  }
 	} //end of Electrons_passIso
       } //end of loop over electrons
-      //    std::cout<<" weight_afterAllElectrons "<<Weight<<endl;
+*/
+      Weight *=NonPrefiringProb;
+      //      std::cout<<" nonprefireProb "<<NonPrefiringProb<<" weight_afterPrefire "<<Weight<<endl;
     } // end of GetNonPrefireProb
     
-    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
+    //    std::cout<<"correction for prefirewt done "<<" weight "<<Weight<<endl;
     
     if(Weight < 0)
       return kTRUE;
@@ -1065,7 +1114,7 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      Vec_scale_mu_nOnePrompt_SB.at(iacc)->Fill(bTagBin, WeightBtagProb*ScaleWeights->at(iacc));
 	    }
 	  }
-	  std::cout<<" pdfsize "<<PDFWeights->size()<<endl;
+	  //	  std::cout<<" pdfsize "<<PDFWeights->size()<<endl;
 	  if(PDFAccSys){
 	    for(int iacc=0; iacc < PDFsize; iacc++){
 	      std::cout<<" nloop "<<i<<" weight "<<Weight<<" WeightBtagProb "<<WeightBtagProb<<" iacc "<<iacc<<" PDFweight "<<PDFWeights->at(iacc)<<endl;
@@ -1084,9 +1133,15 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    }
 	  }
 	  else{
-	    isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	    double isoUnc=GetSFUnc(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0); 
-	    isoSFDn = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),isoUnc);
+	    if(RunFor2018){
+	      isoSF = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	      double isoUnc=GetSFUnc(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0); 
+	      isoSFDn = GetSF(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),isoUnc);
+	    }
+	    if(RunFor2017){
+	      isoSF = GetSF(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	      isoSFDn = GetSF(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIsoSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	    }
 	  }
 	  //	  std::cout<<" isoSF "<<isoSF<<endl;
 	  if(IDMuSys){
@@ -1096,15 +1151,27 @@ Bool_t SFMaker::Process(Long64_t entry)
 	    if(SysUp)
 	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))+GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.017);
 	    if(SysDn){
+	      if(RunFor2018){
 	      double idUnc=GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
 	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),idUnc);
+	      }
+	      if(RunFor2017){
+		recoSFDn = GetSF(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	      }
 	    }
 	  }
 	  else{
-	    recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
-	    double idUnc=GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
-	    recoSFDn = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),idUnc);
-	  
+	    if(RunFor2018)
+	      recoSF = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    if(RunFor2017)
+	      recoSF = GetSF(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_));
+	    if(RunFor2018){
+	      double idUnc=GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	      recoSFDn = GetSF(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),idUnc);
+	    }
+	    if(RunFor2017){
+	      recoSFDn = GetSF(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_))-GetSFUnc(h_muIDSF_sys, GenMuonsAccPt_, std::abs(GenMuonsAccEta_),0.0);
+	    }
 	  }
 	  //	  std::cout<<" idSF "<<recoSF<<endl;
 	  /*
@@ -1294,14 +1361,33 @@ Bool_t SFMaker::Process(Long64_t entry)
 	      trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)+GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
 	    }
 	    if(SysDn){
-	      trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	      if(RunFor2018){
+		trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	      }
+	      if(RunFor2017){
+		if(GenElectronsAccPt_ < 20.0)
+		  trackingSF = GetSF(h_elecTrkLowPtSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkLowPtSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+		else
+		  trackingSF = GetSF(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	      }
 	    }
 	  }
 	  else{
-	    trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_);
-	    trackingSFDn = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	    if(RunFor2018){
+	      trackingSF = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_);
+	      trackingSFDn = GetSF(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	    }
+	    if(RunFor2017){
+	      if(GenElectronsAccPt_ < 20.0){
+		trackingSF = GetSF(h_elecTrkLowPtSF, GenElectronsAccEta_,GenElectronsAccPt_);
+		trackingSFDn = GetSF(h_elecTrkLowPtSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkLowPtSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	      }
+	      else{
+		trackingSF = GetSF(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_);
+		trackingSFDn =  GetSF(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_)-GetSFUnc(h_elecTrkHighPtSF, GenElectronsAccEta_,GenElectronsAccPt_,0.0);
+	      }
+	    }
 	  }
-
 
 	  if(ElectronsPromptNum_ == 1){
 	    double WeightCorr = WeightBtagProb * isoSF * recoSF * trackingSF;
