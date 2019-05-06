@@ -150,6 +150,12 @@ class Prediction : public TSelector {
   TH2D* h_CSStat_HTvsMHT=0;
 
   TH1D* h_CSStat_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_SR_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_LL_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_LL_FailAcc_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_LL_FailIDIso_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_Hadtau_NJetvsNBtag_1D=0;
+
   TH1D* h_CSStat_HTvsMHT_1D=0;
 
   TH2D* h_CSStat_MHTVsNbjet=0;
@@ -994,17 +1000,22 @@ void Prediction::Init(TTree *tree)
     csvForBtag=0.4184;
   if(RunFor2017)
     csvForBtag=0.4941;
+  if(RunFor2016)
+    csvForBtag=0.6321;
 
   if(RunFor2018)
     scaleFactorWeight = 59546.381; //not used for data
   if(RunFor2017)
     scaleFactorWeight = 41486.136;
+  if(RunFor2016)
+    scaleFactorWeight = 35815.165;
 
   if(RunFor2018)
     path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
   if(RunFor2017)
     path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
-  
+  if(RunFor2016)
+    path_bTagCalib = "btag/DeepCSV_2016LegacySF_V1_190404.csv";  
 
   if(!((runOnData && !runOnStandardModelMC && !runOnSignalMC) || (!runOnData && runOnStandardModelMC && !runOnSignalMC) || (!runOnData && !runOnStandardModelMC && runOnSignalMC))){
     fprintf(stderr, "CHECK OPTIONS! EITHER RUN ON DATA, MC, OR SIGNAL!!!");

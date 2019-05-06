@@ -93,7 +93,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
   // Define canvas
   //
-  TCanvas *canvas = new TCanvas("canvas","canvas",W,H);
+  TCanvas *canvas = new TCanvas("canvas","canvas",10,10,W,H);
 
   canvas->SetFillColor(0);
   canvas->SetBorderMode(0);
@@ -156,7 +156,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
   //  gStyle->SetPadBottomMargin(0.15);
-  gStyle->SetPadLeftMargin(0.16);
+  //  gStyle->SetPadLeftMargin(0.16);
   int col1 = kRed;
   int col2 = kBlack;
   int i=0;
@@ -1300,13 +1300,13 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.5,1.5,20000);
+  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0,1.9,20000);
 
-  //  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,20000);
+  //  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,1.9500,0,1.9,20000);
 
-  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,2,12,0.5,1.5,20000);
+  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.9,12,0,1.9,20000);
 
-  //  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{b}","#frac{Direct}{Prediction}",1,0,5,0,5,0.5,1.5,20000);
+  //  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","LL+Had#tau background",0.645,0.63,0.955,0.83,"N_{b}","#frac{Direct}{Prediction}",1,0,5,0,5,0,1.9,20000);
 
 
 

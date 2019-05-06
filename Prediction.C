@@ -41,6 +41,13 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_Prediction_NJetvsNBtag = new TH2D("h_Prediction_NJetvsNBtag", "h_Prediction_NJetvsNBtag",5,2,12,4,0,4);
 
   h_CSStat_NJetvsNBtag_1D = new TH1D("h_CSStat_NJetvsNBtag_1D", "h_CSStat_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_SR_NJetvsNBtag_1D = new TH1D("h_CSStat_SR_NJetvsNBtag_1D", "h_CSStat_SR_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_LL_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_NJetvsNBtag_1D", "h_CSStat_LL_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_LL_FailAcc_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_FailAcc_NJetvsNBtag_1D", "h_CSStat_LL_FailAcc_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_LL_FailIDIso_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_FailIDIso_NJetvsNBtag_1D", "h_CSStat_LL_FailIDIso_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_Hadtau_NJetvsNBtag_1D = new TH1D("h_CSStat_Hadtau_NJetvsNBtag_1D", "h_CSStat_Hadtau_NJetvsNBtag_1D",20,1,20);
+
+
   h_Prediction_NJetvsNBtag_1D = new TH1D("h_Prediction_NJetvsNBtag_1D", "h_Prediction_NJetvsNBtag_1D",20,1,20);
   h_PredictionLL_NJetvsNBtag_1D = new TH1D("h_PredictionLL_NJetvsNBtag_1D", "h_PredictionLL_NJetvsNBtag_1D",20,1,20);
   h_PredictionHadtau_NJetvsNBtag_1D = new TH1D("h_PredictionHadtau_NJetvsNBtag_1D", "h_PredictionHadtau_NJetvsNBtag_1D",20,1,20);
@@ -570,6 +577,12 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_CSStat_HTvsMHT);
 
   GetOutputList()->Add(h_CSStat_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_SR_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_LL_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_LL_FailAcc_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_LL_FailIDIso_NJetvsNBtag_1D);
+  GetOutputList()->Add(h_CSStat_Hadtau_NJetvsNBtag_1D);
+
   GetOutputList()->Add(h_CSStat_HTvsMHT_1D);
 
   GetOutputList()->Add(h_Prediction_NJetvsNBtag);
@@ -1031,7 +1044,7 @@ Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
   //  std::cout<<"***Prediction::Process***"<<" entry "<<entry<<" jetid "<<JetID<<std::endl;
   //
-  //  std::cout<<" lumi "<<scaleFactorWeight<<" btagwp "<<csvForBtag<<" path_bTagCalib "<<path_bTagCalib<<endl;
+  //std::cout<<" lumi "<<scaleFactorWeight<<" btagwp "<<csvForBtag<<" path_bTagCalib "<<path_bTagCalib<<endl;
   h_CutFlow->Fill(0);
   resetValues();
   fChain->GetTree()->GetEntry(entry);
@@ -1055,6 +1068,11 @@ Bool_t Prediction::Process(Long64_t entry)
   bool CheckJetPhi=false;
   bool CheckJetEta=false;
 
+  bool SREvt=false;
+  bool SRLLEvt=false;
+  bool SRLLFailAccEvt=false;
+  bool SRLLFailIDIsoEvt=false;
+  bool SRHadtauEvt=false;
   vector<TVector3>Jetsv2Recipe;
   vector<int> HTJetsIdxv2Recipe;
   vector<int> MHTJetsIdxv2Recipe;
@@ -1514,9 +1532,23 @@ Bool_t Prediction::Process(Long64_t entry)
     GenMuonsNum_ = GenMuons->size();
     GenElectronsNum_ = GenElectrons->size();
     GenTausNum_ = GenTaus->size();
+    int GenElectronsAccNum_ = 0;
+    int GenMuonsAccNum_ =0;
+    for(unsigned i=0; i< GenElectrons->size(); i++){
+        if(GenElectrons->at(i).Pt() > 5. && std::abs(GenElectrons->at(i).Eta()) < 2.5){
+	  GenElectronsAccNum_++;
+	}
+    }
+
+    for(unsigned i=0; i< GenMuons->size(); i++){
+      if(GenMuons->at(i).Pt() > 5. && std::abs(GenMuons->at(i).Eta()) < 2.5){
+	GenMuonsAccNum_++;
+      }
+    }
+
     bool LLEvt=false;
     bool HadtauEvt=false;
-
+    SREvt=true;
     if(GenElectronsNum_ + GenMuonsNum_ == 0){
       //	  std::cout<<" gen_taus "<<GenTaus->size()<<" gen taus had bool "<<GenTaus_had->size()<<endl;
       if(GenTausNum_ > 0){ //gen taus size
@@ -1529,10 +1561,17 @@ Bool_t Prediction::Process(Long64_t entry)
 	}
 	if(HadronicTaus >0){
 	  HadtauEvt=true;
+	  SRHadtauEvt=true;
 	}
       }
     }
     else{
+      SRLLEvt=true;
+      if(GenElectronsAccNum_ + GenMuonsAccNum_ == 1)
+	SRLLFailIDIsoEvt=true;
+      if(GenElectronsAccNum_ + GenMuonsAccNum_ == 0)
+	SRLLFailAccEvt=true;
+
       LLEvt=true; 
     }
     if(!LLEvt && !HadtauEvt){
@@ -1754,7 +1793,45 @@ Bool_t Prediction::Process(Long64_t entry)
 	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
 	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
       }
-
+      if(RunFor2016){
+	skimName="tree_TTJets_SingleLeptFromT_MC2016.root";
+	//	char SkimFile[500];
+	if(currentFile.find("TTJets_SingleLeptFromTbar")!=string::npos) skimName="tree_TTJets_SingleLeptFromTbar_MC2016.root"; 
+	else if(currentFile.find("TTJets_SingleLeptFromT")!=string::npos) skimName="tree_TTJets_SingleLeptFromT_MC2016.root"; 
+	else if(currentFile.find("DiLept")!=string::npos)skimName="tree_TTJets_DiLept_MC2016.root";
+	else if(currentFile.find("TTJets_HT-600to800")!=string::npos)skimName="tree_TTJets_HT-600to800_MC2016.root";
+	else if(currentFile.find("TTJets_HT-800to1200")!=string::npos)skimName="tree_TTJets_HT-800to1200_MC2016.root";
+	else if(currentFile.find("TTJets_HT-1200to2500")!=string::npos)skimName="tree_TTJets_HT-1200to2500_MC2016.root";
+	else if(currentFile.find("TTJets_HT-2500toInf")!=string::npos)skimName="tree_TTJets_HT-2500toInf_MC2016.root";
+	else if(currentFile.find("Inclusive")!=string::npos)skimName="tree_TTJets_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-100To200")!=string::npos)skimName="tree_WJetsToLNu_HT-100to200_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-200To400")!=string::npos)skimName="tree_WJetsToLNu_HT-200to400_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-400To600")!=string::npos)skimName="tree_WJetsToLNu_HT-400to600_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-600To800")!=string::npos)skimName="tree_WJetsToLNu_HT-600to800_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-800To1200")!=string::npos)skimName="tree_WJetsToLNu_HT-800to1200_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-1200To2500")!=string::npos)skimName="tree_WJetsToLNu_HT-1200to2500_MC2016.root";
+	else if(currentFile.find("WJetsToLNu_HT-2500ToInf")!=string::npos)skimName="tree_WJetsToLNu_HT-2500toInf_MC2016.root"; 
+	else if(currentFile.find("tW_antitop")!=string::npos)skimName="tree_ST_tW_antitop_MC2016.root";
+	else if(currentFile.find("tW_top")!=string::npos)skimName="tree_ST_tW_top_MC2016.root";
+	else if(currentFile.find("t-channel_top")!=string::npos)skimName="tree_ST_t-channel_top_MC2016.root";
+	else if(currentFile.find("t-channel_antitop")!=string::npos)skimName="tree_ST_t-channel_antitop_MC2016.root"; 
+	else if(currentFile.find("s-channel")!=string::npos)skimName="tree_ST_s-channel_MC2016.root"; 
+	else if(currentFile.find("ZZZ")!=string::npos)skimName="tree_ZZZ.root"; 
+	else if(currentFile.find("ZZTo2L2Q")!=string::npos)skimName="tree_ZZTo2L2Q.root";
+	else if(currentFile.find("WZZ")!=string::npos)skimName="tree_WZZ.root";
+	else if(currentFile.find("WZTo1L3Nu")!=string::npos)skimName="tree_WZTo1L3Nu.root";
+	else if(currentFile.find("WZTo1L1Nu2Q")!=string::npos)skimName="tree_WZTo1L1Nu2Q.root";
+	else if(currentFile.find("WWZ")!=string::npos)skimName="tree_WWZ.root";
+	else if(currentFile.find("WWTo2L2Nu")!=string::npos)skimName="tree_WWTo2L2Nu.root";
+	else if(currentFile.find("WWTo1L1Nu2Q")!=string::npos)skimName="tree_WWTo1L1Nu2Q.root";
+	else if(currentFile.find("TTZToQQ")!=string::npos)skimName="tree_TTZToQQ.root";
+	else if(currentFile.find("TTZToLLNuNu")!=string::npos)skimName="tree_TTZToLLNuNu.root";
+	else if(currentFile.find("TTWJetsToQQ")!=string::npos)skimName="tree_TTWJetsToQQ.root";
+	else if(currentFile.find("TTWJetsToLNu")!=string::npos)skimName="tree_TTWJetsToLNu.root";
+	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
+	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
+      }
+      //      std::cout<<" skimname "<<skimName<<endl;
       //*AR: 180619-Gets skim file name for a new tree
 
       //std::cout<<" subSampleKey "<<subSampleKey<<endl;
@@ -2701,10 +2778,23 @@ Bool_t Prediction::Process(Long64_t entry)
     if(doBTagCorr){
       h_CSStat_NJetvsNBtag->Fill(JetMax,i,WeightBtagProb);
       h_CSStat_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb);
-      if(ix ==1 && i==3)
+      if(ix ==1 && i==3){
 	h_CSStat_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
-      else
+	if(SREvt) h_CSStat_SR_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
+	if(SRHadtauEvt) h_CSStat_Hadtau_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
+	if(SRLLEvt) h_CSStat_LL_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
+	if(SRLLFailIDIsoEvt) h_CSStat_LL_FailIDIso_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
+	if(SRLLFailAccEvt) h_CSStat_LL_FailAcc_NJetvsNBtag_1D->Fill(ix+2,WeightBtagProb);
+      }
+      else{
 	h_CSStat_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+	if(SREvt) h_CSStat_SR_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+	if(SRHadtauEvt) h_CSStat_Hadtau_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+	if(SRLLEvt) h_CSStat_LL_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+	if(SRLLFailIDIsoEvt) h_CSStat_LL_FailIDIso_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+	if(SRLLFailAccEvt) h_CSStat_LL_FailAcc_NJetvsNBtag_1D->Fill(ix+i,WeightBtagProb);
+      }
+
       h_CSStat_HTvsMHT_1D->Fill(iy+jy,WeightBtagProb);
     }
     else{
@@ -3061,6 +3151,13 @@ void Prediction::Terminate()
   h_Prediction_NJetvsNBtag = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_Prediction_NJetvsNBtag"));
 
   h_CSStat_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_NJetvsNBtag_1D"));
+  h_CSStat_SR_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR_NJetvsNBtag_1D"));
+  h_CSStat_LL_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_LL_NJetvsNBtag_1D"));
+  h_CSStat_LL_FailIDIso_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_LL_FailIDIso_NJetvsNBtag_1D"));
+  h_CSStat_LL_FailAcc_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_LL_FailAcc_NJetvsNBtag_1D"));
+  h_CSStat_Hadtau_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_Hadtau_NJetvsNBtag_1D"));
+
+
   h_Prediction_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction_NJetvsNBtag_1D"));
   h_PredictionLL_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_PredictionLL_NJetvsNBtag_1D"));
   h_PredictionHadtau_NJetvsNBtag_1D = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_PredictionHadtau_NJetvsNBtag_1D"));
@@ -3576,6 +3673,11 @@ void Prediction::Terminate()
   h_CSStat_NJetvsNBtag->Write();
   h_Prediction_NJetvsNBtag->Write();
   h_CSStat_NJetvsNBtag_1D->Write();
+  h_CSStat_SR_NJetvsNBtag_1D->Write();
+  h_CSStat_Hadtau_NJetvsNBtag_1D->Write();
+  h_CSStat_LL_NJetvsNBtag_1D->Write();
+  h_CSStat_LL_FailIDIso_NJetvsNBtag_1D->Write();
+  h_CSStat_LL_FailAcc_NJetvsNBtag_1D->Write();
   h_Prediction_NJetvsNBtag_1D->Write();
   h_PredictionLL_NJetvsNBtag_1D->Write();
   h_PredictionHadtau_NJetvsNBtag_1D->Write();
