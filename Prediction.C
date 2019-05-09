@@ -42,6 +42,40 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   h_CSStat_NJetvsNBtag_1D = new TH1D("h_CSStat_NJetvsNBtag_1D", "h_CSStat_NJetvsNBtag_1D",20,1,20);
   h_CSStat_SR_NJetvsNBtag_1D = new TH1D("h_CSStat_SR_NJetvsNBtag_1D", "h_CSStat_SR_NJetvsNBtag_1D",20,1,20);
+  h_CSStat_SR_LL_LowdR = new TH1D("h_CSStat_SR_LL_LowdR", "h_CSStat_SR_LL_LowdR",4,0.,4.);
+  h_CSStat_SR_Hadtau_LowdR = new TH1D("h_CSStat_SR_Hadtau_LowdR", "h_CSStat_SR_Hadtau_LowdR",4,0.,4.);
+  h_CSStat_SR_LL_HighdR = new TH1D("h_CSStat_SR_LL_HighdR", "h_CSStat_SR_LL_HighdR",4,0.,4.);
+  h_CSStat_SR_Hadtau_HighdR = new TH1D("h_CSStat_SR_Hadtau_HighdR", "h_CSStat_SR_Hadtau_HighdR",4,0.,4.);
+
+  h_CSStat_SR = new TH1D("h_CSStat_SR", "h_CSStat_SR",4,0.,4.);
+  h_CSStat_SR->GetXaxis()->SetBinLabel(1,"[Nj<=5,Nb<=1]");
+  h_CSStat_SR->GetXaxis()->SetBinLabel(2,"[Nj<=5,Nb>=2]");
+  h_CSStat_SR->GetXaxis()->SetBinLabel(3,"[Nj>=6,Nb<=1]");
+  h_CSStat_SR->GetXaxis()->SetBinLabel(4,"[Nj>=6,Nb>=2]");
+
+  h_CSStat_SR_LL_LowdR->GetXaxis()->SetBinLabel(1,"[Nj<=5,Nb<=1]");
+  h_CSStat_SR_LL_LowdR->GetXaxis()->SetBinLabel(2,"[Nj<=5,Nb>=2]");
+  h_CSStat_SR_LL_LowdR->GetXaxis()->SetBinLabel(3,"[Nj>=6,Nb<=1]");
+  h_CSStat_SR_LL_LowdR->GetXaxis()->SetBinLabel(4,"[Nj>=6,Nb>=2]");
+
+  h_CSStat_SR_LL_HighdR->GetXaxis()->SetBinLabel(1,"[Nj<=5,Nb<=1]");
+  h_CSStat_SR_LL_HighdR->GetXaxis()->SetBinLabel(2,"[Nj<=5,Nb>=2]");
+  h_CSStat_SR_LL_HighdR->GetXaxis()->SetBinLabel(3,"[Nj>=6,Nb<=1]");
+  h_CSStat_SR_LL_HighdR->GetXaxis()->SetBinLabel(4,"[Nj>=6,Nb>=2]");
+
+  h_CSStat_SR_Hadtau_LowdR->GetXaxis()->SetBinLabel(1,"[Nj<=5,Nb<=1]");
+  h_CSStat_SR_Hadtau_LowdR->GetXaxis()->SetBinLabel(2,"[Nj<=5,Nb>=2]");
+  h_CSStat_SR_Hadtau_LowdR->GetXaxis()->SetBinLabel(3,"[Nj>=6,Nb<=1]");
+  h_CSStat_SR_Hadtau_LowdR->GetXaxis()->SetBinLabel(4,"[Nj>=6,Nb>=2]");
+
+  h_CSStat_SR_Hadtau_HighdR->GetXaxis()->SetBinLabel(1,"[Nj<=5,Nb<=1]");
+  h_CSStat_SR_Hadtau_HighdR->GetXaxis()->SetBinLabel(2,"[Nj<=5,Nb>=2]");
+  h_CSStat_SR_Hadtau_HighdR->GetXaxis()->SetBinLabel(3,"[Nj>=6,Nb<=1]");
+  h_CSStat_SR_Hadtau_HighdR->GetXaxis()->SetBinLabel(4,"[Nj>=6,Nb>=2]");
+
+
+
+
   h_CSStat_LL_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_NJetvsNBtag_1D", "h_CSStat_LL_NJetvsNBtag_1D",20,1,20);
   h_CSStat_LL_FailAcc_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_FailAcc_NJetvsNBtag_1D", "h_CSStat_LL_FailAcc_NJetvsNBtag_1D",20,1,20);
   h_CSStat_LL_FailIDIso_NJetvsNBtag_1D = new TH1D("h_CSStat_LL_FailIDIso_NJetvsNBtag_1D", "h_CSStat_LL_FailIDIso_NJetvsNBtag_1D",20,1,20);
@@ -114,6 +148,19 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_DphiFour_Exp =new TH1D("h_DphiFour_Exp","h_DphiFour_Exp",32,0,3.2);
   h_LepPt_Exp=new TH1D("h_LepPt_Exp","h_LepPt_Exp",20,0.0,1000.0);
   h_LepEta_Exp=new TH1D("h_LepEta_Exp","h_LepEta_Exp",10,-2.5,2.5);
+
+
+  h_GenLepdRHighNjetHighNb_Exp=new TH1D("h_GenLepdRHighNjetHighNb_Exp","h_GenLepdRHighNjetHighNb_Exp",25,0.0,10.0);
+  h_GenLepdRHighNjetLowNb_Exp=new TH1D("h_GenLepdRHighNjetLowNb_Exp","h_GenLepdRHighNjetLowNb_Exp",25,0.0,10.0);
+
+  h_GenLepdRLowNjetHighNb_Exp=new TH1D("h_GenLepdRLowNjetHighNb_Exp","h_GenLepdRLowNjetHighNb_Exp",25,0.0,10.0);
+  h_GenLepdRLowNjetLowNb_Exp=new TH1D("h_GenLepdRLowNjetLowNb_Exp","h_GenLepdRLowNjetLowNb_Exp",25,0.0,10.0);
+
+  h_GenLepLowNjetPt_Exp=new TH1D("h_GenLepLowNjetPt_Exp","h_GenLepLowNjetPt_Exp",20,0.0,1000.0);
+  h_GenLepLowNjetEta_Exp=new TH1D("h_GenLepLowNjetEta_Exp","h_GenLepLowNjetEta_Exp",4,-5,5);
+
+  h_GenLepHighNjetPt_Exp=new TH1D("h_GenLepHighNjetPt_Exp","h_GenLepHighNjetPt_Exp",20,0.0,1000.0);
+  h_GenLepHighNjetEta_Exp=new TH1D("h_GenLepHighNjetEta_Exp","h_GenLepHighNjetEta_Exp",4,-5,5);
 
   h_LepEtafor50_Exp=new TH1D("h_LepEtafor50_Exp","h_LepEtafor50_Exp",10,-2.5,2.5);
   h_LepEtafor100_Exp=new TH1D("h_LepEtafor100_Exp","h_LepEtafor100_Exp",10,-2.5,2.5);
@@ -575,7 +622,12 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_CutFlow); //one lepton CS
   GetOutputList()->Add(h_CSStat_NJetvsNBtag);
   GetOutputList()->Add(h_CSStat_HTvsMHT);
-
+  GetOutputList()->Add(h_CSStat_SR_LL_LowdR);
+  GetOutputList()->Add(h_CSStat_SR_LL_HighdR);
+  GetOutputList()->Add(h_CSStat_SR_Hadtau_LowdR);
+  GetOutputList()->Add(h_CSStat_SR_Hadtau_HighdR);
+  GetOutputList()->Add(h_CSStat_SR);
+  
   GetOutputList()->Add(h_CSStat_NJetvsNBtag_1D);
   GetOutputList()->Add(h_CSStat_SR_NJetvsNBtag_1D);
   GetOutputList()->Add(h_CSStat_LL_NJetvsNBtag_1D);
@@ -614,6 +666,19 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_LepPt_Exp);
   GetOutputList()->Add(h_LepEta_Exp);
+
+  GetOutputList()->Add(h_GenLepHighNjetPt_Exp);
+  GetOutputList()->Add(h_GenLepHighNjetEta_Exp);
+
+  GetOutputList()->Add(h_GenLepLowNjetPt_Exp);
+  GetOutputList()->Add(h_GenLepLowNjetEta_Exp);
+
+  GetOutputList()->Add(h_GenLepdRHighNjetHighNb_Exp);
+  GetOutputList()->Add(h_GenLepdRHighNjetLowNb_Exp);
+
+  GetOutputList()->Add(h_GenLepdRLowNjetHighNb_Exp);
+  GetOutputList()->Add(h_GenLepdRLowNjetLowNb_Exp);
+
   GetOutputList()->Add(h_LepEtafor50_Exp);
   GetOutputList()->Add(h_LepEtafor100_Exp);
   GetOutputList()->Add(h_LepEtafor200_Exp);
@@ -1138,7 +1203,8 @@ Bool_t Prediction::Process(Long64_t entry)
   int HTJetsDefault=0;
   int HTJetsv2=0;
   double PhiLeadJet=-99;
-
+  double GenLepNbdR=99.0;
+  double GenTauNbdR=99.0;
   //  std::cout<<" runnum1 "<<RunNum<<endl;
 
   //  if(runOnData && RunNum>=319077)
@@ -1190,14 +1256,76 @@ Bool_t Prediction::Process(Long64_t entry)
     //    } //end of METv2 recipe
   } //end of loop over jets
   NJetsforMHTminusHTv2Recipe=MHTminusHTJetsIdxv2Recipe.size();  
+  double MaxdeepCSV=-99;
   for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
     int jetIdx=HTJetsIdxv2Recipe[i];
     HTv2Recipe+=Jets->at(jetIdx).Pt();
     NJetsv2Recipe++;
     double deepCSV=Jets_bJetTagDeepCSVprobb->at(jetIdx) + Jets_bJetTagDeepCSVprobbb->at(jetIdx);
-    if(deepCSV>csvForBtag)
+    if(deepCSV>MaxdeepCSV)
+      MaxdeepCSV=deepCSV;
+    if(deepCSV>csvForBtag){
       BTagsv2Recipe++;
+      for(unsigned i=0; i<GenElectrons->size();i++){
+	double dEtaLepNb=Jets->at(jetIdx).Eta()-GenElectrons->at(i).Eta();
+	double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenElectrons->at(i).Phi());
+	double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	//	double LepNbdR=dR(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),GenElectrons->at(i).Eta(),GenElectrons->at(i).Phi());
+	if(LepNbdR<GenLepNbdR)
+	  GenLepNbdR=LepNbdR;
+      }
+      for(unsigned i=0; i<GenMuons->size();i++){
+	double dEtaLepNb=Jets->at(jetIdx).Eta()-GenMuons->at(i).Eta();
+	double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenMuons->at(i).Phi());
+	double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	if(LepNbdR<GenLepNbdR)
+	  GenLepNbdR=LepNbdR;
+      }
+      for(unsigned i=0; i<GenTaus->size();i++){
+	if(GenTaus_had->at(i)==1){
+	  double dEtaTauNb=Jets->at(jetIdx).Eta()-GenTaus->at(i).Eta();
+	  double dPhiTauNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenTaus->at(i).Phi());
+	  double TauNbdR=sqrt(dEtaTauNb * dEtaTauNb + dPhiTauNb * dPhiTauNb);
+	  if(TauNbdR<GenTauNbdR)
+	    GenTauNbdR=TauNbdR;
+	}
+      }
+    }
   }
+
+  if(BTagsv2Recipe ==0){
+    for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
+      int jetIdx=HTJetsIdxv2Recipe[i];
+      double deepCSV=Jets_bJetTagDeepCSVprobb->at(jetIdx) + Jets_bJetTagDeepCSVprobbb->at(jetIdx);
+      if(deepCSV==MaxdeepCSV){
+	for(unsigned i=0; i<GenElectrons->size();i++){
+	  double dEtaLepNb=Jets->at(jetIdx).Eta()-GenElectrons->at(i).Eta();
+	  double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenElectrons->at(i).Phi());
+	  double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	  //	double LepNbdR=dR(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),GenElectrons->at(i).Eta(),GenElectrons->at(i).Phi());
+	  if(LepNbdR<GenLepNbdR)
+	    GenLepNbdR=LepNbdR;
+	}
+	for(unsigned i=0; i<GenMuons->size();i++){
+	  double dEtaLepNb=Jets->at(jetIdx).Eta()-GenMuons->at(i).Eta();
+	  double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenMuons->at(i).Phi());
+	  double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	  if(LepNbdR<GenLepNbdR)
+	    GenLepNbdR=LepNbdR;
+	}
+	for(unsigned i=0; i<GenTaus->size();i++){
+	  if(GenTaus_had->at(i)==1){
+	    double dEtaTauNb=Jets->at(jetIdx).Eta()-GenTaus->at(i).Eta();
+	    double dPhiTauNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenTaus->at(i).Phi());
+	    double TauNbdR=sqrt(dEtaTauNb * dEtaTauNb + dPhiTauNb * dPhiTauNb);
+	    if(TauNbdR<GenTauNbdR)
+	      GenTauNbdR=TauNbdR;
+	  }
+	}
+      }
+    }
+  }
+
 
   for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
     int jetIdx=MHTJetsIdxv2Recipe[i];
@@ -1205,25 +1333,25 @@ Bool_t Prediction::Process(Long64_t entry)
     MHT3Vecv2Recipe-=temp3Vec;
     HT5v2Recipe+=Jets->at(jetIdx).Pt();
   }
-
+  
   if(BTagsv2Recipe != BTagsDeepCSV || BTagsfrmCSV != BTagsDeepCSV)
     std::cout<<" Btags calculated not equal to Btags from tree "<<" BTagsv2Recipe "<<BTagsv2Recipe<<" BTagsfrmCSV "<<BTagsfrmCSV<<" BTagsDeepCSV "<<BTagsDeepCSV<<endl; 
-
+  
   /*
-  for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
+    for(unsigned int i=0;i<Jetsv2Recipe.size();i++){
     if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<2.4){
-      HTv2Recipe+=Jetsv2Recipe[i].Pt();
-      NJetsv2Recipe++;
-      if(JetsCSVv2Recipe[i]>csvForBtag)
-	BTagsv2Recipe++;
+    HTv2Recipe+=Jetsv2Recipe[i].Pt();
+    NJetsv2Recipe++;
+    if(JetsCSVv2Recipe[i]>csvForBtag)
+    BTagsv2Recipe++;
     }
     if(Jetsv2Recipe[i].Pt()>30 && fabs(Jetsv2Recipe[i].Eta())<5.0){
       MHT3Vecv2Recipe-=Jetsv2Recipe[i];
       HT5v2Recipe+=Jetsv2Recipe[i].Pt();
-    }
-  }
+      }
+      }
   */
-
+  
   MHTv2Recipe=MHT3Vecv2Recipe.Pt(); 
   MHTPhiv2Recipe=MHT3Vecv2Recipe.Phi();
   
@@ -1248,7 +1376,7 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   
   //  std::cout<<" run "<<RunNum<<" entry "<<entry<<" passed event "<<endl;
-
+  
   /*
     if(NJets ==2){
     std::cout<<" njets "<<NJets<<" njets-v2 "<<NJetsv2Recipe<<" ht-v2 "<<HTJetsv2Recipe.size()<<" HT old "<<HT<<" HT "<<HTv2Recipe<<" MHT old "<<MHT<<" MHT "<<MHTv2Recipe<<endl;
@@ -1270,9 +1398,9 @@ Bool_t Prediction::Process(Long64_t entry)
     HTDeltaPhi3v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(HTJetsIdxv2Recipe[2]).Phi() - MHTPhiv2Recipe ));
   if(HTJetsIdxv2Recipe.size()>3)
     HTDeltaPhi4v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(HTJetsIdxv2Recipe[3]).Phi() - MHTPhiv2Recipe ));
-
+  
   //*AR-181017: get Dphi for leading 4 (MHT-HT) jets
-
+  
   if(MHTminusHTJetsIdxv2Recipe.size()>0)
     MHTminusHTDeltaPhi1v2Recipe=fabs(TVector2::Phi_mpi_pi(Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Phi() - MHTPhiv2Recipe ));
   if(MHTminusHTJetsIdxv2Recipe.size()>1)
@@ -1293,8 +1421,8 @@ Bool_t Prediction::Process(Long64_t entry)
 
 	   
 
-
-
+  
+  
 
 
 
@@ -1316,11 +1444,17 @@ Bool_t Prediction::Process(Long64_t entry)
     }  
     newGenMHT=newGenMHT3Vec.Pt();
   } //end of runOnSignalMC
-
+  
   double LepPt=-99.0;
   double LepEta=-99.0;
   double LepPhi=-99.0;
-
+  
+  double GenLepHighNjetPt=-99.0;
+  double GenLepHighNjetEta=-99.0;
+  
+  double GenLepLowNjetPt=-99.0;
+  double GenLepLowNjetEta=-99.0;
+  
   double ElePt=-99.0;
   double EleEta=-99.0;
   double ElePhi=-99.0;
@@ -1329,7 +1463,7 @@ Bool_t Prediction::Process(Long64_t entry)
   double MuEta=-99.0;
   double MuPhi=-99.0;
   /*
-  if(GenElectrons->size() + GenMuons->size() >= 1)
+    if(GenElectrons->size() + GenMuons->size() >= 1)
     h_CutFlow->Fill(20);
 
 
@@ -1367,9 +1501,9 @@ Bool_t Prediction::Process(Long64_t entry)
 	return kTRUE;
     }
   }
-
+  
   NonHEMEve++;
-
+  
   //  std::cout<<" AllEve "<<AllEve<<" HEMeve "<<HEMEve<<" NonHEMEve "<<NonHEMEve<<endl;
   //  if(runOnData)
   //std::cout<<" run "<<RunNum<<" entry "<<entry<<" no HEM electron "<<endl;
@@ -1465,7 +1599,7 @@ Bool_t Prediction::Process(Long64_t entry)
   else if(NJetsv2Recipe==2){
     if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
     if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
-  
+    
     if(ApplyHT5cut){
       double getHT5Cut;
       getHT5Cut = 5.3*(HT5v2Recipe/HTv2Recipe)-4.78;
@@ -1488,7 +1622,7 @@ Bool_t Prediction::Process(Long64_t entry)
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV17/scan/tree_SLm";
   if(runOnStandardModelMC)
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV17/tree_SLm";
-
+  
   if(!GetSignalRegHists){
     if(MuonsNum_==1 && ElectronsNum_==0){
       for(unsigned int i=0;i<Muons->size();i++){
@@ -1519,7 +1653,7 @@ Bool_t Prediction::Process(Long64_t entry)
     if(mtw > 100) return kTRUE;
     h_CutFlow->Fill(14);
   }//end of if(!GetSignalRegHists)
-//std::cout<<" passed mT cut "<<endl;
+  //std::cout<<" passed mT cut "<<endl;
   isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
   //*AR: for 0L signal region, there should not be any isolated track
   if(GetSignalRegHists){
@@ -1535,17 +1669,17 @@ Bool_t Prediction::Process(Long64_t entry)
     int GenElectronsAccNum_ = 0;
     int GenMuonsAccNum_ =0;
     for(unsigned i=0; i< GenElectrons->size(); i++){
-        if(GenElectrons->at(i).Pt() > 5. && std::abs(GenElectrons->at(i).Eta()) < 2.5){
-	  GenElectronsAccNum_++;
-	}
+      if(GenElectrons->at(i).Pt() > 5. && std::abs(GenElectrons->at(i).Eta()) < 2.5){
+	GenElectronsAccNum_++;
+      }
     }
-
+    
     for(unsigned i=0; i< GenMuons->size(); i++){
       if(GenMuons->at(i).Pt() > 5. && std::abs(GenMuons->at(i).Eta()) < 2.5){
 	GenMuonsAccNum_++;
       }
     }
-
+    
     bool LLEvt=false;
     bool HadtauEvt=false;
     SREvt=true;
@@ -1586,7 +1720,7 @@ Bool_t Prediction::Process(Long64_t entry)
     std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
   }
   */
-//  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
+  //  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
   // Signal region MET triggers applied only for data
 
   if(useTrigger) if(!TriggerPass->at(109) && !TriggerPass->at(110) && !TriggerPass->at(111) && !TriggerPass->at(112) && !TriggerPass->at(113) && !TriggerPass->at(114) && !TriggerPass->at(115) && !TriggerPass->at(116) && !TriggerPass->at(117) && !TriggerPass->at(118) && !TriggerPass->at(119) && !TriggerPass->at(120) && !TriggerPass->at(124) && !TriggerPass->at(125) && !TriggerPass->at(126) && !TriggerPass->at(127) && !TriggerPass->at(128) && !TriggerPass->at(129) && !TriggerPass->at(130) && !TriggerPass->at(131) && !TriggerPass->at(132) && !TriggerPass->at(133)&& !TriggerPass->at(134) && !TriggerPass->at(135) && !TriggerPass->at(136)) return kTRUE;
@@ -1604,11 +1738,11 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   //std::cout<<" entry "<<entry<<" Bin_ "<<Bin_<<" BinQCD_ "<<BinQCD_<<endl;
   //*AR-181016: Use only events falling into either of QCD search bins. Note that this includes events which fall inone of 223 bins but not any of 174 search bins. So integral of 1D plots in search variables might not be same as (slightly higher) than 174 search bin histogram integral.
-
+  
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
   h_CutFlow->Fill(15);
   /*
-  if(Bin_ > 900 && BinQCD_ < 900 && MHTv2Recipe>300)
+    if(Bin_ > 900 && BinQCD_ < 900 && MHTv2Recipe>300)
     std::cout<<" entry of passed event "<<entry<<" Bin_ "<<Bin_<<" BinQCD_ "<<BinQCD_<<" HT "<<HTv2Recipe<<" MHT "<<MHTv2Recipe<<" NJet "<<NJetsv2Recipe<<" Btag "<<BTagsv2Recipe<<endl;
 */
   
@@ -1620,7 +1754,7 @@ Bool_t Prediction::Process(Long64_t entry)
       return kTRUE;
     }
   }
-
+  
   //*AR: 181107: check following condition if Dphi cut to be applied
 
   /*
@@ -1879,16 +2013,16 @@ Bool_t Prediction::Process(Long64_t entry)
 	//	std::cout<<" ISRcheck "<<ISRcheck<<endl;
 	//	std::cout<<" h_isr_1 "<<h_isr->GetBinContent(1)<<" h_isr_2 "<<h_isr->GetBinContent(2)<<endl;
 	//	std::cout<<" h_njetisr_1 "<<h_njetsisr->GetBinContent(1)<<" h_njetisr_2 "<<h_njetsisr->GetBinContent(2)<<endl;
-
+	
 	if(isrcorr!=0){
           delete isrcorr;
           isrcorr = 0;
         }
         isrcorr = new ISRCorrector();
 	//		isrcorr->SetWeights(h_njetsisr,h_njetsisr);
-
+	
 	isrcorr->SetWeights(h_isr,h_njetsisr);
-
+	
       }
       
       if(doBTagCorr){ //true only for signal and standard model mc
@@ -1896,7 +2030,7 @@ Bool_t Prediction::Process(Long64_t entry)
           delete btagcorr;
           btagcorr = 0;
         }
-
+	
         btagcorr = new BTagCorrector();
 	//runOnNtuples is true
         if(!runOnNtuples) btagcorr->SetEffs(fChain->GetCurrentFile());
@@ -1927,7 +2061,7 @@ Bool_t Prediction::Process(Long64_t entry)
           return kTRUE;
         }
       } //end of runOnSignalMC
-
+      
       //*AR- Get relative weight of susy signal event based on mother mass for every new tree
       if(runOnSignalMC){
 	TFile *skimFile = TFile::Open(SkimFile, "READ");
@@ -1977,7 +2111,7 @@ Bool_t Prediction::Process(Long64_t entry)
       h_CutFlow->Fill(17);
     }
 
-   
+    
     if(doISRcorr){ //true for signal mc
       w_isr = isrcorr->GetCorrection(NJetsISR);
       Weight *= w_isr;
@@ -2098,7 +2232,7 @@ Bool_t Prediction::Process(Long64_t entry)
       Weight *= GetTriggerEffWeight(MHTv2Recipe);
     }
   }
-
+  
   if(doPUreweighting){ //true only for signal mc
     w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
     Weight *= w_pu;
@@ -2124,7 +2258,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   }
   //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
-
+  
   if(GetNonPrefireProb){
     /*  
     for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
@@ -2681,7 +2815,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	} 
       }
     }
-
+    
     double Bmax=-99;
     double JetMax=-99;
     double MaxHT=-99;
@@ -2734,7 +2868,7 @@ Bool_t Prediction::Process(Long64_t entry)
       iy=9;
     if(HTv2Recipe>=900)
       iy=13;
-
+    
     if(MHTv2Recipe>=250 && MHTv2Recipe<450)
       jy=0;
     if(MHTv2Recipe>=450 && MHTv2Recipe<650)
@@ -2766,9 +2900,9 @@ Bool_t Prediction::Process(Long64_t entry)
     else
       MaxMHT=MHTv2Recipe;
     //    if(MaxMHT>MHTv2Recipe)
-      //      std::cout<<" NJetsv2Recipe "<<NJetsv2Recipe<<" JetMax "<<JetMax<<" BTagsv2Recipe "<<BTagsv2Recipe<<" Bmax "<<Bmax<<" HTv2Recipe "<<HTv2Recipe<<" MaxHT "<<MaxHT<<" MHTv2Recipe "<<MHTv2Recipe<<" maxMHT "<<MaxMHT<<endl;
+    //      std::cout<<" NJetsv2Recipe "<<NJetsv2Recipe<<" JetMax "<<JetMax<<" BTagsv2Recipe "<<BTagsv2Recipe<<" Bmax "<<Bmax<<" HTv2Recipe "<<HTv2Recipe<<" MaxHT "<<MaxHT<<" MHTv2Recipe "<<MHTv2Recipe<<" maxMHT "<<MaxMHT<<endl;
     //    std::cout<<" NJetsv2Recipe "<<NJetsv2Recipe<<" BTagsv2Recipe "<<BTagsv2Recipe<<" ix+jx "<<ix+jx<<" HTv2Recipe "<<HTv2Recipe<<" MHTv2Recipe "<<MHTv2Recipe<<" iy+jy "<<iy+jy<<endl;
-
+    
     HTRatio=HT5/HT;
     HTRatiov2Recipe=HT5v2Recipe/HTv2Recipe;
     RecHTRatiov2Recipe=1/HTRatiov2Recipe;    
@@ -2776,6 +2910,94 @@ Bool_t Prediction::Process(Long64_t entry)
     //*AR: 180917- These histograms represent yield in CR as TF is not applied
     h_CSStat->Fill(bTagBin, WeightBtagProb);
     if(doBTagCorr){
+      if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	h_GenLepdRLowNjetLowNb_Exp->Fill(GenLepNbdR,WeightBtagProb);
+      if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	h_GenLepdRLowNjetHighNb_Exp->Fill(GenLepNbdR,WeightBtagProb);
+      
+      if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	h_GenLepdRHighNjetLowNb_Exp->Fill(GenLepNbdR,WeightBtagProb);
+      if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	h_GenLepdRHighNjetHighNb_Exp->Fill(GenLepNbdR,WeightBtagProb);
+      
+      if(SREvt){
+	if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	  h_CSStat_SR->Fill(0.,WeightBtagProb);
+	else if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	  h_CSStat_SR->Fill(1.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	  h_CSStat_SR->Fill(2.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	  h_CSStat_SR->Fill(3.,WeightBtagProb);
+      }
+
+      if(SRLLEvt && GenLepNbdR<0.4){
+	if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_LL_LowdR->Fill(0.,WeightBtagProb);
+	else if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_LL_LowdR->Fill(1.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_LL_LowdR->Fill(2.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_LL_LowdR->Fill(3.,WeightBtagProb);
+      }
+
+      if(SRLLEvt && GenLepNbdR>=0.4){
+	if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_LL_HighdR->Fill(0.,WeightBtagProb);
+	else if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_LL_HighdR->Fill(1.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_LL_HighdR->Fill(2.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_LL_HighdR->Fill(3.,WeightBtagProb);
+      }
+
+      if(SRHadtauEvt && GenTauNbdR<0.4){
+	if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_Hadtau_LowdR->Fill(0.,WeightBtagProb);
+	else if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_Hadtau_LowdR->Fill(1.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_Hadtau_LowdR->Fill(2.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_Hadtau_LowdR->Fill(3.,WeightBtagProb);
+      }
+
+      if(SRHadtauEvt && GenTauNbdR>=0.4){
+	if(NJetsv2Recipe<=5 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_Hadtau_HighdR->Fill(0.,WeightBtagProb);
+	else if(NJetsv2Recipe<=5 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_Hadtau_HighdR->Fill(1.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe<=1)
+	  h_CSStat_SR_Hadtau_HighdR->Fill(2.,WeightBtagProb);
+	else if(NJetsv2Recipe>=6 && BTagsv2Recipe>=2)
+	  h_CSStat_SR_Hadtau_HighdR->Fill(3.,WeightBtagProb);
+      }
+
+
+      for(unsigned i=0; i<GenElectrons->size();i++){
+	if(NJetsv2Recipe<=5){
+	  h_GenLepLowNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
+	  h_GenLepLowNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+	}
+	if(NJetsv2Recipe>=6){
+	  h_GenLepHighNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
+	  h_GenLepHighNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+	}
+      }
+      for(unsigned i=0; i<GenMuons->size();i++){
+	if(NJetsv2Recipe<=5){
+	  h_GenLepLowNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
+	  h_GenLepLowNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
+	}
+	if(NJetsv2Recipe>=6){
+	  h_GenLepHighNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
+	  h_GenLepHighNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
+	}
+      }
+      
+      
       h_CSStat_NJetvsNBtag->Fill(JetMax,i,WeightBtagProb);
       h_CSStat_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb);
       if(ix ==1 && i==3){
@@ -3188,6 +3410,28 @@ void Prediction::Terminate()
   h_DphiFour_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_DphiFour_Exp"));
   h_LepPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepPt_Exp"));
   h_LepEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEta_Exp"));
+
+  h_GenLepHighNjetPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepHighNjetPt_Exp"));
+  h_GenLepHighNjetEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepHighNjetEta_Exp"));
+
+  h_GenLepdRHighNjetHighNb_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepdRHighNjetHighNb_Exp"));
+  h_GenLepdRLowNjetHighNb_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepdRLowNjetHighNb_Exp"));
+
+  h_GenLepdRHighNjetLowNb_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepdRHighNjetLowNb_Exp"));
+  h_GenLepdRLowNjetLowNb_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepdRLowNjetLowNb_Exp"));
+
+
+  h_GenLepLowNjetPt_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepLowNjetPt_Exp"));
+  h_GenLepLowNjetEta_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_GenLepLowNjetEta_Exp"));
+
+  h_CSStat_SR = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR"));
+  h_CSStat_SR_Hadtau_HighdR = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR_Hadtau_HighdR"));
+  h_CSStat_SR_Hadtau_LowdR = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR_Hadtau_LowdR"));
+  h_CSStat_SR_LL_HighdR = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR_LL_HighdR"));
+  h_CSStat_SR_LL_LowdR = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat_SR_LL_LowdR"));
+
+
+
   h_LepEtafor50_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtafor50_Exp"));
  h_LepEtafor100_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtafor100_Exp"));
  h_LepEtafor200_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_LepEtafor200_Exp"));
@@ -3688,6 +3932,14 @@ void Prediction::Terminate()
   h_CSStat_HTvsMHT_1D->Write();
   h_Prediction_HTvsMHT_1D->Write();
 
+  h_CSStat_SR->Write();
+  h_CSStat_SR_Hadtau_HighdR->Write();
+  h_CSStat_SR_Hadtau_LowdR->Write();
+
+  h_CSStat_SR_LL_HighdR->Write();
+  h_CSStat_SR_LL_LowdR->Write();
+
+
   h_CutFlow->Write();
   h_YieldCutFlow->Write();
   h_HT_Exp->Write();
@@ -3706,6 +3958,19 @@ void Prediction::Terminate()
   h_DphiFour_Exp->Write(); 
   h_LepPt_Exp->Write(); 
   h_LepEta_Exp->Write(); 
+
+  h_GenLepHighNjetPt_Exp->Write(); 
+  h_GenLepHighNjetEta_Exp->Write(); 
+
+  h_GenLepLowNjetPt_Exp->Write(); 
+  h_GenLepLowNjetEta_Exp->Write(); 
+
+  h_GenLepdRHighNjetHighNb_Exp->Write();
+  h_GenLepdRHighNjetLowNb_Exp->Write();
+
+  h_GenLepdRLowNjetHighNb_Exp->Write();
+  h_GenLepdRLowNjetLowNb_Exp->Write();
+ 
   h_LepEtafor50_Exp->Write(); 
   h_LepEtafor100_Exp->Write(); 
   h_LepEtafor200_Exp->Write(); 

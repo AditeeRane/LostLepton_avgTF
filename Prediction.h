@@ -41,7 +41,7 @@ const bool runOnStandardModelMC = true;  //<-check:true only for MC-------------
 const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 
-bool GetSignalRegHists= false; //true while getting MC expectation
+bool GetSignalRegHists= true; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
 bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
@@ -151,6 +151,11 @@ class Prediction : public TSelector {
 
   TH1D* h_CSStat_NJetvsNBtag_1D=0;
   TH1D* h_CSStat_SR_NJetvsNBtag_1D=0;
+  TH1D* h_CSStat_SR_LL_LowdR=0;
+  TH1D* h_CSStat_SR_LL_HighdR=0;
+  TH1D* h_CSStat_SR_Hadtau_LowdR=0;
+  TH1D* h_CSStat_SR_Hadtau_HighdR=0;
+  TH1D* h_CSStat_SR=0;
   TH1D* h_CSStat_LL_NJetvsNBtag_1D=0;
   TH1D* h_CSStat_LL_FailAcc_NJetvsNBtag_1D=0;
   TH1D* h_CSStat_LL_FailIDIso_NJetvsNBtag_1D=0;
@@ -189,6 +194,16 @@ class Prediction : public TSelector {
   TH1D* h_DphiFour_Exp=0;
   TH1D* h_LepPt_Exp=0;
   TH1D* h_LepEta_Exp=0;
+  TH1D* h_GenLepHighNjetPt_Exp=0;
+  TH1D* h_GenLepHighNjetEta_Exp=0;
+  TH1D* h_GenLepdRHighNjetHighNb_Exp=0;
+  TH1D* h_GenLepdRHighNjetLowNb_Exp=0;
+
+  TH1D* h_GenLepLowNjetPt_Exp=0;
+  TH1D* h_GenLepLowNjetEta_Exp=0;
+  TH1D* h_GenLepdRLowNjetHighNb_Exp=0;
+  TH1D* h_GenLepdRLowNjetLowNb_Exp=0;
+
   TH1D* h_LepEtafor50_Exp=0;
   TH1D* h_LepEtafor100_Exp=0;
   TH1D* h_LepEtafor200_Exp=0;

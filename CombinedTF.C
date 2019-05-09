@@ -417,9 +417,10 @@ void CombinedTF() {
 
   //*AR: 190116- TF in nominal case  
   
-  GetTFHistograms("TF_0.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
-  GetTFHistograms("TF_0.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
-  /*
+    GetTFHistograms("TF_0.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
+    GetTFHistograms("TF_0.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");
+  
+    //*AR-190509:only while getting lepton sys
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_Track","h_SR_SF_SB_el_Track","h_CR_SF_SB_el_Track");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_ID","h_SR_SF_SB_el_ID","h_CR_SF_SB_el_ID");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_el_Iso","h_SR_SF_SB_el_Iso","h_CR_SF_SB_el_Iso");
@@ -428,23 +429,23 @@ void CombinedTF() {
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_mu_ID","h_SR_SF_SB_mu_ID","h_CR_SF_SB_mu_ID");
   GetTFHistograms("TF_0.root","h_0L1L_SF_SB_mu_Iso","h_SR_SF_SB_mu_Iso","h_CR_SF_SB_mu_Iso");
 
-*/
-  GetTFHistograms("TF_0.root","h_0L1L_LL_SB","h_SR_LL_SB","h_CR_SB");
-  GetTFHistograms("TF_0.root","h_0L1L_SF_LL_SB","h_SR_SF_LL_SB","h_CR_SF_SB");
 
-  GetTFHistograms("TF_0.root","h_0L1L_Hadtau_SB","h_SR_Hadtau_SB","h_CR_SB");
-  GetTFHistograms("TF_0.root","h_0L1L_SF_Hadtau_SB","h_SR_SF_Hadtau_SB","h_CR_SF_SB");
+    GetTFHistograms("TF_0.root","h_0L1L_LL_SB","h_SR_LL_SB","h_CR_SB");
+    GetTFHistograms("TF_0.root","h_0L1L_SF_LL_SB","h_SR_SF_LL_SB","h_CR_SF_SB");
+
+    GetTFHistograms("TF_0.root","h_0L1L_Hadtau_SB","h_SR_Hadtau_SB","h_CR_SB");
+    GetTFHistograms("TF_0.root","h_0L1L_SF_Hadtau_SB","h_SR_SF_Hadtau_SB","h_CR_SF_SB");
 
 
   //*AR: 190116- TF in scale sys case
 
-  //  GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
+  //GetTFHistograms("TF_0.root","h_scale_0L1L_SB","h_scale_SR_SB","h_scale_CR_SB",9);
   //  GetTFHistograms("TF_0.root","h_scale_0L1L_SF_SB","h_scale_SR_SF_SB","h_scale_CR_SF_SB",9);
 
   //*AR: 190116- TF in PDF sys case
 
-  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",101);
-  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",101);
+  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SB","h_PDF_SR_SB","h_PDF_CR_SB",102);
+  //  GetTFHistograms("TF_0.root","h_PDF_0L1L_SF_SB","h_PDF_SR_SF_SB","h_PDF_CR_SF_SB",102);
 
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SB","h_SR_SB","h_CR_SB");
   //GetTFHistograms("TF_0_NoExotic.root","h_0L1L_SF_SB","h_SR_SF_SB","h_CR_SF_SB");

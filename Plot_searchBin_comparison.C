@@ -540,7 +540,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   }
 
   // Legend & texts
-  sprintf(tempname,"LL+Had#tau background");
+  sprintf(tempname,"Lost-lepton background");
   catLeg1->SetHeader(tempname);
   //sprintf(tempname,"#tau_{hadronic} BG expectation (MC truth)");
   sprintf(tempname,"Direct from simulation");
