@@ -535,7 +535,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     LLPlusHadTau_TFRefHist_copy->Reset(); //Defines 174 bin histogram to copy nominal TF histogram 
 
     
-    //Reference TF with btag probability considered which is used to derive systematics   
+    //Reference TF with btag probability considered    
     sprintf(tempname,"TFLLPlusHadTau_JECRefWithBtagProb_binSFcorrected.root");
     TFile *RefTFWithBtagProbFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
@@ -543,7 +543,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
 
     //223(QCD) bin TF Stat error (error from MC) histogram
     TH1D* LLPlusHadTau_TFErrHist_input=(TH1D*) RefTFWithBtagProbFile->Get("h_0L1L_SF_SB")->Clone("LLPlusHadTau_TFErrHist_input");
-    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefHist); //LLPlusHadTau_TFErrHist_input is reset and returns 1+(TFRefHist_BinError/TFRefHist_BinContent)
+    GetErrorHist(LLPlusHadTau_TFErrHist_input,TFRefWithBtagProbHist); //LLPlusHadTau_TFErrHist_input is reset and returns 1+(TFRefWithBtagProbHist_BinError/TFRefWithBtagProbHist_BinContent)
 
     TH1D *LLPlusHadTau_TFErrHist=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("LLPlusHadTau_TFErrHist"); 
     LLPlusHadTau_TFErrHist->Reset(); //Defines 174 bin histogram to copy TF Stat error histogram 
@@ -578,16 +578,17 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
 
 
     //TFPDFSysDn with btag probability considered
+    //*AR-190509: change 101 to PDFsize
     sprintf(tempname,"TFLLPlusHadTau_PDFSys_binSFcorrected.root");
     TFile * TFPDFSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
     TH1D * searchBin_LLPlusHadTau_AccSysPDFRef_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_0")->Clone("searchBin_LLPlusHadTau_AccSysPDFRef_input");
-    TH1D * searchBin_LLPlusHadTau_AccSysPDFDn_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_101")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn_input");//x axis[0.5,223.5]
-
+    TH1D * searchBin_LLPlusHadTau_AccSysPDFDn_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_102")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn_input");//x axis[0.5,223.5]
 
     TH1D *searchBin_LLPlusHadTau_AccSysPDFDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn");
     searchBin_LLPlusHadTau_AccSysPDFDn->Reset(); //[0.5,223.5]  //Defines 174 bin histogram to copy TF with PDF sys histogram 
 
+    //*AR-190509: change 9 to Scalesize
     //TFScaleSysDn with btag probability considered
     sprintf(tempname,"TFLLPlusHadTau_ScaleSys_binSFcorrected.root");
     TFile * TFScaleSysDnFile = TFile::Open(tempname,"R");
@@ -600,21 +601,34 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     searchBin_LLPlusHadTau_AccSysScaleDn->Reset(); //[0.5,223.5]  //Defines 174 bin histogram to copy TF with Scale sys histogram 
 
     
-    //*AR-190117---As ID+Reco is combined for 2017, there is no separate recommendation for TrackRecoSF for muons
-    //MuonIDSysDn with btag probability considered
+    //*AR-190117---For 2016, there are separate muon ID and reco SF recommendations. As ID+Reco is combined for 2017, there is no separate recommendation for TrackRecoSF for muons
+ 
+   //MuonIDSysDn with btag probability considered
+    /*
+   //MuonTrackRecoDn with btag probability considered
+    sprintf(tempname,"TFLLPlusHadTau_MuTrkRecoDn_binSFcorrected.root");
+    TFile * TFMuTrackRecoSysDnFile = TFile::Open(tempname,"R");
+    printf("Opened %s\n",tempname);
+    TH1D * searchBin_MuRecoSysDn_input=(TH1D*) TFMuTrackRecoSysDnFile->Get("h_0L1L_SF_SB_mu_Track")->Clone("searchBin_MuRecoSysDn_input");//x axis[0.5,223.5]
+    TH1D *searchBin_MuRecoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_MuRecoSysDn");
+    searchBin_MuRecoSysDn->Reset(); //[0.5,223.5] //Defines 174 bin histogram to copy TF with Muon track reco sys histogram 
+*/
+    //*AR: for 2016 code, I derived various lepton systematics in single file. So now file name is same ("TFCombinedLLHadtau_LepSys_190128.root") for all lepton systematics but histogram names are different.
+
+
+   //MuonIDSysDn with btag probability considered
     sprintf(tempname,"TFLLPlusHadTau_MuIDDn_binSFcorrected.root");
     TFile * TFMuIDSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_MuIDSysDn_input=(TH1D*) TFMuIDSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuIDSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_MuIDSysDn_input=(TH1D*) TFMuIDSysDnFile->Get("h_0L1L_SF_SB_mu_ID")->Clone("searchBin_MuIDSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_MuIDSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_MuIDSysDn");
     searchBin_MuIDSysDn->Reset(); //[0.5,223.5] //Defines 174 bin histogram to copy TF with electron iso sys histogram 
-
 
     //MuonIsoSysDn with btag probability considered
     sprintf(tempname,"TFLLPlusHadTau_MuIsoDn_binSFcorrected.root");
     TFile * TFMuIsoSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_MuIsoSysDn_input=(TH1D*) TFMuIsoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_MuIsoSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_MuIsoSysDn_input=(TH1D*) TFMuIsoSysDnFile->Get("h_0L1L_SF_SB_mu_Iso")->Clone("searchBin_MuIsoSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_MuIsoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_MuIsoSysDn");
     searchBin_MuIsoSysDn->Reset(); //[0.5,223.5]  //Defines 174 bin histogram to copy TF with muon iso sys histogram 
 
@@ -622,7 +636,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     sprintf(tempname,"TFLLPlusHadTau_EleTrkRecoDn_binSFcorrected.root");
     TFile * TFEleTrackRecoSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_EleRecoSysDn_input=(TH1D*) TFEleTrackRecoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_EleRecoSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_EleRecoSysDn_input=(TH1D*) TFEleTrackRecoSysDnFile->Get("h_0L1L_SF_SB_el_Track")->Clone("searchBin_EleRecoSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_EleRecoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_EleRecoSysDn");
     searchBin_EleRecoSysDn->Reset(); //[0.5,223.5] //Defines 174 bin histogram to copy TF with Electron track reco sys histogram 
 
@@ -630,7 +644,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     sprintf(tempname,"TFLLPlusHadTau_EleIDDn_binSFcorrected.root");
     TFile * TFEleIDSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_EleIDSysDn_input=(TH1D*) TFEleIDSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_EleIDSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_EleIDSysDn_input=(TH1D*) TFEleIDSysDnFile->Get("h_0L1L_SF_SB_el_ID")->Clone("searchBin_EleIDSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_EleIDSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_EleIDSysDn");
     searchBin_EleIDSysDn->Reset(); //[0.5,223.5] //Defines 174 bin histogram to copy TF with electron iso sys histogram 
 
@@ -638,7 +652,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     sprintf(tempname,"TFLLPlusHadTau_EleIsoDn_binSFcorrected.root");
     TFile * TFEleIsoSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
-    TH1D * searchBin_EleIsoSysDn_input=(TH1D*) TFEleIsoSysDnFile->Get("h_0L1L_SF_SB")->Clone("searchBin_EleIsoSysDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_EleIsoSysDn_input=(TH1D*) TFEleIsoSysDnFile->Get("h_0L1L_SF_SB_el_Iso")->Clone("searchBin_EleIsoSysDn_input");//x axis[0.5,223.5]
     TH1D *searchBin_EleIsoSysDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_EleIsoSysDn");
     searchBin_EleIsoSysDn->Reset(); //[0.5,223.5] //Defines 174 bin histogram to copy TF with electron iso sys histogram 
 
@@ -789,56 +803,56 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
 */
     searchBin_LLPlusHadTau_BMistagDn->Add(searchBin_one);
     //*AR:190117- Input to CorrectLowStatBins is TF_Sys/TF_nom
-    CorrectLowStatBins(searchBin_LLPlusHadTau_BMistagDn,0.996,1.006);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_BMistagDn,0.998,1.004);
     reLabel(searchBin_LLPlusHadTau_BMistagDn);
     searchBin_LLPlusHadTau_BMistagDn->Write("totalPredBMistagDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_JECSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.95,1.04);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.95,1.02);
     reLabel(searchBin_LLPlusHadTau_JECSysDn);
     searchBin_LLPlusHadTau_JECSysDn->Write("totalPred_JECSysDown_LLPlusHadTau");
     searchBin_MTSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MTSysDn,0.995,1.000);
+    CorrectLowStatBins(searchBin_MTSysDn,0.997,0.999);
     reLabel(searchBin_MTSysDn);
     searchBin_MTSysDn->Write("totalPredMTWSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysPDFDn->Add(searchBin_one); 
-    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysPDFDn,0.995,1.003);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysPDFDn,1.0002,1.0006);
     reLabel(searchBin_LLPlusHadTau_AccSysPDFDn);
     searchBin_LLPlusHadTau_AccSysPDFDn->Write("totalPredLepAccSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysScaleDn->Add(searchBin_one); 
-    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.000,1.01);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.001,1.005);
     reLabel(searchBin_LLPlusHadTau_AccSysScaleDn);
     searchBin_LLPlusHadTau_AccSysScaleDn->Write("totalPredLepAccQsquareSysDown_LLPlusHadTau");
-    /*
-    searchBin_MuRecoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuRecoSysDn,1.008,1.012);
-    reLabel(searchBin_MuRecoSysDn);
-    searchBin_MuRecoSysDn->Write("totalPredMuRecoSysDown_LLPlusHadTau");
-*/
+    
+    //searchBin_MuRecoSysDn->Add(searchBin_one);
+    //    CorrectLowStatBins(searchBin_MuRecoSysDn,1.008,1.012);
+    //    reLabel(searchBin_MuRecoSysDn);
+    //    searchBin_MuRecoSysDn->Write("totalPredMuRecoSysDown_LLPlusHadTau");
+
     searchBin_MuIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIDSysDn,1.0035,1.006);
+    CorrectLowStatBins(searchBin_MuIDSysDn,1.002,1.0033);
     reLabel(searchBin_MuIDSysDn);
     searchBin_MuIDSysDn->Write("totalPredMuIDSysDown_LLPlusHadTau");
 
 
     searchBin_MuIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIsoSysDn,1.001,1.003);
+    CorrectLowStatBins(searchBin_MuIsoSysDn,1.001,1.0024);
     reLabel(searchBin_MuIsoSysDn);
     searchBin_MuIsoSysDn->Write("totalPredMuIsoSysDown_LLPlusHadTau");
 
 
     searchBin_EleRecoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleRecoSysDn,1.003,1.006);
+    CorrectLowStatBins(searchBin_EleRecoSysDn,1.004,1.017);
     reLabel(searchBin_EleRecoSysDn);
     searchBin_EleRecoSysDn->Write("totalPredEleRecoSysDown_LLPlusHadTau");
 
 
     searchBin_EleIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIsoSysDn,1.003,1.005);
+    CorrectLowStatBins(searchBin_EleIsoSysDn,1.0015,1.0035);
     reLabel(searchBin_EleIsoSysDn);
     searchBin_EleIsoSysDn->Write("totalPredEleIsoSysDown_LLPlusHadTau");
 
     searchBin_EleIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIDSysDn,1.005,1.007);
+    CorrectLowStatBins(searchBin_EleIDSysDn,1.005,1.009);
     reLabel(searchBin_EleIDSysDn);
     searchBin_EleIDSysDn->Write("totalPredEleIDSysDown_LLPlusHadTau");
 
@@ -1124,6 +1138,7 @@ void reLabel(TH1* output){
 	      sprintf(hname,"totalPredMuRecoSysDown_LL");
 	  }
 */
+	  /*
 	  else if(histname.find("MuRecoSys")!=string::npos){
 	    sprintf(binlabel, "LL_muRecoSys");
 	    if(histname.find("Up")!=string::npos)
@@ -1131,7 +1146,7 @@ void reLabel(TH1* output){
 	    else
 	      sprintf(hname,"totalPredMuRecoSysDown_LL");
 	  }
-
+*/
 	  else if(histname.find("EleRecoSys")!=string::npos){
 	    sprintf(binlabel, "LL_eleRecoSys");
 	    if(histname.find("Up")!=string::npos)

@@ -1266,38 +1266,7 @@ Bool_t Prediction::Process(Long64_t entry)
       MaxdeepCSV=deepCSV;
     if(deepCSV>csvForBtag){
       BTagsv2Recipe++;
-      for(unsigned i=0; i<GenElectrons->size();i++){
-	double dEtaLepNb=Jets->at(jetIdx).Eta()-GenElectrons->at(i).Eta();
-	double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenElectrons->at(i).Phi());
-	double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
-	//	double LepNbdR=dR(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),GenElectrons->at(i).Eta(),GenElectrons->at(i).Phi());
-	if(LepNbdR<GenLepNbdR)
-	  GenLepNbdR=LepNbdR;
-      }
-      for(unsigned i=0; i<GenMuons->size();i++){
-	double dEtaLepNb=Jets->at(jetIdx).Eta()-GenMuons->at(i).Eta();
-	double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenMuons->at(i).Phi());
-	double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
-	if(LepNbdR<GenLepNbdR)
-	  GenLepNbdR=LepNbdR;
-      }
-      for(unsigned i=0; i<GenTaus->size();i++){
-	if(GenTaus_had->at(i)==1){
-	  double dEtaTauNb=Jets->at(jetIdx).Eta()-GenTaus->at(i).Eta();
-	  double dPhiTauNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenTaus->at(i).Phi());
-	  double TauNbdR=sqrt(dEtaTauNb * dEtaTauNb + dPhiTauNb * dPhiTauNb);
-	  if(TauNbdR<GenTauNbdR)
-	    GenTauNbdR=TauNbdR;
-	}
-      }
-    }
-  }
-
-  if(BTagsv2Recipe ==0){
-    for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
-      int jetIdx=HTJetsIdxv2Recipe[i];
-      double deepCSV=Jets_bJetTagDeepCSVprobb->at(jetIdx) + Jets_bJetTagDeepCSVprobbb->at(jetIdx);
-      if(deepCSV==MaxdeepCSV){
+      if(!runOnData){
 	for(unsigned i=0; i<GenElectrons->size();i++){
 	  double dEtaLepNb=Jets->at(jetIdx).Eta()-GenElectrons->at(i).Eta();
 	  double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenElectrons->at(i).Phi());
@@ -1320,6 +1289,41 @@ Bool_t Prediction::Process(Long64_t entry)
 	    double TauNbdR=sqrt(dEtaTauNb * dEtaTauNb + dPhiTauNb * dPhiTauNb);
 	    if(TauNbdR<GenTauNbdR)
 	      GenTauNbdR=TauNbdR;
+	  }
+	}
+      }
+    }
+  }
+
+  if(BTagsv2Recipe ==0){
+    for(unsigned int i=0;i<HTJetsIdxv2Recipe.size();i++){
+      int jetIdx=HTJetsIdxv2Recipe[i];
+      double deepCSV=Jets_bJetTagDeepCSVprobb->at(jetIdx) + Jets_bJetTagDeepCSVprobbb->at(jetIdx);
+      if(deepCSV==MaxdeepCSV){
+	if(!runOnData){
+	  for(unsigned i=0; i<GenElectrons->size();i++){
+	    double dEtaLepNb=Jets->at(jetIdx).Eta()-GenElectrons->at(i).Eta();
+	    double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenElectrons->at(i).Phi());
+	    double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	    //	double LepNbdR=dR(Jets->at(jetIdx).Eta(),Jets->at(jetIdx).Phi(),GenElectrons->at(i).Eta(),GenElectrons->at(i).Phi());
+	    if(LepNbdR<GenLepNbdR)
+	      GenLepNbdR=LepNbdR;
+	  }
+	  for(unsigned i=0; i<GenMuons->size();i++){
+	    double dEtaLepNb=Jets->at(jetIdx).Eta()-GenMuons->at(i).Eta();
+	    double dPhiLepNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenMuons->at(i).Phi());
+	    double LepNbdR=sqrt(dEtaLepNb * dEtaLepNb + dPhiLepNb * dPhiLepNb);
+	    if(LepNbdR<GenLepNbdR)
+	      GenLepNbdR=LepNbdR;
+	  }
+	  for(unsigned i=0; i<GenTaus->size();i++){
+	    if(GenTaus_had->at(i)==1){
+	      double dEtaTauNb=Jets->at(jetIdx).Eta()-GenTaus->at(i).Eta();
+	      double dPhiTauNb=TVector2::Phi_mpi_pi(Jets->at(jetIdx).Phi()-GenTaus->at(i).Phi());
+	      double TauNbdR=sqrt(dEtaTauNb * dEtaTauNb + dPhiTauNb * dPhiTauNb);
+	      if(TauNbdR<GenTauNbdR)
+		GenTauNbdR=TauNbdR;
+	    }
 	  }
 	}
       }
@@ -1834,7 +1838,7 @@ Bool_t Prediction::Process(Long64_t entry)
     currentFile = ((TObjString *)(optionArray->At(optionArray->GetEntries()-1)))->String();
     //    std::cout<<" currentFile "<<currentFile<<endl;
   }
-
+  //  std::cout<<" seg vio "<<endl;
 
   if(!runOnData){
     //    string GetFastSimSkim=Skmname.c_str();
@@ -2807,7 +2811,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	TF = h_0L1L_SB->GetBinContent(bTagBinQCD);
 	TFLL = h_0L1L_LL_SB->GetBinContent(bTagBinQCD);
 	TFHadtau = h_0L1L_Hadtau_SB->GetBinContent(bTagBinQCD);
-	if(!GetSignalRegHists){
+	if(!runOnData && !GetSignalRegHists){
 	  if(MuonsNum_==1 && ElectronsNum_==0)
 	    SFCR=h_mu_SFCR_SB->GetBinContent(bTagBinQCD);
 	  if(MuonsNum_==0 && ElectronsNum_==1)
@@ -2975,28 +2979,28 @@ Bool_t Prediction::Process(Long64_t entry)
 	  h_CSStat_SR_Hadtau_HighdR->Fill(3.,WeightBtagProb);
       }
 
-
-      for(unsigned i=0; i<GenElectrons->size();i++){
-	if(NJetsv2Recipe<=5){
-	  h_GenLepLowNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
-	  h_GenLepLowNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+      if(!runOnData){
+	for(unsigned i=0; i<GenElectrons->size();i++){
+	  if(NJetsv2Recipe<=5){
+	    h_GenLepLowNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
+	    h_GenLepLowNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+	  }
+	  if(NJetsv2Recipe>=6){
+	    h_GenLepHighNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
+	    h_GenLepHighNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+	  }
 	}
-	if(NJetsv2Recipe>=6){
-	  h_GenLepHighNjetPt_Exp->Fill(GenElectrons->at(i).Pt(),WeightBtagProb);
-	  h_GenLepHighNjetEta_Exp->Fill(GenElectrons->at(i).Eta(),WeightBtagProb);
+	for(unsigned i=0; i<GenMuons->size();i++){
+	  if(NJetsv2Recipe<=5){
+	    h_GenLepLowNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
+	    h_GenLepLowNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
+	  }
+	  if(NJetsv2Recipe>=6){
+	    h_GenLepHighNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
+	    h_GenLepHighNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
+	  }
 	}
       }
-      for(unsigned i=0; i<GenMuons->size();i++){
-	if(NJetsv2Recipe<=5){
-	  h_GenLepLowNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
-	  h_GenLepLowNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
-	}
-	if(NJetsv2Recipe>=6){
-	  h_GenLepHighNjetPt_Exp->Fill(GenMuons->at(i).Pt(),WeightBtagProb);
-	  h_GenLepHighNjetEta_Exp->Fill(GenMuons->at(i).Eta(),WeightBtagProb);
-	}
-      }
-      
       
       h_CSStat_NJetvsNBtag->Fill(JetMax,i,WeightBtagProb);
       h_CSStat_HTvsMHT->Fill(MaxHT,MaxMHT,WeightBtagProb);

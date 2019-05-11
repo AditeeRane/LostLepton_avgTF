@@ -32,13 +32,13 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 
 bool RunFor2017=true;
 bool RunFor2018=false;
 bool RunFor2016=false;
 
-const bool includeIsotrkVeto = false;  // true: needed for SR, false: needed for CR
+const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
 const bool useCombinedBins = false;  // Combine bins in nBTags for increased stats
 const bool doPUreweighting = false; //true for fastsim signal in prediction code 

@@ -32,7 +32,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = 1;  //<-check------------------------
+const int useDeltaPhiCut = -1;  //<-check------------------------
 
 bool RunFor2017=true;
 bool RunFor2018=false;
@@ -53,7 +53,7 @@ const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
 const bool JECSys=false; //false by default
 const bool ScaleAccSys=false;
-const bool PDFAccSys=true;
+const bool PDFAccSys=false;
 const bool BtagSys=false;
 const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;

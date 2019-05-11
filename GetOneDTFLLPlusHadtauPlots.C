@@ -191,27 +191,54 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
 */
 
   //  TFile *_fileData = TFile::Open(DataPred);
-
+  TH1::SetDefaultSumw2();
   //  _fileTTbarLL->cd();
-  TH1D *hTTbarCS = (TH1D*)_fileTTbarLL->FindObjectAny(hnameCS);
-  TH1D *hTTbarPre = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePre);
-  TH1D *hTTbarPreLL = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreLL);
-  TH1D *hTTbarPreHadtau = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreHadtau);
+  TH1D *hOrgTTbarCS = (TH1D*)_fileTTbarLL->FindObjectAny(hnameCS);
+  TH1D *hOrgTTbarPre = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePre);
+  TH1D *hOrgTTbarPreLL = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreLL);
+  TH1D *hOrgTTbarPreHadtau = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreHadtau);
 
-  TH1D *hWJetCS = (TH1D*)_fileWJetLL->FindObjectAny(hnameCS);
-  TH1D *hWJetPre = (TH1D*)_fileWJetLL->FindObjectAny(hnamePre);
-  TH1D *hWJetPreLL = (TH1D*)_fileWJetLL->FindObjectAny(hnamePreLL);
-  TH1D *hWJetPreHadtau = (TH1D*)_fileWJetLL->FindObjectAny(hnamePreHadtau);
+  TH1D *hOrgWJetCS = (TH1D*)_fileWJetLL->FindObjectAny(hnameCS);
+  TH1D *hOrgWJetPre = (TH1D*)_fileWJetLL->FindObjectAny(hnamePre);
+  TH1D *hOrgWJetPreLL = (TH1D*)_fileWJetLL->FindObjectAny(hnamePreLL);
+  TH1D *hOrgWJetPreHadtau = (TH1D*)_fileWJetLL->FindObjectAny(hnamePreHadtau);
+
+
+  TH1D* hTTbarCS = new TH1D("hTTbarCS","hTTbarCS",19,0.5,19.5);
+  TH1D* hWJetCS = new TH1D("hWJetCS","hWJetCS",19,0.5,19.5);
+
+  TH1D* hTTbarPre = new TH1D("hTTbarPre","hTTbarPre",19,0.5,19.5);
+  TH1D* hWJetPre = new TH1D("hWJetPre","hWJetPre",19,0.5,19.5);
+
+  for(int i=1;i<=19;i++){
+    hTTbarCS->SetBinContent(i,hOrgTTbarCS->GetBinContent(i));
+    hTTbarCS->SetBinError(i,hOrgTTbarCS->GetBinError(i));
+
+    hWJetCS->SetBinContent(i,hOrgWJetCS->GetBinContent(i));
+    hWJetCS->SetBinError(i,hOrgWJetCS->GetBinError(i));
+
+    hTTbarPre->SetBinContent(i,hOrgTTbarPre->GetBinContent(i));
+    hTTbarPre->SetBinError(i,hOrgTTbarPre->GetBinError(i));
+
+    hWJetPre->SetBinContent(i,hOrgWJetPre->GetBinContent(i));
+    hWJetPre->SetBinError(i,hOrgWJetPre->GetBinError(i));
+  }
+
+
+
 
   hTTbarCS->Scale(137/41.486);
   hTTbarPre->Scale(137/41.486);
-  hTTbarPreLL->Scale(137/41.486);
-  hTTbarPreHadtau->Scale(137/41.486);
+  //  hTTbarPreLL->Scale(137/41.486);
+  //  hTTbarPreHadtau->Scale(137/41.486);
 
   hWJetCS->Scale(137/41.486);
   hWJetPre->Scale(137/41.486);
-  hWJetPreLL->Scale(137/41.486);
-  hWJetPreHadtau->Scale(137/41.486);
+  //  hWJetPreLL->Scale(137/41.486);
+  //  hWJetPreHadtau->Scale(137/41.486);
+
+
+
 
   /*
 
@@ -341,7 +368,7 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
 */
   //  gStyle->SetHatchesLineWidth(2);
   hTTbarCS->SetLineColor(kBlue);
-  //  hTTbarCS->SetFillColor(kBlue);
+  hTTbarCS->SetFillColor(kBlue);
 
   hTTbarPre->SetLineColor(kBlue);
   hTTbarPre->SetFillColor(kBlue);
@@ -357,7 +384,7 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   hTTbarPreHadtau->SetFillStyle(3013);
 */
   hWJetCS->SetLineColor(96);
-  //  hWJetCS->SetFillColor(kGreen+1);
+  hWJetCS->SetFillColor(96);
 
   hWJetPre->SetLineColor(96);
   //  hWJetPre->SetLineWidth(2);
@@ -402,11 +429,11 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   THStack * hExp = new THStack("hExp","hExp");
   //  std::cout<<" ****** seg vio ******"<<endl;
   hExp->Add(hWJetPre);
-  hExp->Add(hWJetCS);
+  hExp->Add(hTTbarPre);
 
+  hExp->Add(hWJetCS);
   //  hExp->Add(hWJetPreHadtau);
   //  hExp->Add(hWJetPreLL);
-  hExp->Add(hTTbarPre);
   //  hExp->Add(hTTbarPreHadtau);
   //  hExp->Add(hTTbarPreLL);
   hExp->Add(hTTbarCS);
@@ -480,10 +507,12 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
   //  tl->SetNColumns(2);
   tl->AddEntry(hWJetPre,"W+jets:Lost-lepton","f");
+  tl->AddEntry(hTTbarPre," t#bar{t}:Lost-lepton","f");
+
   tl->AddEntry(hWJetCS,"W+jets:single-lepton CR","f");
 
-  tl->AddEntry(hTTbarPre," t#bar{t}:Lost-lepton","f");
   tl->AddEntry(hTTbarCS," t#bar{t}:single-lepton CR","f");
+
 
   /*
 
@@ -537,44 +566,44 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     // Njet separation lines
   TLine *tl_njet = new TLine();
   tl_njet->SetLineStyle(2);
-  tl_njet->DrawLine(3.85,ymin_top,3.85,ymax_top); 
-  tl_njet->DrawLine(7.65,ymin_top,7.65,ymax_top); 
-  tl_njet->DrawLine(11.45,ymin_top,11.45,ymax_top); 
-  tl_njet->DrawLine(15.25,ymin_top,15.25,ymax_top); 
+  tl_njet->DrawLine(3.5,ymin_top,3.5,ymax_top); 
+  tl_njet->DrawLine(7.5,ymin_top,7.5,ymax_top); 
+  tl_njet->DrawLine(11.5,ymin_top,11.5,ymax_top); 
+  tl_njet->DrawLine(15.5,ymin_top,15.5,ymax_top); 
 
     // Njet labels
     TLatex * ttext_njet = new TLatex();
     ttext_njet->SetTextFont(42);
     ttext_njet->SetTextSize(0.035);
     ttext_njet->SetTextAlign(22);
-    ttext_njet->DrawLatex(2.3 , 2000000 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
-    ttext_njet->DrawLatex(5.75 , 2000000 , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
-    ttext_njet->DrawLatex(9.55 , 2000000 , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
-    ttext_njet->DrawLatex(13.35 , 2000000 , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
-    ttext_njet->DrawLatex(17.15 , 2000000 , "N_{#scale[0.2]{ }jet} #geq 10");
+    ttext_njet->DrawLatex(2.0 , 2000000 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
+    ttext_njet->DrawLatex(5.0 , 2000000 , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
+    ttext_njet->DrawLatex(9.0 , 2000000 , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
+    ttext_njet->DrawLatex(13.0 , 2000000 , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
+    ttext_njet->DrawLatex(17.0 , 2000000 , "N_{#scale[0.2]{ }jet} #geq 10");
     
     // Nb separation lines
     TLine *tl_nb = new TLine();
     tl_nb->SetLineStyle(3);
-    tl_nb->DrawLine(1.95,ymin_top,1.95,ymax2_top); 
-    tl_nb->DrawLine(2.9,ymin_top,2.9,ymax2_top); 
-    tl_nb->DrawLine(3.85,ymin_top,3.85,ymax2_top);
-    tl_nb->DrawLine(4.80,ymin_top,4.80,ymax2_top);
-    tl_nb->DrawLine(5.75,ymin_top,5.75,ymax2_top); 
-    tl_nb->DrawLine(6.7,ymin_top,6.7,ymax2_top); 
-    tl_nb->DrawLine(7.65,ymin_top,7.65,ymax2_top);
-    tl_nb->DrawLine(8.6,ymin_top,8.6,ymax3_top);
-    tl_nb->DrawLine(9.55,ymin_top,9.55,ymax3_top); 
+    tl_nb->DrawLine(1.5,ymin_top,1.5,ymax2_top); 
+    tl_nb->DrawLine(2.5,ymin_top,2.5,ymax2_top); 
+    tl_nb->DrawLine(3.5,ymin_top,3.5,ymax2_top);
+    tl_nb->DrawLine(4.5,ymin_top,4.50,ymax2_top);
+    tl_nb->DrawLine(5.5,ymin_top,5.5,ymax2_top); 
+    tl_nb->DrawLine(6.5,ymin_top,6.5,ymax2_top); 
+    tl_nb->DrawLine(7.5,ymin_top,7.5,ymax2_top);
+    tl_nb->DrawLine(8.5,ymin_top,8.5,ymax3_top);
+    tl_nb->DrawLine(9.5,ymin_top,9.5,ymax3_top); 
     tl_nb->DrawLine(10.5,ymin_top,10.5,ymax3_top); 
-    tl_nb->DrawLine(11.45,ymin_top,11.45,ymax3_top); 
-    tl_nb->DrawLine(12.4,ymin_top,12.4,ymax4_top); 
-    tl_nb->DrawLine(13.35,ymin_top,13.35,ymax4_top); 
-    tl_nb->DrawLine(14.3,ymin_top,14.3,ymax4_top); 
-    tl_nb->DrawLine(15.25,ymin_top,15.25,ymax4_top);
-    tl_nb->DrawLine(16.2,ymin_top,16.2,ymax5_top);
-    tl_nb->DrawLine(17.15,ymin_top,17.15,ymax5_top);
-    tl_nb->DrawLine(18.1,ymin_top,18.1,ymax5_top);
-    tl_nb->DrawLine(19.05,ymin_top,19.05,ymax5_top);
+    tl_nb->DrawLine(11.5,ymin_top,11.5,ymax3_top); 
+    tl_nb->DrawLine(12.5,ymin_top,12.5,ymax4_top); 
+    tl_nb->DrawLine(13.5,ymin_top,13.5,ymax4_top); 
+    tl_nb->DrawLine(14.5,ymin_top,14.5,ymax4_top); 
+    tl_nb->DrawLine(15.5,ymin_top,15.5,ymax4_top);
+    tl_nb->DrawLine(16.5,ymin_top,16.5,ymax5_top);
+    tl_nb->DrawLine(17.5,ymin_top,17.5,ymax5_top);
+    tl_nb->DrawLine(18.5,ymin_top,18.5,ymax5_top);
+    tl_nb->DrawLine(19.5,ymin_top,19.5,ymax5_top);
 
     
     // Nb labels
@@ -583,14 +612,14 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     ttext_nb->SetTextSize(0.035);
     ttext_nb->SetTextAlign(22);
     
-    ttext_nb->DrawLatex(2.15 , 700000 , "N_{#scale[0.2]{ }b-jet}");
-    ttext_nb->DrawLatex(1.475 , 400000 , "0");
-    ttext_nb->DrawLatex(2.475 , 400000 , "1");
-    ttext_nb->DrawLatex(3.375 , 400000 , "#geq 2");
-    ttext_nb->DrawLatex(4.325 , 400000 , "0");
-    ttext_nb->DrawLatex(5.275 , 400000 , "1");
-    ttext_nb->DrawLatex(6.225 , 400000 , "2");
-    ttext_nb->DrawLatex(7.175 , 400000 , "#geq 3");
+    ttext_nb->DrawLatex(2.0 , 700000 , "N_{#scale[0.2]{ }b-jet}");
+    ttext_nb->DrawLatex(1.0 , 400000 , "0");
+    ttext_nb->DrawLatex(2.0 , 400000 , "1");
+    ttext_nb->DrawLatex(3.0 , 400000 , "#geq 2");
+    ttext_nb->DrawLatex(4.0 , 400000 , "0");
+    ttext_nb->DrawLatex(5.0 , 400000 , "1");
+    ttext_nb->DrawLatex(6.0 , 400000 , "2");
+    ttext_nb->DrawLatex(7.0 , 400000 , "#geq 3");
 
     tl->SetFillColor(kWhite);    
     tl->SetLineColor(kBlack);
@@ -633,34 +662,35 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     // Njet separation lines
   TLine *tlb_njet = new TLine();
   tlb_njet->SetLineStyle(2);
-  tlb_njet->DrawLine(3.85,ymin_top,3.85,ymax_top); 
-  tlb_njet->DrawLine(7.65,ymin_top,7.65,ymax_top); 
-  tlb_njet->DrawLine(11.45,ymin_top,11.45,ymax_top); 
-  tlb_njet->DrawLine(15.25,ymin_top,15.25,ymax_top); 
+
+  tlb_njet->DrawLine(3.5,ymin_top,3.5,ymax_top); 
+  tlb_njet->DrawLine(7.5,ymin_top,7.5,ymax_top); 
+  tlb_njet->DrawLine(11.5,ymin_top,11.5,ymax_top); 
+  tlb_njet->DrawLine(15.5,ymin_top,15.5,ymax_top); 
 
     
     // Nb separation lines
     TLine *tlb_nb = new TLine();
     tlb_nb->SetLineStyle(3);
-    tlb_nb->DrawLine(1.95,ymin_top,1.95,ymax2_top); 
-    tlb_nb->DrawLine(2.9,ymin_top,2.9,ymax2_top); 
-    tlb_nb->DrawLine(3.85,ymin_top,3.85,ymax2_top);
-    tlb_nb->DrawLine(4.80,ymin_top,4.80,ymax2_top);
-    tlb_nb->DrawLine(5.75,ymin_top,5.75,ymax2_top); 
-    tlb_nb->DrawLine(6.7,ymin_top,6.7,ymax2_top); 
-    tlb_nb->DrawLine(7.65,ymin_top,7.65,ymax2_top);
-    tlb_nb->DrawLine(8.6,ymin_top,8.6,ymax3_top);
-    tlb_nb->DrawLine(9.55,ymin_top,9.55,ymax3_top); 
+    tlb_nb->DrawLine(1.5,ymin_top,1.5,ymax2_top); 
+    tlb_nb->DrawLine(2.5,ymin_top,2.5,ymax2_top); 
+    tlb_nb->DrawLine(3.5,ymin_top,3.5,ymax2_top);
+    tlb_nb->DrawLine(4.5,ymin_top,4.50,ymax2_top);
+    tlb_nb->DrawLine(5.5,ymin_top,5.5,ymax2_top); 
+    tlb_nb->DrawLine(6.5,ymin_top,6.5,ymax2_top); 
+    tlb_nb->DrawLine(7.5,ymin_top,7.5,ymax2_top);
+    tlb_nb->DrawLine(8.5,ymin_top,8.5,ymax3_top);
+    tlb_nb->DrawLine(9.5,ymin_top,9.5,ymax3_top); 
     tlb_nb->DrawLine(10.5,ymin_top,10.5,ymax3_top); 
-    tlb_nb->DrawLine(11.45,ymin_top,11.45,ymax3_top); 
-    tlb_nb->DrawLine(12.4,ymin_top,12.4,ymax4_top); 
-    tlb_nb->DrawLine(13.35,ymin_top,13.35,ymax4_top); 
-    tlb_nb->DrawLine(14.3,ymin_top,14.3,ymax4_top); 
-    tlb_nb->DrawLine(15.25,ymin_top,15.25,ymax4_top);
-    tlb_nb->DrawLine(16.2,ymin_top,16.2,ymax5_top);
-    tlb_nb->DrawLine(17.15,ymin_top,17.15,ymax5_top);
-    tlb_nb->DrawLine(18.1,ymin_top,18.1,ymax5_top);
-    tlb_nb->DrawLine(19.05,ymin_top,19.05,ymax5_top);
+    tlb_nb->DrawLine(11.5,ymin_top,11.5,ymax3_top); 
+    tlb_nb->DrawLine(12.5,ymin_top,12.5,ymax4_top); 
+    tlb_nb->DrawLine(13.5,ymin_top,13.5,ymax4_top); 
+    tlb_nb->DrawLine(14.5,ymin_top,14.5,ymax4_top); 
+    tlb_nb->DrawLine(15.5,ymin_top,15.5,ymax4_top);
+    tlb_nb->DrawLine(16.5,ymin_top,16.5,ymax5_top);
+    tlb_nb->DrawLine(17.5,ymin_top,17.5,ymax5_top);
+    tlb_nb->DrawLine(18.5,ymin_top,18.5,ymax5_top);
+    tlb_nb->DrawLine(19.5,ymin_top,19.5,ymax5_top);
 
 
   gPad->Update();
@@ -680,6 +710,6 @@ void GetOneDTFLLPlusHadtauPlots(){
   
 
   
-  GetOneDTFLLPlusHadtauPlots(1300,"h_CSStat_NJetvsNBtag_1D","h_Prediction_NJetvsNBtag_1D","h_PredictionLL_NJetvsNBtag_1D","h_PredictionHadtau_NJetvsNBtag_1D","TFLLPlusHadtauCombined","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","SR+CR",0.61,0.55,0.92,0.77,"bin index","Transfer Factor",1,0,19,1,20,0,2.49,200000);
+  GetOneDTFLLPlusHadtauPlots(1300,"h_CSStat_NJetvsNBtag_1D","h_Prediction_NJetvsNBtag_1D","h_PredictionLL_NJetvsNBtag_1D","h_PredictionHadtau_NJetvsNBtag_1D","TFLLPlusHadtauCombined","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","SR+CR",0.64,0.55,0.95,0.77,"bin index","Transfer Factor",1,0,19,0.5,19.5,0,2.49,200000);
   
 }
