@@ -1969,7 +1969,7 @@ Bool_t Prediction::Process(Long64_t entry)
 	else if(currentFile.find("TTTT")!=string::npos)skimName="tree_TTTT.root";
 	else if(currentFile.find("TTGJets")!=string::npos)skimName="tree_TTGJets.root";
       }
-      //      std::cout<<" skimname "<<skimName<<endl;
+      std::cout<<" skimname "<<skimName<<endl;
       //*AR: 180619-Gets skim file name for a new tree
 
       //std::cout<<" subSampleKey "<<subSampleKey<<endl;
@@ -2802,8 +2802,17 @@ Bool_t Prediction::Process(Long64_t entry)
 	TF = h_0L1L_RmHEMEleJet_SB->GetBinContent(bTagBinQCD);
       }
     }
+    else if(RunForGH && runOnData && RunNum>=278820){
+      //      std::cout<<" run "<<RunNum<<"*** TF_RunforGH ***"<<endl;
+      if(applySFs){ //true for data
+	TF = h_0L1L_RunforGH_SF_SB->GetBinContent(bTagBinQCD);
+	if(TF < 0) TF = h_0L1L_RunforGH_SB->GetBinContent(bTagBinQCD);
+      }else{ //true for SM and signal MC
+	TF = h_0L1L_RunforGH_SB->GetBinContent(bTagBinQCD);
+      }
+    }
     else{
-      //      std::cout<<" TF "<<endl;
+      //      std::cout<<" run "<<RunNum<<" **********TF nominal******"<<endl;
       if(applySFs){ //true for data
 	TF = h_0L1L_SF_SB->GetBinContent(bTagBinQCD);
 	if(TF < 0) TF = h_0L1L_SB->GetBinContent(bTagBinQCD);

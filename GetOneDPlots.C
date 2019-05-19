@@ -8,10 +8,10 @@
 
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have different names
-//void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,ochar const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+void GetOneDPlots(int hNum,char const * Var,char const * VarTwo,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
 
 //*AR: 181016: use this definition of function if histograms to be compared from two files have same name
-void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
+//void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTbarLL,char const * WJetLL,char const * STLL,char const* DataPred,char const * LegHeader,double Legxmin,double Legymin,double Legxmax,double Legymax,char const *xRatioLabel,char const *yRatioLabel,bool logy, bool logx,int RatioNbins,double RatioXmin,double RatioXmax,double RatioYmin,double RatioYmax,double topMax){
   
   //*AR:180831: Borrow cosmetics specific to RA2b style
 
@@ -111,21 +111,21 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
  
   // define the size
   double up_height     = 0.8;  // please tune so that the upper figures size will meet your requirement
-  double dw_correction = 1.275; // please tune so that the smaller canvas size will work in your environment
+  double dw_correction = 1.30; // please tune so that the smaller canvas size will work in your environment
   double font_size_dw  = 0.1;  // please tune the font size parameter for bottom figure
   double dw_height    = (1. - up_height) * dw_correction;
   double dw_height_offset = 0.040; // KH, added to put the bottom one closer to the top panel
  
   // set pad size
   canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
-  canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
+  canvas_dw->SetPad(0., dw_height_offset, 0.97, 0.29);
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
   canvas_up->SetTopMargin(0.10);
   canvas_up->SetRightMargin(0.03);
   canvas_dw->SetFillColor(0);
   canvas_dw->SetFrameFillColor(0);
-  canvas_dw->SetBottomMargin(0.30);
+  canvas_dw->SetBottomMargin(0.35);
   canvas_dw->SetRightMargin(0.03);
   canvas_up->SetBottomMargin(0);  
   // set top margin 0 for bottom figure
@@ -168,7 +168,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
 
   sprintf(header,"%s",LegHeader);
   sprintf(hname,"h_%s_Exp",Var);
-  //  sprintf(hnameRev,"h_%s_Pre",VarTwo);
+  sprintf(hnameRev,"h_%s_Pre",VarTwo);
   sprintf(RatioLabelX,"%s",xRatioLabel);
   sprintf(RatioLabelY,"%s",yRatioLabel);
   sprintf(cname,"h_%s_Exp_%s",Var,Sample);
@@ -187,9 +187,54 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   TFile *_fileData = TFile::Open(DataPred);
 
   _fileTTbarLL->cd();
-  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  //TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
   //  hTTbarLL->Scale(35900);
+  TH1D *hTTbarLLOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
+  _fileWJetLL->cd();
+  //TH1D *hWJetLL = (TH1D*)_fileWJetLL->FindObjectAny(hname);
+  //  hWJetLL->Scale(35900);
+  
+  TH1D *hWJetLLOrg = (TH1D*)_fileWJetLL->FindObjectAny(hname);
+  _fileSTLL->cd();
+  //TH1D *hSTLL = (TH1D*)_fileSTLL->FindObjectAny(hname);
+  //  hSTLL->Scale(35900);
+  
+  TH1D *hSTLLOrg = (TH1D*)_fileSTLL->FindObjectAny(hname);
+  _fileData->cd();
+
+  TH1D *hDataLLHadtauOrg = (TH1D*)_fileData->FindObjectAny(hnameRev);
+
+  TH1D * hTTbarLL = new TH1D("hTTbarLL", "hTTbarLL", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+  TH1D * hWJetLL = new TH1D("hWJetLL", "hWJetLL", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+  TH1D * hSTLL = new TH1D("hSTLL", "hSTLL", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+
+  TH1D * hDataLLHadtau = new TH1D("hDataLLHadtau", "hDataLLHadtau", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+
+  for(int i=0;i<=GetRatioNbins+1;i++){
+    hTTbarLL->SetBinContent(i,hTTbarLLOrg->GetBinContent(i)); 
+    hTTbarLL->SetBinError(i,hTTbarLLOrg->GetBinError(i)); 
+
+    hWJetLL->SetBinContent(i,hWJetLLOrg->GetBinContent(i)); 
+    hWJetLL->SetBinError(i,hWJetLLOrg->GetBinError(i)); 
+
+    hSTLL->SetBinContent(i,hSTLLOrg->GetBinContent(i)); 
+    hSTLL->SetBinError(i,hSTLLOrg->GetBinError(i)); 
+
+    hDataLLHadtau->SetBinContent(i,hDataLLHadtauOrg->GetBinContent(i)); 
+    hDataLLHadtau->SetBinError(i,hDataLLHadtauOrg->GetBinError(i)); 
+
+    double val=hDataLLHadtauOrg->GetBinContent(i)+hDataLLHadtauOrg->GetBinContent(i+1);
+    //    if(i==4)
+    //hDataLLHadtau->SetBinContent(i,val);
+    double err=sqrt(hDataLLHadtauOrg->GetBinError(i)*hDataLLHadtauOrg->GetBinError(i) + hDataLLHadtauOrg->GetBinError(i+1)*hDataLLHadtauOrg->GetBinError(i+1));
+    //    if(i==4)
+    //hDataLLHadtau->SetBinError(i,err); 
+
+
+  }
+
   /*
+  
   TH1D *hTTbarLLOrg = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
   TH1D *hTTbarLL = new TH1D("hTTbarLL","hTTbarLL",4,0,4);
   //  hTTbarLL->Sumw2();
@@ -208,11 +253,11 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hTTbarLL->SetBinError(i,err);
     }
   }
-*/
+
   _fileWJetLL->cd();
-  TH1D *hWJetLL = (TH1D*)_fileWJetLL->FindObjectAny(hname);
+  //TH1D *hWJetLL = (TH1D*)_fileWJetLL->FindObjectAny(hname);
   //  hWJetLL->Scale(35900);
-  /*
+  
   TH1D *hWJetLLOrg = (TH1D*)_fileWJetLL->FindObjectAny(hname);
   TH1D *hWJetLL = new TH1D("hWJetLL","hWJetLL",4,0,4);
   //  hWJetLL->Sumw2();
@@ -231,12 +276,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hWJetLL->SetBinError(i,err);
     }
   }
-*/
-  _fileSTLL->cd();
-  TH1D *hSTLL = (TH1D*)_fileSTLL->FindObjectAny(hname);
-  //  hSTLL->Scale(35900);
-  /*
-  TH1D *hSTLLOrg = (TH1D*)_fileSTLL->FindObjectAny(hname);
+
   TH1D *hSTLL = new TH1D("hSTLL","hSTLL",4,0,4);
   //  hSTLL->Sumw2();
   nbins=hSTLL->GetXaxis()->GetNbins();
@@ -254,13 +294,13 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
       hSTLL->SetBinError(i,err);
     }
   }
-  */
+  
   _fileData->cd();
-  TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hname);
+  //  TH1D *hDataLLHadtau = (TH1D*)_fileData->FindObjectAny(hnameRev);
   //  std::cout<<" seg vio "<<endl;
   //  hDataLLHadtau->Scale(41486.328/59546.381);
-  /*
-  TH1D *hDataLLHadtauOrg = (TH1D*)_fileData->FindObjectAny(hname);
+  
+  TH1D *hDataLLHadtauOrg = (TH1D*)_fileData->FindObjectAny(hnameRev);
   TH1D *hDataLLHadtau = new TH1D("hDataLLHadtau","hDataLLHadtau",4,0,4);
   //  hDataLLHadtau->Sumw2();
   //  nbins=hDataLLHadtau->GetXaxis()->GetNbins();
@@ -287,10 +327,9 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   hSTLL->Rebin(5);
   hDataLLHadtau->Rebin(5);
 */
-  hDataLLHadtau->SetLineColor(kBlack);
-  hDataLLHadtau->SetLineWidth(2);
-  hDataLLHadtau->SetMarkerStyle(21);
-  hDataLLHadtau->SetMarkerColor(kBlack);
+  hDataLLHadtau->SetMarkerStyle(20);
+  hDataLLHadtau->SetMarkerSize(1.2);
+  hDataLLHadtau->SetLineColor(1);
 
   double xmin=hDataLLHadtau->GetXaxis()->GetXmin();
   double xmax=hDataLLHadtau->GetXaxis()->GetXmax();
@@ -326,6 +365,7 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   //  hSTLLHadtau->Add(hSTHadtau);
   hSTLLHadtau->SetLineColor(kRed);
   hSTLLHadtau->SetFillColor(kRed);
+
 
 
   THStack * hExp = new THStack("hExp","hExp");
@@ -376,26 +416,44 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   hExp->Draw("hist e");
   hDataLLHadtau->Draw("esame");
   std::cout<<" seg vio 5"<<endl;  
+  hExp->GetYaxis()->SetTitle("Events");
+
+  hExp->GetYaxis()->SetLabelSize(0.055*1.15);
+  hExp->GetYaxis()->SetTitleSize(0.06*1.15);
+  hExp->GetYaxis()->SetTitleOffset(0.9);
+  hExp->GetYaxis()->SetTitleFont(42);
 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
-  tl->SetHeader(header);
+  //  tl->SetHeader(header);
+  tl->SetTextSize(0.044);
+  tl->SetTextFont(42);
+  tl->SetFillColor(0);
+  tl->SetLineColor(0);
+  tl->SetBorderSize(0);
+
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
-  tl->AddEntry(hDataLLHadtau, "Data"); 
-  tl->AddEntry(hSTLLHadtau, "MC: single top");
+  tl->AddEntry(hDataLLHadtau, "Data:Lost-lepton prediction","pe"); 
+  tl->AddEntry(hSTLLHadtau, "MC: Single top");
   tl->AddEntry(hWJetLLHadtau, "MC: W+jets");
-  tl->AddEntry(hTTbarLLHadtau, "MC: TTbar");
+  tl->AddEntry(hTTbarLLHadtau, "MC: t#bar{t}");
   tl->SetLineColor(kWhite);
   tl->Draw("same");
+  gPad->RedrawAxis();
+
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
+  ttext->SetTextSize(0.8*canvas_up->GetTopMargin());
   ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Preliminary}");
 
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
-  double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "35.9 fb^{-1} (13 TeV)");
 
-  
+  double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
+  ttexlumi->SetTextSize(0.8*canvas_up->GetTopMargin());
+  ttexlumi->DrawLatexNDC(0.6, 0.91 , "137 fb^{-1} (13 TeV)");
+
+  gPad->SetLeftMargin(0.16);
+  gPad->SetTicks(1,1);
   gPad->Modified();
   std::cout<<" seg vio 6"<<endl;  
   
@@ -409,25 +467,29 @@ void GetOneDPlots(int hNum,char const * Var,char const * Sample,char const * TTb
   canvas_dw->cd();
   cOne->Draw("e");
   std::cout<<" seg vio 7"<<endl;  
-  
+  cOne->GetXaxis()->SetLabelSize(0.20*0.045/0.06);
   cOne->GetXaxis()->SetTitleOffset(0.9);
-  cOne->GetXaxis()->SetTitleSize(0.13);
+  cOne->GetXaxis()->SetTitleSize(0.16);
   cOne->GetXaxis()->SetTitleFont(42);
   cOne->GetXaxis()->SetLabelOffset(0.008);
 
   cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
-  cOne->GetYaxis()->SetTitleOffset(0.35);
-  cOne->GetYaxis()->SetTitleSize(0.13);
+  cOne->GetYaxis()->SetTitleOffset(0.40);
+  cOne->GetYaxis()->SetTitleSize(0.18);
   cOne->GetYaxis()->SetTitleFont(42);
+  cOne->GetYaxis()->SetNdivisions(505);
+  cOne->GetYaxis()->SetLabelSize(0.20*0.045/0.06);
   cOne->GetYaxis()->SetLabelOffset(0.008);
 
   gStyle->SetPadTickY(1);
   cOne->GetYaxis()->SetNdivisions(5);
-  cOne->SetLabelSize(0.115,"XY");
+  //  cOne->SetLabelSize(0.115,"XY");
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
   gPad->Update();
+  gPad->SetLeftMargin(0.16);
+  gPad->SetTicks(1,1);
   gPad->Modified();
   char PrintName[500];
   sprintf(PrintName,"%i_%s.png",hNum,cname);
@@ -500,7 +562,7 @@ void GetOneDPlots(){
   
   //  GetOneDPlots(1300,"NBtagv2Recipe","2016_1L_Check","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"NBtag","Data/MC",1,0,4,0,4,0,2.49,200000);
   
-  
+  /*
   GetOneDPlots(1000,"MHTv2Recipe","2016_1L_Check","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
 
   GetOneDPlots(1100,"HTv2Recipe","2016_1L_Check","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"HT","Data/MC",1,0,12,100,2500,0,2.49,90000);
@@ -529,6 +591,57 @@ void GetOneDPlots(){
   GetOneDPlots(1200,"LepEta","2016_1L_Check","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #eta","Data/MC",0,0,10,-2.5,2.5,0,2.49,50000);
 
   GetOneDPlots(1200,"LepPhi","2016_1L_Check","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"Lepton #phi","Data/MC",0,0,7,-3.5,3.5,0,2.49,50000);
+*/
+
+
+  //  GetOneDPlots(1300,"NBtagv2Recipe","NBtag","Data_FinalV17_16Plus17Plus18","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.52,0.6,0.87,0.87,"N_{b}","Data/MC",1,0,4,-0.5,3.5,0,2.49,200000);
+  
+    GetOneDPlots(1000,"MHTv2Recipe","MHT","Data_FinalV17_16Plus17Plus18","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.52,0.6,0.87,0.87,"H_{T}^{miss}","Data/MC",1,0,16,200,1000,0,2.49,70000);
+
+    GetOneDPlots(1100,"HTv2Recipe","HT","Data_FinalV17_16Plus17Plus18","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.52,0.6,0.87,0.87,"H_{T}","Data/MC",1,0,12,100,2500,0,2.49,90000);
+
+    GetOneDPlots(1200,"NJetv2Recipe","NJet","Data_FinalV17_16Plus17Plus18","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","0L SR",0.52,0.6,0.87,0.87,"N_{jet}","Data/MC",1,0,10,1.5,11.5,0,2.49,50000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   

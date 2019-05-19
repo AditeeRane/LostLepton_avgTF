@@ -32,11 +32,11 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
-bool RunFor2017=true;
+bool RunFor2017=false;
 bool RunFor2018=false;
-bool RunFor2016=false;
+bool RunFor2016=true;
 
 const bool includeIsotrkVeto = true;  // true: needed for SR, false: needed for CR
 const bool doBTagCorr = true;
@@ -56,14 +56,15 @@ const bool IDMuSys=false;//false by default
 const bool IDEleSys=false;
 const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
-const bool ScaleAccSys=false;
+const bool ScaleAccSys=true;
 const bool PDFAccSys=false;
 const bool BtagSys=false;
 const bool PrefireSys=false;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC, 
-bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
+bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected regi
+//on
 const bool ApplyHT5cut=true;
-
+bool RunForGH=false; //to be used only for 2016, as muon id/iso SFs are different for GH and other era 
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -101,6 +102,7 @@ TString path_muIso=TString("SFs_Moriond17/RunABCD_SF_ISO_Mu_2018_190404.root");
 TString hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
 TString path_muIso_sys=TString("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
 TString hist_muIso_sys=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta_syst");
+
 
 
 
@@ -171,7 +173,7 @@ const double deltaPhi3_=0.3;
 const double deltaPhi4_=0.3;
 double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 int Scalesize=9;
-int PDFsize=102;
+int PDFsize=100;
 
 class SFMaker : public TSelector {
  public :
@@ -634,6 +636,8 @@ void SFMaker::Init(TTree *tree)
     csvForBtag=0.4184;
   if(RunFor2017)
     csvForBtag=0.4941;
+  if(RunFor2016)
+    csvForBtag=0.6321;
   /*
   if(RunFor2018)
     scaleFactorWeight = 59546.381; //not used for data
@@ -644,7 +648,8 @@ void SFMaker::Init(TTree *tree)
     path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
   if(RunFor2017)
     path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
-
+  if(RunFor2016)
+    path_bTagCalib = "btag/DeepCSV_2016LegacySF_V1_190404.csv";
 
   if(RunFor2018){
     path_elecID=TString("SFs_Moriond17/ElectronScaleFactors_Run2018_190404.root");
@@ -690,6 +695,43 @@ void SFMaker::Init(TTree *tree)
     hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
     path_muIso_sys=TString("SFs_Moriond17/RunBCDEF_SF_ISO_syst.root");
     hist_muIso_sys=TString("NUM_TightRelIso_DEN_MediumID_pt_abseta");
+  }
+
+
+
+  if(RunFor2016){
+    path_elecID=TString("SFs_Moriond17/ElectronScaleFactors_Run2016_190404.root");
+    hist_elecID=TString("Run2016_CutBasedVetoNoIso94XV2");
+    path_elecIso=TString("SFs_Moriond17/ElectronScaleFactors_Run2016_190404.root");
+    hist_elecIso=TString("Run2016_Mini");
+
+    // Electron tracking inefficiency
+    path_elecTrkHighPt=TString("SFs_Moriond17/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016_190404.root");
+    hist_elecTrkHighPt=TString("EGamma_SF2D");
+
+    // Electron tracking inefficiency
+    path_elecTrkLowPt=TString("SFs_Moriond17/EGM2D_BtoH_low_RecoSF_Legacy2016_190404.root");
+    hist_elecTrkLowPt=TString("EGamma_SF2D");
+
+    if(RunForGH){
+    //*AR-190511:uses file including systematic error for Run GH
+      path_muID=TString("SFs_Moriond17/RunGH_SF_ID_sys_Mu_2016_190511.root");
+      hist_muID=TString("NUM_MediumID_DEN_genTracks_eta_pt");
+      
+      
+      //*AR-190511:uses file including systematic error for Run GH
+      path_muIso=TString("SFs_Moriond17/RunGH_SF_ISO_sys_Mu_2016_190511.root");
+      hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_eta_pt");
+    }
+    else{
+      //*AR-190511:uses file including systematic error for Run BCDEF 
+      path_muID=TString("SFs_Moriond17/RunBCDEF_SF_ID_sys_Mu_2016_190511.root");
+      hist_muID=TString("NUM_MediumID_DEN_genTracks_eta_pt");
+      
+      //*AR-190511:uses file including systematic error for Run BCDEF
+      path_muIso=TString("SFs_Moriond17/RunBCDEF_SF_ISO_sys_Mu_2016_190511.root");
+      hist_muIso=TString("NUM_TightRelIso_DEN_MediumID_eta_pt");
+    }
   }
 
 
@@ -775,7 +817,7 @@ void SFMaker::Init(TTree *tree)
     TFile *elecTrkSF_histFile = TFile::Open(path_elecTrk, "READ");
     h_elecTrkSF = (TH2F*) elecTrkSF_histFile->Get(hist_elecTrk)->Clone();  
   }
-  if(RunFor2017){
+  if(RunFor2017 || RunFor2016){
     TFile *elecTrkHighPtSF_histFile = TFile::Open(path_elecTrkHighPt, "READ");
     h_elecTrkHighPtSF = (TH2F*) elecTrkHighPtSF_histFile->Get(hist_elecTrkHighPt)->Clone();
     TFile *elecTrkLowPtSF_histFile = TFile::Open(path_elecTrkLowPt, "READ");

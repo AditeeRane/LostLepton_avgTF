@@ -45,7 +45,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempname,"ARElog116_HadTauEstimation_stacked.root");
   //*AR:190112- MC expectation
   //  sprintf(tempname,"Prediction_0_haddTTbarWJetST_LLHadtauExpWithBtagProb_0L_190111.root");
-  sprintf(tempname,"Prediction_0_haddTTbarWJetST_0L_190417_16Plus17Plus18.root");
+  sprintf(tempname,"Prediction_0_haddTTbarWJetST_0L_FinalV17_16Plus17Plus18.root");
 
   //  sprintf(tempname,"GenInfo_HadTauEstimation_JECRefWithbtagProb_haddTTbarWJetST.root");
   
@@ -54,11 +54,11 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   //sprintf(tempnameAvg,"Prediction_0_TTbarWJetST_WithoutSF_HadTauDirect_binSFcorrected.root");
   //*AR:190112- MC or data prediction
   //  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_LLHadtauPred_190111.root");
-  sprintf(tempnameAvg,"Prediction_0_haddTTbarWJetST_1L_190417_16Plus17Plus18.root");
+  sprintf(tempnameAvg,"Prediction_0_haddData_LLHadtauPred_1L_FinalV17_16Plus17Plus18.root");
 
  // false: do closure test (MC prediction vs MC truth)
   // true: do data driven prediction and compare to MC truth
-  bool doData = false;
+  bool doData = true;
 
   // Add systematics in quadrature to stat. uncertainty on prediction
   // Non-closure systematic not included yet!
@@ -97,9 +97,14 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
 
   //float ymax_bottom = 1.19;
   //float ymin_bottom = 0.81;
-
-  float ymax_bottom = 1.99;
-  float ymin_bottom = 0.01;
+  if(doData){
+    float ymax_bottom = 1.95;
+    float ymin_bottom = 0.;
+  }
+  else{
+    float ymax_bottom = 1.49;
+    float ymin_bottom = 0.5;
+  }
 
   float ymax2_bottom = 2.15;
   float ymax3_bottom = 2.15;
@@ -797,7 +802,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
   CMS_lumi(canvas, iPeriod, iPos, lumi_sqrtS);
 
   if(doData){
-    sprintf(tempname,"Comparison_Data_Full_Plot_UpdatedOnly2018.pdf");
+    sprintf(tempname,"Comparison_Data_Full_Plot_FinalV17_16Plus17Plus18.pdf");
     if (pull==1)    sprintf(tempname,"Comparison_DataPull_Full_Plot.pdf");
   }else{
     if(doClosurewoIsoTrackVeto){
@@ -806,7 +811,7 @@ void Plot_searchBin_comparison(string option="", int pull=0){ // string option="
       if (pull==1)    sprintf(tempname,"ComparisonPull_woIsoTrack_Full_Plot.pdf");
     }else{
       if(option.find("QCD")!=string::npos) sprintf(tempname,"Comparison_QCD_HDP_Full_Plot.pdf");
-        else sprintf(tempname,"Comparison_Full_Plot_2016Plus17Plus18_CorrectLumi137.pdf");
+        else sprintf(tempname,"Comparison_Full_Plot_FinalV17_2017_Rerun.pdf");
       if (pull==1)    sprintf(tempname,"ComparisonPull_Full_Plot.pdf");
     }
   }

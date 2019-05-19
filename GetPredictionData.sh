@@ -94,7 +94,7 @@ for DataStr in MET ; do
 		echo Output = ${Output}>> ${SubmitFile}
 		echo Error = ${Error}>> ${SubmitFile}
 		echo Log = ${Log}>> ${SubmitFile}
-		echo Transfer_Input_Files = 2017BCDE.json,2017F.json,Prediction.h,Prediction.C,MakePrediction_Data.C,TF.root,TF_RmHEMEleJet.root,SearchBins.h,LLTools.h,${SUBMIT_DIR}/${ArgTwoB},${SUBMIT_DIR}/SFs_ICHEP16,${SUBMIT_DIR}/SFs_Moriond17,${SUBMIT_DIR}/btag,${SUBMIT_DIR}/pu,${SUBMIT_DIR}/isr>> ${SubmitFile}
+		echo Transfer_Input_Files = 2017BCDE.json,2017F.json,Prediction.h,Prediction.C,MakePrediction_Data.C,TF.root,TF_RmHEMEleJet.root,TF_RunforGH.root,SearchBins.h,LLTools.h,${SUBMIT_DIR}/${ArgTwoB},${SUBMIT_DIR}/SFs_ICHEP16,${SUBMIT_DIR}/SFs_Moriond17,${SUBMIT_DIR}/btag,${SUBMIT_DIR}/pu,${SUBMIT_DIR}/isr>> ${SubmitFile}
 		echo Transfer_Output_Files = Prediction_0_Data_${DataStr}_${outStr}_${i}_00.root>> ${SubmitFile}
 		#echo Transfer_Output_Files = MuJetMatchRate_Data_${DataStr}_${outStr}_${i}_00.root>> ${SubmitFile}        
 		echo transfer_output_remaps = '"'Prediction_0_Data_${DataStr}_${outStr}_${i}_00.root = TauHad2Multiple/Prediction_0_Data_${DataStr}_${outStr}_${i}_00.root'"'>> ${SubmitFile}

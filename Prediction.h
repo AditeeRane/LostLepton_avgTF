@@ -30,29 +30,31 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 bool RunFor2017=true;
 bool RunFor2018=false;
 bool RunFor2016=false;
 
-const bool runOnData = true;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
+const bool runOnData = false;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 
 bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
 const bool ApplyHT5cut=true;
 bool AddHEMVeto=false; //<---true to get 2018 Prediction with HEM affected region
+bool RunForGH=false;  //to be used only for 2016, as muon id/iso SFs are different 
+//for GH and other era 
+
 // Use TFs with/without SFs
-const bool applySFs = true; //check:true only for data
+const bool applySFs = false; //check:true only for data
 double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 // Use TFs with/without SFs
 double scaleFactorWeight = 59546.381; //*AR:190429:don't change here, yearwise change of file is made later
-
 
 // Only needed if running on full nTuples not on Skims (bTag reweighting)
 // Does not matter for Data
@@ -630,6 +632,9 @@ class Prediction : public TSelector {
   TH1D* h_0L1L_RmHEMEleJet_SB = 0;
   TH1D* h_0L1L_RmHEMEleJet_SF_SB = 0;
 
+  TH1D* h_0L1L_RunforGH_SB = 0;
+  TH1D* h_0L1L_RunforGH_SF_SB = 0;
+
   //open skim file as skimfile
   TH1* h_njetsisr = 0;
   double nEvtsTotal;
@@ -1075,6 +1080,9 @@ void Prediction::Init(TTree *tree)
     TFile *TF_RmHEMEleJet_histFile = TFile::Open("TF_RmHEMEleJet.root", "READ");
     h_0L1L_RmHEMEleJet_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SB")->Clone();
     h_0L1L_RmHEMEleJet_SF_SB = (TH1D*) TF_RmHEMEleJet_histFile->Get("h_0L1L_SF_SB")->Clone();
+    TFile *TF_RunforGH_histFile = TFile::Open("TF_RunforGH.root", "READ");
+    h_0L1L_RunforGH_SB = (TH1D*) TF_RunforGH_histFile->Get("h_0L1L_SB")->Clone();
+    h_0L1L_RunforGH_SF_SB = (TH1D*) TF_RunforGH_histFile->Get("h_0L1L_SF_SB")->Clone();
   }
 
   TChain* temp = (TChain*)fChain;

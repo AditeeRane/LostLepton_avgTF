@@ -150,7 +150,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   canvas_up->SetRightMargin(0.03);
   canvas_dw->SetFillColor(0);
   canvas_dw->SetFrameFillColor(0);
-  canvas_dw->SetBottomMargin(0.30);
+  canvas_dw->SetBottomMargin(0.35);
   canvas_dw->SetRightMargin(0.03);
   canvas_up->SetBottomMargin(0);
   // set top margin 0 for bottom figure
@@ -270,7 +270,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   GenHist->SetLineColor(4);
   EstHist->SetLineColor(4);
 
-  GenHist->GetYaxis()->SetLabelSize(0.045*1.15);
+  GenHist->GetYaxis()->SetLabelSize(0.055*1.15);
   GenHist->GetYaxis()->SetTitleSize(0.06*1.15);
   GenHist->GetYaxis()->SetTitleOffset(0.6);
   GenHist->GetYaxis()->SetTitleFont(42);
@@ -337,6 +337,13 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
+  tl->SetTextSize(0.044);
+  tl->SetTextFont(42);
+  tl->SetFillColor(0);
+  tl->SetLineColor(0);
+  tl->SetBorderSize(0);
+
+
   tl->SetHeader(header);
  
   tl->AddEntry(GenHist, "Direct from simulation","pe"); 
@@ -349,24 +356,26 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
-  ttext->SetTextSize(0.7*canvas_up->GetTopMargin());
+  ttext->SetTextSize(0.8*canvas_up->GetTopMargin());
   //ttext->DrawLatex(GetRatioXmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
   //  ttext->DrawLatex(xmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
   ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Simulation}");
   
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
+
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
   //  ttexlumi->DrawLatex(GetRatioXmax-10*binSize, ymaximum , "35.9fb^{-1} (13TeV)");
 
   //*AR:B:E vs F   
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "13.49fb^{-1} (13TeV)");
   //  ttexlumi->DrawLatex(xmin+0.65*diff, 1*ymax , "5.0fb^{-1} (13TeV)");
-  ttexlumi->SetTextSize(0.7*canvas_up->GetTopMargin());
-  ttexlumi->DrawLatexNDC(0.65, 0.91 , "137 fb^{-1} (13 TeV)");
+  ttexlumi->SetTextSize(0.8*canvas_up->GetTopMargin());
+  ttexlumi->DrawLatexNDC(0.6, 0.91 , "137 fb^{-1} (13 TeV)");
 
 
   gPad->SetLeftMargin(0.16);
+
   gPad->SetTicks(1,1);  
   gPad->Modified();
   
@@ -426,9 +435,9 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
       numerator->GetYaxis()->SetTitleSize(font_size_dw);
 
 
-      numerator->GetXaxis()->SetLabelSize(0.18*0.045/0.06);
+      numerator->GetXaxis()->SetLabelSize(0.20*0.045/0.06);
       //      numerator->GetXaxis()->SetTitleSize(0.18);
-      numerator->GetXaxis()->SetTitleSize(0.15);
+      numerator->GetXaxis()->SetTitleSize(0.16);
 
       numerator->GetXaxis()->SetTitleOffset(0.9);
       numerator->GetXaxis()->SetTitleFont(42);
@@ -439,8 +448,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
       gStyle->SetPadTickY(1);
       numerator->GetYaxis()->SetNdivisions(505);
 
-      numerator->GetYaxis()->SetLabelSize(0.18*0.045/0.06);
-      numerator->GetYaxis()->SetTitleSize(0.15);
+      numerator->GetYaxis()->SetLabelSize(0.20*0.045/0.06);
+      numerator->GetYaxis()->SetTitleSize(0.18);
       //numerator->GetYaxis()->SetTitleOffset(0.5);
       //      numerator->GetYaxis()->SetTitleOffset(0.28);
       numerator->GetYaxis()->SetTitleOffset(0.40);
@@ -1253,13 +1262,13 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.57,0.63,0.955,0.87,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.5,1.5,30000);
+  //  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.5,1.5,30000);
 
-  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.57,0.63,0.955,0.87,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
+  //  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
 
-  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.57,0.63,0.955,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.5,1.5,25000);
+  //  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.5,1.5,25000);
 
-  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","2016Plu17Plus18_LegUpdate","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.57,0.63,0.955,0.87,"N_{b}","#frac{Direct}{Prediction}",1,0,5,-0.5,4.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{b}","#frac{Direct}{Prediction}",1,0,5,-0.5,4.5,0.5,1.5,50500);
 
 
 

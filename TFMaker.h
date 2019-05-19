@@ -32,7 +32,7 @@
 // useDeltaPhiCut = 0: no deltaPhiCut
 // useDeltaPhiCut = 1: deltaPhiCut
 // useDeltaPhiCut = -1: inverted deltaPhiCut
-const int useDeltaPhiCut = -1;  //<-check------------------------
+const int useDeltaPhiCut = 1;  //<-check------------------------
 
 bool RunFor2017=true;
 bool RunFor2018=false;
@@ -63,7 +63,7 @@ double scaleFactorWeight = 59546.381;
 bool GetNonPrefireProb=true; //<---true for 2016 and 2017 MC
 bool AddHEMVeto=false; //<---true to get 2018 TF for HEM affected region
 const bool ApplyHT5cut=true;
-
+bool RunForGH=false; //to be used only for 2016, as muon id/iso SFs are different for GH and other era, but not used in TFMaker code 
 // Path to Skims for btag reweighting
 const string path_toSkims("root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm/");
 
@@ -95,7 +95,7 @@ const double deltaPhi4_=0.3;
 double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 
 int Scalesize=9;
-int PDFsize=102;
+int PDFsize=100;
 //vector<double> *Vec_SF;
 
 
@@ -577,18 +577,22 @@ void TFMaker::Init(TTree *tree)
     csvForBtag=0.4184;
   if(RunFor2017)
     csvForBtag=0.4941;
-
+  if(RunFor2016)
+    csvForBtag=0.6321;
   
   if(RunFor2018)
     scaleFactorWeight = 59546.381; //not used for data
   if(RunFor2017)
     scaleFactorWeight = 41486.136;
+  if(RunFor2016)
+    scaleFactorWeight = 35815.165;
 
   if(RunFor2018)
     path_bTagCalib = "btag/DeepCSV_102XSF_V1_1018_190404.csv";
   if(RunFor2017)
     path_bTagCalib = "btag/DeepCSV_2017_94XSF_V4_B_F_190404.csv";
-
+  if(RunFor2016)
+    path_bTagCalib = "btag/DeepCSV_2016LegacySF_V1_190404.csv";
   ////////////////////////
   //////// End Options
   ///////////////////////
