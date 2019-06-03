@@ -310,6 +310,9 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   hWJetPreHadtau->SetFillColor(kGreen+1);
   hWJetPreHadtau->SetFillStyle(3013);
 */
+
+
+
   TH1D * hCR=(TH1D *)hTTbarCS->Clone("hCR");
   hCR->Add(hWJetCS);
   hCR->Add(hSTCS);
@@ -317,6 +320,10 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   TH1D * hSR=(TH1D *)hTTbarPre->Clone("hSR");
   hSR->Add(hWJetPre);
   hSR->Add(hSTPre);
+
+  hSR->SetMarkerStyle(20);
+  hSR->SetMarkerSize(1.2);
+  hSR->SetLineColor(1);
 
   /*
 
@@ -424,18 +431,18 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   //  tl->SetFillColor(10);
-  tl->SetHeader("Lost-lepton");
+  tl->SetHeader("Lost lepton");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
   //  tl->SetNColumns(2);
-  tl->AddEntry(hSTPre,"single top","f");
-  tl->AddEntry(hWJetPre,"W+jets","f");
   tl->AddEntry(hTTbarPre," t#bar{t}","f");
+  tl->AddEntry(hWJetPre,"W+jets","f");
+  tl->AddEntry(hSTPre,"Single top","f");
 
   TLegend *tlCS=new TLegend(Legxmin,0.62,Legxmax,0.97);
-  tlCS->SetHeader("single-lepton");
-  tlCS->AddEntry(hSTCS,"single top","f");
-  tlCS->AddEntry(hWJetCS,"W+jets","f");
+  tlCS->SetHeader("Single lepton");
   tlCS->AddEntry(hTTbarCS," t#bar{t}","f");
+  tlCS->AddEntry(hWJetCS,"W+jets","f");
+  tlCS->AddEntry(hSTCS,"Single top","f");
 
 
   /*
@@ -498,9 +505,9 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     // Njet labels
     TLatex * ttext_njet = new TLatex();
     ttext_njet->SetTextFont(42);
-    ttext_njet->SetTextSize(0.062);
+    ttext_njet->SetTextSize(0.0525);
     ttext_njet->SetTextAlign(22);
-    ttext_njet->DrawLatex(2.0 , 2000000 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
+    ttext_njet->DrawLatex(2.2 , 2000000 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
     ttext_njet->DrawLatex(5.5 , 2000000 , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
     ttext_njet->DrawLatex(9.5 , 2000000 , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
     ttext_njet->DrawLatex(13.5 , 2000000 , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
@@ -533,10 +540,10 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     // Nb labels
     TLatex * ttext_nb = new TLatex();
     ttext_nb->SetTextFont(42);
-    ttext_nb->SetTextSize(0.062);
+    ttext_nb->SetTextSize(0.0525);
     ttext_nb->SetTextAlign(22);
     
-    ttext_nb->DrawLatex(2.0 , 700000 , "N_{#scale[0.2]{ }b-jet}");
+    ttext_nb->DrawLatex(2.0 , 800000 , "N_{#scale[0.2]{ }b-jet}");
     ttext_nb->DrawLatex(1.0 , 300000 , "0");
     ttext_nb->DrawLatex(2.0 , 300000 , "1");
     ttext_nb->DrawLatex(3.0 , 300000 , "#geq 2");
@@ -611,6 +618,8 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
     tlCS->SetFillColor(kWhite);    
     tlCS->SetLineColor(kBlack);
     tlCS->Draw();
+    gPad->RedrawAxis();
+    //    gPad->SetTicks(1,1);
     gPad->SetLeftMargin(0.16);
     gPad->SetBottomMargin(0);
     gPad->Modified();
@@ -626,16 +635,21 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
 
 
     std::cout<<" seg vio 6"<<endl;  
-    
     //  TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
   TH1D *  cOne=(TH1D *) hSR->Clone("Ratio");
   cOne->Divide(hCR);
+  for(int i=1;i<=19;i++){
+    std::cout<<" CR_v "<<hCR->GetBinContent(i)<<" CR_e "<<hCR->GetBinError(i)<<" SR_v "<<hSR->GetBinContent(i)<<" SR_e "<<hSR->GetBinError(i)<<" cone-v "<<cOne->GetBinContent(i)<<" cone_e "<<cOne->GetBinError(i)<<endl;    
+  }
+  
   gStyle->SetPadBottomMargin(0.3);
   cOne->SetTitle(0);
   cOne->GetXaxis()->SetTitle(RatioLabelX);
   cOne->GetYaxis()->SetTitle(RatioLabelY);
   canvas_dwdw->cd();
-  cOne->SetMarkerStyle(20);cOne->SetLineColor(1);
+  cOne->SetMarkerStyle(20);
+  cOne->SetMarkerSize(1.2);
+  cOne->SetLineColor(1);
   cOne->Draw("e");
   std::cout<<" seg vio 7"<<endl;  
   
@@ -651,8 +665,21 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   cOne->GetYaxis()->SetLabelOffset(0.008);
 
   gStyle->SetPadTickY(1);
+  gStyle->SetErrorX(0);
   cOne->GetYaxis()->SetNdivisions(5);
   cOne->SetLabelSize(0.149,"XY");
+
+
+  TLegend *tlbottom=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
+  //  tl->SetFillColor(10);
+  tlbottom->SetHeader("Lost lepton");
+  //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
+  //  tl->SetNColumns(2);
+  tlbottom->AddEntry(cOne," t#bar{t}","pe");
+
+
+
+
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
@@ -709,6 +736,6 @@ void GetOneDTFLLPlusHadtauPlots(){
   
 
   
-  GetOneDTFLLPlusHadtauPlots(1300,"h_CSStat_NJetvsNBtag_1D","h_Prediction_NJetvsNBtag_1D","h_PredictionLL_NJetvsNBtag_1D","h_PredictionHadtau_NJetvsNBtag_1D","TFLLPlusHadtauCombined_BillSuggestion","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","SR+CR",0.75,0.55,0.95,0.77,"N_{jet}, N_{b-jet} bin index","#frac{Lost -lepton}{single-lepton}",1,0,19,0.5,19.5,0,2.19,200000);
+  GetOneDTFLLPlusHadtauPlots(1300,"h_CSStat_NJetvsNBtag_1D","h_Prediction_NJetvsNBtag_1D","h_PredictionLL_NJetvsNBtag_1D","h_PredictionHadtau_NJetvsNBtag_1D","TFLLPlusHadtauCombined_BillFinalSuggestion","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","SR+CR",0.75,0.55,0.95,0.77,"N_{jet}, N_{b-jet} bin index","#frac{Lost lepton}{Single lepton}",1,0,19,0.5,19.5,0,2.19,200000);
   
 }

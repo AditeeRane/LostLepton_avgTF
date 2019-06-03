@@ -248,10 +248,10 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   GenHist = new TH1D("Exp", "Exp", hTTbarLL->GetNbinsX(), 0.5, hTTbarLL->GetNbinsX()+0.5);
   GenHistD = new TH1D("ExpD", "ExpD", hTTbarDLL->GetNbinsX(), 0.5, hTTbarDLL->GetNbinsX()+0.5);
 */
-  EstHist = new TH1D("Pred", "Pred", hTTbarHadtau->GetNbinsX(), GetRatioXmin, GetRatioXmax);
-  EstHistD = new TH1D("PredD", "PredD", hTTbarDHadtau->GetNbinsX(), GetRatioXmin, GetRatioXmax);
-  GenHist = new TH1D("Exp", "Exp", hTTbarLL->GetNbinsX(), GetRatioXmin, GetRatioXmax);
-  GenHistD = new TH1D("ExpD", "ExpD", hTTbarDLL->GetNbinsX(), GetRatioXmin, GetRatioXmax);
+  EstHist = new TH1D("Pred", "Pred", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+  EstHistD = new TH1D("PredD", "PredD", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+  GenHist = new TH1D("Exp", "Exp", GetRatioNbins, GetRatioXmin, GetRatioXmax);
+  GenHistD = new TH1D("ExpD", "ExpD", GetRatioNbins, GetRatioXmin, GetRatioXmax);
 
 
   for(int i = 0; i <= hTTbarHadtau->GetNbinsX()+1; i++){
@@ -296,7 +296,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
   GenHist->SetTitle("");
   GenHist->SetMarkerStyle(20);
-  GenHist->SetMarkerSize(1.2);
+  GenHist->SetMarkerSize(1.2); //1.2 before
   GenHist->SetLineColor(1);
   GenHist->GetXaxis()->SetTitle(RatioLabelX);
   GenHist->GetYaxis()->SetTitle(TopLabelY);
@@ -468,6 +468,9 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
       ex1->Draw();
       numerator->DrawCopy();
 
+      for(int i=1;i<=numerator->GetXaxis()->GetNbins();i++){
+	std::cout<<" i "<<i<< " val "<<numerator->GetBinContent(i)<<" err "<<numerator->GetBinError(i)<<endl;
+      }
       ex2->Draw();
       denominator->DrawCopy("e2same");
       //denominator->DrawCopy("same");
@@ -1262,13 +1265,13 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  //  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.5,1.5,30000);
+  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.805,1.195,30000);
 
-  //  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
+  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
 
-  //  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.5,1.5,25000);
+  GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.7,1.3,25000);
 
-  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{b}","#frac{Direct}{Prediction}",1,0,5,-0.5,4.5,0.5,1.5,50500);
+  GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{b}","#frac{Direct}{Prediction}",1,0,4,-0.5,3.5,0.5,1.5,50500);
 
 
 
