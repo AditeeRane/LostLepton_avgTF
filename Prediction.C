@@ -800,248 +800,12 @@ Bool_t Prediction::Process(Long64_t entry)
   } //end of runOnSignalMC
   //  std::cout<<" entry "<<entry<<" seg vio "<<endl;
 
-  double LepPt=-99.0;
-  double LepEta=-99.0;
-  double LepPhi=-99.0;
-  
-  //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
-  //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
-  if(!GetSignalRegHists){
-    if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
-
-    if(MuonsNum_==1){
-      for(unsigned int i=0;i<Muons->size();i++){
-	//if(Muons_passIso->at(i)){
-	  LepPt=Muons->at(i).Pt();
-	  LepEta=Muons->at(i).Eta();
-	  LepPhi=Muons->at(i).Phi();
-	  //}
-      }
-    }
-
-    if(ElectronsNum_==1){
-      for(unsigned int i=0;i<Electrons->size();i++){
-	//if(Electrons_passIso->at(i)){
-	  LepPt=Electrons->at(i).Pt();
-	  LepEta=Electrons->at(i).Eta();
-	  LepPhi=Electrons->at(i).Phi();
-	  //}
-      }
-    }
-
-    //    if(LepPt<20 || fabs(LepEta)>2.1) 
-    //return kTRUE;
-  } //end of if(!GetSignalRegHists)
-  else
-    if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
-  PassLep++;  
-
-  if(GetSignalRegHists){
-    if(isoTracksNum ==0){
-      h_HTv2Recipe_BeforeBaseline_Exp->Fill(HTv2Recipe,Weight*scaleFactorWeight);
-      h_MHTv2Recipe_BeforeBaseline_Exp->Fill(MHTv2Recipe,Weight*scaleFactorWeight);
-      h_NJetv2Recipe_BeforeBaseline_Exp->Fill(NJetsv2Recipe,Weight*scaleFactorWeight);
-      h_NBtagv2Recipe_BeforeBaseline_Exp->Fill(BTagsv2Recipe,Weight*scaleFactorWeight);
-      if(NJetsv2Recipe>=2){
-	h_DphiOnev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi1v2Recipe,Weight*scaleFactorWeight);
-	h_DphiTwov2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi2v2Recipe,Weight*scaleFactorWeight);
-      }
-      if(NJetsv2Recipe>=3)
-	h_DphiThreev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi3v2Recipe,Weight*scaleFactorWeight);
-      if(NJetsv2Recipe>=4)
-	h_DphiFourv2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi4v2Recipe,Weight*scaleFactorWeight);
-    }
-  }
-  //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
-  if(runOnSignalMC && useGenHTMHT){
-    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
-  }
-  else{
-    //if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
-    if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
-
-  }
-  //  std::cout<<" entry "<<entry<<" seg vio "<<" check baseline "<<endl;
-
-  //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
-  //for low dphi: only events with either of dphis<(0.5,0.5,0.3,0.3)
-  if(NJetsv2Recipe>=4){
-    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_) return kTRUE;
-    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
-  }
-  else if(NJetsv2Recipe==3){
-    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
-    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_)) return kTRUE;
-  }
-  else if(NJetsv2Recipe==2){
-    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
-    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
-  }
-  else
-    return kTRUE;
-
-  PassBaseline++;
-  //  std::cout<<" entry "<<entry<<" seg vio "<<" pass baseline deltaPhi"<<endl;
-  
-  //  if(useDeltaPhiCut == 1)  if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
-  //  if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
-  
-  if(applyFilters &&  !FiltersPass() ) return kTRUE;
-  PassFilter++;
-
-  //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
-
   //*AR: initialize skim path
   if(runOnSignalMC)
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
   if(runOnStandardModelMC)
     SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
 
-  //  std::cout<<" entry "<<entry<<" seg vio "<<" muon skim path default "<<endl;
-
-
-
-  if(!GetSignalRegHists){
-    if(MuonsNum_==1 && ElectronsNum_==0){
-      mtw =  Muons_MTW->at(0);
-      
-      //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
-      
-      //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
-      if(runOnSignalMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
-      if(runOnStandardModelMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
-    }else if(MuonsNum_==0 && ElectronsNum_==1){
-      mtw =  Electrons_MTW->at(0);
-      //std::cout<<" entry "<<entry<<" 1e event "<<endl;
-      if(runOnSignalMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLe";
-      if(runOnStandardModelMC)
-	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLe";
-    }
-    //do not consider event if mT>100 
-    if(mtw > 100) return kTRUE;
-    PassmT++;
-  }//end of if(!GetSignalRegHists)
-//std::cout<<" passed mT cut "<<endl;
-  isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
-  //*AR: for 0L signal region, there should not be any isolated track
-  if(GetSignalRegHists){
-    if(isoTracksNum !=0){
-      //  std::cout<<" isotrack nonzero "<<endl;
-      return kTRUE;
-    }
-  }
-
-  //  std::cout<<" entry "<<entry<<" seg vio "<<" get skim file path"<<endl;
-
-  
-/*
-  for(unsigned i=0;i<TriggerNames->size();i++){
-    std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
-  }
-*/  
-//  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
-  // Signal region MET triggers applied only for data
-  if(useTrigger) if(!TriggerPass->at(42) && !TriggerPass->at(43) &&!TriggerPass->at(44) && !TriggerPass->at(46) && !TriggerPass->at(47) && !TriggerPass->at(48)) return kTRUE;
-
-  //  if(useTrigger) if(!TriggerPass->at(108) && !TriggerPass->at(110) &&!TriggerPass->at(114) && !TriggerPass->at(124) && !TriggerPass->at(126) && !TriggerPass->at(129)) return kTRUE;
-
-  if(runOnSignalMC && useGenHTMHT){
-    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
-  }
-  else{
-    //  Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
-    //    BinQCD_ = SearchBinsQCD_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
-
-    Bin_ = SearchBins_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
-    BinQCD_ = SearchBinsQCD_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
-  }
-  //*AR-181016: Use only events falling into search bins
-  if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
-  PassSearchBin++;
-  //  std::cout<<" entry "<<entry<<" seg vio "<<" fall in search bin "<<endl;
-
-  bool HTMatch=true;
-  bool NJetMatch=true;
-  bool MHTMatch=true;
-  if(HT == HTv2Recipe) HTMatch=false;
-  if(MHT == MHTv2Recipe) MHTMatch=false;
-  if(NJets == NJetsv2Recipe) NJetMatch=false;
-
-  //  if(HTMatch || NJetMatch || MHTMatch)
-  //std::cout<<" entry "<<entry<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
-  
-  h_YieldCutFlow->Fill(0.0);
-  
-  
-  bool LOnePrefireCase=false;
-  /*
-  //  std::cout<<" mht size "<<MHTJetsIdxv2Recipe.size()<<endl;
-  if(MHTJetsIdxv2Recipe.size()>0){
-    for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
-      int jetIdx=MHTJetsIdxv2Recipe[i];
-      //      std::cout<<"entry "<<entry<<" i "<<" pt "<<Jets->at(jetIdx).Pt()<<" eta "<<Jets->at(jetIdx).Eta()<<endl;
-      if(Jets->at(jetIdx).Pt()>100 && fabs(Jets->at(jetIdx).Eta())>2.25 && fabs(Jets->at(jetIdx).Eta())<3.0){
-	LOnePrefireCase=true;
-    //std::cout<<" now skip evt "<<endl;
-	break;
-      }
-    }
-  }
-  if(LOnePrefireCase)
-    return kTRUE;
-  */
-  
-  //*AR: 181107: check following condition if Dphi cut to be applied
-  
-  //if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
-  //return kTRUE;
-  h_YieldCutFlow->Fill(1.0);
-  //  std::cout<<" evt falling in search bin "<<endl;
-  //*AR: 180917- Initialization of vectors
-  bTagProb = {1, 0, 0, 0};
-  bTagBins = {Bin_, 0, 0, 0};
-  bTagBinsQCD = {BinQCD_, 0, 0, 0};
-
-  //  std::cout<<" *** Seg Vio1 *** "<<endl;
-  if(topPTreweight){ //false
-    if(GenParticles->size() != GenParticles_PdgId->size()){
-      std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
-    }else{
-      for(unsigned iGen = 0; iGen < GenParticles->size(); iGen++){
-        if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
-          topPt.push_back(GenParticles->at(iGen).Pt());
-        }
-      }
-      
-      // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
-      if(topPt.size() == 2){
-        // dilept
-        if(GenElectrons->size() + GenMuons->size() == 2){
-          topPtSF = std::sqrt(std::exp(0.148-0.00129*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.148-0.00129*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-	  // singlelept
-        }else if(GenElectrons->size() + GenMuons->size() == 1){
-          topPtSF = std::sqrt(std::exp(0.159-0.00141*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.159-0.00141*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-	  //had
-        }else{
-          // Usually non-promt (in hadTau evts): use average SF
-          topPtSF = std::sqrt(std::exp(0.156-0.00137*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.156-0.00137*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
-          //std::cout << "Cannot do top-pT reweighting! No leptonic top found."<< std::endl; 
-        }
-      }else{
-        topPtSF = -1;
-        std::cout << "Cannot do top-pT reweighting! More/Less than 2 tops found."<< std::endl; 
-      }
-
-    }
-
-    // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
-    topPtSF /= 0.99;
-  } //end of if(topPTreweight)
-  //std::cout<<" entry "<<entry<<" *** Seg Vio2 *** "<<endl;
   double madHTcut=0.0;
   //char SkimFile[500];
   if(runOnData){
@@ -1263,6 +1027,282 @@ Bool_t Prediction::Process(Long64_t entry)
       
     }
   } //end of if(!runOnData)
+
+  if(runOnSignalMC){
+    //Account for efficiency of Jets_ID since we cannot apply it on fastSim
+    Weight *= 0.99;
+    //std::cout<<" weight_afterJets_ID "<<Weight<<endl;
+  }
+  //*AR: true only for signal MC and useGenHTMHT=false
+  if(useTriggerEffWeight){ // false for SM MC
+    //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
+    //    std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight before triggerEffwt "<<Weight<<endl;
+    //*AR- 190328: Note that below MHT<250, TriggerEffWeight=0
+    if(runOnSignalMC){
+      Weight *= GetSignalTriggerEffWeight(HTv2Recipe,MHTv2Recipe);
+      //std::cout<<" weight_afterTrigEff "<<Weight<<endl;
+    }else{
+      Weight *= GetTriggerEffWeight(MHTv2Recipe);
+    }
+  }
+
+  if(doPUreweighting){ //true only for signal mc
+    w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
+    Weight *= w_pu;
+    //std::cout<<" weight_afterpu "<<Weight<<endl;
+    
+  }
+  
+  if(runOnData) Weight = 1.;
+  else{
+    //*AR:180619: As /uscms_data/d3/arane/work/RA2bInterpretation/CMSSW_7_4_7/src/SCRA2BLE/DatacardBuilder/GenMHTCorrection.py scales signal contamination by lumi in /pb, here signal histograms are saved at 1/pb scale.
+    if(!runOnSignalMC)
+      Weight *= scaleFactorWeight;
+  }
+  //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
+
+
+  double LepPt=-99.0;
+  double LepEta=-99.0;
+  double LepPhi=-99.0;
+  
+  //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
+  //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
+  if(!GetSignalRegHists){
+    if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+
+    if(MuonsNum_==1){
+      for(unsigned int i=0;i<Muons->size();i++){
+	//if(Muons_passIso->at(i)){
+	  LepPt=Muons->at(i).Pt();
+	  LepEta=Muons->at(i).Eta();
+	  LepPhi=Muons->at(i).Phi();
+	  //}
+      }
+    }
+
+    if(ElectronsNum_==1){
+      for(unsigned int i=0;i<Electrons->size();i++){
+	//if(Electrons_passIso->at(i)){
+	  LepPt=Electrons->at(i).Pt();
+	  LepEta=Electrons->at(i).Eta();
+	  LepPhi=Electrons->at(i).Phi();
+	  //}
+      }
+    }
+
+    //    if(LepPt<20 || fabs(LepEta)>2.1) 
+    //return kTRUE;
+  } //end of if(!GetSignalRegHists)
+  else
+    if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
+  PassLep++;  
+
+
+
+  std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight before baseline "<<Weight<<endl;
+  if(GetSignalRegHists){
+    if(isoTracksNum ==0){
+      h_HTv2Recipe_BeforeBaseline_Exp->Fill(HTv2Recipe,Weight*scaleFactorWeight);
+      h_MHTv2Recipe_BeforeBaseline_Exp->Fill(MHTv2Recipe,Weight*scaleFactorWeight);
+      h_NJetv2Recipe_BeforeBaseline_Exp->Fill(NJetsv2Recipe,Weight*scaleFactorWeight);
+      h_NBtagv2Recipe_BeforeBaseline_Exp->Fill(BTagsv2Recipe,Weight*scaleFactorWeight);
+      if(NJetsv2Recipe>=2){
+	h_DphiOnev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi1v2Recipe,Weight*scaleFactorWeight);
+	h_DphiTwov2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi2v2Recipe,Weight*scaleFactorWeight);
+      }
+      if(NJetsv2Recipe>=3)
+	h_DphiThreev2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi3v2Recipe,Weight*scaleFactorWeight);
+      if(NJetsv2Recipe>=4)
+	h_DphiFourv2Recipe_BeforeBaseline_Exp->Fill(HTDeltaPhi4v2Recipe,Weight*scaleFactorWeight);
+    }
+  }
+  //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
+  if(runOnSignalMC && useGenHTMHT){
+    if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+  }
+  else{
+    //if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
+    if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
+
+  }
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" check baseline "<<endl;
+
+  //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
+  //for low dphi: only events with either of dphis<(0.5,0.5,0.3,0.3)
+  if(NJetsv2Recipe>=4){
+    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_) return kTRUE;
+    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_ || HTDeltaPhi4v2Recipe < deltaPhi4_)) return kTRUE;
+  }
+  else if(NJetsv2Recipe==3){
+    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_) return kTRUE;
+    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_ || HTDeltaPhi3v2Recipe < deltaPhi3_)) return kTRUE;
+  }
+  else if(NJetsv2Recipe==2){
+    if(useDeltaPhiCut == 1)if(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_) return kTRUE;
+    if(useDeltaPhiCut == -1) if(!(HTDeltaPhi1v2Recipe < deltaPhi1_ || HTDeltaPhi2v2Recipe < deltaPhi2_)) return kTRUE;
+  }
+  else
+    return kTRUE;
+
+  PassBaseline++;
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" pass baseline deltaPhi"<<endl;
+  
+  //  if(useDeltaPhiCut == 1)  if(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_) return kTRUE;
+  //  if(useDeltaPhiCut == -1) if(!(DeltaPhi1 < deltaPhi1_ || DeltaPhi2 < deltaPhi2_ || DeltaPhi3 < deltaPhi3_ || DeltaPhi4 < deltaPhi4_)) return kTRUE;
+  
+  if(applyFilters &&  !FiltersPass() ) return kTRUE;
+  PassFilter++;
+
+  //*AR-180606:Only consider events with one isolated lepton at reco level and mT<100(no pT, eta cuts)
+
+  if(!GetSignalRegHists){
+    if(MuonsNum_==1 && ElectronsNum_==0){
+      mtw =  Muons_MTW->at(0);
+      
+      //std::cout<<" entry "<<entry<<" 1mu event "<<endl;
+      
+      //*AR: 180917- Gets skimfile for signal and standard model MC. No skimFile for data 
+      if(runOnSignalMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLm";
+      if(runOnStandardModelMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLm";
+    }else if(MuonsNum_==0 && ElectronsNum_==1){
+      mtw =  Electrons_MTW->at(0);
+      //std::cout<<" entry "<<entry<<" 1e event "<<endl;
+      if(runOnSignalMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/scan/tree_SLe";
+      if(runOnStandardModelMC)
+	SkimFilePath="root://cmseos.fnal.gov//store/user/lpcsusyhad/SusyRA2Analysis2015/Skims/Run2ProductionV12/tree_SLe";
+    }
+    //do not consider event if mT>100 
+    if(mtw > 100) return kTRUE;
+    PassmT++;
+  }//end of if(!GetSignalRegHists)
+//std::cout<<" passed mT cut "<<endl;
+  isoTracksNum = isoElectronTracksNum + isoMuonTracksNum + isoPionTracksNum;
+  //*AR: for 0L signal region, there should not be any isolated track
+  if(GetSignalRegHists){
+    if(isoTracksNum !=0){
+      //  std::cout<<" isotrack nonzero "<<endl;
+      return kTRUE;
+    }
+  }
+
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" muon skim path default "<<endl;
+
+
+
+
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" get skim file path"<<endl;
+
+  
+/*
+  for(unsigned i=0;i<TriggerNames->size();i++){
+    std::cout<<" entry "<<entry<<" i "<<i<<" name "<< TriggerNames->at(i)<<endl;
+  }
+*/  
+//  std::cout<<" 108 "<<TriggerNames->at(108)<<" 110 "<<TriggerNames->at(110)<<" 114 "<<TriggerNames->at(114)<<" 124 "<<TriggerNames->at(124)<<" 126 "<<TriggerNames->at(126)<<" 129 "<<TriggerNames->at(129)<<endl;
+  // Signal region MET triggers applied only for data
+  if(useTrigger) if(!TriggerPass->at(42) && !TriggerPass->at(43) &&!TriggerPass->at(44) && !TriggerPass->at(46) && !TriggerPass->at(47) && !TriggerPass->at(48)) return kTRUE;
+
+  //  if(useTrigger) if(!TriggerPass->at(108) && !TriggerPass->at(110) &&!TriggerPass->at(114) && !TriggerPass->at(124) && !TriggerPass->at(126) && !TriggerPass->at(129)) return kTRUE;
+
+  if(runOnSignalMC && useGenHTMHT){
+    Bin_ = SearchBins_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(newGenHT,newGenMHT,NJets,BTagsfrmCSV);
+  }
+  else{
+    //  Bin_ = SearchBins_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
+    //    BinQCD_ = SearchBinsQCD_->GetBinNumber(HT,MHT,NJets,BTagsfrmCSV);
+
+    Bin_ = SearchBins_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
+    BinQCD_ = SearchBinsQCD_->GetBinNumber(HTv2Recipe,MHTv2Recipe,NJetsv2Recipe,BTagsv2Recipe);
+  }
+  //*AR-181016: Use only events falling into search bins
+  if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
+  PassSearchBin++;
+  //  std::cout<<" entry "<<entry<<" seg vio "<<" fall in search bin "<<endl;
+
+  bool HTMatch=true;
+  bool NJetMatch=true;
+  bool MHTMatch=true;
+  if(HT == HTv2Recipe) HTMatch=false;
+  if(MHT == MHTv2Recipe) MHTMatch=false;
+  if(NJets == NJetsv2Recipe) NJetMatch=false;
+
+  //  if(HTMatch || NJetMatch || MHTMatch)
+  //std::cout<<" entry "<<entry<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
+  
+  h_YieldCutFlow->Fill(0.0);
+  
+  
+  bool LOnePrefireCase=false;
+  /*
+  //  std::cout<<" mht size "<<MHTJetsIdxv2Recipe.size()<<endl;
+  if(MHTJetsIdxv2Recipe.size()>0){
+    for(unsigned int i=0;i<MHTJetsIdxv2Recipe.size();i++){
+      int jetIdx=MHTJetsIdxv2Recipe[i];
+      //      std::cout<<"entry "<<entry<<" i "<<" pt "<<Jets->at(jetIdx).Pt()<<" eta "<<Jets->at(jetIdx).Eta()<<endl;
+      if(Jets->at(jetIdx).Pt()>100 && fabs(Jets->at(jetIdx).Eta())>2.25 && fabs(Jets->at(jetIdx).Eta())<3.0){
+	LOnePrefireCase=true;
+    //std::cout<<" now skip evt "<<endl;
+	break;
+      }
+    }
+  }
+  if(LOnePrefireCase)
+    return kTRUE;
+  */
+  
+  //*AR: 181107: check following condition if Dphi cut to be applied
+  
+  //if((MHTminusHTJetsIdxv2Recipe.size()>0 && Jets->at(MHTminusHTJetsIdxv2Recipe[0]).Pt()>250 && (MHTminusHTDeltaPhi1v2Recipe>2.6 || MHTminusHTDeltaPhi1v2Recipe<0.1)) || (MHTminusHTJetsIdxv2Recipe.size()>1 && Jets->at(MHTminusHTJetsIdxv2Recipe[1]).Pt()>250 && (MHTminusHTDeltaPhi2v2Recipe>2.6 || MHTminusHTDeltaPhi2v2Recipe<0.1)))
+  //return kTRUE;
+  h_YieldCutFlow->Fill(1.0);
+  //  std::cout<<" evt falling in search bin "<<endl;
+  //*AR: 180917- Initialization of vectors
+  bTagProb = {1, 0, 0, 0};
+  bTagBins = {Bin_, 0, 0, 0};
+  bTagBinsQCD = {BinQCD_, 0, 0, 0};
+
+  //  std::cout<<" *** Seg Vio1 *** "<<endl;
+  if(topPTreweight){ //false
+    if(GenParticles->size() != GenParticles_PdgId->size()){
+      std::cout << "Cannot do top-pT reweighting!"<< std::endl; 
+    }else{
+      for(unsigned iGen = 0; iGen < GenParticles->size(); iGen++){
+        if(std::abs(GenParticles_PdgId->at(iGen)) == 6){
+          topPt.push_back(GenParticles->at(iGen).Pt());
+        }
+      }
+      
+      // https://twiki.cern.ch/twiki/bin/viewauth/CMS/TopPtReweighting#Example
+      if(topPt.size() == 2){
+        // dilept
+        if(GenElectrons->size() + GenMuons->size() == 2){
+          topPtSF = std::sqrt(std::exp(0.148-0.00129*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.148-0.00129*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+	  // singlelept
+        }else if(GenElectrons->size() + GenMuons->size() == 1){
+          topPtSF = std::sqrt(std::exp(0.159-0.00141*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.159-0.00141*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+	  //had
+        }else{
+          // Usually non-promt (in hadTau evts): use average SF
+          topPtSF = std::sqrt(std::exp(0.156-0.00137*(topPt.at(0) < 400. ? topPt.at(0) : 400.))*std::exp(0.156-0.00137*(topPt.at(1) < 400. ? topPt.at(1) : 400.)));
+          //std::cout << "Cannot do top-pT reweighting! No leptonic top found."<< std::endl; 
+        }
+      }else{
+        topPtSF = -1;
+        std::cout << "Cannot do top-pT reweighting! More/Less than 2 tops found."<< std::endl; 
+      }
+
+    }
+
+    // Normalization tested on SingleLept and DiLept samples (varies from ~98.9x-99.0x)
+    topPtSF /= 0.99;
+  } //end of if(topPTreweight)
+  //std::cout<<" entry "<<entry<<" *** Seg Vio2 *** "<<endl;
+
   
   if(runOnData && RunSelectiveEvents){
     //std::cout<<" RunSelectiveEvents before unblinding "<<endl;
@@ -1350,36 +1390,6 @@ Bool_t Prediction::Process(Long64_t entry)
   } //end of if(runOnData && RunSelectiveEvents)
 
 
-  if(runOnSignalMC){
-    //Account for efficiency of Jets_ID since we cannot apply it on fastSim
-    Weight *= 0.99;
-    //std::cout<<" weight_afterJets_ID "<<Weight<<endl;
-  }
-  //*AR: true only for signal MC and useGenHTMHT=false
-  if(useTriggerEffWeight){ // false for SM MC
-    //GetSignalTriggerEffWeight and GetTriggerEffWeight are methods defined in LLTools.h and values are given as function of MHT.
-    if(runOnSignalMC){
-      Weight *= GetSignalTriggerEffWeight(HTv2Recipe,MHTv2Recipe);
-      //std::cout<<" weight_afterTrigEff "<<Weight<<endl;
-    }else{
-      Weight *= GetTriggerEffWeight(MHTv2Recipe);
-    }
-  }
-
-  if(doPUreweighting){ //true only for signal mc
-    w_pu = puhist->GetBinContent(puhist->GetXaxis()->FindBin(min(TrueNumInteractions,puhist->GetBinLowEdge(puhist->GetNbinsX()+1))));
-    Weight *= w_pu;
-    //std::cout<<" weight_afterpu "<<Weight<<endl;
-    
-  }
-  
-  if(runOnData) Weight = 1.;
-  else{
-    //*AR:180619: As /uscms_data/d3/arane/work/RA2bInterpretation/CMSSW_7_4_7/src/SCRA2BLE/DatacardBuilder/GenMHTCorrection.py scales signal contamination by lumi in /pb, here signal histograms are saved at 1/pb scale.
-    if(!runOnSignalMC)
-      Weight *= scaleFactorWeight;
-  }
-  //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
 
 
   //*AR:181016-jet pT, eta distribution of those contributing to HT and excess ones contributing to  MHT in default case
@@ -1760,6 +1770,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   */
   for(int i = 0; i < nLoops; i++){
+    std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight after baseline "<<Weight<<endl;
     double WeightBtagProb = Weight*bTagProb.at(i);
     unsigned bTagBin = bTagBins.at(i);
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
