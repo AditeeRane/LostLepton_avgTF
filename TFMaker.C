@@ -232,8 +232,8 @@ Bool_t TFMaker::Process(Long64_t entry)
 
     fChain->GetTree()->GetEntry(entry);
 
-    //std::cout<<" csvForBtag "<<csvForBtag<<" btagcalib "<<path_bTagCalib<<" lumi "<<scaleFactorWeight<<endl;
-    //    std::cout<<" scalesize "<<ScaleWeights->size()<<" pdf "<<PDFWeights->size()<<endl;
+    //    std::cout<<" csvForBtag "<<csvForBtag<<" btagcalib "<<path_bTagCalib<<" lumi "<<scaleFactorWeight<<endl;
+    std::cout<<" scalesize "<<ScaleWeights->size()<<" pdf "<<PDFWeights->size()<<endl;
     //*AR-180116-Only consider events passing filters
     if(applyFilters &&  !FiltersPass() ) return kTRUE;
     bool CheckPhi=false;

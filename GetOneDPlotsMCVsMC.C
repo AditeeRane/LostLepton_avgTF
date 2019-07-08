@@ -147,11 +147,11 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   canvas_up->SetFrameFillColor(0);
   canvas_up->SetFillColor(0);
   canvas_up->SetTopMargin(0.10);
-  canvas_up->SetRightMargin(0.03);
+  canvas_up->SetRightMargin(0.04);
   canvas_dw->SetFillColor(0);
   canvas_dw->SetFrameFillColor(0);
   canvas_dw->SetBottomMargin(0.35);
-  canvas_dw->SetRightMargin(0.03);
+  canvas_dw->SetRightMargin(0.04);
   canvas_up->SetBottomMargin(0);
   // set top margin 0 for bottom figure
   canvas_dw->SetTopMargin(0);
@@ -288,7 +288,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
     else 
       GenHist->SetMaximum(1.5*GenHist->GetMaximum());
   }
-  GenHist->SetMinimum(9);
+  GenHist->SetMinimum(11);
   
 
   TExec *ex1 = new TExec("ex1","gStyle->SetErrorX(0);");
@@ -1265,9 +1265,9 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}","#frac{Direct}{Prediction}",1,0,16,200,1000,0.805,1.195,30000);
+  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}[GeV]","#frac{Direct}{Prediction}",1,0,16,200,1000,0.805,1.195,30000);
 
-  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
+  GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}[GeV]","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
 
   GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.7,1.3,25000);
 

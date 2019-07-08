@@ -34,9 +34,9 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-bool RunFor2017=true;
+bool RunFor2017=false;
 bool RunFor2018=false;
-bool RunFor2016=false;
+bool RunFor2016=true;
 
 const bool doBTagCorr = true;
 const bool doPUreweighting = false; //true for fastsim signal in prediction code
@@ -53,7 +53,7 @@ const bool TrackRecoMuSys=false;
 const bool TrackRecoEleSys=false;
 const bool JECSys=false; //false by default
 const bool ScaleAccSys=false;
-const bool PDFAccSys=false;
+const bool PDFAccSys=true;
 const bool BtagSys=false;
 const bool MTSys=false; //*AR, 180329: for MTSys SF files are same as JEC Ref as SFMaker does not include MTW.
 const bool SysUp=false;

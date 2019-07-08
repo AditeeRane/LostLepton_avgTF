@@ -280,7 +280,7 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
 
   hTTbarPre->SetLineColor(kGreen+2);
   hTTbarPre->SetFillColor(kGreen+2);
-  hTTbarPre->SetFillStyle(3013);
+  hTTbarPre->SetFillStyle(3004);
 
   hWJetCS->SetLineColor(kBlue);
   hWJetCS->SetFillColor(kBlue);
@@ -288,7 +288,7 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   hWJetPre->SetLineColor(kBlue);
   //  hWJetPre->SetLineWidth(2);
   hWJetPre->SetFillColor(kBlue);
-  hWJetPre->SetFillStyle(3013);
+  hWJetPre->SetFillStyle(3005);
 
 
   hSTCS->SetLineColor(96);
@@ -434,13 +434,13 @@ void GetOneDTFLLPlusHadtauPlots(int hNum,char const * VarCS, char const * VarPre
   tl->SetHeader("Lost lepton");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
   //  tl->SetNColumns(2);
-  tl->AddEntry(hTTbarPre," t#bar{t}","f");
+  tl->AddEntry(hTTbarPre,"t#bar{t}","f");
   tl->AddEntry(hWJetPre,"W+jets","f");
   tl->AddEntry(hSTPre,"Single top","f");
 
   TLegend *tlCS=new TLegend(Legxmin,0.62,Legxmax,0.97);
   tlCS->SetHeader("Single lepton");
-  tlCS->AddEntry(hTTbarCS," t#bar{t}","f");
+  tlCS->AddEntry(hTTbarCS,"t#bar{t}","f");
   tlCS->AddEntry(hWJetCS,"W+jets","f");
   tlCS->AddEntry(hSTCS,"Single top","f");
 
