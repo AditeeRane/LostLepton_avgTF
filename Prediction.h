@@ -32,9 +32,9 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-bool RunFor2017=false;
+bool RunFor2017=true;
 bool RunFor2018=false;
-bool RunFor2016=true;
+bool RunFor2016=false;
 
 const bool runOnData = false;   //<-check:true only for data------------------------
 const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
