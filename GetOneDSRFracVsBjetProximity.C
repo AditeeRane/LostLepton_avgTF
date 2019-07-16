@@ -125,7 +125,7 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   canvas_up->SetRightMargin(0.03);
   canvas_dw->SetFillColor(0);
   canvas_dw->SetFrameFillColor(0);
-  canvas_dw->SetBottomMargin(0.30);
+  canvas_dw->SetBottomMargin(0.3);
   canvas_dw->SetRightMargin(0.03);
   canvas_up->SetBottomMargin(0);  
   // set top margin 0 for bottom figure
@@ -144,7 +144,7 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
   //  gStyle->SetPadBottomMargin(0.15);
-  gStyle->SetPadLeftMargin(0.25);
+  gStyle->SetPadLeftMargin(0.15);
   int col1 = kRed;
   int col2 = kBlack;
   int i=0;
@@ -210,14 +210,19 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   TH1D *hTTbarPredRL = (TH1D *)hTTbarPreLLdRL->Clone("hTTbarPredRL");
   hTTbarPredRL->Add(hTTbarPreHadtaudRL);
 
+  TH1D *hTTbarPredRH = (TH1D *)hTTbarPreLLdRH->Clone("hTTbarPredRH");
+  hTTbarPredRH->Add(hTTbarPreHadtaudRH);
+
+  /*
   TH1D *hTTbarPreHadtaudRHFrac= (TH1D *) hTTbarPreHadtaudRH->Clone("hTTbarPreHadtaudRHFrac");
   hTTbarPreHadtaudRHFrac->Divide(hTTbarPre);
   TH1D *hTTbarPreHadtaudRLFrac= (TH1D *) hTTbarPreHadtaudRL->Clone("hTTbarPreHadtaudRLFrac");
   hTTbarPreHadtaudRLFrac->Divide(hTTbarPre);
-
-  TH1D *hTTbarPreLLdRHFrac= (TH1D *) hTTbarPreLLdRH->Clone("hTTbarPreLLdRHFrac");
+*/
+  TH1D *hTTbarPreLLdRHFrac= (TH1D *) hTTbarPredRH->Clone("hTTbarPreLLdRHFrac");
   hTTbarPreLLdRHFrac->Divide(hTTbarPre);
-  TH1D *hTTbarPreLLdRLFrac= (TH1D *) hTTbarPreLLdRL->Clone("hTTbarPreLLdRLFrac");
+
+  TH1D *hTTbarPreLLdRLFrac= (TH1D *) hTTbarPredRL->Clone("hTTbarPreLLdRLFrac");
   hTTbarPreLLdRLFrac->Divide(hTTbarPre);
 
 
@@ -225,18 +230,18 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   //  double CRFrac,LLFailIDIsoFrac,LLFailAccFrac,HadtauFrac,total,CRval,SRval;
   
   //  gStyle->SetHatchesLineWidth(2);
-  hTTbarPreHadtaudRHFrac->SetLineColor(kBlue);
-  hTTbarPreHadtaudRHFrac->SetFillColor(kBlue);
+  //  hTTbarPreHadtaudRHFrac->SetLineColor(kBlue);
+  //  hTTbarPreHadtaudRHFrac->SetFillColor(kBlue);
 
-  hTTbarPreLLdRHFrac->SetLineColor(kRed+4);
-  hTTbarPreLLdRHFrac->SetFillColor(kRed+4);
+  hTTbarPreLLdRHFrac->SetLineColor(kRed);
+  hTTbarPreLLdRHFrac->SetFillColor(kRed);
 
-  hTTbarPreHadtaudRLFrac->SetLineColor(kBlue);
-  hTTbarPreHadtaudRLFrac->SetFillColor(kBlue);
-  hTTbarPreHadtaudRLFrac->SetFillStyle(3013);
+  //  hTTbarPreHadtaudRLFrac->SetLineColor(kBlue);
+  //  hTTbarPreHadtaudRLFrac->SetFillColor(kBlue);
+  //  hTTbarPreHadtaudRLFrac->SetFillStyle(3013);
 
-  hTTbarPreLLdRLFrac->SetLineColor(kRed+4);
-  hTTbarPreLLdRLFrac->SetFillColor(kRed+4);
+  hTTbarPreLLdRLFrac->SetLineColor(96);
+  hTTbarPreLLdRLFrac->SetFillColor(96);
   hTTbarPreLLdRLFrac->SetFillStyle(3013); 
 
 
@@ -244,10 +249,10 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   THStack * hExp = new THStack("hExp","hExp");
   //  std::cout<<" ****** seg vio ******"<<endl;
   hExp->Add(hTTbarPreLLdRLFrac);
-  hExp->Add(hTTbarPreHadtaudRLFrac);
+  //  hExp->Add(hTTbarPreHadtaudRLFrac);
 
   hExp->Add(hTTbarPreLLdRHFrac);
-  hExp->Add(hTTbarPreHadtaudRHFrac);
+  //  hExp->Add(hTTbarPreHadtaudRHFrac);
 
 
   /*
@@ -286,8 +291,8 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
     else 
       hExp->SetMaximum(1);
 */
-  hExp->SetMaximum(10);
-  hExp->SetMinimum(0.01);
+  hExp->SetMaximum(2000);
+  hExp->SetMinimum(0.001);
   std::cout<<" seg vio 2"<<endl;  
   //*AR:190104-If you get segmentation violation for arbitary plot due to SetMinimum() command then switch off "if" loops used to set minimum of histogram. Instead fix minimum to some fixed value. 
   //  hExp->SetMinimum(0.);
@@ -306,25 +311,34 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   hExp->Draw("hist e");
   //  hDataLLHadtau->Draw("esame");
   std::cout<<" seg vio 5"<<endl;  
-  hTTbarPreLLdRLFrac->SetLabelSize(0.032);
-  hTTbarPreLLdRLFrac->SetLabelFont(42);
-  hTTbarPreLLdRLFrac->SetLabelSize(0.125,"X");
-  hTTbarPreLLdRLFrac->SetLabelSize(0.125,"Y");
+  hExp->GetYaxis()->SetTitle("Fractions");
+  hExp->GetYaxis()->SetTitleSize(0.05);
+  hExp->GetYaxis()->SetLabelSize(0.05);
+  hExp->GetYaxis()->SetLabelFont(42);
+  hExp->GetYaxis()->SetLabelOffset(0.008);
+  hExp->GetYaxis()->SetTitleOffset(0.94);
 
+
+  /*
+  hExp->SetLabelSize(0.032);
+  hExp->SetLabelFont(42);
+  hExp->SetLabelSize(0.125,"X");
+  hExp->SetLabelSize(0.125,"Y");
+*/
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   //  tl->SetFillColor(10);
-  tl->SetHeader(header);
+  tl->SetHeader("Lost lepton (LL)");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
-  tl->SetNColumns(2);
-  tl->AddEntry(hTTbarPreLLdRLFrac," LL:dR_{min}(Bjet,gen L)<0.4");
+  //  tl->SetNColumns(2);
+  tl->AddEntry(hTTbarPreLLdRHFrac,"(#DeltaR_{b-jet,gen lepton})_{min}>0.4");
+  tl->AddEntry(hTTbarPreLLdRLFrac,"(#DeltaR_{b-jet,gen lepton})_{min}<0.4");
 
-  tl->AddEntry(hTTbarPreHadtaudRLFrac,"#tau_{h}:dR_{min}(Bjet,gen L)<0.4");
+  //  tl->AddEntry(hTTbarPreHadtaudRLFrac,"#tau_{h}:dR_{min}(Bjet,gen L)<0.4");
   //  tl->AddEntry(hWJetPreHadtau,"W+jets(SR):#tau_{h}");
 
-  tl->AddEntry(hTTbarPreLLdRHFrac,"LL:dR_{min}(Bjet,gen L)>0.4");
   //  tl->AddEntry(hWJetPreLL,"W+jets(SR):LL");
 
-  tl->AddEntry(hTTbarPreHadtaudRHFrac,"#tau_{h}:dR_{min}(Bjet,gen L)>0.4");
+  //  tl->AddEntry(hTTbarPreHadtaudRHFrac,"#tau_{h}:dR_{min}(Bjet,gen L)>0.4");
 
   //  tl->AddEntry(hWJetCS,"W+jets(CR):1L");
 
@@ -347,6 +361,27 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   tl->AddEntry(hWJetLLHadtau, "MC: W+jets");
   tl->AddEntry(hTTbarLLHadtau, "MC: TTbar");
 */
+
+  TLatex * ttext = new TLatex();
+  ttext->SetTextFont(42);
+  ttext->SetTextSize(0.90*canvas_up->GetTopMargin());
+  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS}");
+
+  TLatex * ttextSup = new TLatex();
+  ttextSup->SetTextFont(42);
+  ttextSup->SetTextSize(0.50*canvas_up->GetTopMargin());
+  ttextSup->DrawLatexNDC(0.29,0.91, "#it{Simulation Supplementary}");
+
+  TLatex * ttexlumi = new TLatex();
+  ttexlumi->SetTextFont(42);
+  ttexlumi->SetTextSize(0.90*canvas_up->GetTopMargin());
+  double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
+  ttexlumi->DrawLatexNDC(0.72, 0.91 , "13 TeV");
+
+
+
+
+  /*
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
   ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Simulation}");
@@ -354,7 +389,7 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "41 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.7, 0.91 , "(13 TeV)");
   /*
   
   float ymax_top = 2000000.;
@@ -439,6 +474,8 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
     tl->SetLineColor(kBlack);
     tl->Draw();
 
+    gPad->SetLeftMargin(0.16);
+    gPad->SetBottomMargin(0.);
     
   gPad->Modified();
   std::cout<<" seg vio 6"<<endl;  
@@ -455,21 +492,27 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
   cOne->Draw("e");
   std::cout<<" seg vio 7"<<endl;  
   
-  cOne->GetXaxis()->SetTitleOffset(0.9);
+  cOne->GetXaxis()->SetTitleOffset(1.0);
   cOne->GetXaxis()->SetTitleSize(0.13);
   cOne->GetXaxis()->SetTitleFont(42);
   cOne->GetXaxis()->SetLabelOffset(0.008);
 
   cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
-  cOne->GetYaxis()->SetTitleOffset(0.45);
-  cOne->GetYaxis()->SetTitleSize(0.1);
+  cOne->GetYaxis()->SetTitleOffset(0.50);
+  cOne->GetYaxis()->SetTitleSize(0.13);
   cOne->GetYaxis()->SetTitleFont(42);
   cOne->GetYaxis()->SetLabelOffset(0.008);
 
   gStyle->SetPadTickY(1);
+  gStyle->SetErrorX(0);
   cOne->GetYaxis()->SetNdivisions(5);
-  cOne->SetLabelSize(0.175,"XY");
-  cOne->SetLabelSize(0.085,"Y");
+  cOne->GetXaxis()->SetBinLabel(1,"[N_{jet}#leq5,N_{b-jet}#leq1]");
+  cOne->GetXaxis()->SetBinLabel(2,"[N_{jet}#leq5,N_{b-jet}#geq2]");
+  cOne->GetXaxis()->SetBinLabel(3,"[N_{jet}#geq6,N_{b-jet}#leq1]");
+  cOne->GetXaxis()->SetBinLabel(4,"[N_{jet}#geq6,N_{b-jet}#geq2]");
+
+  cOne->SetLabelSize(0.185,"XY");
+  cOne->SetLabelSize(0.125,"Y");
 
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
@@ -508,6 +551,11 @@ void GetOneDSRFracVsBjetProximity(int hNum,char const * VarPre, char const * Var
     tlb_nb->DrawLine(19,ymin_top,19,ymax5_top);
     tlb_nb->DrawLine(20,ymin_top,20,ymax5_top);
 */
+    gPad->RedrawAxis();
+    //    gPad->SetTicks(1,1);
+    gPad->SetLeftMargin(0.16);
+    //    gPad->SetBottomMargin(0);
+    gPad->Modified();
 
   gPad->Update();
   gPad->Modified();
@@ -536,7 +584,7 @@ void GetOneDSRFracVsBjetProximity(){
 
 
   
-  GetOneDSRFracVsBjetProximity(1300,"h_CSStat_SR","h_CSStat_SR_Hadtau_HighdR","h_CSStat_SR_Hadtau_LowdR","h_CSStat_SR_LL_HighdR","h_CSStat_SR_LL_LowdR","2017_SRVsBjetProximity","Prediction_0_haddTTbar_0L_.root","Gen L proximity to Bjet",0.40,0.62,0.96,0.87,"bins","(dR<0.4)/tot",1,0,4,0,4,0,0.19,200000);
+  GetOneDSRFracVsBjetProximity(1300,"h_CSStat_SR","h_CSStat_SR_Hadtau_HighdR","h_CSStat_SR_Hadtau_LowdR","h_CSStat_SR_LL_HighdR","h_CSStat_SR_LL_LowdR","2017_SRVsBjetProximity_forSupplementary","Prediction_0_haddTTbar_0L_.root","Gen L proximity to Bjet",0.40,0.56,0.96,0.87,"","#frac{LL(#DeltaR_{min}<0.4)}{LL}",1,0,4,0,4,0,0.19,200000);
   
   /*
   GetOneDPlots(1000,"MHTv2Recipe","2017_Final_1L_NewPrefire","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);

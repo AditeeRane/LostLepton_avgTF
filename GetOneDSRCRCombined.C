@@ -123,9 +123,11 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   canvas_up->SetFillColor(0);
   canvas_up->SetTopMargin(0.10);
   canvas_up->SetRightMargin(0.03);
+  canvas_up->SetBottomMargin(0);
+
   canvas_dw->SetFillColor(0);
   canvas_dw->SetFrameFillColor(0);
-  canvas_dw->SetBottomMargin(0.30);
+  canvas_dw->SetBottomMargin(0.40);
   canvas_dw->SetRightMargin(0.03);
   canvas_up->SetBottomMargin(0);  
   // set top margin 0 for bottom figure
@@ -205,6 +207,27 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   TH1D *hTTbarPreLLFailAcc = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreLLFailAcc);
   TH1D *hTTbarPreHadtau = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreHadtau);
 
+  TH1D *hTTbarTotalOrg=(TH1D *) hTTbarCS->Clone("hTTbarTotalOrg");
+  hTTbarTotalOrg->Add(hTTbarPre,1);
+
+  TH1D *hTTbarFracCSOrg=(TH1D *) hTTbarCS->Clone("hTTbarFracCSOrg");
+  hTTbarFracCSOrg->Divide(hTTbarTotalOrg);
+
+  TH1D *hTTbarFracPreOrg=(TH1D *) hTTbarPre->Clone("hTTbarFracPreOrg");
+  hTTbarFracPreOrg->Divide(hTTbarTotalOrg);
+
+  TH1D *hTTbarFracPreLLOrg=(TH1D *) hTTbarPreLL->Clone("hTTbarFracPreLLOrg");
+  hTTbarFracPreLLOrg->Divide(hTTbarTotalOrg);
+
+  TH1D *hTTbarFracPreLLFailIDIsoOrg=(TH1D *) hTTbarPreLLFailIDIso->Clone("hTTbarFracPreLLFailIDIsoOrg");
+  hTTbarFracPreLLFailIDIsoOrg->Divide(hTTbarTotalOrg); 
+
+  TH1D *hTTbarFracPreLLFailAccOrg=(TH1D *) hTTbarPreLLFailAcc->Clone("hTTbarFracPreLLFailAccOrg");
+  hTTbarFracPreLLFailAccOrg->Divide(hTTbarTotalOrg); 
+
+  TH1D * hTTbarFracPreHadtauOrg=(TH1D *) hTTbarPreHadtau->Clone("hTTbarFracPreHadtauOrg");
+  hTTbarFracPreHadtauOrg->Divide(hTTbarTotalOrg);
+
   /*
   TH1D *hTTbarFracCS = (TH1D*) hTTbarCSClone->Clone("hTTbarFracCS");
   //  hTTbarFracCS->Reset();
@@ -221,29 +244,33 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
 */
  
 
-  TH1D *hTTbarFracCS = new TH1D("hTTbarFracCS","hTTbarFracCS",19,1,20);
-  TH1D *hTTbarFracPre = new TH1D("hTTbarFracPre","hTTbarFracPre",19,1,20);
-  TH1D *hTTbarFracPreLL = new TH1D("hTTbarFracPreLL","hTTbarFracPreLL",19,1,20);
-  TH1D *hTTbarFracPreLLFailIDIso = new TH1D("hTTbarFracPreLLFailIDIso","hTTbarFracPreLLFailIDIso",19,1,20);
-  TH1D *hTTbarFracPreLLFailAcc = new TH1D("hTTbarFracPreLLFailAcc","hTTbarFracPreLLFailAcc",19,1,20);
-  TH1D *hTTbarFracPreHadtau = new TH1D("hTTbarFracPreHadtau","hTTbarFracPreHadtau",19,1,20);
-  TH1D *hCR = new TH1D("hCR","hCR",19,1,20);
-  TH1D *hSR = new TH1D("hSR","hSR",19,1,20);
+  TH1D *hTTbarFracCS = new TH1D("hTTbarFracCS","hTTbarFracCS",19,0.5,19.5);
+  TH1D *hTTbarFracPre = new TH1D("hTTbarFracPre","hTTbarFracPre",19,0.5,19.5);
+  TH1D *hTTbarFracPreLL = new TH1D("hTTbarFracPreLL","hTTbarFracPreLL",19,0.5,19.5);
+  TH1D *hTTbarFracPreLLFailIDIso = new TH1D("hTTbarFracPreLLFailIDIso","hTTbarFracPreLLFailIDIso",19,0.5,19.5);
+  TH1D *hTTbarFracPreLLFailAcc = new TH1D("hTTbarFracPreLLFailAcc","hTTbarFracPreLLFailAcc",19,0.5,19.5);
+  TH1D *hTTbarFracPreHadtau = new TH1D("hTTbarFracPreHadtau","hTTbarFracPreHadtau",19,0.5,19.5);
+  TH1D *hCR = new TH1D("hCR","hCR",19,0.5,19.5);
+  TH1D *hSR = new TH1D("hSR","hSR",19,0.5,19.5);
 
 
 
   double CRFrac,LLFailIDIsoFrac,LLFailAccFrac,HadtauFrac,total,CRval,SRval;
   
 
-  for(int i=1;i<=20;i++){
+  for(int i=1;i<=19;i++){
+    /*
     total=hTTbarCS->GetBinContent(i)+hTTbarPre->GetBinContent(i);
     CRFrac=hTTbarCS->GetBinContent(i)/total;
     LLFailIDIsoFrac=hTTbarPreLLFailIDIso->GetBinContent(i)/total;
     LLFailAccFrac=hTTbarPreLLFailAcc->GetBinContent(i)/total; 
     HadtauFrac=hTTbarPreHadtau->GetBinContent(i)/total;
     //TFval=hTTbarPre->GetBinContent(i)/hTTbarCS->GetBinContent(i);
-    hTTbarFracCS->SetBinContent(i,CRFrac);
-    hTTbarFracCS->SetBinError(i,0);
+*/
+
+
+    hTTbarFracCS->SetBinContent(i,hTTbarFracCSOrg->GetBinContent(i));
+    hTTbarFracCS->SetBinError(i,hTTbarFracCSOrg->GetBinError(i));
 
     hCR->SetBinContent(i,hTTbarCS->GetBinContent(i));
     hCR->SetBinError(i,hTTbarCS->GetBinError(i));
@@ -252,34 +279,34 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     hSR->SetBinError(i,hTTbarPre->GetBinError(i));
 
 
-    hTTbarFracPreLLFailIDIso->SetBinContent(i,LLFailIDIsoFrac);
-    hTTbarFracPreLLFailIDIso->SetBinError(i,0);
+    hTTbarFracPreLLFailIDIso->SetBinContent(i,hTTbarFracPreLLFailIDIsoOrg->GetBinContent(i));
+    hTTbarFracPreLLFailIDIso->SetBinError(i,hTTbarFracPreLLFailIDIsoOrg->GetBinError(i));
 
-    hTTbarFracPreLLFailAcc->SetBinContent(i,LLFailAccFrac);
-    hTTbarFracPreLLFailAcc->SetBinError(i,0);
+    hTTbarFracPreLLFailAcc->SetBinContent(i,hTTbarFracPreLLFailAccOrg->GetBinContent(i));
+    hTTbarFracPreLLFailAcc->SetBinError(i,hTTbarFracPreLLFailAccOrg->GetBinError(i));
 
-    hTTbarFracPreHadtau->SetBinContent(i,HadtauFrac);
-    hTTbarFracPreHadtau->SetBinError(i,0);
+    hTTbarFracPreHadtau->SetBinContent(i,hTTbarFracPreHadtauOrg->GetBinContent(i));
+    hTTbarFracPreHadtau->SetBinError(i,hTTbarFracPreHadtauOrg->GetBinError(i));
 
   }
 
   //  gStyle->SetHatchesLineWidth(2);
-  hTTbarFracCS->SetLineColor(kBlue);
-  hTTbarFracCS->SetFillColor(kBlue);
+  hTTbarFracCS->SetLineColor(kRed+4);
+  hTTbarFracCS->SetFillColor(kRed+4);
 
-  hTTbarFracPreLLFailIDIso->SetLineColor(kRed+4);
-  hTTbarFracPreLLFailIDIso->SetFillColor(kRed+4);
-  hTTbarFracPreLLFailIDIso->SetFillStyle(3008);
+  hTTbarFracPreLLFailIDIso->SetLineColor(kBlue);
+  hTTbarFracPreLLFailIDIso->SetFillColor(kBlue);
+  hTTbarFracPreLLFailIDIso->SetFillStyle(3005);
 
-  hTTbarFracPreHadtau->SetLineColor(kRed);
-  hTTbarFracPreHadtau->SetFillColor(kRed);
+  hTTbarFracPreHadtau->SetLineColor(96);
+  hTTbarFracPreHadtau->SetFillColor(96);
   hTTbarFracPreHadtau->SetFillStyle(3013);
 
 
-  hTTbarFracPreLLFailAcc->SetLineColor(kMagenta+1);
+  hTTbarFracPreLLFailAcc->SetLineColor(kGreen+2);
   //  hTTbarFracPreLLFailAcc->SetLineWidth(2);
-  hTTbarFracPreLLFailAcc->SetFillColor(kMagenta+1);
-  hTTbarFracPreLLFailAcc->SetFillStyle(3013);
+  hTTbarFracPreLLFailAcc->SetFillColor(kGreen+2);
+  hTTbarFracPreLLFailAcc->SetFillStyle(3004);
   /*
   hWJetPreHadtau->SetLineColor(kGreen+1);
   hWJetPreHadtau->SetLineWidth(2);
@@ -355,7 +382,7 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
       hExp->SetMaximum(1);
 */
   hExp->SetMaximum(2);
-  hExp->SetMinimum(0);
+  hExp->SetMinimum(0.001);
   std::cout<<" seg vio 2"<<endl;  
   //*AR:190104-If you get segmentation violation for arbitary plot due to SetMinimum() command then switch off "if" loops used to set minimum of histogram. Instead fix minimum to some fixed value. 
   //  hExp->SetMinimum(0.);
@@ -374,24 +401,45 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   hExp->Draw("hist e");
   //  hDataLLHadtau->Draw("esame");
   std::cout<<" seg vio 5"<<endl;  
-  hTTbarFracCS->SetLabelSize(0.032);
+  //  hTTbarFracCS->SetLabelSize(0.032);
   hTTbarFracCS->SetLabelFont(42);
-  hTTbarFracCS->SetLabelSize(0.215,"XY");
+  hTTbarFracCS->SetLabelSize(1.815,"XY");
+  
+  hExp->GetYaxis()->SetTitle("Fractions");
 
+  hExp->GetYaxis()->SetTitleSize(0.05);
+  hExp->GetYaxis()->SetLabelSize(0.05);
+  hExp->GetYaxis()->SetLabelFont(42);
+  hExp->GetYaxis()->SetLabelOffset(0.008);
+  hExp->GetYaxis()->SetTitleOffset(0.88);
+
+//  cOne->SetLabelSize(0.149,"XY"); 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   //  tl->SetFillColor(10);
-  //  tl->SetHeader(header);
+  //  tl->SetHeader("W+jets: Lost lepton, Single lepton fractions");
+  //  tl->SetHeader("W+jets");
+  tl->SetHeader("t#bar{t}");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
-  tl->SetNColumns(2);
-  tl->AddEntry(hTTbarFracCS," W+jets(CR):1L");
+  //  tl->SetNColumns(2);
+  //  tl->AddEntry(hTTbarFracCS," W+jets(CR):1L");
 
-  tl->AddEntry(hTTbarFracPreHadtau," W+jets(SR):#tau_{h}");
   //  tl->AddEntry(hWJetPreHadtau,"W+jets(SR):#tau_{h}");
 
-  tl->AddEntry(hTTbarFracPreLLFailAcc," W+jets(SR):LL-fail Acc");
   //  tl->AddEntry(hWJetPreLL,"W+jets(SR):LL");
 
-  tl->AddEntry(hTTbarFracPreLLFailIDIso," W+jets(SR):LL-fail ID,Iso");
+  tl->AddEntry(hTTbarFracPreLLFailAcc,"Lost lepton-fail acceptance","f");
+  tl->AddEntry(hTTbarFracPreLLFailIDIso,"Lost lepton-fail ID,Iso","f");
+  tl->AddEntry(hTTbarFracPreHadtau,"Lost lepton-#tau_{h}","f");
+  tl->AddEntry(hTTbarFracCS,"Single lepton","f");
+
+  /*
+
+  TLegend *tlCS=new TLegend(Legxmin,0.32,Legxmax,0.57);
+  tlCS->SetHeader("Single lepton");
+  tlCS->AddEntry(hTTbarFracCS,"Lepton found","f");
+
+*/
+
 
   //  tl->AddEntry(hWJetCS,"W+jets(CR):1L");
 
@@ -416,21 +464,28 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
 */
   TLatex * ttext = new TLatex();
   ttext->SetTextFont(42);
-  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Simulation}");
+  ttext->SetTextSize(0.90*canvas_up->GetTopMargin());
+  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS}");
+
+  TLatex * ttextSup = new TLatex();
+  ttextSup->SetTextFont(42);
+  ttextSup->SetTextSize(0.50*canvas_up->GetTopMargin());
+  ttextSup->DrawLatexNDC(0.29,0.91, "#it{Simulation Supplementary}");
 
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
+  ttexlumi->SetTextSize(0.90*canvas_up->GetTopMargin());
   double binSize=(GetRatioXmax-GetRatioXmin)/GetRatioNbins;
-  ttexlumi->DrawLatexNDC(0.7, 0.91 , "41 fb^{-1} (13 TeV)");
+  ttexlumi->DrawLatexNDC(0.72, 0.91 , "13 TeV");
   /*
   
   float ymax_top = 2000000.;
   float ymin_top = 0.015;
   */
-  float ymax2_top = 2;
-  float ymax3_top = 2;
-  float ymax4_top = 2;
-  float ymax5_top = 2;
+  float ymax2_top = 1.6;
+  float ymax3_top = 1.4;
+  float ymax4_top = 1.2;
+  float ymax5_top = 1.2;
 
   //float ymax_bottom = 1.19;
   //float ymin_bottom = 0.81;
@@ -445,25 +500,63 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     // Njet separation lines
   TLine *tl_njet = new TLine();
   tl_njet->SetLineStyle(2);
+
+  tl_njet->DrawLine(3.5,ymin_top,3.5,ymax_top); 
+  tl_njet->DrawLine(7.5,ymin_top,7.5,ymax_top); 
+  tl_njet->DrawLine(11.5,ymin_top,11.5,ymax_top); 
+  tl_njet->DrawLine(15.5,ymin_top,15.5,ymax_top); 
+
+
+  /*
   tl_njet->DrawLine(4,ymin_top,4,ymax_top); 
   tl_njet->DrawLine(8,ymin_top,8,ymax_top); 
   tl_njet->DrawLine(12,ymin_top,12,ymax_top); 
   tl_njet->DrawLine(16,ymin_top,16,ymax_top); 
-
+*/
     // Njet labels
     TLatex * ttext_njet = new TLatex();
     ttext_njet->SetTextFont(42);
-    ttext_njet->SetTextSize(0.032);
+    ttext_njet->SetTextSize(0.0375);
     ttext_njet->SetTextAlign(22);
+
+    ttext_njet->DrawLatex(2.2 , 2.03 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
+    ttext_njet->DrawLatex(5.5 , 2.03 , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
+    ttext_njet->DrawLatex(9.5 , 2.03 , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
+    ttext_njet->DrawLatex(13.5 , 2.03 , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
+    ttext_njet->DrawLatex(17.5 , 2.03 , "N_{#scale[0.2]{ }jet} #geq 10");
+    /*
     ttext_njet->DrawLatex(2.5 , 1.9 , "2 #leq N_{#scale[0.2]{ }jet} #leq 3");
     ttext_njet->DrawLatex(6 , 1.9 , "4 #leq N_{#scale[0.2]{ }jet} #leq 5");
     ttext_njet->DrawLatex(10 , 1.9 , "6 #leq N_{#scale[0.2]{ }jet} #leq 7");
     ttext_njet->DrawLatex(14 , 1.9 , "8 #leq N_{#scale[0.2]{ }jet} #leq 9");
     ttext_njet->DrawLatex(18 , 1.9 , "N_{#scale[0.2]{ }jet} #geq 10");
-    
+    */
     // Nb separation lines
     TLine *tl_nb = new TLine();
     tl_nb->SetLineStyle(3);
+
+    tl_nb->DrawLine(1.5,ymin_top,1.5,ymax2_top); 
+    tl_nb->DrawLine(2.5,ymin_top,2.5,ymax2_top); 
+    tl_nb->DrawLine(3.5,ymin_top,3.5,ymax2_top);
+    tl_nb->DrawLine(4.5,ymin_top,4.50,ymax2_top);
+    tl_nb->DrawLine(5.5,ymin_top,5.5,ymax2_top); 
+    tl_nb->DrawLine(6.5,ymin_top,6.5,ymax2_top); 
+    tl_nb->DrawLine(7.5,ymin_top,7.5,ymax2_top);
+    tl_nb->DrawLine(8.5,ymin_top,8.5,ymax3_top);
+    tl_nb->DrawLine(9.5,ymin_top,9.5,ymax3_top); 
+    tl_nb->DrawLine(10.5,ymin_top,10.5,ymax3_top); 
+    tl_nb->DrawLine(11.5,ymin_top,11.5,ymax3_top); 
+    tl_nb->DrawLine(12.5,ymin_top,12.5,ymax4_top); 
+    tl_nb->DrawLine(13.5,ymin_top,13.5,ymax4_top); 
+    tl_nb->DrawLine(14.5,ymin_top,14.5,ymax4_top); 
+    tl_nb->DrawLine(15.5,ymin_top,15.5,ymax4_top);
+    tl_nb->DrawLine(16.5,ymin_top,16.5,ymax5_top);
+    tl_nb->DrawLine(17.5,ymin_top,17.5,ymax5_top);
+    tl_nb->DrawLine(18.5,ymin_top,18.5,ymax5_top);
+    tl_nb->DrawLine(19.5,ymin_top,19.5,ymax5_top);
+
+    /*
+
     tl_nb->DrawLine(2,ymin_top,2,ymax2_top); 
     tl_nb->DrawLine(3,ymin_top,3,ymax2_top); 
     tl_nb->DrawLine(4,ymin_top,4,ymax2_top);
@@ -484,27 +577,34 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     tl_nb->DrawLine(19,ymin_top,19,ymax5_top);
     tl_nb->DrawLine(20,ymin_top,20,ymax5_top);
 
-    
+*/    
     // Nb labels
     TLatex * ttext_nb = new TLatex();
     ttext_nb->SetTextFont(42);
-    ttext_nb->SetTextSize(0.035);
+    ttext_nb->SetTextSize(0.0375);
     ttext_nb->SetTextAlign(22);
     
-    ttext_nb->DrawLatex(2.5 , 1.8 , "N_{#scale[0.2]{ }b-jet}");
-    ttext_nb->DrawLatex(1.5 , 1.7 , "0");
-    ttext_nb->DrawLatex(2.5 , 1.7 , "1");
-    ttext_nb->DrawLatex(3.5 , 1.7 , "#geq 2");
-    ttext_nb->DrawLatex(4.5 , 1.7 , "0");
-    ttext_nb->DrawLatex(5.5 , 1.7 , "1");
-    ttext_nb->DrawLatex(6.5 , 1.7 , "2");
-    ttext_nb->DrawLatex(7.5 , 1.7 , "#geq 3");
+    ttext_nb->DrawLatex(2.0 , 1.93 , "N_{#scale[0.2]{ }b-jet}");
+    ttext_nb->DrawLatex(1.0 , 1.832 , "0");
+    ttext_nb->DrawLatex(2.0 , 1.832 , "1");
+    ttext_nb->DrawLatex(3.0 , 1.832 , "#geq 2");
+    ttext_nb->DrawLatex(4.0 , 1.832 , "0");
+    ttext_nb->DrawLatex(5.0 , 1.832 , "1");
+    ttext_nb->DrawLatex(6.0 , 1.832 , "2");
+    ttext_nb->DrawLatex(7.0 , 1.832 , "#geq 3");
 
     tl->SetFillColor(kWhite);    
     tl->SetLineColor(kBlack);
     tl->Draw();
+    /*
+    tlCS->SetFillColor(kWhite);    
+    tlCS->SetLineColor(kBlack);
+    tlCS->Draw();
+*/
+    gPad->SetLeftMargin(0.16);
+    gPad->SetBottomMargin(0.);
     
-  gPad->Modified();
+    gPad->Modified();
   std::cout<<" seg vio 6"<<endl;  
   
   //  TH1D * cOne = new TH1D("Ratio","ratio plot",GetRatioNbins,GetRatioXmin,GetRatioXmax); //For SF and TF histogram
@@ -519,26 +619,49 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   cOne->Draw("e");
   std::cout<<" seg vio 7"<<endl;  
   
-  cOne->GetXaxis()->SetTitleOffset(0.9);
+
+  TLegend *tlbottom=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
+  //  tl->SetFillColor(10);
+  tlbottom->SetHeader("Lost lepton");
+  //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
+  //  tl->SetNColumns(2);
+  tlbottom->AddEntry(cOne," t#bar{t}","pe");
+
+
+  cOne->GetXaxis()->SetTitleOffset(1.05);
   cOne->GetXaxis()->SetTitleSize(0.13);
+  cOne->GetXaxis()->SetLabelSize(0.13);
   cOne->GetXaxis()->SetTitleFont(42);
   cOne->GetXaxis()->SetLabelOffset(0.008);
 
   cOne->GetYaxis()->SetRangeUser(RatioYmin,RatioYmax);
-  cOne->GetYaxis()->SetTitleOffset(0.35);
+  cOne->GetYaxis()->SetTitleOffset(0.44);
   cOne->GetYaxis()->SetTitleSize(0.13);
+  cOne->GetYaxis()->SetLabelSize(0.13);
   cOne->GetYaxis()->SetTitleFont(42);
   cOne->GetYaxis()->SetLabelOffset(0.008);
 
   gStyle->SetPadTickY(1);
+  gStyle->SetErrorX(0);
   cOne->GetYaxis()->SetNdivisions(5);
-  cOne->SetLabelSize(0.115,"XY");
+  cOne->SetLabelSize(0.149,"XY");
   TLine *tline = new TLine(GetRatioXmin,1.,GetRatioXmax,1.);
   tline->SetLineStyle(2);  
   tline->Draw("same");  
 
 
     // Njet separation lines
+
+  TLine *tlCS_njet = new TLine();
+  tlCS_njet->SetLineStyle(2);
+  tlCS_njet->DrawLine(3.5,ymin_top,3.5,2); 
+  tlCS_njet->DrawLine(7.5,ymin_top,7.5,2); 
+  tlCS_njet->DrawLine(11.5,ymin_top,11.5,2); 
+  tlCS_njet->DrawLine(15.5,ymin_top,15.5,2); 
+
+
+  /*
+
   TLine *tlb_njet = new TLine();
   tlb_njet->SetLineStyle(2);
   tlb_njet->DrawLine(4,ymin_top,4,ymax_top); 
@@ -546,9 +669,35 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   tlb_njet->DrawLine(12,ymin_top,12,ymax_top); 
   tlb_njet->DrawLine(16,ymin_top,16,ymax_top); 
 
-    
+*/    
     // Nb separation lines
-    TLine *tlb_nb = new TLine();
+    
+    TLine *tlCS_nb = new TLine();
+    tlCS_nb->SetLineStyle(3);
+    tlCS_nb->DrawLine(1.5,ymin_top,1.5,2); 
+    tlCS_nb->DrawLine(2.5,ymin_top,2.5,2); 
+    tlCS_nb->DrawLine(3.5,ymin_top,3.5,2);
+    tlCS_nb->DrawLine(4.5,ymin_top,4.50,2);
+    tlCS_nb->DrawLine(5.5,ymin_top,5.5,2); 
+    tlCS_nb->DrawLine(6.5,ymin_top,6.5,2); 
+    tlCS_nb->DrawLine(7.5,ymin_top,7.5,2);
+    tlCS_nb->DrawLine(8.5,ymin_top,8.5,2);
+    tlCS_nb->DrawLine(9.5,ymin_top,9.5,2); 
+    tlCS_nb->DrawLine(10.5,ymin_top,10.5,2); 
+    tlCS_nb->DrawLine(11.5,ymin_top,11.5,2); 
+    tlCS_nb->DrawLine(12.5,ymin_top,12.5,2); 
+    tlCS_nb->DrawLine(13.5,ymin_top,13.5,2); 
+    tlCS_nb->DrawLine(14.5,ymin_top,14.5,2); 
+    tlCS_nb->DrawLine(15.5,ymin_top,15.5,2);
+    tlCS_nb->DrawLine(16.5,ymin_top,16.5,2);
+    tlCS_nb->DrawLine(17.5,ymin_top,17.5,2);
+    tlCS_nb->DrawLine(18.5,ymin_top,18.5,2);
+    tlCS_nb->DrawLine(19.5,ymin_top,19.5,2);
+
+
+    /*
+
+  TLine *tlb_nb = new TLine();
     tlb_nb->SetLineStyle(3);
     tlb_nb->DrawLine(2,ymin_top,2,ymax2_top); 
     tlb_nb->DrawLine(3,ymin_top,3,ymax2_top); 
@@ -569,15 +718,23 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     tlb_nb->DrawLine(18,ymin_top,18,ymax5_top);
     tlb_nb->DrawLine(19,ymin_top,19,ymax5_top);
     tlb_nb->DrawLine(20,ymin_top,20,ymax5_top);
+*/
+    
 
+    //tlCS->SetFillColor(kWhite);    
+    //    tlCS->SetLineColor(kBlack);
+    //    tlCS->Draw();
+    gPad->RedrawAxis();
+    //    gPad->SetTicks(1,1);
+    gPad->SetLeftMargin(0.16);
+    //    gPad->SetBottomMargin(0);
+    gPad->Modified();
 
-  gPad->Update();
-  gPad->Modified();
-  char PrintName[500];
-  sprintf(PrintName,"%i_%s.png",hNum,cname);
-  canvas->Print(PrintName);
-  sprintf(PrintName,"%i_%s.pdf",hNum,cname);
-  canvas->Print(PrintName);
+    char PrintName[500];
+    sprintf(PrintName,"%i_%s.png",hNum,cname);
+    canvas->Print(PrintName);
+    sprintf(PrintName,"%i_%s.pdf",hNum,cname);
+    canvas->Print(PrintName);
 
 
 
@@ -598,7 +755,7 @@ void GetOneDSRCRCombined(){
 
 
   
-  GetOneDSRCRCombined(1300,"h_CSStat_NJetvsNBtag_1D","h_CSStat_SR_NJetvsNBtag_1D","h_CSStat_LL_NJetvsNBtag_1D","h_CSStat_Hadtau_NJetvsNBtag_1D","h_CSStat_LL_FailAcc_NJetvsNBtag_1D","h_CSStat_LL_FailIDIso_NJetvsNBtag_1D","2017_CRSR","Prediction_0_haddTTbar_1L_.root","Prediction_0_haddTTbar_0L_.root","SR+CR",0.52,0.55,0.95,0.77,"bin index","Transfer Factor",0,0,19,1,20,0,1.9,200000);
+  GetOneDSRCRCombined(1300,"h_CSStat_NJetvsNBtag_1D","h_CSStat_SR_NJetvsNBtag_1D","h_CSStat_LL_NJetvsNBtag_1D","h_CSStat_Hadtau_NJetvsNBtag_1D","h_CSStat_LL_FailAcc_NJetvsNBtag_1D","h_CSStat_LL_FailIDIso_NJetvsNBtag_1D","2017_CRSR_forSupplimentary","Prediction_0_haddTTbar_1L_.root","Prediction_0_haddTTbar_0L_.root","SR+CR",0.47,0.5,0.962,0.83,"N_{jet}, N_{b-jet} bin index","#frac{Lost lepton}{Single lepton}",0,0,19,0.5,19.5,0,1.9,200000);
   
   /*
   GetOneDPlots(1000,"MHTv2Recipe","2017_Final_1L_NewPrefire","Prediction_0_haddTTbar_0L_.root","Prediction_0_haddWJet_0L_.root","Prediction_0_haddST_0L_.root","Prediction_0_haddData_MET_BeforePrefire_NoBtagProb_1L.root","1L CR",0.57,0.6,0.87,0.87,"MHT","Data/MC",1,0,16,200,1000,0,2.49,70000);
