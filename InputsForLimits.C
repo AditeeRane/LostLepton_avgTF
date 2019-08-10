@@ -583,7 +583,7 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     TFile * TFPDFSysDnFile = TFile::Open(tempname,"R");
     printf("Opened %s\n",tempname);
     TH1D * searchBin_LLPlusHadTau_AccSysPDFRef_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_0")->Clone("searchBin_LLPlusHadTau_AccSysPDFRef_input");
-    TH1D * searchBin_LLPlusHadTau_AccSysPDFDn_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_100")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn_input");//x axis[0.5,223.5]
+    TH1D * searchBin_LLPlusHadTau_AccSysPDFDn_input=(TH1D*) TFPDFSysDnFile->Get("h_PDF_0L1L_SF_SB_102")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn_input");//x axis[0.5,223.5]
 
     TH1D *searchBin_LLPlusHadTau_AccSysPDFDn=(TH1D*) DataEstFile->Get("h_Prediction")->Clone("searchBin_LLPlusHadTau_AccSysPDFDn");
     searchBin_LLPlusHadTau_AccSysPDFDn->Reset(); //[0.5,223.5]  //Defines 174 bin histogram to copy TF with PDF sys histogram 
@@ -803,23 +803,23 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
 */
     searchBin_LLPlusHadTau_BMistagDn->Add(searchBin_one);
     //*AR:190117- Input to CorrectLowStatBins is TF_Sys/TF_nom
-    CorrectLowStatBins(searchBin_LLPlusHadTau_BMistagDn,1.00,1.004);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_BMistagDn,0.998,1.004);
     reLabel(searchBin_LLPlusHadTau_BMistagDn);
     searchBin_LLPlusHadTau_BMistagDn->Write("totalPredBMistagDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_JECSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.96,1.04);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_JECSysDn,0.95,1.02);
     reLabel(searchBin_LLPlusHadTau_JECSysDn);
     searchBin_LLPlusHadTau_JECSysDn->Write("totalPred_JECSysDown_LLPlusHadTau");
     searchBin_MTSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MTSysDn,0.997,1.00);
+    CorrectLowStatBins(searchBin_MTSysDn,0.997,0.999);
     reLabel(searchBin_MTSysDn);
     searchBin_MTSysDn->Write("totalPredMTWSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysPDFDn->Add(searchBin_one); 
-    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysPDFDn,1.002,1.008);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysPDFDn,1.0002,1.0006);
     reLabel(searchBin_LLPlusHadTau_AccSysPDFDn);
     searchBin_LLPlusHadTau_AccSysPDFDn->Write("totalPredLepAccSysDown_LLPlusHadTau");
     searchBin_LLPlusHadTau_AccSysScaleDn->Add(searchBin_one); 
-    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.000,1.006);
+    CorrectLowStatBins(searchBin_LLPlusHadTau_AccSysScaleDn,1.001,1.005);
     reLabel(searchBin_LLPlusHadTau_AccSysScaleDn);
     searchBin_LLPlusHadTau_AccSysScaleDn->Write("totalPredLepAccQsquareSysDown_LLPlusHadTau");
     
@@ -829,30 +829,30 @@ void InputsForLimits(bool Hadtau=false, bool LostLepton=false, bool LLPlusHadtau
     //    searchBin_MuRecoSysDn->Write("totalPredMuRecoSysDown_LLPlusHadTau");
 
     searchBin_MuIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIDSysDn,1.006,1.011);
+    CorrectLowStatBins(searchBin_MuIDSysDn,1.002,1.0033);
     reLabel(searchBin_MuIDSysDn);
     searchBin_MuIDSysDn->Write("totalPredMuIDSysDown_LLPlusHadTau");
 
 
     searchBin_MuIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_MuIsoSysDn,1.003,1.006);
+    CorrectLowStatBins(searchBin_MuIsoSysDn,1.001,1.0024);
     reLabel(searchBin_MuIsoSysDn);
     searchBin_MuIsoSysDn->Write("totalPredMuIsoSysDown_LLPlusHadTau");
 
 
     searchBin_EleRecoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleRecoSysDn,1.004,1.01);
+    CorrectLowStatBins(searchBin_EleRecoSysDn,1.004,1.017);
     reLabel(searchBin_EleRecoSysDn);
     searchBin_EleRecoSysDn->Write("totalPredEleRecoSysDown_LLPlusHadTau");
 
 
     searchBin_EleIsoSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIsoSysDn,1.003,1.006);
+    CorrectLowStatBins(searchBin_EleIsoSysDn,1.0015,1.0035);
     reLabel(searchBin_EleIsoSysDn);
     searchBin_EleIsoSysDn->Write("totalPredEleIsoSysDown_LLPlusHadTau");
 
     searchBin_EleIDSysDn->Add(searchBin_one);
-    CorrectLowStatBins(searchBin_EleIDSysDn,1.004,1.01);
+    CorrectLowStatBins(searchBin_EleIDSysDn,1.005,1.009);
     reLabel(searchBin_EleIDSysDn);
     searchBin_EleIDSysDn->Write("totalPredEleIDSysDown_LLPlusHadTau");
 

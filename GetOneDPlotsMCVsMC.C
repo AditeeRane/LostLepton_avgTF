@@ -226,8 +226,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
  //*AR:190509-hTTbarLL==GenHistTemp, hTTbarDLL==GenHistDTemp
   //  TH1D *hTTbarLL = (TH1D*)_fileTTbarLL->FindObjectAny(hname);
-  hTTbarLL=(TH1D*) _fileTTbarLL->Get(hname)->Clone();
-  hTTbarDLL=(TH1D*) _fileTTbarLL->Get(hname)->Clone();
+  hTTbarLL=(TH1D*) _fileTTbarLL->Get(hnameRev)->Clone();
+  hTTbarDLL=(TH1D*) _fileTTbarLL->Get(hnameRev)->Clone();
 
   _fileTTbarHadtau->cd();
 
@@ -346,8 +346,8 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
 
   tl->SetHeader(header);
  
-  tl->AddEntry(GenHist, "Direct from simulation","pe"); 
-  tl->AddEntry(EstHist, "Treat simulation like data");
+  tl->AddEntry(GenHist, "MHT-ntuple","pe"); 
+  tl->AddEntry(EstHist, "MHT-recalculate");
 
   tl->Draw("same");
   gPad->RedrawAxis();
@@ -359,7 +359,7 @@ void GetOneDPlotsMCVsMC(int hNum,char const * Var,char const * VarTwo,char const
   ttext->SetTextSize(0.8*canvas_up->GetTopMargin());
   //ttext->DrawLatex(GetRatioXmin , 1.1*ymax , "#bf{CMS} #it{Preliminary}");
   //  ttext->DrawLatex(xmin , 1*ymax , "#bf{CMS} #it{Preliminary}");
-  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Simulation}");
+  ttext->DrawLatexNDC(0.15,0.91, "#bf{CMS} #it{Preliminary}");
   
   TLatex * ttexlumi = new TLatex();
   ttexlumi->SetTextFont(42);
@@ -1265,15 +1265,16 @@ void GetOneDPlotsMCVsMC(){
 
 
   
-  GetOneDPlotsMCVsMC(2320,"MHTv2Recipe","MHT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}[GeV]","#frac{Direct}{Prediction}",1,0,16,200,1000,0.805,1.195,30000);
+  GetOneDPlotsMCVsMC(2320,"MHT","MHT","MHTntuplevsMHTrecalculate_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}^{miss}[GeV]","#frac{MHT-ntuple}{MHT-calc}",1,0,16,200,1000,0.805,1.195,30000);
 
+  /*
   GetOneDPlotsMCVsMC(2320,"HTv2Recipe","HT","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"H_{T}[GeV]","#frac{Direct}{Prediction}",1,0,12,100,2500,0.5,1.5,45000);
 
   GetOneDPlotsMCVsMC(2320,"NJetv2Recipe","NJet","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{jet}","#frac{Direct}{Prediction}",1,0,10,1.5,11.5,0.7,1.3,25000);
 
   GetOneDPlotsMCVsMC(2320,"NBtagv2Recipe","NBtag","FinalV17_16Plus17Plus18","Prediction_0_Data_MET_Oct02_bcdehadd_.root","Prediction_0_Data_MET_Oct02_fhadd_.root","Lost-lepton background",0.53,0.63,0.915,0.87,"N_{b}","#frac{Direct}{Prediction}",1,0,4,-0.5,3.5,0.5,1.5,50500);
 
-
+*/
 
 
 

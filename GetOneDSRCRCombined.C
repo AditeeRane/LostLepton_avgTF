@@ -120,12 +120,16 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   canvas_up->SetPad(0., 1 - up_height +0.095, 0.97, 1.);
   canvas_dw->SetPad(0., dw_height_offset, 0.97, dw_height+dw_height_offset);
   canvas_up->SetFrameFillColor(0);
+  canvas_up->SetFrameLineColor(1);
+
   canvas_up->SetFillColor(0);
   canvas_up->SetTopMargin(0.10);
   canvas_up->SetRightMargin(0.03);
   canvas_up->SetBottomMargin(0);
+  canvas_up->SetLeftMargin(0.16);
 
   canvas_dw->SetFillColor(0);
+
   canvas_dw->SetFrameFillColor(0);
   canvas_dw->SetBottomMargin(0.40);
   canvas_dw->SetRightMargin(0.03);
@@ -206,6 +210,16 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   TH1D *hTTbarPreLLFailIDIso = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreLLFailIDIso);
   TH1D *hTTbarPreLLFailAcc = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreLLFailAcc);
   TH1D *hTTbarPreHadtau = (TH1D*)_fileTTbarLL->FindObjectAny(hnamePreHadtau);
+  
+  //  hTTbarCS->Scale(137.0/77.0);
+  //  hTTbarCSClone->Scale(137.0/77.0);
+  
+  hTTbarPre->Scale(137.0/77.0);
+  hTTbarPreLL->Scale(137.0/77.0);
+  hTTbarPreLLFailIDIso->Scale(137.0/77.0);
+  hTTbarPreLLFailAcc->Scale(137.0/77.0); 
+  hTTbarPreHadtau->Scale(137.0/77.0);
+  hTTbarCS->Scale(137.0/77.0);
 
   TH1D *hTTbarTotalOrg=(TH1D *) hTTbarCS->Clone("hTTbarTotalOrg");
   hTTbarTotalOrg->Add(hTTbarPre,1);
@@ -291,8 +305,8 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   }
 
   //  gStyle->SetHatchesLineWidth(2);
-  hTTbarFracCS->SetLineColor(kRed+4);
-  hTTbarFracCS->SetFillColor(kRed+4);
+  hTTbarFracCS->SetLineColor(14);
+  hTTbarFracCS->SetFillColor(14);
 
   hTTbarFracPreLLFailIDIso->SetLineColor(kBlue);
   hTTbarFracPreLLFailIDIso->SetFillColor(kBlue);
@@ -417,8 +431,8 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   //  tl->SetFillColor(10);
   //  tl->SetHeader("W+jets: Lost lepton, Single lepton fractions");
-  //  tl->SetHeader("W+jets");
-  tl->SetHeader("t#bar{t}");
+  tl->SetHeader("W+jets");
+  //  tl->SetHeader("t#bar{t}");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
   //  tl->SetNColumns(2);
   //  tl->AddEntry(hTTbarFracCS," W+jets(CR):1L");

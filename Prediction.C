@@ -134,6 +134,10 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
   h_HT5_Exp =new TH1D("h_HT5_Exp","h_HT5_Exp",12,100,2500);
   h_HTRatio_Exp =new TH1D("h_HTRatio_Exp","h_HTRatio_Exp",20,0,5);
+
+  h_MHTdiff_Exp =new TH1D("h_MHTdiff_Exp","h_MHTdiff_Exp",40,-100,100);
+  h_MHTvsMHTv2_Exp =new TH2D("h_MHTvsMHTv2_Exp","h_MHTvsMHTv2_Exp",40,200,1000,40,200,1000);
+
   h_MHT_Exp =new TH1D("h_MHT_Exp","h_MHT_Exp",16,200,1000);
   h_MET_Exp =new TH1D("h_MET_Exp","h_MET_Exp",16,200,1000);
   h_MHTPhi_Exp=new TH1D("h_MHTPhi_Exp","h_MHTPhi_Exp",7,-3.5,3.5);
@@ -797,6 +801,8 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h_HTRatioforHighNJetv2Recipe_Exp);
   GetOutputList()->Add(h_HTRatioforTwoNbv2Recipe_Exp);
   GetOutputList()->Add(h_HTRatioforNotTwoNbv2Recipe_Exp);
+  GetOutputList()->Add(h_MHTdiff_Exp);
+  GetOutputList()->Add(h_MHTvsMHTv2_Exp);
   GetOutputList()->Add(h_MHTv2Recipe_Exp);
   GetOutputList()->Add(h_MHTv2RecipeMCCor_Exp);
 
@@ -1560,8 +1566,23 @@ Bool_t Prediction::Process(Long64_t entry)
     
     h_CutFlow->Fill(2);
   }
-  //    std::cout<<"MHTdiff "<<MHTdiff<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphiv2 "<<DeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<DeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<DeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<DeltaPhi4v2Recipe<<endl;
+  double MHTxxx=MHT;
+  double MHTv2Recipexxx=MHTv2Recipe;
+  double MHTdiffxxx=MHTxxx-MHTv2Recipexxx;
   //*AR: 180917- Only consider events with HT>300, MHT>250, Njet>1.5
+  HTv2Recipe=HT;
+  HT5v2Recipe=HT5;
+  MHTv2Recipe=MHT;
+  MHTPhiv2Recipe=MHTPhi;
+  NJetsv2Recipe=NJets;
+  HTDeltaPhi1v2Recipe=DeltaPhi1;
+  HTDeltaPhi2v2Recipe=DeltaPhi2;
+  HTDeltaPhi3v2Recipe=DeltaPhi3;
+  HTDeltaPhi4v2Recipe=DeltaPhi4;
+
+  //  std::cout<<" ht "<<HT<<" htv2 "<<HTv2Recipe<<" mht "<<MHT<<" mhtv2 "<<MHTv2Recipe<<" njets "<<NJets<<" njetv2 "<<NJetsv2Recipe<<" dphi1 "<<DeltaPhi1<<" dphi1v2 "<<HTDeltaPhi1v2Recipe<<" dphi2 "<<DeltaPhi2<<" dphi2v2 "<<HTDeltaPhi2v2Recipe<<" dphi3 "<<DeltaPhi3<<"  dphi3v2 "<<HTDeltaPhi3v2Recipe<<" dphi4 "<<DeltaPhi4<< " dphi4v2 "<<HTDeltaPhi4v2Recipe<<endl;
+
+
   if(runOnSignalMC && useGenHTMHT){
     if(newGenHT<minHT_ || newGenMHT< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
   }
@@ -3212,6 +3233,9 @@ Bool_t Prediction::Process(Long64_t entry)
 
     h_HT5v2Recipe_Exp->Fill(HT5v2Recipe,WeightBtagProb);
     h_HTRatiov2Recipe_Exp->Fill(HTRatiov2Recipe,WeightBtagProb);
+    if(MHTdiffxxx > 0. || MHTdiffxxx < 0.)
+      h_MHTdiff_Exp->Fill(MHTdiffxxx,WeightBtagProb);
+    h_MHTvsMHTv2_Exp->Fill(MHTxxx,MHTv2Recipexxx,WeightBtagProb);
     h_MHTv2Recipe_Exp->Fill(MHTv2Recipe,WeightBtagProb);
     h_MHTv2RecipeMCCor_Exp->Fill(MHTv2Recipe,WeightBtagProb*SFCR);
 
@@ -3597,6 +3621,8 @@ void Prediction::Terminate()
   h_HTRatioforHighNJetv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforHighNJetv2Recipe_Exp"));
   h_HTRatioforTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforTwoNbv2Recipe_Exp"));
   h_HTRatioforNotTwoNbv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HTRatioforNotTwoNbv2Recipe_Exp"));
+  h_MHTdiff_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTdiff_Exp"));
+  h_MHTvsMHTv2_Exp = dynamic_cast<TH2D*>(GetOutputList()->FindObject("h_MHTvsMHTv2_Exp"));
 
   h_MHTv2Recipe_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2Recipe_Exp"));
   h_MHTv2RecipeMCCor_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_MHTv2RecipeMCCor_Exp"));
@@ -4098,7 +4124,8 @@ void Prediction::Terminate()
   h_HTRatioforNotTwoNbv2Recipe_Exp->Write();
   h_MHTv2Recipe_Exp->Write();
   h_MHTv2RecipeMCCor_Exp->Write();
-
+  h_MHTdiff_Exp->Write();
+  h_MHTvsMHTv2_Exp->Write();
   h_MHTv2RecipeExtend_Exp->Write();
 
   h_MHTv2Recipe_forQCD_Exp->Write();
