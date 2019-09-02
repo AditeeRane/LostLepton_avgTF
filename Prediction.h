@@ -32,26 +32,26 @@
 // useDeltaPhiCut = -1: inverted deltaPhiCut
 const int useDeltaPhiCut = 1;  //<-check------------------------
 
-bool RunFor2017=false;
+bool RunFor2017=true;
 bool RunFor2018=false;
-bool RunFor2016=true;
+bool RunFor2016=false;
 
-const bool runOnData = false;   //<-check:true only for data------------------------
-const bool runOnStandardModelMC = true;  //<-check:true only for MC------------------------
-const bool EENoiseCutbyAditee =false; //<- to be applied to 2017 data
+const bool runOnData = true;   //<-check:true only for data------------------------
+const bool runOnStandardModelMC = false;  //<-check:true only for MC------------------------
+const bool EENoiseCutbyAditee =true; //<- to be applied to 2017 data
 const bool runOnSignalMC = false;  //<-check------------------------
 
-bool GetSignalRegHists= true; //true while getting MC expectation
+bool GetSignalRegHists= false; //true while getting MC expectation
 //*AR: To select events from given runs in data, which are allowed to unblind from 2017 in signal region.
 bool RunSelectiveEvents= false;
-bool GetNonPrefireProb=true;  //true for 2016 and 2017 MC
+bool GetNonPrefireProb=false;  //true for 2016 and 2017 MC
 const bool ApplyHT5cut=true;
 bool AddHEMVeto=false; //<---true to get 2018 Prediction with HEM affected region
 bool RunForGH=false;  //to be used only for 2016, as muon id/iso SFs are different 
 //for GH and other era 
 
 // Use TFs with/without SFs
-const bool applySFs = false; //check:true only for data
+const bool applySFs = true; //check:true only for data
 double csvForBtag=0.4184; //*AR:190429:don't change here, yearwise change of file is made later
 // Use TFs with/without SFs
 double scaleFactorWeight = 59546.381; //*AR:190429:don't change here, yearwise change of file is made later
