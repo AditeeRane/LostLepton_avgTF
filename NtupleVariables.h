@@ -80,9 +80,9 @@ class NtupleVariables : public TSelector {
   Int_t           eeBadScFilter;
   //Bool_t           eeBadSc4Filter;
   std::vector<TLorentzVector> *GenElectrons=0;
-  vector<bool>    *GenElectrons_fromTau;
+  std::vector<bool>    *GenElectrons_fromTau=0;
   std::vector<TLorentzVector> *GenMuons=0;
-  vector<bool>    *GenMuons_fromTau;
+  std::vector<bool>    *GenMuons_fromTau=0;
   std::vector<TLorentzVector> *GenTaus=0;
   std::vector<bool> *GenTaus_had=0;
   Int_t          HBHENoiseFilter;
@@ -138,6 +138,12 @@ class NtupleVariables : public TSelector {
   std::vector<double>     *Jets_chargedHadronEnergyFraction=0;
 
   std::vector<bool>    *Jets_HTMask=0;
+
+
+
+
+
+
   Double_t        METPhi;
   Double_t        MET;
   Double_t        NonPrefiringProb;
@@ -193,6 +199,44 @@ class NtupleVariables : public TSelector {
 
 
 
+
+  Double_t        DeltaPhi1_AK8;
+  Double_t        DeltaPhi2_AK8;
+  Double_t        DeltaPhiMin_AK8;
+
+
+  std::vector<TLorentzVector> *GenJetsAK8=0; 
+  std::vector<int> *GenJetsAK8_multiplicity=0;
+  std::vector<double> *GenJetsAK8_prunedMass=0;
+  std::vector<double> *GenJetsAK8_softDropMass=0;
+
+  std::vector<TLorentzVector> *JetsAK8=0;
+  std::vector<double> *JetsAK8_deepDoubleBDiscriminatorH=0;
+  std::vector<double> *JetsAK8_deepDoubleBDiscriminatorQ=0;
+  std::vector<double> *JetsAK8_doubleBDiscriminator=0;
+  std::vector<double> *JetsAK8_hDiscriminatorDeep=0;
+  std::vector<int> *JetsAK8_multiplicity=0; 
+
+  std::vector<double> *JetsAK8_NsubjettinessTau1=0;
+  std::vector<double> *JetsAK8_NsubjettinessTau2=0;
+  std::vector<double> *JetsAK8_NsubjettinessTau3=0;
+
+  std::vector<int> * JetsAK8_origIndex=0;
+  std::vector<double> *JetsAK8_prunedMass=0;
+  std::vector<double> *JetsAK8_softDropMass=0;  
+
+  std::vector<vector<TLorentzVector> > *JetsAK8_subjets=0;
+  std::vector<vector<double> > *JetsAK8_subjets_bDiscriminatorCSV=0;
+  std::vector<vector<int> > *JetsAK8_subjets_multiplicity=0;
+  std::vector<double> *JetsAK8_tDiscriminatorDeep=0;
+  std::vector<double> *JetsAK8_tDiscriminatorDeepDecorrel=0;
+  std::vector<double> *JetsAK8_wDiscriminatorDeep=0;
+  std::vector<double> *JetsAK8_wDiscriminatorDeepDecorrel=0;
+  std::vector<double> *JetsAK8_zDiscriminatorDeep=0;
+  std::vector<double> *JetsAK8_zDiscriminatorDeepDecorrel=0;
+
+
+
    // List of branches
 
   TBranch        *b_RunNum=0;   //!
@@ -228,9 +272,9 @@ class NtupleVariables : public TSelector {
   TBranch        *b_eeBadScFilter=0;   //!
   //TBranch        *b_eeBadSc4Filter=0;   //!
   TBranch        *b_GenElectrons=0;   //!
-  TBranch        *b_GenElectrons_fromTau;   //!
+  TBranch        *b_GenElectrons_fromTau=0;   //!
   TBranch        *b_GenMuons=0;   //!
-  TBranch        *b_GenMuons_fromTau;   //! 
+  TBranch        *b_GenMuons_fromTau=0;   //! 
   TBranch        *b_GenTaus=0;   //!
   TBranch        *b_GenTaus_had=0;   //!
   TBranch        *b_HBHENoiseFilter=0;   //!
@@ -330,6 +374,45 @@ class NtupleVariables : public TSelector {
   TBranch        *b_Muons_tightID=0;   //!
   TBranch        *b_Electrons_mediumID=0;   //!
   TBranch        *b_Electrons_tightID=0;   //!
+
+  TBranch        *b_DeltaPhi1_AK8=0;
+  TBranch        *b_DeltaPhi2_AK8=0;
+  TBranch        *b_DeltaPhiMin_AK8=0;
+
+
+  TBranch        *b_GenJetsAK8=0; 
+  TBranch        *b_GenJetsAK8_multiplicity=0;
+  TBranch        *b_GenJetsAK8_prunedMass=0;
+  TBranch        *b_GenJetsAK8_softDropMass=0;
+
+  TBranch        *b_JetsAK8=0;
+  TBranch        *b_JetsAK8_deepDoubleBDiscriminatorH=0;
+  TBranch        *b_JetsAK8_deepDoubleBDiscriminatorQ=0;
+  TBranch        *b_JetsAK8_doubleBDiscriminator=0;
+  TBranch        *b_JetsAK8_hDiscriminatorDeep=0;
+  TBranch        *b_JetsAK8_multiplicity=0; 
+
+  TBranch        *b_JetsAK8_NsubjettinessTau1=0;
+  TBranch        *b_JetsAK8_NsubjettinessTau2=0;
+  TBranch        *b_JetsAK8_NsubjettinessTau3=0;
+
+  TBranch        *b_JetsAK8_origIndex=0;
+  TBranch        *b_JetsAK8_prunedMass=0;
+  TBranch        *b_JetsAK8_softDropMass=0;  
+
+  TBranch        *b_JetsAK8_subjets=0;
+  TBranch        *b_JetsAK8_subjets_bDiscriminatorCSV=0;
+  TBranch        *b_JetsAK8_subjets_multiplicity=0;
+  TBranch        *b_JetsAK8_tDiscriminatorDeep=0;
+  TBranch        *b_JetsAK8_tDiscriminatorDeepDecorrel=0;
+  TBranch        *b_JetsAK8_wDiscriminatorDeep=0;
+  TBranch        *b_JetsAK8_wDiscriminatorDeepDecorrel=0;
+  TBranch        *b_JetsAK8_zDiscriminatorDeep=0;
+  TBranch        *b_JetsAK8_zDiscriminatorDeepDecorrel=0;
+
+
+
+
    
  NtupleVariables(TTree * /*tree*/ =0) : fChain(0) { }
    ~NtupleVariables() { }
@@ -450,6 +533,43 @@ void NtupleVariables::Init(TTree *tree, string nameData)
    fChain->SetBranchStatus("TrueNumInteractions",1);
    fChain->SetBranchStatus("Weight",1);
 
+
+  fChain->SetBranchStatus("DeltaPhi1_AK8",1);
+  fChain->SetBranchStatus("DeltaPhi2_AK8",1);
+  fChain->SetBranchStatus("DeltaPhiMin_AK8",1);
+
+
+  fChain->SetBranchStatus("GenJetsAK8",1); 
+  fChain->SetBranchStatus("GenJetsAK8_multiplicity",1);
+  fChain->SetBranchStatus("GenJetsAK8_prunedMass",1);
+  fChain->SetBranchStatus("GenJetsAK8_softDropMass",1);
+
+  fChain->SetBranchStatus("JetsAK8",1);
+  fChain->SetBranchStatus("JetsAK8_deepDoubleBDiscriminatorH",1);
+  fChain->SetBranchStatus("JetsAK8_deepDoubleBDiscriminatorQ",1);
+  fChain->SetBranchStatus("JetsAK8_doubleBDiscriminator",1);
+  fChain->SetBranchStatus("JetsAK8_hDiscriminatorDeep",1);
+  fChain->SetBranchStatus("JetsAK8_multiplicity",1); 
+
+  fChain->SetBranchStatus("JetsAK8_NsubjettinessTau1",1);
+  fChain->SetBranchStatus("JetsAK8_NsubjettinessTau2",1);
+  fChain->SetBranchStatus("JetsAK8_NsubjettinessTau3",1);
+
+  fChain->SetBranchStatus("JetsAK8_origIndex",1);
+  fChain->SetBranchStatus("JetsAK8_prunedMass",1);
+  fChain->SetBranchStatus("JetsAK8_softDropMass",1);  
+
+  fChain->SetBranchStatus("JetsAK8_subjets",1);
+  fChain->SetBranchStatus("JetsAK8_subjets_bDiscriminatorCSV",1);
+  fChain->SetBranchStatus("JetsAK8_subjets_multiplicity",1);
+  fChain->SetBranchStatus("JetsAK8_tDiscriminatorDeep",1);
+  fChain->SetBranchStatus("JetsAK8_tDiscriminatorDeepDecorrel",1);
+  fChain->SetBranchStatus("JetsAK8_wDiscriminatorDeep",1);
+  fChain->SetBranchStatus("JetsAK8_wDiscriminatorDeepDecorrel",1);
+  fChain->SetBranchStatus("JetsAK8_zDiscriminatorDeep",1);
+  fChain->SetBranchStatus("JetsAK8_zDiscriminatorDeepDecorrel",1);
+
+
    fChain->SetBranchAddress("CrossSection", &CrossSection, &b_CrossSection);
    fChain->SetBranchAddress("RunNum", &RunNum, &b_RunNum);
    fChain->SetBranchAddress("LumiBlockNum", &LumiBlockNum, &b_LumiBlockNum);
@@ -519,7 +639,10 @@ void NtupleVariables::Init(TTree *tree, string nameData)
 
 
   fChain->SetBranchAddress("GenElectrons", &GenElectrons, &b_GenElectrons);
+  fChain->SetBranchAddress("GenElectrons_fromTau", &GenElectrons_fromTau, &b_GenElectrons_fromTau);
   fChain->SetBranchAddress("GenMuons", &GenMuons, &b_GenMuons);
+  fChain->SetBranchAddress("GenMuons_fromTau", &GenMuons_fromTau, &b_GenMuons_fromTau);
+
   fChain->SetBranchAddress("GenTaus", &GenTaus, &b_GenTaus);
   fChain->SetBranchAddress("GenTaus_had", &GenTaus_had, &b_GenTaus_had);
   
@@ -538,6 +661,40 @@ void NtupleVariables::Init(TTree *tree, string nameData)
   fChain->SetBranchAddress("Muons_MTW", &Muons_MTW, &b_Muons_MTW);
   fChain->SetBranchAddress("Electrons_MTW", &Electrons_MTW, &b_Electrons_MTW);
 
+  fChain->SetBranchAddress("DeltaPhi1_AK8",&DeltaPhi1_AK8,&b_DeltaPhi1_AK8);
+  fChain->SetBranchAddress("DeltaPhi2_AK8",&DeltaPhi2_AK8,&b_DeltaPhi2_AK8);
+  fChain->SetBranchAddress("DeltaPhiMin_AK8",&DeltaPhiMin_AK8,&b_DeltaPhiMin_AK8);
+
+
+  fChain->SetBranchAddress("GenJetsAK8",&GenJetsAK8,&b_GenJetsAK8); 
+  fChain->SetBranchAddress("GenJetsAK8_multiplicity",&GenJetsAK8_multiplicity,&b_GenJetsAK8_multiplicity);
+  fChain->SetBranchAddress("GenJetsAK8_prunedMass",&GenJetsAK8_prunedMass,&b_GenJetsAK8_prunedMass);
+  fChain->SetBranchAddress("GenJetsAK8_softDropMass",&GenJetsAK8_softDropMass,&b_GenJetsAK8_softDropMass);
+
+  fChain->SetBranchAddress("JetsAK8",&JetsAK8,&b_JetsAK8);
+  fChain->SetBranchAddress("JetsAK8_deepDoubleBDiscriminatorH",&JetsAK8_deepDoubleBDiscriminatorH,&b_JetsAK8_deepDoubleBDiscriminatorH);
+  fChain->SetBranchAddress("JetsAK8_deepDoubleBDiscriminatorQ",&JetsAK8_deepDoubleBDiscriminatorQ,&b_JetsAK8_deepDoubleBDiscriminatorQ);
+  fChain->SetBranchAddress("JetsAK8_doubleBDiscriminator",&JetsAK8_doubleBDiscriminator,&b_JetsAK8_doubleBDiscriminator);
+  fChain->SetBranchAddress("JetsAK8_hDiscriminatorDeep",&JetsAK8_hDiscriminatorDeep,&b_JetsAK8_hDiscriminatorDeep);
+  fChain->SetBranchAddress("JetsAK8_multiplicity",&JetsAK8_multiplicity,&b_JetsAK8_multiplicity); 
+
+  fChain->SetBranchAddress("JetsAK8_NsubjettinessTau1",&JetsAK8_NsubjettinessTau1,&b_JetsAK8_NsubjettinessTau1);
+  fChain->SetBranchAddress("JetsAK8_NsubjettinessTau2",&JetsAK8_NsubjettinessTau2,&b_JetsAK8_NsubjettinessTau2);
+  fChain->SetBranchAddress("JetsAK8_NsubjettinessTau3",&JetsAK8_NsubjettinessTau3,&b_JetsAK8_NsubjettinessTau3);
+
+  fChain->SetBranchAddress("JetsAK8_origIndex",&JetsAK8_origIndex,&b_JetsAK8_origIndex);
+  fChain->SetBranchAddress("JetsAK8_prunedMass",&JetsAK8_prunedMass,&b_JetsAK8_prunedMass);
+  fChain->SetBranchAddress("JetsAK8_softDropMass",&JetsAK8_softDropMass,&b_JetsAK8_softDropMass);  
+
+  fChain->SetBranchAddress("JetsAK8_subjets",&JetsAK8_subjets,&b_JetsAK8_subjets);
+  fChain->SetBranchAddress("JetsAK8_subjets_bDiscriminatorCSV",&JetsAK8_subjets_bDiscriminatorCSV,&b_JetsAK8_subjets_bDiscriminatorCSV);
+  fChain->SetBranchAddress("JetsAK8_subjets_multiplicity",&JetsAK8_subjets_multiplicity,&b_JetsAK8_subjets_multiplicity);
+  fChain->SetBranchAddress("JetsAK8_tDiscriminatorDeep",&JetsAK8_tDiscriminatorDeep,&b_JetsAK8_tDiscriminatorDeep);
+  fChain->SetBranchAddress("JetsAK8_tDiscriminatorDeepDecorrel",&JetsAK8_tDiscriminatorDeepDecorrel,&b_JetsAK8_tDiscriminatorDeepDecorrel);
+  fChain->SetBranchAddress("JetsAK8_wDiscriminatorDeep",&JetsAK8_wDiscriminatorDeep,&b_JetsAK8_wDiscriminatorDeep);
+  fChain->SetBranchAddress("JetsAK8_wDiscriminatorDeepDecorrel",&JetsAK8_wDiscriminatorDeepDecorrel,&b_JetsAK8_wDiscriminatorDeepDecorrel);
+  fChain->SetBranchAddress("JetsAK8_zDiscriminatorDeep",&JetsAK8_zDiscriminatorDeep,&b_JetsAK8_zDiscriminatorDeep);
+  fChain->SetBranchAddress("JetsAK8_zDiscriminatorDeepDecorrel",&JetsAK8_zDiscriminatorDeepDecorrel,&b_JetsAK8_zDiscriminatorDeepDecorrel);
 
    Notify();
 }

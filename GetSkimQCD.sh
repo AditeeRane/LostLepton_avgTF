@@ -5,8 +5,8 @@ outStr=$2
 
 export SUBMIT_DIR=`pwd -P`
 
-for QCDStr in HT_200_300 HT_300_500 HT_500_700 HT_700_1000 HT_1000_1500 HT_1500_2000 HT_2000_Inf ; do
-
+#for QCDStr in HT_200_300 HT_300_500 HT_500_700 HT_700_1000 HT_1000_1500 HT_1500_2000 HT_2000_Inf ; do
+for QCDStr in HT_200_300 HT_300_500 ; do
 #for QCDStr in HT_1200_2500 HT_600_800 HT_800_1200 HT_2500_Inf; do
 #for QCDStr in HT_2500_Inf; do
 #for QCDStr in T_SingleLep Tbar_SingleLep; do
