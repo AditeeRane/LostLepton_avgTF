@@ -452,6 +452,10 @@ void GetPiChart2DBaselineHTMHT(int hNum){
   ttext12->SetTextColor(1);
   ttext12->Draw("same");
 
+  TLatex * textArxiv=new TLatex(0.001,0.2,"#it{arXiv:1908.04722}");
+  textArxiv->SetTextSize(0.12);
+  textArxiv->SetTextColor(kBlue);
+  textArxiv->Draw();
 
 
   pFive->cd(2);
@@ -635,8 +639,8 @@ void GetPiChart2DBaselineHTMHT(int hNum){
   gPad->Update();
   gPad->Modified();
 
-  cpie->Print("PieChart2DBaselineHTMHTAllBkg_137.pdf");
-  cpie->Print("PieChart2DBaselineHTMHTAllBkg_137.png");
+  cpie->Print("PieChart2DBaselineHTMHTAllBkg_withArxiv_137.pdf");
+  cpie->Print("PieChart2DBaselineHTMHTAllBkg_withArxiv_137.png");
 
 
 

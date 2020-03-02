@@ -464,6 +464,15 @@ void GetPiChartOfAllBkg(int hNum){
   pieNbtag3->SetCircle(.5,.43,.385);
   pieNbtag3->SetLabelFormat(0);
   pieNbtag3->Draw("nol < ");
+
+  pFive->cd(5);
+  TLatex * textArxiv=new TLatex(0.001,0.5,"#it{arXiv:1908.04722}");
+  textArxiv->SetTextSize(0.12);
+  textArxiv->SetTextColor(kBlue);
+  textArxiv->Draw();
+
+
+
   /*
   pFive->cd(5);
   pieNbtag4->SetCircle(.5,.43,.385);
@@ -626,8 +635,8 @@ void GetPiChartOfAllBkg(int hNum){
   gPad->Update();
   gPad->Modified();
 
-  cpie->Print("PieChartWithAllBkg_137.pdf");
-  cpie->Print("PieChartWithAllBkg_137.png");
+  cpie->Print("PieChartWithAllBkg_withArxiv_137.pdf");
+  cpie->Print("PieChartWithAllBkg_withArxiv_137.png");
 
 
 

@@ -436,6 +436,13 @@ void GetPiChart(int hNum){
   ttextNbtag->SetTextColor(1);
   ttextNbtag->Draw();
 
+
+  TLatex * textArxiv=new TLatex(0.001,0.03,"#it{arXiv:1908.04722}");
+  textArxiv->SetTextSize(0.12);
+  textArxiv->SetTextColor(kBlue);
+  textArxiv->Draw();
+
+
   pFive->cd(2);
   pieNbtag1->SetCircle(.5,.43,.385);
   pieNbtag1->SetLabelFormat(0);
@@ -598,8 +605,8 @@ void GetPiChart(int hNum){
   gPad->Update();
   gPad->Modified();
 
-  cpie->Print("PieChartHTWithSupplementary_137.pdf");
-  cpie->Print("PieChartHTWithSupplementary_137.png");
+  cpie->Print("PieChartHTWithSupplementary_withArxiv_137.pdf");
+  cpie->Print("PieChartHTWithSupplementary_withArxiv_137.png");
 
 
 

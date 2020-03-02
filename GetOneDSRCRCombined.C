@@ -431,8 +431,8 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
   TLegend *tl=new TLegend(Legxmin,Legymin,Legxmax,Legymax);
   //  tl->SetFillColor(10);
   //  tl->SetHeader("W+jets: Lost lepton, Single lepton fractions");
-  tl->SetHeader("W+jets");
-  //  tl->SetHeader("t#bar{t}");
+  //  tl->SetHeader("W+jets");
+  tl->SetHeader("t#bar{t}");
   //  tl->AddEntry(hDataLLHadtau, "Data: LL+Had#tau");  //if 0L reg
   //  tl->SetNColumns(2);
   //  tl->AddEntry(hTTbarFracCS," W+jets(CR):1L");
@@ -592,6 +592,17 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     tl_nb->DrawLine(20,ymin_top,20,ymax5_top);
 
 */    
+
+  TLatex * textArxiv=new TLatex(1.0,1.61,"#it{arXiv:1908.04722}");
+  textArxiv->SetTextSize(0.0475);
+  textArxiv->SetTextColor(kBlue);
+  textArxiv->Draw();
+
+
+
+
+
+
     // Nb labels
     TLatex * ttext_nb = new TLatex();
     ttext_nb->SetTextFont(42);
@@ -745,9 +756,9 @@ void GetOneDSRCRCombined(int hNum,char const * VarCS, char const * VarPre, char 
     gPad->Modified();
 
     char PrintName[500];
-    sprintf(PrintName,"%i_%s.png",hNum,cname);
+    sprintf(PrintName,"%i_withArxiv_%s.png",hNum,cname);
     canvas->Print(PrintName);
-    sprintf(PrintName,"%i_%s.pdf",hNum,cname);
+    sprintf(PrintName,"%i_withArxiv_%s.pdf",hNum,cname);
     canvas->Print(PrintName);
 
 
