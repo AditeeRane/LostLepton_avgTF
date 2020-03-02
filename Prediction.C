@@ -33,6 +33,36 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
   unsigned nSB = SearchBins_->GetNbins();
   h_Prediction = new TH1D("h_Prediction", "h_Prediction", nSB, 0.5, nSB+0.5);
   h_CSStat = new TH1D("h_CSStat", "h_CSStat", nSB, 0.5, nSB+0.5);
+  h_CutFlow = new TH1D("h_CutFlow", "h_CutFlow", 30, 0, 30);
+  h_CutFlow->GetXaxis()->SetBinLabel(1,"all");
+  h_CutFlow->GetXaxis()->SetBinLabel(2,"HTgen_cut");
+  if(GetSignalRegHists)
+    h_CutFlow->GetXaxis()->SetBinLabel(3,"0L");
+  else
+    h_CutFlow->GetXaxis()->SetBinLabel(3,"1L");
+  h_CutFlow->GetXaxis()->SetBinLabel(4,"Base-HT,MHT,NJet");
+  h_CutFlow->GetXaxis()->SetBinLabel(5,"Base-dPhi");
+  h_CutFlow->GetXaxis()->SetBinLabel(6,"HBHENoise");
+  h_CutFlow->GetXaxis()->SetBinLabel(7,"HBHEIsoNoise");
+  h_CutFlow->GetXaxis()->SetBinLabel(8,"EcalDeadCell");
+  h_CutFlow->GetXaxis()->SetBinLabel(9,"eeBadSc");
+  h_CutFlow->GetXaxis()->SetBinLabel(10,"NVtx");
+  h_CutFlow->GetXaxis()->SetBinLabel(11,"JetID");
+  h_CutFlow->GetXaxis()->SetBinLabel(12,"PFCaloMETRatio");
+  h_CutFlow->GetXaxis()->SetBinLabel(13,"BadMuonJet");
+  h_CutFlow->GetXaxis()->SetBinLabel(14,"BadJet");
+  if(GetSignalRegHists)
+    h_CutFlow->GetXaxis()->SetBinLabel(15,"NoIsoTrack");
+  else
+    h_CutFlow->GetXaxis()->SetBinLabel(15,"MT-cut");
+  h_CutFlow->GetXaxis()->SetBinLabel(16,"QCDBin");
+  h_CutFlow->GetXaxis()->SetBinLabel(17,"NegWt");
+  h_CutFlow->GetXaxis()->SetBinLabel(18,"madHT");
+  h_CutFlow->GetXaxis()->SetBinLabel(19,"1e");
+  h_CutFlow->GetXaxis()->SetBinLabel(20,"1mu");
+  h_CutFlow->GetXaxis()->SetBinLabel(21,"1L-gen");
+  h_CutFlow->GetXaxis()->SetBinLabel(22,"Hadtaus");
+
   h_YieldCutFlow = new TH1D("h_YieldCutFlow", "h_YieldCutFlow", 2, 0, 2.0);
 
   h_HT_Exp =new TH1D("h_HT_Exp","h_HT_Exp",12,100,2500);
@@ -317,6 +347,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
   GetOutputList()->Add(h_Prediction);
   GetOutputList()->Add(h_CSStat); //one lepton CS
+  GetOutputList()->Add(h_CutFlow); //one lepton CS
   GetOutputList()->Add(h_YieldCutFlow);
   GetOutputList()->Add(h_HT_Exp);
   GetOutputList()->Add(h_HT5_Exp);
@@ -582,7 +613,7 @@ void Prediction::SlaveBegin(TTree * /*tree*/)
 
 Bool_t Prediction::Process(Long64_t entry)
 { //*AR-180619: Runs for every event
-
+  h_CutFlow->Fill(0);
   resetValues();
   fChain->GetTree()->GetEntry(entry);
 
@@ -599,6 +630,8 @@ Bool_t Prediction::Process(Long64_t entry)
 
   //*AR:180917-HTgen_cut=0, hence this if condition has no role
   if(HTgen_cut > 0.01) if(madHT > HTgen_cut) return kTRUE;
+  h_CutFlow->Fill(1);
+
   MuonsNum_ = Muons->size();
   ElectronsNum_ = Electrons->size();
   //*AR: 180917: NMuons and NElectrons are number of isolated electrons and muons
@@ -999,14 +1032,9 @@ Bool_t Prediction::Process(Long64_t entry)
     //*AR:180917:skip negative wt events
     if(Weight < 0)
       return kTRUE;
-    
-    if(currentFile.find("TTbar_Tbar_SingleLep")!=string::npos || currentFile.find("TTbar_T_SingleLep")!=string::npos || currentFile.find("DiLept")!=string::npos){
-      madHTcut=600;
-      if(madHT > madHTcut){
-	//	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
-	return kTRUE;
-      }
-    }
+
+    h_CutFlow->Fill(16);
+
 
    
     if(doISRcorr){ //true for signal mc
@@ -1062,45 +1090,9 @@ Bool_t Prediction::Process(Long64_t entry)
   //  std::cout<<" weight_afterlumiscale "<<Weight<<endl;
 
 
-  double LepPt=-99.0;
-  double LepEta=-99.0;
-  double LepPhi=-99.0;
-  
-  //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
-  //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
-  if(!GetSignalRegHists){
-    if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
-
-    if(MuonsNum_==1){
-      for(unsigned int i=0;i<Muons->size();i++){
-	//if(Muons_passIso->at(i)){
-	  LepPt=Muons->at(i).Pt();
-	  LepEta=Muons->at(i).Eta();
-	  LepPhi=Muons->at(i).Phi();
-	  //}
-      }
-    }
-
-    if(ElectronsNum_==1){
-      for(unsigned int i=0;i<Electrons->size();i++){
-	//if(Electrons_passIso->at(i)){
-	  LepPt=Electrons->at(i).Pt();
-	  LepEta=Electrons->at(i).Eta();
-	  LepPhi=Electrons->at(i).Phi();
-	  //}
-      }
-    }
-
-    //    if(LepPt<20 || fabs(LepEta)>2.1) 
-    //return kTRUE;
-  } //end of if(!GetSignalRegHists)
-  else
-    if((MuonsNum_+ElectronsNum_) !=0) return kTRUE;
-  PassLep++;  
 
 
-
-  std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight before baseline "<<Weight<<endl;
+  //  std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight before baseline "<<Weight<<endl;
   if(GetSignalRegHists){
     if(isoTracksNum ==0){
       h_HTv2Recipe_BeforeBaseline_Exp->Fill(HTv2Recipe,Weight*scaleFactorWeight);
@@ -1124,8 +1116,62 @@ Bool_t Prediction::Process(Long64_t entry)
   else{
     //if(HT<minHT_ || MHT< minMHT_ || NJets < minNJets_  ) return kTRUE;
     if(HTv2Recipe<minHT_ || MHTv2Recipe< minMHT_ || NJetsv2Recipe < minNJets_  ) return kTRUE;
-
+    h_CutFlow->Fill(3);
   }
+
+  if(currentFile.find("TTbar_Tbar_SingleLep")!=string::npos || currentFile.find("TTbar_T_SingleLep")!=string::npos || currentFile.find("DiLept")!=string::npos){
+    madHTcut=600;
+    if(madHT > madHTcut){
+      //	std::cout<<" currentTree "<<currentTree<<" entry "<<entry<<" madHT "<<madHT<< " &&&not passed&&& "<<endl;
+      return kTRUE;
+    }
+    h_CutFlow->Fill(17);
+  }
+
+  double LepPt=-99.0;
+  double LepEta=-99.0;
+  double LepPhi=-99.0;
+  
+  //*AR-181016: only considers single isolated lepton events(pT>20, eta<2.1) for CR and 0L events for signal region
+  //pT>20 cut can be removed as MET triggers used for CR selection don't have any lepton pT threshold
+  if(!GetSignalRegHists){
+    if((MuonsNum_+ElectronsNum_) !=1) return kTRUE;
+    h_CutFlow->Fill(2);
+    if(MuonsNum_==1){
+      h_CutFlow->Fill(19);
+      for(unsigned int i=0;i<Muons->size();i++){
+	//if(Muons_passIso->at(i)){
+	  LepPt=Muons->at(i).Pt();
+	  LepEta=Muons->at(i).Eta();
+	  LepPhi=Muons->at(i).Phi();
+	  //}
+      }
+    }
+
+    if(ElectronsNum_==1){
+      h_CutFlow->Fill(18);
+      for(unsigned int i=0;i<Electrons->size();i++){
+	//if(Electrons_passIso->at(i)){
+	  LepPt=Electrons->at(i).Pt();
+	  LepEta=Electrons->at(i).Eta();
+	  LepPhi=Electrons->at(i).Phi();
+	  //}
+      }
+    }
+
+    //    if(LepPt<20 || fabs(LepEta)>2.1) 
+    //return kTRUE;
+  } //end of if(!GetSignalRegHists)
+  else{
+    if((MuonsNum_+ElectronsNum_) !=0)
+      return kTRUE;
+    h_CutFlow->Fill(2);
+  }
+  PassLep++;  
+
+
+
+
   //  std::cout<<" entry "<<entry<<" seg vio "<<" check baseline "<<endl;
 
   //*AR: 180917-for high dphi: only events with all dphis>(0.5,0.5,0.3,0.3)
@@ -1145,6 +1191,7 @@ Bool_t Prediction::Process(Long64_t entry)
   else
     return kTRUE;
 
+  h_CutFlow->Fill(4);
   PassBaseline++;
   //  std::cout<<" entry "<<entry<<" seg vio "<<" pass baseline deltaPhi"<<endl;
   
@@ -1177,6 +1224,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
     //do not consider event if mT>100 
     if(mtw > 100) return kTRUE;
+    h_CutFlow->Fill(14);
     PassmT++;
   }//end of if(!GetSignalRegHists)
 //std::cout<<" passed mT cut "<<endl;
@@ -1187,6 +1235,39 @@ Bool_t Prediction::Process(Long64_t entry)
       //  std::cout<<" isotrack nonzero "<<endl;
       return kTRUE;
     }
+    /*
+  //*AR-190423:CHECK IF EVENT IS LOST LEPTON OR HADTAU
+    GenMuonsNum_ = GenMuons->size();
+    GenElectronsNum_ = GenElectrons->size();
+    GenTausNum_ = GenTaus->size();
+    bool LLEvt=false;
+    bool HadtauEvt=false;
+    
+    if(GenElectronsNum_ + GenMuonsNum_ == 0){
+      //	  std::cout<<" gen_taus "<<GenTaus->size()<<" gen taus had bool "<<GenTaus_had->size()<<endl;
+      if(GenTausNum_ > 0){ //gen taus size
+	int HadronicTaus=0;
+	for(unsigned i=0; i<GenTaus->size();i++){
+	  if(GenTaus_had->at(i)==1){ //checks if tau is hadronic tau
+	    //	std::cout<<" it's a hadronic tau "<<endl;
+	    HadronicTaus++;
+	  }
+	}
+	if(HadronicTaus >0){
+	  HadtauEvt=true;
+	}
+      }
+    }
+    else{
+      LLEvt=true; 
+    }
+    if(!LLEvt && !HadtauEvt){
+      std::cout<<" no LL or Hadtau event "<<endl;
+      return kTRUE;
+    }
+*/
+    h_CutFlow->Fill(14);
+
   }
 
   //  std::cout<<" entry "<<entry<<" seg vio "<<" muon skim path default "<<endl;
@@ -1221,6 +1302,8 @@ Bool_t Prediction::Process(Long64_t entry)
   }
   //*AR-181016: Use only events falling into search bins
   if(Bin_ > 900 && BinQCD_ > 900) return kTRUE;
+  h_CutFlow->Fill(15);
+
   PassSearchBin++;
   //  std::cout<<" entry "<<entry<<" seg vio "<<" fall in search bin "<<endl;
 
@@ -1770,7 +1853,7 @@ Bool_t Prediction::Process(Long64_t entry)
     }
   */
   for(int i = 0; i < nLoops; i++){
-    std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight after baseline "<<Weight<<endl;
+    //    std::cout<<" entry "<<entry<<" MHT "<<MHTv2Recipe<<" Weight after baseline "<<Weight<<endl;
     double WeightBtagProb = Weight*bTagProb.at(i);
     unsigned bTagBin = bTagBins.at(i);
     unsigned bTagBinQCD = bTagBinsQCD.at(i);
@@ -1940,6 +2023,7 @@ void Prediction::Terminate()
   std::cout<<"***Prediction::Terminate***"<<std::endl;
   h_Prediction = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_Prediction"));
   h_CSStat = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CSStat"));
+  h_CutFlow = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_CutFlow"));
   h_YieldCutFlow = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_YieldCutFlow"));
   h_HT_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT_Exp"));
   h_HT5_Exp = dynamic_cast<TH1D*>(GetOutputList()->FindObject("h_HT5_Exp"));
@@ -2237,6 +2321,7 @@ void Prediction::Terminate()
 */
   h_Prediction->Write();
   h_CSStat->Write();
+  h_CutFlow->Write();
   h_YieldCutFlow->Write();
   h_HT_Exp->Write();
   h_HT5_Exp->Write();  
@@ -2555,15 +2640,41 @@ bool Prediction::FiltersPass()
   bool result=true;
   if(useFilterData){
     if(HBHENoiseFilter!=1) result=false;
+    if(result) h_CutFlow->Fill(5);
+
     if(HBHEIsoNoiseFilter!=1) result=false;
+    if(result) h_CutFlow->Fill(6);
+
     if(EcalDeadCellTriggerPrimitiveFilter!=1) result=false;    
+
+    if(result) h_CutFlow->Fill(7);
+
     if(eeBadScFilter!=1) result=false;
     //    if(ecalBadCalibFilter!=1) result=false;
+    /*
+    if(BadPFMuonFilter!=1) result=false;
+      
+    if(result) h_CutFlow->Fill(8);
+    if(BadChargedCandidateFilter!=1) result=false;
+
+    if(!runOnSignalMC){
+      if(globalTightHalo2016Filter!=1) result=false;
+    }
+*/
+
+
+    
+
     if(runOnData){
       if(!BadChargedCandidateFilter) result=false;
       if(!BadPFMuonFilter) result=false;
       if(globalTightHalo2016Filter!=1) result=false;
-    }    
+    }
+
+
+
+    if(result) h_CutFlow->Fill(9);
+    
   }
   if(NVtx<=0) result=false;
   //std::cout<<" nvtx "<<endl;
@@ -2578,8 +2689,12 @@ bool Prediction::FiltersPass()
       }
     }
   }
+  if(result) h_CutFlow->Fill(10);
+
   // Preliminary filters
   if(PFCaloMETRatio>5) result=false;
+  if(result) h_CutFlow->Fill(11);
+
   //  std::cout<<" pfcalometratio "<<endl;
 
   // Check efficiency of filter
@@ -2592,6 +2707,7 @@ bool Prediction::FiltersPass()
 	result=false;
       }
     }
+  if(result) h_CutFlow->Fill(12);
 
 
   //reject events with any jet pt>20, |eta|<2.5 NOT matched to a GenJet (w/in DeltaR<0.3) and chfrac < 0.1
@@ -2611,6 +2727,7 @@ bool Prediction::FiltersPass()
 	break;
       }
     }
+  if(result) h_CutFlow->Fill(13);
 
   return result;
 }

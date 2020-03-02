@@ -122,6 +122,7 @@ class Prediction : public TSelector {
   TH1D* h_Prediction = 0;
   TH1D* h_YieldCutFlow=0;
   TH1D* h_CSStat = 0;
+  TH1D* h_CutFlow =0; 
   TH1D* h_HT_Exp=0;
   TH1D* h_HT5_Exp=0;
   TH1D* h_HTRatio_Exp=0;
@@ -752,7 +753,11 @@ void Prediction::Init(TTree *tree)
   if(runOnData) useTrigger = true;
   // Apply weights if trigger not simulated
   //if(runOnStandardModelMC) useTriggerEffWeight = true; // not derived yet
-  if(runOnSignalMC && !useGenHTMHT) useTriggerEffWeight = true;
+  if(runOnSignalMC && !useGenHTMHT) useTriggerEffWeight = true; 
+
+
+  //*AR:190923: to make before and after baseline plots TriggerEffWeight not applied.
+  useTriggerEffWeight = false; 
 
   // Do PU reweighting. true for signal scan
   if(runOnSignalMC) doPUreweighting = true;
